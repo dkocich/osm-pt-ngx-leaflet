@@ -31,6 +31,10 @@ See how it looks at [demo page](http://haoliangyu.github.io/ngx-leaflet-starter/
 FAQ
 --------------
 
+### Local development
+
+In the main folder type webpack-dev-server and navigate to localhost:8080.
+
 ### Was it named *angular2-leaflet-starter*?
 
 Yes, but no longer. Angular is evolving rapidly and has moved further from 2.0. This project is renamed to **ngx-leaflet-starter**, meaning that it will evolve with Angular and stay close to the latest version.
