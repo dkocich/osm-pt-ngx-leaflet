@@ -20,6 +20,7 @@
   "scripts": {
     "build": "webpack --config webpack/webpack.config.prod.js",
     "build-dev": "webpack --config webpack/webpack.config.dev.js",
+    "test": "snyk test",
     "watch": "webpack --config webpack/webpack.config.dev.js --watch"
   },
   "homepage": "https://github.com/haoliangyu/ngx-leaflet-starter#readme",
@@ -62,6 +63,7 @@
     "typescript": "^2.2.2",
     "url-loader": "^0.5.8",
     "webpack": "^2.3.3",
-    "webpack-cleanup-plugin": "^0.5.1"
+    "webpack-cleanup-plugin": "^0.5.1",
+    "snyk": "^1.29.0"
   }
 }
