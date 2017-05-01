@@ -1,5 +1,7 @@
-ngx-leaflet-starter
-========================
+osm-pt-ngx-leaflet
+==================
+
+...
 
 [![Build Status](https://travis-ci.org/haoliangyu/ngx-leaflet-starter.svg?branch=master)](https://github.com/haoliangyu/ngx-leaflet-starter)
 
