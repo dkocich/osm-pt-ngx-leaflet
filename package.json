@@ -21,11 +21,11 @@
     "url": "https://github.com/haoliangyu/ngx-leaflet-starter/issues"
   },
   "scripts": {
-    "build": "webpack --config webpack/webpack.config.prod.js",
-    "build-dev": "webpack --config webpack/webpack.config.dev.js",
-    "deploy": "NODE_ENV=production webpack -p --config webpack/webpack.config.prod.js",
-    "dev": "webpack-dev-server --content-base public/",
-    "postinstall": "webpack -p --config webpack/webpack.config.dev.js --progress",
+    "build": "webpack --config webpack/webpack.config.prod.js --colors",
+    "build-dev": "webpack --config webpack/webpack.config.dev.js --progress --colors",
+    "deploy": "NODE_ENV=production webpack -p --config webpack/webpack.config.prod.js --colors",
+    "dev": "webpack-dev-server --content-base public/ --progress --colors",
+    "postinstall": "NODE_ENV=production webpack -p --config webpack/webpack.config.dev.js --progress --colors",
     "start": "webpack-dev-server --content-base public/",
     "test": "snyk test",
     "watch": "webpack --config webpack/webpack.config.dev.js --watch"
