@@ -19,7 +19,10 @@ export class MapService {
             }),
             CartoDB: L.tileLayer("http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-            })
+            }),
+            EsriImagery: L.tileLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+                attribution: '&copy; ESRI https://leaflet-extras.github.io/leaflet-providers/preview/'
+                })
         };
     }
 
