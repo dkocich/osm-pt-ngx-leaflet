@@ -17,20 +17,28 @@ import {NgModule} from "@angular/core";
 import {FormsModule}   from "@angular/forms";
 import {BrowserModule} from "@angular/platform-browser";
 
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+
 import {AppComponent} from "./components/app/app.component";
 import {NavigatorComponent} from "./components/navigator/navigator.component";
 import {ToolbarComponent} from "./components/toolbar/toolbar.component";
+import {RelationBrowserComponent} from "./components/sidebar/relation-browser.component";
+import {TagBrowserComponent} from "./components/sidebar/tag-browser.component";
+import {StopBrowserComponent} from "./components/sidebar/stop-browser.component";
 
 import {MapService} from "./services/map.service";
 import {GeocodingService} from "./services/geocoding.service";
 
 @NgModule({
-    imports: [HttpModule, FormsModule, BrowserModule],
+    imports: [HttpModule, FormsModule, BrowserModule, NgbModule.forRoot()],
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,
         NavigatorComponent,
-        ToolbarComponent
+        ToolbarComponent,
+        RelationBrowserComponent,
+        TagBrowserComponent,
+        StopBrowserComponent,
     ],
     providers: [
         MapService,

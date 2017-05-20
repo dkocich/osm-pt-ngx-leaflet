@@ -13,3 +13,23 @@
     <navigator></navigator>
     <toolbar></toolbar>
 </div>
+
+<div id="sidebar">
+    <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-1,ngb-panel-0,ngb-panel-2">
+        <ngb-panel title="Relation browser" [disabled]="false">
+            <ng-template ngbPanelContent>
+                <relation-browser></relation-browser>
+            </ng-template>
+        </ngb-panel>
+        <ngb-panel title="Tag browser" [disabled]="false">
+            <ng-template ngbPanelContent>
+                <tag-browser></tag-browser>
+            </ng-template>
+        </ngb-panel>
+        <ngb-panel title="Stop/platform data browser" [disabled]="false">
+            <ng-template ngbPanelContent>
+                <stop-browser></stop-browser>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+</div>
