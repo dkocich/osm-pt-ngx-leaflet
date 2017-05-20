@@ -23,7 +23,7 @@ export class AppComponent {
     ngOnInit() {
         let map = L.map("map", {
             zoomControl: false,
-            center: L.latLng(40.731253, -73.996139),
+            center: L.latLng(49.686, 18.351),
             zoom: 12,
             minZoom: 4,
             maxZoom: 19,
