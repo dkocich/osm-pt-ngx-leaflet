@@ -11,9 +11,11 @@ import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.css";
 import "leaflet/dist/leaflet.css";
 
+import Rollbar = require('rollbar');
+
 import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
 import {HttpModule} from "@angular/http";
-import {NgModule} from "@angular/core";
+import {ErrorHandler, Injectable, Injector, NgModule} from "@angular/core";
 import {FormsModule}   from "@angular/forms";
 import {BrowserModule} from "@angular/platform-browser";
 
@@ -29,6 +31,21 @@ import {StopBrowserComponent} from "./components/sidebar/stop-browser.component"
 import {MapService} from "./services/map.service";
 import {GeocodingService} from "./services/geocoding.service";
 
+const rollbarConfig = {
+    accessToken: '63bf1bc9197847399cabf043c5552080',
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+};
+
+@Injectable()
+export class RollbarErrorHandler implements ErrorHandler {
+    constructor(private injector: Injector) { }
+    handleError(err:any) : void {
+        var rollbar = this.injector.get(Rollbar);
+        rollbar.error(err.originalStack || err);
+    }
+}
+
 @NgModule({
     imports: [HttpModule, FormsModule, BrowserModule, NgbModule.forRoot()],
     bootstrap: [AppComponent],
@@ -42,7 +59,13 @@ import {GeocodingService} from "./services/geocoding.service";
     ],
     providers: [
         MapService,
-        GeocodingService
+        GeocodingService,
+        { provide: ErrorHandler, useClass: RollbarErrorHandler },
+        { provide: Rollbar,
+          useFactory: () => {
+            return new Rollbar(rollbarConfig)
+          }
+        }
     ]
 })
 
