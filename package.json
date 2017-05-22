@@ -1,24 +1,24 @@
 {
-  "name": "ngx-leaflet-starter",
-  "version": "2.0.0",
+  "name": "osm-pt-ngx-leaflet",
+  "version": "0.0.1",
   "engines": {
     "node": "7.2.1"
   },
-  "description": "A minimal Angular X project with leaflet",
+  "description": "An OSM public transport editor based on Leaflet and Angular JS framework.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/haoliangyu/ngx-leaflet-starter.git"
+    "url": "git+https://github.com/dkocich/osm-pt-ngx-leaflet.git"
   },
   "keywords": [
     "angular",
     "leaflet",
     "starter"
   ],
-  "author": "Haoliang Yu <haholiang.yu@outlook.com>",
+  "author": "David Kocich <dkocich@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/haoliangyu/ngx-leaflet-starter/issues"
+    "url": "https://github.com/dkocich/osm-pt-ngx-leaflet/issues"
   },
   "scripts": {
     "build": "webpack --config webpack/webpack.config.prod.js --colors",
