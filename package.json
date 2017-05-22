@@ -24,7 +24,7 @@
     "build": "webpack --config webpack/webpack.config.prod.js --colors",
     "build-dev": "webpack --config webpack/webpack.config.dev.js --progress --colors",
     "deploy": "NODE_ENV=production webpack -p --config webpack/webpack.config.prod.js --colors",
-    "dev": "webpack-dev-server --content-base public/ --progress --colors",
+    "dev": "webpack-dev-server --config webpack/webpack.config.dev.js  --content-base public/ --progress --colors",
     "postinstall": "NODE_ENV=production webpack -p --config webpack/webpack.config.dev.js --progress --colors",
     "start": "webpack-dev-server --content-base public/",
     "test": "snyk test",
