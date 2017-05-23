@@ -50,6 +50,7 @@
     "leaflet.vectorgrid": "^1.2.0",
     "ngx-bootstrap": "^1.6.6",
     "reflect-metadata": "^0.1.10",
+    "rollbar": "^2.0.1",
     "rxjs": "5.4.0",
     "zone.js": "^0.8.11"
   },
