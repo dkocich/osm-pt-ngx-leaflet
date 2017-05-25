@@ -1,0 +1,69 @@
+<button id="download-data" class="btn btn-default on-map" [class.btn-primary]="downloading"
+        title="Download data from Overpass API" (click)="showDownloadModal()">
+    <i class="fa fa-download"></i>
+</button>
+
+<button id="upload-data" class="btn btn-default on-map" [class.btn-primary]="downloading"
+        title="Upload changes to OSM" (click)="showUploadModal()">
+    <i class="fa fa-upload"></i>
+</button>
+
+<div class="modal fade" bsModal #downloadModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="myDownloadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Download data from Overpass API</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="hideDownloadModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="downloadQueryShort">Query:</label>
+                    <input type="text" id="downloadQueryShort" class="form-control" disabled>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-info" disabled>Build query</button>
+                    <button type="button" class="btn btn-primary" disabled>Build query and run</button>
+                </div>
+                <div class="form-group">
+                    <label for="downloadQueryRaw">Raw query:</label>
+                    <textarea class="form-control" id="downloadQueryRaw" rows="10"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-danger pull-left" disabled>Clear</button>
+                    <button type="button" class="btn btn-success pull-right" disabled>Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" bsModal #uploadModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="myUploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Upload changes</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="hideUploadModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="uploadChangeSummary">Summary:</label>
+                    <textarea class="form-control" id="uploadChangeSummary" rows="10"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="uploadComment">Comment:</label>
+                    <input type="text" id="uploadComment" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="uploadSource">Sources:</label>
+                    <input type="text" id="uploadSource" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
