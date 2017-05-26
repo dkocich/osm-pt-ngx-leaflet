@@ -16,6 +16,7 @@ import {HttpModule} from "@angular/http";
 import {NgModule} from "@angular/core";
 import {FormsModule}   from "@angular/forms";
 import {BrowserModule} from "@angular/platform-browser";
+import {ModalModule} from "ngx-bootstrap";
 
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
@@ -25,12 +26,13 @@ import {ToolbarComponent} from "./components/toolbar/toolbar.component";
 import {RelationBrowserComponent} from "./components/sidebar/relation-browser.component";
 import {TagBrowserComponent} from "./components/sidebar/tag-browser.component";
 import {StopBrowserComponent} from "./components/sidebar/stop-browser.component";
+import {TransporterComponent} from "./components/transporter/transporter.component";
 
 import {MapService} from "./services/map.service";
 import {GeocodingService} from "./services/geocoding.service";
 
 @NgModule({
-    imports: [HttpModule, FormsModule, BrowserModule, NgbModule.forRoot()],
+    imports: [HttpModule, FormsModule, BrowserModule, ModalModule.forRoot(), NgbModule.forRoot()],
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,
@@ -39,6 +41,7 @@ import {GeocodingService} from "./services/geocoding.service";
         RelationBrowserComponent,
         TagBrowserComponent,
         StopBrowserComponent,
+        TransporterComponent
     ],
     providers: [
         MapService,

@@ -1,6 +1,7 @@
-import {Component} from "@angular/core";
+import {Component, ViewChild} from "@angular/core";
 import {MapService} from "../../services/map.service";
 import {Map, MouseEvent, Marker} from "leaflet";
+import {TransporterComponent} from "../transporter/transporter.component";
 
 @Component({
     selector: "toolbar",
@@ -16,6 +17,8 @@ export class ToolbarComponent {
     removing: boolean;
     airportLayerAdded: boolean;
     markerCount: number;
+
+    @ViewChild(TransporterComponent) transporterComponent: TransporterComponent;
 
     constructor(private mapService: MapService) {
         this.editing = false;
