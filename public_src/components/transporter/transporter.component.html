@@ -37,7 +37,7 @@
                 </div>
                 <div class="form-group">
                     <button type="button" class="btn btn-danger pull-left" (click)="queryShort=''; queryRaw='';">Clear</button>
-                    <button type="button" class="btn btn-success pull-right" disabled>Continue</button>
+                    <button type="button" class="btn btn-success pull-right" (click)="requestData(queryRaw)">Continue</button>
                 </div>
             </div>
         </div>

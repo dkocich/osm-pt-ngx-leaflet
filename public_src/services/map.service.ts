@@ -1,13 +1,16 @@
 import {Injectable} from "@angular/core";
-import {Http} from "@angular/http";
+import {Http, Headers, RequestOptions} from "@angular/http";
 import {Location} from "../core/location.class";
 import {Map} from "leaflet";
+
 
 @Injectable()
 export class MapService {
     public map: Map;
     public baseMaps: any;
     private vtLayer: any;
+    private ptLayer: any;
+    private osmtogeojson: any = require("osmtogeojson");
 
     constructor(private http: Http) {
         this.baseMaps = {
@@ -48,5 +51,31 @@ export class MapService {
                   this.vtLayer.addTo(this.map);
               });
       }
+    }
+
+    clearLayer() {
+        if (this.ptLayer) {
+            this.map.removeLayer(this.ptLayer);
+            delete this.ptLayer;
+        }
+    }
+
+    renderData(requestBody, options) {
+        this.http.post("http://overpass-api.de/api/interpreter", requestBody, options)
+            .map(res => res.json())
+            .subscribe(result => {
+                let transformed = this.osmtogeojson(result);
+                let myStyle = {
+                    "color": "#0000FF",
+                    "weight": 5,
+                    "opacity": 0.2
+                };
+                this.ptLayer = L.geoJSON(transformed, {
+                    style: function (feature) {
+                        return myStyle;
+                    }
+                });
+                this.ptLayer.addTo(this.map);
+            });
     }
 }
