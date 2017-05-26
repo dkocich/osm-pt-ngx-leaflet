@@ -21,7 +21,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="downloadQueryShort">Query:</label>
-                    <input type="text" id="downloadQueryShort" class="form-control" disabled>
+                    <input type="text" id="downloadQueryShort" class="form-control" [(ngModel)]="queryShort">
                 </div>
                 <div class="form-group">
                     <button type="button" class="btn btn-info" disabled>Build query</button>
@@ -29,10 +29,14 @@
                 </div>
                 <div class="form-group">
                     <label for="downloadQueryRaw">Raw query:</label>
-                    <textarea class="form-control" id="downloadQueryRaw" rows="10"></textarea>
+                    <textarea class="form-control" id="downloadQueryRaw" rows="10" [(ngModel)]="queryRaw"></textarea>
                 </div>
                 <div class="form-group">
-                    <button type="button" class="btn btn-danger pull-left" disabled>Clear</button>
+                    <label>Favorite queries:</label><br>
+                    <span class="tag label label-info" *ngFor="let entry of favoriteQueries" (click)="setQuery($event)">{{entry.short}}</span>&nbsp;
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-danger pull-left" (click)="queryShort=''; queryRaw='';">Clear</button>
                     <button type="button" class="btn btn-success pull-right" disabled>Continue</button>
                 </div>
             </div>
