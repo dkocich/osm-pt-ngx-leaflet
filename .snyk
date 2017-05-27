@@ -1,4 +1,15 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.7.1
-ignore: {}
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  'npm:concat-stream:20160901':
+    - osmtogeojson > concat-stream:
+        reason: None given
+        expires: '2017-06-26T22:49:28.420Z'
+    - osmtogeojson > geojson-numeric > concat-stream:
+        reason: None given
+        expires: '2017-06-26T22:49:28.421Z'
+    - osmtogeojson > geojson-rewind > concat-stream:
+        reason: None given
+        expires: '2017-06-26T22:49:28.421Z'
 patch: {}

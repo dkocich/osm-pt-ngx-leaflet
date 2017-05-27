@@ -30,6 +30,7 @@ import {TransporterComponent} from "./components/transporter/transporter.compone
 
 import {MapService} from "./services/map.service";
 import {GeocodingService} from "./services/geocoding.service";
+import {OverpassService} from "./services/overpass.service";
 
 @NgModule({
     imports: [HttpModule, FormsModule, BrowserModule, ModalModule.forRoot(), NgbModule.forRoot()],
@@ -45,7 +46,8 @@ import {GeocodingService} from "./services/geocoding.service";
     ],
     providers: [
         MapService,
-        GeocodingService
+        GeocodingService,
+        OverpassService
     ]
 })
 

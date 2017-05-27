@@ -28,7 +28,9 @@
     "postinstall": "NODE_ENV=production webpack -p --config webpack/webpack.config.dev.js --progress --colors",
     "start": "webpack-dev-server --content-base public/",
     "test": "snyk test",
-    "watch": "webpack --config webpack/webpack.config.dev.js --watch"
+    "watch": "webpack --config webpack/webpack.config.dev.js --watch",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "homepage": "https://github.com/haoliangyu/ngx-leaflet-starter#readme",
   "dependencies": {
@@ -49,9 +51,11 @@
     "leaflet": "^1.0.3",
     "leaflet.vectorgrid": "^1.2.0",
     "ngx-bootstrap": "^1.6.6",
+    "osmtogeojson": "^3.0.0-beta.0",
     "reflect-metadata": "^0.1.10",
     "rxjs": "5.4.0",
-    "zone.js": "^0.8.11"
+    "zone.js": "^0.8.11",
+    "snyk": "^1.31.0"
   },
   "devDependencies": {
     "@angular/cli": "^1.0.4",
@@ -66,7 +70,6 @@
     "optimize-js-plugin": "0.0.4",
     "raw-loader": "^0.5.1",
     "script-ext-html-webpack-plugin": "^1.8.0",
-    "snyk": "^1.30.1",
     "style-loader": "^0.18.0",
     "to-string-loader": "^1.1.5",
     "ts-loader": "^2.1.0",
@@ -77,5 +80,6 @@
     "webpack": "^2.5.1",
     "webpack-cleanup-plugin": "^0.5.1",
     "webpack-dev-server": "^2.4.5"
-  }
+  },
+  "snyk": true
 }
