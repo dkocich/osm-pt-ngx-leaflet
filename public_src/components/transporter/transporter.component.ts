@@ -11,22 +11,22 @@ import {ModalDirective} from "ngx-bootstrap";
     providers: []
 })
 export class TransporterComponent {
-    @ViewChild('downloadModal') public downloadModal:ModalDirective;
-    @ViewChild('uploadModal') public uploadModal:ModalDirective;
+    @ViewChild("downloadModal") public downloadModal: ModalDirective;
+    @ViewChild("uploadModal") public uploadModal: ModalDirective;
 
-    public showDownloadModal():void {
+    public showDownloadModal(): void {
         this.downloadModal.show();
     }
 
-    public hideDownloadModal():void {
+    public hideDownloadModal(): void {
         this.downloadModal.hide();
     }
 
-    public showUploadModal():void {
+    public showUploadModal(): void {
         this.uploadModal.show();
     }
 
-    public hideUploadModal():void {
+    public hideUploadModal(): void {
         this.uploadModal.hide();
     }
 }
