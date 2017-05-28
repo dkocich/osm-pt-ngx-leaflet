@@ -5,6 +5,7 @@ const HtmlWebpackPlugin  = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const srcDir = 'public_src';
 const outputDir = '../public';
@@ -30,7 +31,7 @@ module.exports = {
             { test: /\.component\.html$/, use: [{ loader: 'html-loader', options: { minimize: false } }] },
             { test: /(\.component|)\.less$/, use: ['to-string-loader', 'css-loader', 'less-loader'] },
             { test: /\.css$/, use: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })},
-            { test: /\.(png|gif|jpg)$/, use:[{ loader: 'file-loader', options: { name: 'images/[name].[ext]'} } ]},
+            { test: /\.(png|gif|jpg|ico|svg)$/, use:[{ loader: 'file-loader', options: { name: 'images/[name].[ext]'} } ]},
             { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, use:[{ loader: 'file-loader', options: { name: 'fonts/[name].[ext]'} } ]},
             { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, use:[{ loader: 'file-loader', options: { name: 'fonts/[name].[ext]'} } ]},
             { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, use:[{ loader: 'file-loader', options: { name: 'fonts/[name].[ext]'} } ]},
@@ -50,6 +51,10 @@ module.exports = {
         }),
         new WebpackCleanupPlugin({
           exclude: ['index.html', 'data/airports.geojson']
-        })
+        }),
+        new CopyWebpackPlugin([{
+            from: 'public_src/images',
+            to: 'images'
+        }])
     ]
 };

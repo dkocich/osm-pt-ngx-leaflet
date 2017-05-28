@@ -7,6 +7,7 @@ const OptimizeJsPlugin = require("optimize-js-plugin");
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const srcDir = 'public_src';
 const outputDir = '../public';
@@ -63,6 +64,10 @@ module.exports = {
             cssProcessor: require('cssnano'),
             cssProcessorOptions: { discardComments: { removeAll: true } },
             canPrint: true
-        })
+        }),
+        new CopyWebpackPlugin([{
+            from: 'public_src/images',
+            to: 'images'
+        }])
     ]
 };
