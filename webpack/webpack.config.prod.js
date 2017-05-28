@@ -7,6 +7,7 @@ const OptimizeJsPlugin = require("optimize-js-plugin");
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const srcDir = 'public_src';
 const outputDir = '../public';
@@ -29,7 +30,7 @@ module.exports = {
         rules: [
             { test: /\.ts$/, enforce: 'pre', loader: 'tslint-loader' },
             { test: /(\.component|\.service|)\.ts$/, use: ['ts-loader'] },
-            { test: /\.component\.html$/, use: ['raw-loader'] },
+            { test: /\.component\.html$/, use: [{ loader: 'html-loader', options: { minimize: false } }] },
             { test: /(\.component|)\.less$/, use: ['to-string-loader', 'css-loader', 'less-loader'] },
             { test: /\.css$/, use: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' })},
             { test: /\.(png|gif|jpg)$/, use:[{ loader: 'file-loader', options: { name: 'images/[name].[ext]'} } ]},
@@ -63,6 +64,10 @@ module.exports = {
             cssProcessor: require('cssnano'),
             cssProcessorOptions: { discardComments: { removeAll: true } },
             canPrint: true
-        })
+        }),
+        new CopyWebpackPlugin([{
+            from: 'public_src/images',
+            to: 'images'
+        }])
     ]
 };
