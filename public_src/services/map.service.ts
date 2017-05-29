@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers, RequestOptions} from "@angular/http";
-import {Location} from "../core/location.class";
+import {Http} from "@angular/http";
 import {Map} from "leaflet";
 
 
@@ -8,7 +7,6 @@ import {Map} from "leaflet";
 export class MapService {
     public map: Map;
     public baseMaps: any;
-    private vtLayer: any;
     private ptLayer: any;
     private osmtogeojson: any = require("osmtogeojson");
 
@@ -37,20 +35,6 @@ export class MapService {
 
         L.DomEvent.disableClickPropagation(element);
         L.DomEvent.disableScrollPropagation(element);
-    }
-
-    toggleAirPortLayer() {
-      if (this.vtLayer) {
-          this.map.removeLayer(this.vtLayer);
-          delete this.vtLayer;
-      } else {
-          this.http.get("https://rawgit.com/haoliangyu/angular2-leaflet-starter/master/public/data/airports.geojson")
-              .map(res => res.json())
-              .subscribe(result => {
-                  this.vtLayer = L.vectorGrid.slicer(result);
-                  this.vtLayer.addTo(this.map);
-              });
-      }
     }
 
     clearLayer() {
