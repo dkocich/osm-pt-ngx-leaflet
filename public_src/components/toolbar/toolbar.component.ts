@@ -1,6 +1,7 @@
 import {Component, ViewChild} from "@angular/core";
 import {MapService} from "../../services/map.service";
 import {TransporterComponent} from "../transporter/transporter.component";
+import {OverpassService} from "../../services/overpass.service";
 
 @Component({
     selector: "toolbar",
@@ -12,15 +13,47 @@ import {TransporterComponent} from "../transporter/transporter.component";
     providers: []
 })
 export class ToolbarComponent {
+    downloading: boolean;
 
     @ViewChild(TransporterComponent) transporterComponent: TransporterComponent;
 
-    constructor(private mapService: MapService) {
+    constructor(private mapService: MapService, private overpassService: OverpassService) {
+        this.downloading = true;
     }
 
     ngOnInit() {
+        this.mapService.disableMouseEvent("toggle-download");
     }
 
     Initialize() {
+        this.mapService.map.on("zoomend moveend", () => {
+            this.initDownloader();
+        });
+    }
+
+    initDownloader() {
+        if (this.checkDownloadRules()) this.overpassService.requestNewOverpassData();
+    }
+
+    checkMinZoomLevel () {
+        return this.mapService.map.getZoom() > 16;
+    }
+
+    checkMinDistance() {
+        let lastDownloadCenterDistance = this.mapService.map.getCenter().distanceTo(this.mapService.previousCenter);
+        return lastDownloadCenterDistance > 10000;
+    }
+
+    checkDownloadRules() {
+        return this.checkMinZoomLevel() && this.checkMinDistance();
+    }
+
+    toggleDownloading() {
+        this.downloading = !this.downloading;
+        if (this.downloading) {
+            this.mapService.map.on("zoomend moveend", () => {
+                this.initDownloader();
+            });
+        } else if (!this.downloading) this.mapService.map.off("zoomend moveend");
     }
 }

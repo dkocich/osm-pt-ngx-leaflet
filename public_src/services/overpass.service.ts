@@ -1,11 +1,41 @@
 import {Injectable} from "@angular/core";
-import {Headers, RequestOptions} from "@angular/http";
+import {Headers, Http, RequestOptions} from "@angular/http";
 import {MapService} from "./map.service";
+
+const CONTINUOUS_QUERY: string = `
+[out:json][timeout:25][bbox:{{bbox}}];
+(
+  node["route"="bus"];
+  way["route"="bus"];
+  relation["route"="bus"];
+  node["route"="train"];
+  way["route"="train"];
+  relation["route"="train"];
+  node["route"="tram"];
+  way["route"="tram"];
+  relation["route"="tram"];
+  node["public_transport"];
+  way["public_transport"];
+  relation["public_transport"];
+);
+(._;>;);
+out meta;`;
 
 @Injectable()
 export class OverpassService {
+    constructor(private http: Http, private mapService: MapService) { }
 
-    constructor(private mapService: MapService) { }
+    public requestNewOverpassData() {
+        let requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
+        let options = this.setRequestOptions();
+        this.mapService.previousCenter = [this.mapService.map.getCenter().lat, this.mapService.map.getCenter().lng];
+        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+            .map(res => res.json())
+            .subscribe(result => {
+                let transformedGeojson = this.mapService.osmtogeojson(result);
+                this.mapService.renderTransformedGeojsonData(transformedGeojson);
+            });
+    }
 
     public requestOverpassData(requestBody: string): void {
         this.mapService.clearLayer();
