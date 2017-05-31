@@ -1,9 +1,7 @@
 import {Component, ViewChild} from "@angular/core";
-import {NavigatorComponent} from "../navigator/navigator.component";
 import {ToolbarComponent} from "../toolbar/toolbar.component";
 import {MapService} from "../../services/map.service";
 import {GeocodingService} from "../../services/geocoding.service";
-import {Location} from "../../core/location.class";
 
 @Component({
     selector: "app",
