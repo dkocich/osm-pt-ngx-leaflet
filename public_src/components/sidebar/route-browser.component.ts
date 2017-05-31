@@ -4,17 +4,18 @@ import {MapService} from "../../services/map.service";
 import {ProcessingService} from "../../services/processing.service";
 
 @Component({
-    selector: "stop-browser",
-    template: require<any>("./stop-browser.component.html"),
+    selector: "route-browser",
+    template: require<any>("./route-browser.component.html"),
     styles: [
-        require<any>("./stop-browser.component.less"),
+        require<any>("./route-browser.component.less"),
         require<any>("../../styles/main.less")
     ],
     providers: []
 })
-export class StopBrowserComponent {
-    private listOfStops: object[] = this.storageService.listOfStops;
-    public listOfStopsForRoute: object[] = this.storageService.listOfStopsForRoute;
+export class RouteBrowserComponent {
+    private listOfRelations: object[] = this.storageService.listOfRelations;
+    private listOfRelationsForStop: object[] = this.storageService.listOfRelationsForStop;
+
     private filteredView: boolean;
 
     constructor(private storageService: StorageService,
@@ -23,7 +24,7 @@ export class StopBrowserComponent {
     }
 
     ngOnInit() {
-        this.processingService.showStopsForRoute$.subscribe(
+        this.processingService.showRelationsForStop$.subscribe(
             data => {
                 this.filteredView = data;
             }
@@ -31,10 +32,12 @@ export class StopBrowserComponent {
     }
 
     private cancelFilter() {
-        this.processingService.activateFilteredStopView(false);
+        this.processingService.activateFilteredRouteView(false);
     }
 
-    private exploreStop($event, stop) {
-        this.processingService.exploreStop(stop);
+    private exploreRelation($event, rel) {
+        this.processingService.exploreRelation(rel);
     }
+
+    // listOfRelations = this.storageService.listOfRelations;
 }

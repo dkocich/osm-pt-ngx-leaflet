@@ -1,1 +1,51 @@
-<p>this window should allow you to see route's bus stops</p>
+<div id="stop-content" class="panel panel-body panel-default">
+
+    <div class="text-center">
+        <h4 class="text-danger"
+            *ngIf="listOfStops.length === 0">There are no loaded stops (zoom map).</h4>
+        <h4 class="text-info"
+            *ngIf="listOfStops.length > 0">Please select a relation to browse related stops/platforms.</h4>
+        <button class="btn btn-warning" *ngIf="filteredView" (click)="cancelFilter()">Cancel filter</button>
+    </div>
+
+    <!--{{listOfStopsForRoute | json}}-->
+
+    <div *ngIf="filteredView" class="small">
+        <table class="table-responsive table-condensed table-bordered table-hover table-striped">
+            <thead>
+            <tr>
+                <td>Role</td>
+                <td>Type</td>
+                <td>Ref</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let stop of listOfStopsForRoute;">
+                <td class="explore" (click)="exploreStop($event, stop)"><i class="fa fa-search" aria-hidden="true"></i></td>
+                <td>{{stop.role}}</td>
+                <td>{{stop.type}}</td>
+                <td>{{stop.ref}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="listOfStops.length !== 0 && !filteredView" class="small">
+        <table class="table-responsive table-condensed table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <td></td>
+                    <td>Id</td>
+                    <td>Tags</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let stop of listOfStops" id="{{stop.id}}">
+                    <td class="explore" (click)="exploreStop($event, stop)"><i class="fa fa-search" aria-hidden="true"></i></td>
+                    <td>{{stop.id}}</td>
+                    <td>{{stop.tags | json}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
