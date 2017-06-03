@@ -23,12 +23,12 @@ export class TransporterComponent {
 
     constructor(private mapService: MapService, private overpassService: OverpassService) { }
 
-    requestData(requestBody) {
+    private requestData(requestBody): void {
         this.overpassService.requestOverpassData(requestBody);
         this.hideDownloadModal();
     }
 
-    setQuery(event) {
+    private setQuery(event): void {
         this.queryShort = event.target.textContent;
         let filtered = this.favoriteQueries.filter(function (iter) {
            return iter.short === event.target.textContent;

@@ -13,7 +13,7 @@ export class GeocodingService {
         this.http = http;
     }
 
-    geocode(address: string) {
+    public geocode(address: string): any {
         return this.http
             .get("https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(address))
             .map(res => res.json())
@@ -39,7 +39,7 @@ export class GeocodingService {
             });
     }
 
-    getCurrentLocation() {
+    public getCurrentLocation(): any {
         return this.http
             .get("https://ipv4.myexternalip.com/json")
             .map(res => res.json().ip)

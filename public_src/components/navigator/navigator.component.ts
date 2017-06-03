@@ -28,7 +28,7 @@ export class NavigatorComponent {
         this.map = this.mapService.map;
     }
 
-    goto() {
+    public goto(): any {
         if (!this.address) { return; }
 
         this.geocoder.geocode(this.address)
