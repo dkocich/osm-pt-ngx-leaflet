@@ -51,21 +51,21 @@ export class MapService {
         };
     }
 
-    disableMouseEvent(elementId: string) {
+    public disableMouseEvent(elementId: string) {
         let element = <HTMLElement>document.getElementById(elementId);
 
         L.DomEvent.disableClickPropagation(element);
         L.DomEvent.disableScrollPropagation(element);
     }
 
-    clearLayer() {
+    public clearLayer(): void {
         if (this.ptLayer) {
             this.map.removeLayer(this.ptLayer);
             delete this.ptLayer;
         }
     }
 
-    stylePoint(feature, latlng) {
+    private stylePoint(feature, latlng) {
         let iconUrl = "images/marker-icon.png";
         let shadowUrl = "";
         let fp = feature.properties;
@@ -113,7 +113,7 @@ export class MapService {
         return L.marker(latlng, {icon: myIcon});
     }
 
-    styleFeature(feature) {
+    private styleFeature(feature): object {
         switch (feature.properties.route) {
             case "bus":
                 return REL_BUS_STYLE;
@@ -126,7 +126,7 @@ export class MapService {
         }
     }
 
-    renderTransformedGeojsonData(transformedGeojson) {
+    public renderTransformedGeojsonData(transformedGeojson): void {
         this.ptLayer = L.geoJSON(transformedGeojson, {
             pointToLayer: (feature, latlng) => {
                 return this.stylePoint(feature, latlng);
@@ -141,7 +141,7 @@ export class MapService {
         this.ptLayer.addTo(this.map);
     }
 
-    enablePopups(feature, layer) {
+    public enablePopups(feature, layer): void {
         layer.on("click", function (e) {
             let latlng;
             let popup = "";
@@ -188,7 +188,7 @@ export class MapService {
         });
     }
 
-    renderData(requestBody, options) {
+    public renderData(requestBody, options) {
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map(res => res.json())
             .subscribe(result => {

@@ -31,24 +31,24 @@ export class ToolbarComponent {
         });
     }
 
-    initDownloader() {
+    private initDownloader(): void {
         if (this.checkDownloadRules()) this.overpassService.requestNewOverpassData();
     }
 
-    checkMinZoomLevel () {
+    private checkMinZoomLevel (): boolean {
         return this.mapService.map.getZoom() > 16;
     }
 
-    checkMinDistance() {
+    private checkMinDistance(): boolean {
         let lastDownloadCenterDistance = this.mapService.map.getCenter().distanceTo(this.mapService.previousCenter);
         return lastDownloadCenterDistance > 10000;
     }
 
-    checkDownloadRules() {
+    private checkDownloadRules(): boolean {
         return this.checkMinZoomLevel() && this.checkMinDistance();
     }
 
-    toggleDownloading() {
+    private toggleDownloading(): void {
         this.downloading = !this.downloading;
         if (this.downloading) {
             this.mapService.map.on("zoomend moveend", () => {
