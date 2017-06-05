@@ -1,6 +1,8 @@
 import {Injectable} from "@angular/core";
 import {Headers, Http, RequestOptions} from "@angular/http";
 import {MapService} from "./map.service";
+import {ProcessingService} from "./processing.service";
+import {StorageService} from "./storage.service";
 
 const CONTINUOUS_QUERY: string = `
 [out:json][timeout:25][bbox:{{bbox}}];
@@ -23,7 +25,9 @@ out meta;`;
 
 @Injectable()
 export class OverpassService {
-    constructor(private http: Http, private mapService: MapService) { }
+    constructor(private http: Http, private mapService: MapService,
+                private storageService: StorageService,
+                private processingService: ProcessingService) { }
 
     public requestNewOverpassData() {
         let requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
@@ -32,7 +36,11 @@ export class OverpassService {
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map(res => res.json())
             .subscribe(result => {
+                console.log(result);
                 let transformedGeojson = this.mapService.osmtogeojson(result);
+                this.storageService.localJsonStorage = result;
+                this.storageService.localGeojsonStorage = transformedGeojson;
+                this.processingService.createLists();
                 this.mapService.renderTransformedGeojsonData(transformedGeojson);
             });
     }

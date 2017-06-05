@@ -1,6 +1,4 @@
-import {Component} from "@angular/core";
-
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {Component, Input} from "@angular/core";
 
 @Component({
     selector: "tag-browser",
@@ -12,4 +10,26 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
     providers: []
 })
 export class TagBrowserComponent {
+    private elementTags: object[] = []; // [ {"lorem": "ipsum"}, {"foo": "bar"} ]
+
+    @Input() tagKey: string = "";
+    @Input() tagValue: string = "";
+
+    private elementChanges: any = [];
+
+    constructor() { }
+
+    private updateKey(value: string) { this.tagKey = value; }
+
+    private updateValue(value: string) { this.tagValue = value; }
+
+    private appendNewTag() {
+        console.log("LOG: Added tags are: ", this.tagKey, this.tagValue);
+        this.elementTags.push( {[this.tagKey]: this.tagValue} );
+        this.tagKey = this.tagValue = "" ;
+    }
+
+    private isUnchanged() {
+        return !this.tagKey || !this.tagValue;
+    }
 }

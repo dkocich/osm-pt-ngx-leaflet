@@ -16,7 +16,7 @@ import {HttpModule} from "@angular/http";
 import {NgModule} from "@angular/core";
 import {FormsModule}   from "@angular/forms";
 import {BrowserModule} from "@angular/platform-browser";
-import {ModalModule} from "ngx-bootstrap";
+import {AccordionModule, ModalModule} from "ngx-bootstrap";
 
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
@@ -25,15 +25,21 @@ import {NavigatorComponent} from "./components/navigator/navigator.component";
 import {ToolbarComponent} from "./components/toolbar/toolbar.component";
 import {RelationBrowserComponent} from "./components/sidebar/relation-browser.component";
 import {TagBrowserComponent} from "./components/sidebar/tag-browser.component";
+import {RouteBrowserComponent} from "./components/sidebar/route-browser.component";
 import {StopBrowserComponent} from "./components/sidebar/stop-browser.component";
 import {TransporterComponent} from "./components/transporter/transporter.component";
 
 import {MapService} from "./services/map.service";
 import {GeocodingService} from "./services/geocoding.service";
 import {OverpassService} from "./services/overpass.service";
+import {StorageService} from "./services/storage.service";
+import {ProcessingService} from "./services/processing.service";
+
+import {KeysPipe} from "./components/pipes/keys.pipe";
 
 @NgModule({
-    imports: [HttpModule, FormsModule, BrowserModule, ModalModule.forRoot(), NgbModule.forRoot()],
+    imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
+        ModalModule.forRoot(), NgbModule.forRoot()],
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,
@@ -41,13 +47,18 @@ import {OverpassService} from "./services/overpass.service";
         ToolbarComponent,
         RelationBrowserComponent,
         TagBrowserComponent,
+        RouteBrowserComponent,
         StopBrowserComponent,
-        TransporterComponent
+        TransporterComponent,
+        KeysPipe
     ],
     providers: [
         MapService,
         GeocodingService,
-        OverpassService
+        OverpassService,
+        StorageService,
+        ProcessingService,
+        KeysPipe
     ]
 })
 
