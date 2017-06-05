@@ -8,10 +8,17 @@
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": [
+      "node",
+      "jasmine"
+    ]
   },
   "compileOnSave": false,
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "awesomeTypeScriptLoaderOptions": {
+    "useWebpackText": true
+  }
 }

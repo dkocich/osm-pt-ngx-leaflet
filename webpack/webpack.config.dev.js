@@ -11,7 +11,7 @@ const srcDir = "public_src";
 const outputDir = "../public";
 
 module.exports = {
-    devtool: "cheap-source-map",
+    devtool: "inline-source-map",
     entry: {
         app: path.resolve(srcDir, "bootstrap.ts")
     },
