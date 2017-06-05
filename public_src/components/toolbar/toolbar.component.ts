@@ -36,12 +36,12 @@ export class ToolbarComponent {
     }
 
     private checkMinZoomLevel (): boolean {
-        return this.mapService.map.getZoom() > 16;
+        return this.mapService.map.getZoom() > 15;
     }
 
     private checkMinDistance(): boolean {
         let lastDownloadCenterDistance = this.mapService.map.getCenter().distanceTo(this.mapService.previousCenter);
-        return lastDownloadCenterDistance > 10000;
+        return lastDownloadCenterDistance > 5000;
     }
 
     private checkDownloadRules(): boolean {

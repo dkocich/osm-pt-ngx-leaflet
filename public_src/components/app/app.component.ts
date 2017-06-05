@@ -22,10 +22,10 @@ export class AppComponent {
         let map = L.map("map", {
             zoomControl: false,
             center: L.latLng(49.686, 18.351),
-            zoom: 12,
+            zoom: 14,
             minZoom: 4,
             maxZoom: 19,
-            layers: [this.mapService.baseMaps.OpenStreetMap]
+            layers: [this.mapService.baseMaps.CartoDB]
         });
 
         L.control.zoom({ position: "topright" }).addTo(map);
