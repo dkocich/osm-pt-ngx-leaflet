@@ -17,6 +17,7 @@ import {NgModule} from "@angular/core";
 import {FormsModule}   from "@angular/forms";
 import {BrowserModule} from "@angular/platform-browser";
 import {AccordionModule, ModalModule} from "ngx-bootstrap";
+import {RouterModule, Routes}   from "@angular/router";
 
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
@@ -36,10 +37,18 @@ import {StorageService} from "./services/storage.service";
 import {ProcessingService} from "./services/processing.service";
 
 import {KeysPipe} from "./components/pipes/keys.pipe";
+import {APP_BASE_HREF} from "@angular/common";
+
+const appRoutes: Routes = [
+    { path: "", redirectTo: "/", pathMatch: "full" },
+    { path: "about", redirectTo: "/about" }
+    // , { path: "**", component: PageNotFoundComponent }
+];
 
 @NgModule({
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
-        ModalModule.forRoot(), NgbModule.forRoot()],
+        ModalModule.forRoot(), NgbModule.forRoot(), RouterModule.forRoot(appRoutes)
+    ],
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,
@@ -58,7 +67,8 @@ import {KeysPipe} from "./components/pipes/keys.pipe";
         OverpassService,
         StorageService,
         ProcessingService,
-        KeysPipe
+        KeysPipe,
+        { provide: APP_BASE_HREF, useValue: "/" }
     ]
 })
 
