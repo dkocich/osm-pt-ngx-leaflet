@@ -16,6 +16,8 @@ export class StorageService {
     public waysForRoute: object[] = [];
     public relationsForRoute: object[] = [];
 
+    public displayName: string = "";
+
     public clearRouteData() {
         this.stopsForRoute = [];
         this.platformsForRoute = [];
@@ -24,4 +26,19 @@ export class StorageService {
     }
 
     constructor() { }
+
+    public setUserData(displayName, id, count): void {
+        this.displayName = displayName;
+        localStorage.setItem("display_name", displayName);
+        localStorage.setItem("id", id);
+        localStorage.setItem("count", count);
+    }
+
+    public clearLocalStorage(): void {
+        localStorage.clear();
+    }
+
+    public getDisplayName(): string {
+        return this.displayName || localStorage.getItem("display_name");
+    }
 }

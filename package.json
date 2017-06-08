@@ -51,6 +51,7 @@
     "leaflet": "^1.0.3",
     "leaflet.vectorgrid": "^1.2.0",
     "ngx-bootstrap": "^1.7.1",
+    "osm-auth": "github:osmlab/osm-auth",
     "osmtogeojson": "^3.0.0-beta.2",
     "reflect-metadata": "^0.1.10",
     "rxjs": "5.4.0",
