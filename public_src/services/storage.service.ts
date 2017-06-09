@@ -6,6 +6,7 @@ export class StorageService {
     public localGeojsonStorage: any;
     public listOfStops: any = [];
     public listOfRelations: any = [];
+    public listOfMasters: any = [];
 
     // filtering of sidebar
     public listOfStopsForRoute: object[] = [];
