@@ -47,6 +47,7 @@
     "@types/geojson": "1.0.2",
     "@types/leaflet": "^1.0.63",
     "angular2-busy": "^2.0.4",
+    "angulartics2": "^2.2.2",
     "bootstrap": "^3.3.7",
     "express": "^4.15.3",
     "font-awesome": "^4.7.0",

@@ -6,6 +6,7 @@ import {AuthComponent} from "../auth/auth.component";
 import {CarouselConfig, ModalDirective} from "ngx-bootstrap";
 import {LoadingService} from "../../services/loading.service";
 import {ProcessingService} from "../../services/processing.service";
+import {Angulartics2GoogleAnalytics} from "angulartics2";
 
 @Component({
     selector: "app",
@@ -20,7 +21,8 @@ export class AppComponent {
     @ViewChild(ToolbarComponent) toolbarComponent: ToolbarComponent;
     @ViewChild(AuthComponent) authComponent: AuthComponent;
 
-    constructor(private mapService: MapService, private geocoder: GeocodingService,
+    constructor(public angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
+                private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService) {
     }
 

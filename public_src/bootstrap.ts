@@ -43,6 +43,8 @@ import {ProcessingService} from "./services/processing.service";
 import {ConfigService} from "./services/config.service";
 import {LoadingService} from "./services/loading.service";
 
+import {Angulartics2Module, Angulartics2GoogleAnalytics} from "angulartics2";
+
 import {KeysPipe} from "./components/pipes/keys.pipe";
 
 Raven
@@ -58,7 +60,8 @@ export class RavenErrorHandler implements ErrorHandler {
 @NgModule({
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
         ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot(),
-        BusyModule, BrowserAnimationsModule],
+        BusyModule, BrowserAnimationsModule, Angulartics2Module.forRoot([Angulartics2GoogleAnalytics])
+    ],
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,
