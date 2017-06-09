@@ -16,7 +16,7 @@ import {HttpModule} from "@angular/http";
 import {NgModule} from "@angular/core";
 import {FormsModule}   from "@angular/forms";
 import {BrowserModule} from "@angular/platform-browser";
-import {AccordionModule, ModalModule} from "ngx-bootstrap";
+import {AccordionModule, CarouselModule, ModalModule} from "ngx-bootstrap";
 
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
@@ -40,7 +40,7 @@ import {KeysPipe} from "./components/pipes/keys.pipe";
 
 @NgModule({
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
-        ModalModule.forRoot(), NgbModule.forRoot()],
+        ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot()],
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,

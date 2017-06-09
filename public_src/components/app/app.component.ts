@@ -3,6 +3,7 @@ import {ToolbarComponent} from "../toolbar/toolbar.component";
 import {MapService} from "../../services/map.service";
 import {GeocodingService} from "../../services/geocoding.service";
 import {AuthComponent} from "../auth/auth.component";
+import {CarouselConfig, ModalDirective} from "ngx-bootstrap";
 
 @Component({
     selector: "app",
@@ -10,7 +11,7 @@ import {AuthComponent} from "../auth/auth.component";
     styles: [
         require<any>("./app.component.less")
     ],
-    providers: []
+    providers: [{provide: CarouselConfig, useValue: {noPause: false}}]
 })
 export class AppComponent {
 
@@ -18,6 +19,16 @@ export class AppComponent {
     @ViewChild(AuthComponent) authComponent: AuthComponent;
 
     constructor(private mapService: MapService, private geocoder: GeocodingService) {
+    }
+
+    @ViewChild("helpModal") public helpModal: ModalDirective;
+
+    private showHelpModal(): void {
+        this.helpModal.show();
+    }
+
+    private hideHelpModal(): void {
+        this.helpModal.hide();
     }
 
     ngOnInit() {
