@@ -17,6 +17,15 @@ export class ProcessingService {
     constructor(private storageService: StorageService,
                 private mapService: MapService) { }
 
+    public processResponse(response) {
+        console.log(response);
+        let transformedGeojson = this.mapService.osmtogeojson(response);
+        this.storageService.localJsonStorage = response;
+        this.storageService.localGeojsonStorage = transformedGeojson;
+        this.createLists();
+        this.mapService.renderTransformedGeojsonData(transformedGeojson);
+    }
+
     public createLists() {
         this.storageService.localJsonStorage.elements.forEach( (element) => {
             switch (element.type) {

@@ -5,6 +5,7 @@ import {StorageService} from "./storage.service";
 import latLng = L.latLng;
 import LatLngExpression = L.LatLngExpression;
 import LatLngLiteral = L.LatLngLiteral;
+import {ConfigService} from "./config.service";
 
 const DEFAULT_ICON = L.icon({
     iconUrl: "",
@@ -61,7 +62,8 @@ export class MapService {
     private markerFrom: any = undefined;
     private markerTo: any = undefined;
 
-    constructor(private http: Http, private storageService: StorageService) {
+    constructor(private http: Http, private storageService: StorageService,
+                private configService: ConfigService) {
         this.baseMaps = {
             Empty: L.tileLayer("", {
                 attribution: ""
@@ -158,6 +160,13 @@ export class MapService {
 
     public renderTransformedGeojsonData(transformedGeojson): void {
         this.ptLayer = L.geoJSON(transformedGeojson, {
+            filter: (feature) => {
+                if (this.configService.cfgFilterLines) {
+                    return "public_transport" in feature.properties && feature.id[0] === "n";
+                } else {
+                    return true;
+                }
+            },
             pointToLayer: (feature, latlng) => {
                 return this.stylePoint(feature, latlng);
             },

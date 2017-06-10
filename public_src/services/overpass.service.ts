@@ -35,13 +35,8 @@ export class OverpassService {
         this.mapService.previousCenter = [this.mapService.map.getCenter().lat, this.mapService.map.getCenter().lng];
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map(res => res.json())
-            .subscribe(result => {
-                console.log(result);
-                let transformedGeojson = this.mapService.osmtogeojson(result);
-                this.storageService.localJsonStorage = result;
-                this.storageService.localGeojsonStorage = transformedGeojson;
-                this.processingService.createLists();
-                this.mapService.renderTransformedGeojsonData(transformedGeojson);
+            .subscribe(response => {
+                this.processingService.processResponse(response);
             });
     }
 

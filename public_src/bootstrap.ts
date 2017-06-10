@@ -35,6 +35,7 @@ import {GeocodingService} from "./services/geocoding.service";
 import {OverpassService} from "./services/overpass.service";
 import {StorageService} from "./services/storage.service";
 import {ProcessingService} from "./services/processing.service";
+import {ConfigService} from "./services/config.service";
 
 import {KeysPipe} from "./components/pipes/keys.pipe";
 
@@ -60,6 +61,7 @@ import {KeysPipe} from "./components/pipes/keys.pipe";
         OverpassService,
         StorageService,
         ProcessingService,
+        ConfigService,
         KeysPipe
     ]
 })

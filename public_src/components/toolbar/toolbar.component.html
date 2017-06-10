@@ -1,6 +1,12 @@
 <button id="toggle-download" class="btn btn-default on-map" [class.btn-primary]="downloading"
-        title="Toggle downloading of transport data" (click)="toggleDownloading()" btnCheckbox>
+        title="Toggle downloading of transport data" (click)="toggleDownloading()"
+        (mouseenter)="showOptions()" btnCheckbox>
     <i class="fa fa-repeat"></i>
+</button>
+
+<button id="toggle-filter" class="btn btn-default on-map" [class.btn-primary]="filtering"
+        title="Toggle view of routes in map" (click)="toggleLinesFilter()" btnCheckbox>
+    <i class="fa fa-filter"></i>
 </button>
 
 <transporter></transporter>
