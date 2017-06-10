@@ -1,6 +1,7 @@
 osm-pt-ngx-leaflet
 ==================
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/231206018f6e41d9bddee2b4bb4683dc)](https://www.codacy.com/app/dkocich/osm-pt-ngx-leaflet?utm_source=github.com&utm_medium=referral&utm_content=dkocich/osm-pt-ngx-leaflet&utm_campaign=badger)
 [![Known Vulnerabilities](https://snyk.io/test/github/snyk/goof/badge.svg)](https://snyk.io/test/github/snyk/goof)
 [![Build Status](https://travis-ci.org/haoliangyu/ngx-leaflet-starter.svg?branch=master)](https://github.com/haoliangyu/ngx-leaflet-starter)
 
