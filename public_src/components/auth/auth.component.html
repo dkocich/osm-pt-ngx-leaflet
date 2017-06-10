@@ -1,0 +1,5 @@
+<ul class="nav navbar-nav navbar-right">
+    <li id="logout" *ngIf="isAuthenticated()" (click)="logout()"><a href="#">Logout</a></li>
+    <li id="authenticate" *ngIf="!isAuthenticated()" (click)="authenticate()"><a href="#">Login</a></li>
+    <li><a id="display_name" href="#">{{displayName}}</a></li>
+</ul>

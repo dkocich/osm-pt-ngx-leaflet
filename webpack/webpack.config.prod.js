@@ -68,6 +68,12 @@ module.exports = {
         new CopyWebpackPlugin([{
             from: "public_src/images",
             to: "images"
+        }, {
+            from: "public_src/land.html",
+            to: ""
+        }, {
+            from: "public_src/land_single.html",
+            to: ""
         }])
     ]
 };

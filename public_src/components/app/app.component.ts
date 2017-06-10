@@ -2,6 +2,7 @@ import {Component, ViewChild} from "@angular/core";
 import {ToolbarComponent} from "../toolbar/toolbar.component";
 import {MapService} from "../../services/map.service";
 import {GeocodingService} from "../../services/geocoding.service";
+import {AuthComponent} from "../auth/auth.component";
 
 @Component({
     selector: "app",
@@ -14,6 +15,7 @@ import {GeocodingService} from "../../services/geocoding.service";
 export class AppComponent {
 
     @ViewChild(ToolbarComponent) toolbarComponent: ToolbarComponent;
+    @ViewChild(AuthComponent) authComponent: AuthComponent;
 
     constructor(private mapService: MapService, private geocoder: GeocodingService) {
     }

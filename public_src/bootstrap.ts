@@ -28,6 +28,7 @@ import {TagBrowserComponent} from "./components/sidebar/tag-browser.component";
 import {RouteBrowserComponent} from "./components/sidebar/route-browser.component";
 import {StopBrowserComponent} from "./components/sidebar/stop-browser.component";
 import {TransporterComponent} from "./components/transporter/transporter.component";
+import {AuthComponent} from "./components/auth/auth.component";
 
 import {MapService} from "./services/map.service";
 import {GeocodingService} from "./services/geocoding.service";
@@ -50,6 +51,7 @@ import {KeysPipe} from "./components/pipes/keys.pipe";
         RouteBrowserComponent,
         StopBrowserComponent,
         TransporterComponent,
+        AuthComponent,
         KeysPipe
     ],
     providers: [
