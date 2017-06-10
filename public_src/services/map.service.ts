@@ -56,7 +56,7 @@ export class MapService {
     public osmtogeojson: any = require("osmtogeojson");
 
     private highlightFill: any = undefined;
-    private highlightStroke: any = undefined;
+    public highlightStroke: any = undefined;
     private highlight: any = undefined;
     private markerFrom: any = undefined;
     private markerTo: any = undefined;

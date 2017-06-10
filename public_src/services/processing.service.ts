@@ -55,12 +55,14 @@ export class ProcessingService {
         if (this.mapService.showRoute(rel)) {
             this.mapService.drawTooltipFromTo(rel);
             this.filterStopsByRelation(rel);
+            this.mapService.map.fitBounds(this.mapService.highlightStroke.getBounds());
         }
     }
 
     public exploreStop(stop) {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.filterRelationsByStop(stop);
+        this.mapService.map.panTo([stop.lat, stop.lon]);
     }
     /**
      *
