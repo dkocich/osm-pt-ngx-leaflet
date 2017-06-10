@@ -26,13 +26,18 @@ export class ProcessingService {
                     }
                     break;
                 case "relation":
-                    this.storageService.listOfRelations.push(element);
-                    break;
+                    if (element.tags.public_transport === "stop_area") {
+                        this.storageService.listOfMasters.push(element);
+                    } else {
+                        this.storageService.listOfRelations.push(element);
+                        break;
+                    }
             }
         });
         console.log(
             "Total # of nodes: ", this.storageService.listOfStops.length,
-            "Total # of relations: ", this.storageService.listOfRelations.length);
+            "Total # of relations: ", this.storageService.listOfRelations.length,
+            "Total # of master rel. ", this.storageService.listOfMasters.length);
     }
 
     // Service message commands
