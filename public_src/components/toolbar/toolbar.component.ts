@@ -2,6 +2,7 @@ import {Component, ViewChild} from "@angular/core";
 import {MapService} from "../../services/map.service";
 import {TransporterComponent} from "../transporter/transporter.component";
 import {OverpassService} from "../../services/overpass.service";
+import {ConfigService} from "../../services/config.service";
 
 @Component({
     selector: "toolbar",
@@ -13,16 +14,20 @@ import {OverpassService} from "../../services/overpass.service";
     providers: []
 })
 export class ToolbarComponent {
-    downloading: boolean;
+    public downloading: boolean;
+    private filtering: boolean;
 
     @ViewChild(TransporterComponent) transporterComponent: TransporterComponent;
 
-    constructor(private mapService: MapService, private overpassService: OverpassService) {
+    constructor(private mapService: MapService, private overpassService: OverpassService,
+                private configService: ConfigService) {
         this.downloading = true;
+        this.filtering = this.configService.cfgFilterLines;
     }
 
     ngOnInit() {
         this.mapService.disableMouseEvent("toggle-download");
+        this.mapService.disableMouseEvent("toggle-filter");
     }
 
     Initialize() {
@@ -55,5 +60,17 @@ export class ToolbarComponent {
                 this.initDownloader();
             });
         } else if (!this.downloading) this.mapService.map.off("zoomend moveend");
+    }
+
+    private showOptions(): void {
+        document.getElementById("toggle-filter").style.display = "inline";
+        setTimeout( function() {
+            document.getElementById("toggle-filter").style.display = "none";
+        }, 5000);
+    }
+
+    private toggleLinesFilter(): void {
+        this.configService.cfgFilterLines = !this.configService.cfgFilterLines;
+        this.filtering = !this.filtering;
     }
 }

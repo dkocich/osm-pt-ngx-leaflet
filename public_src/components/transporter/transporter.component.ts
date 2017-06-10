@@ -23,6 +23,11 @@ export class TransporterComponent {
 
     constructor(private mapService: MapService, private overpassService: OverpassService) { }
 
+    ngOnInit() {
+        this.mapService.disableMouseEvent("download-data");
+        this.mapService.disableMouseEvent("upload-data");
+    }
+
     private requestData(requestBody): void {
         this.overpassService.requestOverpassData(requestBody);
         this.hideDownloadModal();
@@ -41,6 +46,7 @@ export class TransporterComponent {
 
     public showDownloadModal(): void {
         this.downloadModal.show();
+        this.mapService.disableMouseEvent("modalDownload");
     }
 
     public hideDownloadModal(): void {
@@ -49,6 +55,7 @@ export class TransporterComponent {
 
     public showUploadModal(): void {
         this.uploadModal.show();
+        this.mapService.disableMouseEvent("modalUpload");
     }
 
     public hideUploadModal(): void {
