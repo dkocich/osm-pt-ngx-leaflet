@@ -17,11 +17,12 @@ import {NgModule} from "@angular/core";
 import {FormsModule}   from "@angular/forms";
 import {BrowserModule} from "@angular/platform-browser";
 import {AccordionModule, ModalModule} from "ngx-bootstrap";
-import {RouterModule, Routes}   from "@angular/router";
+import {RouterModule, Routes} from "@angular/router";
 
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 import {AppComponent} from "./components/app/app.component";
+import {PageNotFoundComponent} from "./components/pagenotfound/pagenotfound.component";
 import {NavigatorComponent} from "./components/navigator/navigator.component";
 import {ToolbarComponent} from "./components/toolbar/toolbar.component";
 import {RelationBrowserComponent} from "./components/sidebar/relation-browser.component";
@@ -37,18 +38,23 @@ import {StorageService} from "./services/storage.service";
 import {ProcessingService} from "./services/processing.service";
 
 import {KeysPipe} from "./components/pipes/keys.pipe";
-import {APP_BASE_HREF} from "@angular/common";
+import {APP_BASE_HREF, HashLocationStrategy, LocationStrategy} from "@angular/common";
+// import {AppRoutingModule} from "./app-routing.module";
 
 const appRoutes: Routes = [
     { path: "", redirectTo: "/", pathMatch: "full" },
-    { path: "about", redirectTo: "/about" }
-    // , { path: "**", component: PageNotFoundComponent }
+    { path: "about", redirectTo: "/about" },
+    { path: "abc", redirectTo: "/about" },
+    { path: "**", redirectTo: "/404" },
+    { path: "404", component: PageNotFoundComponent }
 ];
 
 @NgModule({
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
-        ModalModule.forRoot(), NgbModule.forRoot(), RouterModule.forRoot(appRoutes)
+        ModalModule.forRoot(), NgbModule.forRoot(), RouterModule.forRoot(appRoutes, { useHash: true })
+        // AppRoutingModule // RouterModule.forRoot(routerConfig)
     ],
+    exports: [RouterModule],
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,
@@ -59,6 +65,7 @@ const appRoutes: Routes = [
         RouteBrowserComponent,
         StopBrowserComponent,
         TransporterComponent,
+        PageNotFoundComponent,
         KeysPipe
     ],
     providers: [
