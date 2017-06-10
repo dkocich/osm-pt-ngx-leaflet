@@ -5,7 +5,7 @@
         </div>
         <auth></auth>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Help</a></li>
+            <li><a href="#" (click)="showHelpModal()">Help</a></li>
             <li><a href="#">About</a></li>
             <li><a href="https://osm-pt.blogspot.com/">Blog</a></li>
         </ul>
@@ -52,4 +52,43 @@
             <stop-browser></stop-browser>
         </accordion-group>
     </accordion>
+</div>
+
+<div class="modal fade" bsModal #helpModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="myHelpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Help guide</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="hideHelpModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <carousel>
+                    <slide>
+                        <img src="../../images/help1.png" alt="First slide">
+                        <div class="carousel-caption">
+                            <h3>First slide label</h3>
+                            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                        </div>
+                    </slide>
+                    <slide>
+                        <img src="../../images/help2.png" alt="Second slide">
+                        <div class="carousel-caption">
+                            <h3>Second slide label</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
+                    </slide>
+                    <slide>
+                        <img src="../../images/help3.png" alt="Third slide">
+                        <div class="carousel-caption">
+                            <h3>Third slide label</h3>
+                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                        </div>
+                    </slide>
+                </carousel>
+            </div>
+        </div>
+    </div>
 </div>
