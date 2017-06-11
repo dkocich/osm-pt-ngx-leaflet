@@ -6,6 +6,7 @@ import latLng = L.latLng;
 import LatLngExpression = L.LatLngExpression;
 import LatLngLiteral = L.LatLngLiteral;
 import {ConfigService} from "./config.service";
+import {IPtStop} from "../core/ptStop.interface";
 
 const DEFAULT_ICON = L.icon({
     iconUrl: "",
@@ -263,6 +264,11 @@ export class MapService {
        }
     }
 
+    public showStop(stop: IPtStop) {
+        this.markerFrom = L.circleMarker( {lat: stop.lat, lng: stop.lon}, FROM_TO_LABEL);
+        this.markerFrom.addTo(this.map);
+    }
+
     public showRoute(rel) {
         let latlngs = Array();
         for (let member of rel.members) {
@@ -296,7 +302,7 @@ export class MapService {
     }
 
     public highlightIsActive() {
-        return this.highlightFill || this.highlightStroke;
+        return this.highlightFill || this.highlightStroke || this.markerFrom;
     }
 
     public drawTooltipFromTo(rel) {
