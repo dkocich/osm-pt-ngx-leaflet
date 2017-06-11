@@ -29,6 +29,13 @@ export class RouteBrowserComponent {
                 this.filteredView = data;
             }
         );
+        this.processingService.refreshSidebarViews$.subscribe(
+            data => {
+                if (data === "route") {
+                    this.listOfRelationsForStop = this.storageService.listOfRelationsForStop;
+                }
+            }
+        );
     }
 
     private cancelFilter() {

@@ -1,12 +1,13 @@
 import {Injectable} from "@angular/core";
+import {IPtStop} from "../core/ptStop.interface";
 
 @Injectable()
 export class StorageService {
     public localJsonStorage: any;
-    public localGeojsonStorage: any;
-    public listOfStops: any = [];
-    public listOfRelations: any = [];
-    public listOfMasters: any = [];
+    public localGeojsonStorage: object;
+    public listOfStops: IPtStop[] = [];
+    public listOfRelations: object[] = [];
+    public listOfMasters: object[] = [];
 
     // filtering of sidebar
     public listOfStopsForRoute: object[] = [];
@@ -16,6 +17,7 @@ export class StorageService {
     public platformsForRoute: object[] = [];
     public waysForRoute: object[] = [];
     public relationsForRoute: object[] = [];
+    public currentElement: object = {};
 
     public displayName: string = "";
 
