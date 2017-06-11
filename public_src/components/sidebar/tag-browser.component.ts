@@ -1,4 +1,6 @@
 import {Component, Input} from "@angular/core";
+import {ProcessingService} from "../../services/processing.service";
+import {StorageService} from "../../services/storage.service";
 
 @Component({
     selector: "tag-browser",
@@ -10,14 +12,25 @@ import {Component, Input} from "@angular/core";
     providers: []
 })
 export class TagBrowserComponent {
-    private elementTags: object[] = []; // [ {"lorem": "ipsum"}, {"foo": "bar"} ]
+    private elementTags: object;
 
     @Input() tagKey: string = "";
     @Input() tagValue: string = "";
 
     private elementChanges: any = [];
 
-    constructor() { }
+    constructor(private processingService: ProcessingService,
+                private storageService: StorageService) { }
+
+    ngOnInit() {
+        this.processingService.refreshSidebarViews$.subscribe(
+            data => {
+                if (data === "tag") {
+                    this.elementTags = this.storageService.currentElement;
+                }
+            }
+        );
+    }
 
     private updateKey(value: string) { this.tagKey = value; }
 
@@ -25,7 +38,7 @@ export class TagBrowserComponent {
 
     private appendNewTag() {
         console.log("LOG: Added tags are: ", this.tagKey, this.tagValue);
-        this.elementTags.push( {[this.tagKey]: this.tagValue} );
+        this.elementTags[this.tagKey] = this.tagValue;
         this.tagKey = this.tagValue = "" ;
     }
 

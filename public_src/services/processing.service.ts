@@ -10,9 +10,11 @@ export class ProcessingService {
     // Observable boolean sources
     private showRelationsForStopSource = new Subject<boolean>();
     private showStopsForRouteSource = new Subject<boolean>();
+    private refreshSidebarViewsSource = new Subject<string>();
     // Observable boolean streams
-    showRelationsForStop$ = this.showRelationsForStopSource.asObservable();
-    showStopsForRoute$ = this.showStopsForRouteSource.asObservable();
+    public showRelationsForStop$ = this.showRelationsForStopSource.asObservable();
+    public showStopsForRoute$ = this.showStopsForRouteSource.asObservable();
+    public refreshSidebarViews$ = this.refreshSidebarViewsSource.asObservable();
 
     constructor(private storageService: StorageService,
                 private mapService: MapService) { }
@@ -58,12 +60,22 @@ export class ProcessingService {
         this.showStopsForRouteSource.next(data);
     }
 
+    private refreshSidebarView(data: string) {
+        this.refreshSidebarViewsSource.next(data);
+    }
+
+    private refreshTagView(element) {
+        this.storageService.currentElement = element;
+        this.refreshSidebarView("tag");
+    }
+
     public exploreRelation(rel) {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.storageService.clearRouteData();
         if (this.mapService.showRoute(rel)) {
             this.mapService.drawTooltipFromTo(rel);
             this.filterStopsByRelation(rel);
+            this.refreshTagView(rel.tags);
             this.mapService.map.fitBounds(this.mapService.highlightStroke.getBounds());
         }
     }
@@ -71,6 +83,7 @@ export class ProcessingService {
     public exploreStop(stop) {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.filterRelationsByStop(stop);
+        this.refreshTagView(stop.tags);
         this.mapService.map.panTo([stop.lat, stop.lon]);
     }
     /**
@@ -96,7 +109,19 @@ export class ProcessingService {
      *  }
      */
     public filterRelationsByStop(stop: IPtStop): void {
+        this.storageService.listOfRelationsForStop = [];
+
+        for (let relation of this.storageService.listOfRelations) {
+            for (let member of relation["members"]) {
+                if (member["ref"] === stop.id) {
+                    console.log(relation);
+                    this.storageService.listOfRelationsForStop.push(relation);
+                }
+            }
+        }
+        console.log(this.storageService.listOfRelationsForStop);
         this.activateFilteredRouteView(true);
+        this.refreshSidebarView("route");
     }
 
     /**
@@ -142,5 +167,6 @@ export class ProcessingService {
     public filterStopsByRelation(rel: IPtRelation): void {
         this.storageService.listOfStopsForRoute = rel.members;
         this.activateFilteredStopView(true);
+        this.refreshSidebarView("stop");
     }
 }

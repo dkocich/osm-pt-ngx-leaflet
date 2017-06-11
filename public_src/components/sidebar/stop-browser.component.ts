@@ -28,6 +28,13 @@ export class StopBrowserComponent {
                 this.filteredView = data;
             }
         );
+        this.processingService.refreshSidebarViews$.subscribe(
+            data => {
+                if (data === "stop") {
+                    this.listOfStopsForRoute = this.storageService.listOfStopsForRoute;
+                }
+            }
+        );
     }
 
     private cancelFilter() {

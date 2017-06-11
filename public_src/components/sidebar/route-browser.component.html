@@ -8,6 +8,41 @@
         <button class="btn btn-warning" *ngIf="filteredView" (click)="cancelFilter()">Cancel filter</button>
     </div>
 
+    <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="small">
+        <table class="table-responsive table-condensed table-bordered table-hover table-striped">
+            <thead>
+            <tr>
+                <td></td>
+                <td title="Id">Id</td>
+                <td title="Route">Route</td>
+                <td title="Reference">Ref.</td>
+                <td title="Name">Name</td>
+                <td title="Network">Netw.</td>
+                <td title="Operator">Oper.</td>
+                <td title="public_transport">P_T</td>
+                <td title="public_transport:version">P_T v.</td>
+                <td title="Type">Type</td>
+                <td title="Complete">Compl.</td>
+            </tr>
+            </thead>
+            <tbody #routeTableBody>
+            <tr *ngFor="let rel of listOfRelationsForStop">
+                <td class="explore" (click)="exploreRelation($event, rel)"><i class="fa fa-search" aria-hidden="true"></i></td>
+                <td>{{rel.id}}</td>
+                <td>{{rel.tags.route}}</td>
+                <td>{{rel.tags.ref}}</td>
+                <td>{{rel.tags.name}}</td>
+                <td>{{rel.tags.network}}</td>
+                <td>{{rel.tags.operator}}</td>
+                <td>{{rel.tags.public_transport}}</td>
+                <td>{{rel.tags["public_transport:version"]}}</td>
+                <td>{{rel.tags.type}}</td>
+                <td>{{rel.tags.complete}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div *ngIf="listOfRelations.length !== 0 && !filteredView" class="small">
         <table class="table-responsive table-condensed table-bordered table-hover table-striped">
             <thead>
