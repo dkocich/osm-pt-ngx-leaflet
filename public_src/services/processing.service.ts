@@ -70,6 +70,7 @@ export class ProcessingService {
 
     public exploreStop(stop) {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
+        this.mapService.showStop(stop);
         this.filterRelationsByStop(stop);
         this.mapService.map.panTo([stop.lat, stop.lon]);
     }
