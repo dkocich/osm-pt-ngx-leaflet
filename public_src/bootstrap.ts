@@ -10,6 +10,7 @@ import "reflect-metadata";
 import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.css";
 import "leaflet/dist/leaflet.css";
+import "angular2-busy/build/style/busy.css";
 
 import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
 import {HttpModule} from "@angular/http";
@@ -19,6 +20,8 @@ import {BrowserModule} from "@angular/platform-browser";
 import {AccordionModule, CarouselModule, ModalModule} from "ngx-bootstrap";
 
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {BusyModule} from "angular2-busy";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {AppComponent} from "./components/app/app.component";
 import {NavigatorComponent} from "./components/navigator/navigator.component";
@@ -36,12 +39,14 @@ import {OverpassService} from "./services/overpass.service";
 import {StorageService} from "./services/storage.service";
 import {ProcessingService} from "./services/processing.service";
 import {ConfigService} from "./services/config.service";
+import {LoadingService} from "./services/loading.service";
 
 import {KeysPipe} from "./components/pipes/keys.pipe";
 
 @NgModule({
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
-        ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot()],
+        ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot(),
+        BusyModule, BrowserAnimationsModule],
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,
@@ -62,6 +67,7 @@ import {KeysPipe} from "./components/pipes/keys.pipe";
         StorageService,
         ProcessingService,
         ConfigService,
+        LoadingService,
         KeysPipe
     ]
 })

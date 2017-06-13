@@ -3,6 +3,7 @@ import {Headers, Http, RequestOptions} from "@angular/http";
 import {MapService} from "./map.service";
 import {ProcessingService} from "./processing.service";
 import {StorageService} from "./storage.service";
+import {LoadingService} from "./loading.service";
 
 const CONTINUOUS_QUERY: string = `
 [out:json][timeout:25][bbox:{{bbox}}];
@@ -27,9 +28,11 @@ out meta;`;
 export class OverpassService {
     constructor(private http: Http, private mapService: MapService,
                 private storageService: StorageService,
-                private processingService: ProcessingService) { }
+                private processingService: ProcessingService,
+                private loadingService: LoadingService) { }
 
     public requestNewOverpassData() {
+        this.loadingService.show();
         let requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
         let options = this.setRequestOptions();
         this.mapService.previousCenter = [this.mapService.map.getCenter().lat, this.mapService.map.getCenter().lng];
@@ -41,6 +44,7 @@ export class OverpassService {
     }
 
     public requestOverpassData(requestBody: string): void {
+        this.loadingService.show();
         this.mapService.clearLayer();
         requestBody = this.replaceBboxString(requestBody);
         let options = this.setRequestOptions();

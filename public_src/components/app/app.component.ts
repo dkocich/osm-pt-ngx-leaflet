@@ -4,6 +4,7 @@ import {MapService} from "../../services/map.service";
 import {GeocodingService} from "../../services/geocoding.service";
 import {AuthComponent} from "../auth/auth.component";
 import {CarouselConfig, ModalDirective} from "ngx-bootstrap";
+import {LoadingService} from "../../services/loading.service";
 
 @Component({
     selector: "app",
@@ -18,7 +19,8 @@ export class AppComponent {
     @ViewChild(ToolbarComponent) toolbarComponent: ToolbarComponent;
     @ViewChild(AuthComponent) authComponent: AuthComponent;
 
-    constructor(private mapService: MapService, private geocoder: GeocodingService) {
+    constructor(private mapService: MapService, private geocoder: GeocodingService,
+                private loadingService: LoadingService) {
     }
 
     @ViewChild("helpModal") public helpModal: ModalDirective;
@@ -29,6 +31,10 @@ export class AppComponent {
 
     private hideHelpModal(): void {
         this.helpModal.hide();
+    }
+
+    private isLoading(): boolean {
+        return this.loadingService.isLoading();
     }
 
     ngOnInit() {
