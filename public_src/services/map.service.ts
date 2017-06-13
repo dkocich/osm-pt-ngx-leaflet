@@ -7,6 +7,7 @@ import LatLngExpression = L.LatLngExpression;
 import LatLngLiteral = L.LatLngLiteral;
 import {ConfigService} from "./config.service";
 import {IPtStop} from "../core/ptStop.interface";
+import {LoadingService} from "./loading.service";
 
 const DEFAULT_ICON = L.icon({
     iconUrl: "",
@@ -64,7 +65,7 @@ export class MapService {
     private markerTo: any = undefined;
 
     constructor(private http: Http, private storageService: StorageService,
-                private configService: ConfigService) {
+                private configService: ConfigService, private loadingService: LoadingService) {
         this.baseMaps = {
             Empty: L.tileLayer("", {
                 attribution: ""
@@ -245,6 +246,7 @@ export class MapService {
                     }
                 });
                 this.ptLayer.addTo(this.map);
+                this.loadingService.hide();
             });
     }
 

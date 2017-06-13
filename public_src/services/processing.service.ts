@@ -4,6 +4,7 @@ import {Subject} from "rxjs/Subject";
 import {IPtStop} from "../core/ptStop.interface";
 import {IPtRelation} from "../core/ptRelation.interface";
 import {MapService} from "./map.service";
+import {LoadingService} from "./loading.service";
 
 @Injectable()
 export class ProcessingService {
@@ -17,7 +18,8 @@ export class ProcessingService {
     public refreshSidebarViews$ = this.refreshSidebarViewsSource.asObservable();
 
     constructor(private storageService: StorageService,
-                private mapService: MapService) { }
+                private mapService: MapService,
+                private loadingService: LoadingService) { }
 
     public processResponse(response) {
         console.log(response);
@@ -26,6 +28,7 @@ export class ProcessingService {
         this.storageService.localGeojsonStorage = transformedGeojson;
         this.createLists();
         this.mapService.renderTransformedGeojsonData(transformedGeojson);
+        this.loadingService.hide();
     }
 
     public createLists() {
