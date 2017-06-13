@@ -253,9 +253,9 @@ export class MapService {
     public clearHighlight() {
         console.log("LOG: Highlight cleared",
             this.map, this.map.hasLayer(this.highlight));
-        this.map.removeLayer(this.markerFrom);
-        this.map.removeLayer(this.markerTo);
-        this.map.removeLayer(this.highlight);
+        if (this.markerFrom) this.map.removeLayer(this.markerFrom);
+        if (this.markerTo) this.map.removeLayer(this.markerTo);
+        if (this.highlight) this.map.removeLayer(this.highlight);
     }
 
     public findCoordinates(refId) {
