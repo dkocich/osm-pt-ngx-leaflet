@@ -44,7 +44,7 @@ export class AppComponent {
             center: L.latLng(49.686, 18.351),
             zoom: 14,
             minZoom: 4,
-            maxZoom: 19,
+            maxZoom: 22,
             layers: [this.mapService.baseMaps.CartoDB]
         });
 
