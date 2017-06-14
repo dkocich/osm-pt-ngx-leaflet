@@ -1,10 +1,8 @@
-<div id="route-content" class="panel panel-body panel-default">
+<div class="content panel panel-body panel-default">
 
     <div class="text-center">
         <h4 class="text-danger"
             *ngIf="listOfRelations.length === 0">There are no loaded routes (zoom map).</h4>
-        <h4 class="text-info"
-            *ngIf="listOfRelations.length > 0">Please select a stop/platform to browse related routes.</h4>
         <button class="btn btn-warning" *ngIf="filteredView" (click)="cancelFilter()">Cancel filter</button>
     </div>
 
