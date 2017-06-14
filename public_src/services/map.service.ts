@@ -57,6 +57,7 @@ export class MapService {
     public previousCenter: [number, number] = [0.0, 0.0];
     private ptLayer: any;
     public osmtogeojson: any = require("osmtogeojson");
+    public bounds;
 
     private highlightFill: any = undefined;
     public highlightStroke: any = undefined;

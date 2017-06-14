@@ -5,6 +5,7 @@ import {GeocodingService} from "../../services/geocoding.service";
 import {AuthComponent} from "../auth/auth.component";
 import {CarouselConfig, ModalDirective} from "ngx-bootstrap";
 import {LoadingService} from "../../services/loading.service";
+import {ProcessingService} from "../../services/processing.service";
 
 @Component({
     selector: "app",
@@ -20,7 +21,7 @@ export class AppComponent {
     @ViewChild(AuthComponent) authComponent: AuthComponent;
 
     constructor(private mapService: MapService, private geocoder: GeocodingService,
-                private loadingService: LoadingService) {
+                private loadingService: LoadingService, private processingService: ProcessingService) {
     }
 
     @ViewChild("helpModal") public helpModal: ModalDirective;
@@ -52,6 +53,9 @@ export class AppComponent {
         L.control.scale().addTo(map);
 
         this.mapService.map = map;
+        this.mapService.map.on("zoomend moveend", () => {
+            this.processingService.filterDataInBounds();
+        });
         this.geocoder.getCurrentLocation()
             .subscribe(
                 location => map.panTo([location.latitude, location.longitude]),

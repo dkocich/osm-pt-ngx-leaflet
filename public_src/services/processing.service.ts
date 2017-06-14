@@ -21,6 +21,19 @@ export class ProcessingService {
                 private mapService: MapService,
                 private loadingService: LoadingService) { }
 
+    public filterDataInBounds() {
+        if (!this.storageService.localJsonStorage) return;
+        this.mapService.bounds = this.mapService.map.getBounds();
+        for (let stop of this.storageService.listOfStops) {
+            let el = document.getElementById(stop.id.toString());
+            if (el && this.mapService.bounds.contains([stop.lat, stop.lon])) {
+                el.style.display = "table-row";
+            } else {
+                el.style.display = "none";
+            }
+        }
+    }
+
     public processResponse(response) {
         console.log(response);
         let transformedGeojson = this.mapService.osmtogeojson(response);
