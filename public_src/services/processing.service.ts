@@ -26,6 +26,7 @@ export class ProcessingService {
         this.mapService.bounds = this.mapService.map.getBounds();
         for (let stop of this.storageService.listOfStops) {
             let el = document.getElementById(stop.id.toString());
+            if (!el) return;
             if (el && this.mapService.bounds.contains([stop.lat, stop.lon])) {
                 el.style.display = "table-row";
             } else {
