@@ -257,11 +257,18 @@ export class MapService {
     }
 
     public clearHighlight() {
-        console.log("LOG: Highlight cleared",
-            this.map, this.map.hasLayer(this.highlight));
-        if (this.markerFrom) this.map.removeLayer(this.markerFrom);
-        if (this.markerTo) this.map.removeLayer(this.markerTo);
-        if (this.highlight) this.map.removeLayer(this.highlight);
+        if (this.markerFrom !== undefined) {
+            this.map.removeLayer(this.markerFrom);
+            this.markerFrom = undefined;
+        }
+        if (this.markerTo !== undefined) {
+            this.map.removeLayer(this.markerTo);
+            this.markerTo = undefined;
+        }
+        if (this.highlight !== undefined) {
+            this.map.removeLayer(this.highlight);
+            this.highlight = undefined;
+        }
     }
 
     public findCoordinates(refId) {
@@ -274,10 +281,47 @@ export class MapService {
 
     public showStop(stop: IPtStop) {
         this.markerFrom = L.circleMarker( {lat: stop.lat, lng: stop.lon}, FROM_TO_LABEL);
-        this.markerFrom.addTo(this.map);
+        this.highlight = L.layerGroup([this.markerFrom]);
     }
 
-    public showRoute(rel) {
+    public showRelatedRoutes(filteredRelationsForStop: object[]): void {
+        if (filteredRelationsForStop) {
+            this.storageService.stopsForRoute = [];
+            for (let rel of filteredRelationsForStop) {
+                this.showRoutes(rel);
+            }
+            if (this.highlight) {
+                this.highlight.addTo(this.map);
+            }
+        }
+    }
+
+    public showRoutes(rel: any): boolean {
+        let latlngs = Array();
+        this.storageService.stopsForRoute = [];
+        for (let member of rel.members) {
+            if (member.type === "node" && ["stop", "stop_entry_only"].indexOf(member.role) > -1) {
+                this.storageService.stopsForRoute.push(member.ref);
+                let latlng: LatLngExpression = this.findCoordinates(member.ref);
+                if (latlng) latlngs.push(latlng);
+            }
+        }
+        if (latlngs.length > 0) {
+            HIGHLIGHT_FILL.color = "#" + (Math.floor(Math.random() * 0xffffff) | 0x0f0f0f).toString(16);
+            this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL);
+            if (this.highlight) {
+                this.highlight.addLayer(L.layerGroup([this.highlightFill]));
+            } else {
+                this.highlight = L.layerGroup([this.highlightFill]);
+            }
+            this.drawTooltipFromTo(rel);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public showRoute(rel: any) {
         let latlngs = Array();
         for (let member of rel.members) {
             if (member.type === "node" && ["stop", "stop_entry_only"]
@@ -314,21 +358,26 @@ export class MapService {
     }
 
     public drawTooltipFromTo(rel) {
-        console.log(rel);
         let latlngFrom: LatLngExpression = this.findCoordinates(
             this.storageService.stopsForRoute[0]);
         let latlngTo: LatLngExpression = this.findCoordinates(
             this.storageService.stopsForRoute[this.storageService.stopsForRoute.length - 1]);
 
-        console.log("LOG: Rel. + label coordinates (rel, from, to)", rel, latlngFrom, latlngTo);
+        let from = rel.tags.from || "#FROM";
+        let to = rel.tags.to || "#TO";
+        let route = rel.tags.route || "#ROUTE";
+        let ref = rel.tags.ref || "#REF";
 
         this.markerFrom = L.circleMarker( latlngFrom, FROM_TO_LABEL)
-            .bindTooltip("From: " + rel.tags.from, {
-                permanent: true, className: "from-to-label", offset: [0, 0] });
-        this.markerFrom.addTo(this.map);
+            .bindTooltip("From: " + from + " (" + route + " " + ref + ")", {
+                permanent: true, className: "from-to-label", offset: [0, 0]});
         this.markerTo = L.circleMarker( latlngTo, FROM_TO_LABEL)
-            .bindTooltip("To: " + rel.tags.to, {
-                permanent: true, className: "from-to-label", offset: [0, 0] });
-        this.markerTo.addTo(this.map);
+            .bindTooltip("To: " + to + " (" + route + " " + ref + ")", {
+                permanent: true, className: "from-to-label", offset: [0, 0]});
+        if (this.highlight) {
+            this.highlight.addLayer(L.layerGroup([this.markerFrom, this.markerTo]));
+        } else {
+            this.highlight = L.layerGroup([this.markerFrom, this.markerTo]);
+        }
     }
 }
