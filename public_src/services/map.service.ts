@@ -141,6 +141,7 @@ export class MapService {
         let myIcon = L.icon({
             iconUrl: iconUrl,
             shadowUrl: shadowUrl,
+            iconAnchor: [7, 7],
             shadowSize: [24, 24],
             shadowAnchor: [22, 94]
         });
@@ -225,7 +226,7 @@ export class MapService {
             let p = L.popup({maxHeight: 600, offset: L.point(0, -20)})
                 .setLatLng(latlng)
                 .setContent(popup);
-            layer.bindPopup(p).openPopup();
+            layer.unbindPopup().bindPopup(p).openPopup();
         });
     }
 
