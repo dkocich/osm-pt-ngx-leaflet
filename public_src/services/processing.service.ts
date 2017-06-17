@@ -19,7 +19,34 @@ export class ProcessingService {
 
     constructor(private storageService: StorageService,
                 private mapService: MapService,
-                private loadingService: LoadingService) { }
+                private loadingService: LoadingService) {
+
+        this.mapService.popupBtnClick.subscribe(
+            (data) => {
+                console.log(data);
+                let featureType = data[0];
+                let featureId = Number(data[1]);
+                let element = this.findElementById(featureId, featureType);
+                if (!element) {
+                    alert("Element was not found?!");
+                } else if (featureType === "node") {
+                    this.exploreStop(element);
+                } else if (featureType === "relation") {
+                    this.exploreRelation(element);
+                }
+            }
+        );
+    }
+
+    private findElementById(featureId: number, featureType?: string): object {
+        for (let element of this.storageService.listOfStops) {
+            console.log(element.id, featureId);
+            if (element.id === featureId) {
+                console.log(element);
+                return element;
+            }
+        }
+    }
 
     public filterDataInBounds() {
         if (!this.storageService.localJsonStorage) return;
