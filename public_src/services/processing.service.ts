@@ -135,24 +135,6 @@ export class ProcessingService {
     /**
      *
      * @param stop
-     * {
-     *    "type": "node",
-     *    "id": 447767772,
-     *    "lat": 49.6769377,
-     *    "lon": 18.3665044,
-     *    "timestamp": "2017-04-20T01:22:48Z",
-     *    "version": 3,
-     *    "changeset": 47956115,
-     *    "user": "dkocich",
-     *    "uid": 1784758,
-     *    "tags": {
-     *      "bench": "yes",
-     *      "bus": "yes",
-     *      "name": "Frýdek-Místek, Frýdek, U Gustlíčka",
-     *      "public_transport": "platform",
-     *      "shelter": "yes"
-     *    }
-     *  }
      */
     public filterRelationsByStop(stop: IPtStop): object[] {
         this.storageService.listOfRelationsForStop = [];
@@ -172,42 +154,6 @@ export class ProcessingService {
     /**
      *
      * @param rel
-     *  {
-     *    "type": "relation",
-     *    "id": 7157492,
-     *    "timestamp": "2017-05-15T22:23:20Z",
-     *    "version": 5,
-     *    "changeset": 48714598,
-     *    "user": "dkocich",
-     *    "uid": 1784758,
-     *    "members": [
-     *      {
-     *        "type": "node",
-     *        "ref": 2184049214,
-     *        "role": "stop"
-     *      },
-     *      {
-     *        "type": "node",
-     *        "ref": 2162278060,
-     *        "role": "platform"
-     *      },
-     *      {
-     *        "type": "way",
-     *        "ref": 387730713,
-     *        "role": ""
-     *      }
-     *    ],
-     *    "tags": {
-     *      "complete": "no",
-     *      "from": "Řepiště, U kříže",
-     *      "name": "Bus 11: Řepiště, U kříže -> Místek,Riviéra",
-     *      "operator": "ČSAD Frýdek-Místek",
-     *      "public_transport:version": "2",
-     *      "route": "bus",
-     *      "to": "Místek,Riviéra",
-     *      "type": "route"
-     *    }
-     *  }
      */
     public filterStopsByRelation(rel: IPtRelation): void {
         this.storageService.listOfStopsForRoute = rel.members;
