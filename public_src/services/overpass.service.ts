@@ -40,6 +40,9 @@ export class OverpassService {
     private changeset_id: string;
     private test = "test bindu";
 
+    private parseString: any = require("xml2js")["parseString"];
+    private Osm2Json = require("osm2json");
+
     constructor(private http: Http, private mapService: MapService,
                 private storageService: StorageService,
                 private processingService: ProcessingService,
@@ -59,7 +62,51 @@ export class OverpassService {
             .map(res => res.json())
             .subscribe(response => {
                 this.processingService.processResponse(response);
+                this.requestRouteMasterData();
             });
+    }
+
+    /**
+     *
+     * Example of response:
+     *
+     * "<?xml version="1.0" encoding="UTF-8"?>
+     * <osm version="0.6" generator="OpenStreetMap server" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+     *   <relation id="7169733" changeset="47954500" timestamp="2017-04-19T23:07:48Z" version="1" visible="true" user="dkocich" uid="1784758">
+     *     <member type="relation" ref="7145228" role=""/>
+     *     <member type="relation" ref="7145227" role=""/>
+     *     <tag k="name" v="Bus 1"/>
+     *     <tag k="public_transport" v="route_master"/>
+     *     <tag k="type" v="public_transport"/>
+     *   </relation>
+     * </osm>"
+     */
+    private requestRouteMasterData(): void {
+        this.loadingService.show();
+        for (let relation of this.storageService.listOfRelations) {
+            this.http.get("https://api.openstreetmap.org/api/0.6/relation/" + relation["id"] + "/relations")
+                .subscribe(response => {
+                    if (response.status === 200) {
+                        // let opts = {"types": ["relation"], "strict": true};
+                        // let stream = new Osm2Json(opts);
+                        // stream.parse(response["_body"]);
+                        this.parseString(response["_body"], (err, result) => {
+                            if (result["osm"]["relation"] && result["osm"]["relation"].length > 1) {
+                                // TODO parse ...
+                                // for (let relation of result["osm"]["relation"]) {
+                                //     if (relation["public_transport"] === "route_master") {
+                                //         this.storageService.listOfMasters.push(relation);
+                                //         console.log(relation);
+                                //     }
+                                // }
+                            }
+                        });
+                    } else {
+                        alert("route_master response status" + response.status + "\n" + response["_body"]);
+                    }
+                });
+        }
+        this.loadingService.hide();
     }
 
     /**

@@ -47,6 +47,7 @@
     "@types/geojson": "1.0.2",
     "@types/leaflet": "^1.0.63",
     "@types/xmlbuilder": "0.0.30",
+    "@types/xml2js": "0.0.33",
     "angular2-busy": "^2.0.4",
     "bootstrap": "^3.3.7",
     "express": "^4.15.3",
@@ -55,12 +56,14 @@
     "leaflet.vectorgrid": "^1.2.0",
     "ngx-bootstrap": "^1.7.1",
     "osm-auth": "github:osmlab/osm-auth",
+    "osm2json": "^2.1.0",
     "osmtogeojson": "^3.0.0-beta.2",
     "raven-js": "^3.16.0",
     "reflect-metadata": "^0.1.10",
     "rxjs": "5.4.0",
     "snyk": "^1.36.0",
     "xmlbuilder": "^9.0.1",
+    "xml2js": "^0.4.17",
     "zone.js": "^0.8.12"
   },
   "devDependencies": {
