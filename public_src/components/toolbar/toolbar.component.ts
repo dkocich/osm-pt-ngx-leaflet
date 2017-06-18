@@ -73,4 +73,12 @@ export class ToolbarComponent {
         this.configService.cfgFilterLines = !this.configService.cfgFilterLines;
         this.filtering = !this.filtering;
     }
+
+    private highlightIsActive() {
+        return this.mapService.highlightIsActive();
+    }
+
+    private clearHighlight() {
+        return this.mapService.clearHighlight();
+    }
 }

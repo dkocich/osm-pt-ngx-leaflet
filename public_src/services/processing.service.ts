@@ -100,7 +100,8 @@ export class ProcessingService {
     public exploreStop(stop) {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.mapService.showStop(stop);
-        this.filterRelationsByStop(stop);
+        let filteredRelationsForStop = this.filterRelationsByStop(stop);
+        this.mapService.showRelatedRoutes(filteredRelationsForStop);
         this.refreshTagView(stop.tags);
         this.mapService.map.panTo([stop.lat, stop.lon]);
     }
@@ -126,20 +127,19 @@ export class ProcessingService {
      *    }
      *  }
      */
-    public filterRelationsByStop(stop: IPtStop): void {
+    public filterRelationsByStop(stop: IPtStop): object[] {
         this.storageService.listOfRelationsForStop = [];
 
         for (let relation of this.storageService.listOfRelations) {
             for (let member of relation["members"]) {
                 if (member["ref"] === stop.id) {
-                    console.log(relation);
                     this.storageService.listOfRelationsForStop.push(relation);
                 }
             }
         }
-        console.log(this.storageService.listOfRelationsForStop);
         this.activateFilteredRouteView(true);
         this.refreshSidebarView("route");
+        return this.storageService.listOfRelationsForStop;
     }
 
     /**

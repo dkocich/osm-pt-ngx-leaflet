@@ -10,3 +10,8 @@
 </button>
 
 <transporter></transporter>
+
+<button id="clear-highlight" class="btn btn-danger on-map" *ngIf="highlightIsActive()"
+        title="Clear current highlight" (click)="clearHighlight()">
+    <i class="fa fa-times"></i>
+</button>
