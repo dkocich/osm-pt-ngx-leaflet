@@ -31,7 +31,7 @@ export class OverpassService {
                 private processingService: ProcessingService,
                 private loadingService: LoadingService) { }
 
-    public requestNewOverpassData() {
+    public requestNewOverpassData(): void {
         this.loadingService.show();
         let requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
         let options = this.setRequestOptions();
@@ -51,7 +51,7 @@ export class OverpassService {
         this.mapService.renderData(requestBody, options);
     }
 
-    private replaceBboxString(requestBody) {
+    private replaceBboxString(requestBody: string): string {
         let b = this.mapService.map.getBounds();
         let s = b.getSouth().toString();
         let w = b.getWest().toString();
@@ -60,10 +60,10 @@ export class OverpassService {
         return requestBody.replace(new RegExp("{{bbox}}", "g"), [s, w, n, e].join(", "));
     }
 
-    private setRequestOptions() {
+    private setRequestOptions(): RequestOptions {
         let headers = new Headers();
         headers.append("Content-Type", "application/X-www-form-urlencoded");
-        let options = new RequestOptions({headers: headers});
+        let options: RequestOptions = new RequestOptions({headers: headers});
         return options;
     }
 }

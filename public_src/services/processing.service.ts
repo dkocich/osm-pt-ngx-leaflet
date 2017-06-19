@@ -48,7 +48,7 @@ export class ProcessingService {
         }
     }
 
-    public filterDataInBounds() {
+    public filterDataInBounds(): void {
         if (!this.storageService.localJsonStorage) return;
         this.mapService.bounds = this.mapService.map.getBounds();
         for (let stop of this.storageService.listOfStops) {
@@ -62,7 +62,7 @@ export class ProcessingService {
         }
     }
 
-    public processResponse(response) {
+    public processResponse(response: object): void {
         console.log(response);
         let transformedGeojson = this.mapService.osmtogeojson(response);
         this.storageService.localJsonStorage = response;
@@ -72,7 +72,7 @@ export class ProcessingService {
         this.loadingService.hide();
     }
 
-    public createLists() {
+    public createLists(): void {
         this.storageService.localJsonStorage.elements.forEach( (element) => {
             switch (element.type) {
                 case "node":
@@ -96,24 +96,24 @@ export class ProcessingService {
     }
 
     // Service message commands
-    public activateFilteredRouteView(data: boolean) {
+    public activateFilteredRouteView(data: boolean): void {
         this.showRelationsForStopSource.next(data);
     }
 
-    public activateFilteredStopView(data: boolean) {
+    public activateFilteredStopView(data: boolean): void  {
         this.showStopsForRouteSource.next(data);
     }
 
-    private refreshSidebarView(data: string) {
+    private refreshSidebarView(data: string): void  {
         this.refreshSidebarViewsSource.next(data);
     }
 
-    private refreshTagView(element) {
+    private refreshTagView(element): void  {
         this.storageService.currentElement = element;
         this.refreshSidebarView("tag");
     }
 
-    public exploreRelation(rel) {
+    public exploreRelation(rel: any): void  {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.storageService.clearRouteData();
         if (this.mapService.showRoute(rel)) {
@@ -124,7 +124,7 @@ export class ProcessingService {
         }
     }
 
-    public exploreStop(stop) {
+    public exploreStop(stop: any): void {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.mapService.showStop(stop);
         let filteredRelationsForStop = this.filterRelationsByStop(stop);
@@ -135,24 +135,6 @@ export class ProcessingService {
     /**
      *
      * @param stop
-     * {
-     *    "type": "node",
-     *    "id": 447767772,
-     *    "lat": 49.6769377,
-     *    "lon": 18.3665044,
-     *    "timestamp": "2017-04-20T01:22:48Z",
-     *    "version": 3,
-     *    "changeset": 47956115,
-     *    "user": "dkocich",
-     *    "uid": 1784758,
-     *    "tags": {
-     *      "bench": "yes",
-     *      "bus": "yes",
-     *      "name": "Frýdek-Místek, Frýdek, U Gustlíčka",
-     *      "public_transport": "platform",
-     *      "shelter": "yes"
-     *    }
-     *  }
      */
     public filterRelationsByStop(stop: IPtStop): object[] {
         this.storageService.listOfRelationsForStop = [];
@@ -172,42 +154,6 @@ export class ProcessingService {
     /**
      *
      * @param rel
-     *  {
-     *    "type": "relation",
-     *    "id": 7157492,
-     *    "timestamp": "2017-05-15T22:23:20Z",
-     *    "version": 5,
-     *    "changeset": 48714598,
-     *    "user": "dkocich",
-     *    "uid": 1784758,
-     *    "members": [
-     *      {
-     *        "type": "node",
-     *        "ref": 2184049214,
-     *        "role": "stop"
-     *      },
-     *      {
-     *        "type": "node",
-     *        "ref": 2162278060,
-     *        "role": "platform"
-     *      },
-     *      {
-     *        "type": "way",
-     *        "ref": 387730713,
-     *        "role": ""
-     *      }
-     *    ],
-     *    "tags": {
-     *      "complete": "no",
-     *      "from": "Řepiště, U kříže",
-     *      "name": "Bus 11: Řepiště, U kříže -> Místek,Riviéra",
-     *      "operator": "ČSAD Frýdek-Místek",
-     *      "public_transport:version": "2",
-     *      "route": "bus",
-     *      "to": "Místek,Riviéra",
-     *      "type": "route"
-     *    }
-     *  }
      */
     public filterStopsByRelation(rel: IPtRelation): void {
         this.storageService.listOfStopsForRoute = rel.members;
