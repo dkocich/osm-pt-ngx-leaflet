@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {EventEmitter, Injectable, Injector} from "@angular/core";
 import {Http} from "@angular/http";
 import {Map} from "leaflet";
 import {StorageService} from "./storage.service";
@@ -65,8 +65,11 @@ export class MapService {
     private markerFrom: any = undefined;
     private markerTo: any = undefined;
 
+    public popupBtnClick: EventEmitter<any> = new EventEmitter();
+
     constructor(private http: Http, private storageService: StorageService,
                 private configService: ConfigService, private loadingService: LoadingService) {
+
         this.baseMaps = {
             Empty: L.tileLayer("", {
                 attribution: ""
@@ -189,7 +192,7 @@ export class MapService {
     }
 
     public enablePopups(feature, layer): void {
-        layer.on("click", function (e) {
+        layer.on("click", e => {
             let latlng;
             let popup = "";
             let featureTypeId = feature.id.split("/");
@@ -228,11 +231,26 @@ export class MapService {
             } else {
                 latlng = e.latlng; // all other (lines, polygons, multipolygons)
             }
+
+            popup += "<div #popupBtns class='text-center' id='popupBtns'></div>";
+
             let p = L.popup({maxHeight: 600, offset: L.point(0, -20)})
                 .setLatLng(latlng)
                 .setContent(popup);
             layer.unbindPopup().bindPopup(p).openPopup();
+            let htmlData = "<button type='button' class='btn btn-success' data-type='" + featureType + "' data-id='" + featureId + "'>" +
+                "<i class='fa fa-search' aria-hidden='true'></i>Show related</button>";
+            let el = document.getElementById("popupBtns");
+            el.innerHTML = htmlData;
+            el.addEventListener("click", event => this.handleClick(event));
         });
+    }
+
+    private handleClick(event) {
+        console.log(event);
+        let featureId = event.target["dataset"].id;
+        let featureType = event.target["dataset"].type;
+        this.popupBtnClick.emit([featureType, featureId]);
     }
 
     public renderData(requestBody, options) {
