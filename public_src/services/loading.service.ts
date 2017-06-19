@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 
 @Injectable()
 export class LoadingService {
-    private _isLoading = false;
+    private _isLoading: boolean = false;
 
     constructor() { }
 

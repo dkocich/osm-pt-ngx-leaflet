@@ -48,7 +48,7 @@ export class ProcessingService {
         }
     }
 
-    public filterDataInBounds() {
+    public filterDataInBounds(): void {
         if (!this.storageService.localJsonStorage) return;
         this.mapService.bounds = this.mapService.map.getBounds();
         for (let stop of this.storageService.listOfStops) {
@@ -62,7 +62,7 @@ export class ProcessingService {
         }
     }
 
-    public processResponse(response) {
+    public processResponse(response: object): void {
         console.log(response);
         let transformedGeojson = this.mapService.osmtogeojson(response);
         this.storageService.localJsonStorage = response;
@@ -72,7 +72,7 @@ export class ProcessingService {
         this.loadingService.hide();
     }
 
-    public createLists() {
+    public createLists(): void {
         this.storageService.localJsonStorage.elements.forEach( (element) => {
             switch (element.type) {
                 case "node":
@@ -96,24 +96,24 @@ export class ProcessingService {
     }
 
     // Service message commands
-    public activateFilteredRouteView(data: boolean) {
+    public activateFilteredRouteView(data: boolean): void {
         this.showRelationsForStopSource.next(data);
     }
 
-    public activateFilteredStopView(data: boolean) {
+    public activateFilteredStopView(data: boolean): void  {
         this.showStopsForRouteSource.next(data);
     }
 
-    private refreshSidebarView(data: string) {
+    private refreshSidebarView(data: string): void  {
         this.refreshSidebarViewsSource.next(data);
     }
 
-    private refreshTagView(element) {
+    private refreshTagView(element): void  {
         this.storageService.currentElement = element;
         this.refreshSidebarView("tag");
     }
 
-    public exploreRelation(rel) {
+    public exploreRelation(rel: any): void  {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.storageService.clearRouteData();
         if (this.mapService.showRoute(rel)) {
@@ -124,7 +124,7 @@ export class ProcessingService {
         }
     }
 
-    public exploreStop(stop) {
+    public exploreStop(stop: any): void {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.mapService.showStop(stop);
         let filteredRelationsForStop = this.filterRelationsByStop(stop);

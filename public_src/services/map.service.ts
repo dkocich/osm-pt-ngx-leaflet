@@ -8,6 +8,7 @@ import LatLngLiteral = L.LatLngLiteral;
 import {ConfigService} from "./config.service";
 import {IPtStop} from "../core/ptStop.interface";
 import {LoadingService} from "./loading.service";
+import {IPtRelation} from "../core/ptRelation.interface";
 
 const DEFAULT_ICON = L.icon({
     iconUrl: "",
@@ -93,14 +94,14 @@ export class MapService {
         };
     }
 
-    public disableMouseEvent(elementId: string) {
+    public disableMouseEvent(elementId: string): void {
         let element = <HTMLElement>document.getElementById(elementId);
 
         L.DomEvent.disableClickPropagation(element);
         L.DomEvent.disableScrollPropagation(element);
     }
 
-    public clearLayer(): void {
+    public clearLayer() {
         if (this.ptLayer) {
             this.map.removeLayer(this.ptLayer);
             delete this.ptLayer;
@@ -246,14 +247,14 @@ export class MapService {
         });
     }
 
-    private handleClick(event) {
+    private handleClick(event): void {
         console.log(event);
         let featureId = event.target["dataset"].id;
         let featureType = event.target["dataset"].type;
         this.popupBtnClick.emit([featureType, featureId]);
     }
 
-    public renderData(requestBody, options) {
+    public renderData(requestBody, options): void {
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map(res => res.json())
             .subscribe(result => {
@@ -274,7 +275,7 @@ export class MapService {
             });
     }
 
-    public clearHighlight() {
+    public clearHighlight(): void {
         if (this.markerFrom !== undefined) {
             this.map.removeLayer(this.markerFrom);
             this.markerFrom = undefined;
@@ -289,7 +290,7 @@ export class MapService {
         }
     }
 
-    public findCoordinates(refId) {
+    public findCoordinates(refId): LatLngExpression {
        for (let stop of this.storageService.listOfStops) {
            if (stop.id === refId) {
                return {lat: stop.lat, lng: stop.lon};
@@ -339,7 +340,7 @@ export class MapService {
         }
     }
 
-    public showRoute(rel: any) {
+    public showRoute(rel: any): boolean {
         let latlngs = Array();
         for (let member of rel.members) {
             if (member.type === "node" && ["stop", "stop_entry_only"]
@@ -371,11 +372,11 @@ export class MapService {
         }
     }
 
-    public highlightIsActive() {
+    public highlightIsActive(): boolean {
         return this.highlightFill || this.highlightStroke || this.markerFrom;
     }
 
-    public drawTooltipFromTo(rel) {
+    public drawTooltipFromTo(rel): void {
         let latlngFrom: LatLngExpression = this.findCoordinates(
             this.storageService.stopsForRoute[0]);
         let latlngTo: LatLngExpression = this.findCoordinates(

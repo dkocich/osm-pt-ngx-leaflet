@@ -21,7 +21,7 @@ export class StorageService {
 
     public displayName: string = "";
 
-    public clearRouteData() {
+    public clearRouteData(): void {
         this.stopsForRoute = [];
         this.platformsForRoute = [];
         this.waysForRoute = [];
@@ -41,7 +41,7 @@ export class StorageService {
         sessionStorage.setItem(key, JSON.stringify(value));
     }
 
-    public getSessionStorageItem(key: string): any{
+    public getSessionStorageItem(key: string): any {
         let item = sessionStorage.getItem(key);
         return JSON.parse(item);
     }
