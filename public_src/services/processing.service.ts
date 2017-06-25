@@ -40,6 +40,12 @@ export class ProcessingService {
         );
     }
 
+    /**
+     * Returns element with specific ID.
+     * @param featureId
+     * @param featureType
+     * @returns {IPtStop}
+     */
     private findElementById(featureId: number, featureType?: string): object {
         for (let element of this.storageService.listOfStops) {
             console.log(element.id, featureId);
@@ -50,6 +56,9 @@ export class ProcessingService {
         }
     }
 
+    /**
+     * Filters data in the sidebar depending on current view's bounding box.
+     */
     public filterDataInBounds(): void {
         if (!this.storageService.localJsonStorage) return;
         this.mapService.bounds = this.mapService.map.getBounds();
@@ -64,6 +73,10 @@ export class ProcessingService {
         }
     }
 
+    /**
+     *
+     * @param response
+     */
     public processResponse(response: object): void {
         console.log(response);
         let transformedGeojson = this.mapService.osmtogeojson(response);
@@ -74,6 +87,9 @@ export class ProcessingService {
         this.loadingService.hide();
     }
 
+    /**
+     * Creates initial list of stops/relations.
+     */
     public createLists(): void {
         this.storageService.localJsonStorage.elements.forEach( (element) => {
             switch (element.type) {
@@ -97,24 +113,43 @@ export class ProcessingService {
             "Total # of master rel. ", this.storageService.listOfMasters.length);
     }
 
-    // Service message commands
+    /**
+     *
+     * @param data
+     */
     public activateFilteredRouteView(data: boolean): void {
         this.showRelationsForStopSource.next(data);
     }
 
+    /**
+     *
+     * @param data
+     */
     public activateFilteredStopView(data: boolean): void  {
         this.showStopsForRouteSource.next(data);
     }
 
+    /**
+     *
+     * @param data
+     */
     private refreshSidebarView(data: string): void  {
         this.refreshSidebarViewsSource.next(data);
     }
 
+    /**
+     *
+     * @param element
+     */
     private refreshTagView(element): void  {
         this.storageService.currentElement = element;
         this.refreshSidebarView("tag");
     }
 
+    /**
+     *
+     * @param rel
+     */
     public exploreRelation(rel: any): void  {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.storageService.clearRouteData();
@@ -126,6 +161,10 @@ export class ProcessingService {
         }
     }
 
+    /**
+     *
+     * @param stop
+     */
     public exploreStop(stop: any): void {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.mapService.showStop(stop);
@@ -134,8 +173,9 @@ export class ProcessingService {
         this.refreshTagView(stop.tags);
         this.mapService.map.panTo([stop.lat, stop.lon]);
     }
+
     /**
-     *
+     * Filters relations (routes) for given stop.
      * @param stop
      */
     public filterRelationsByStop(stop: IPtStop): object[] {
@@ -154,7 +194,7 @@ export class ProcessingService {
     }
 
     /**
-     *
+     * Filters stops for given relation (route).
      * @param rel
      */
     public filterStopsByRelation(rel: IPtRelation): void {
