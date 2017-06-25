@@ -1,13 +1,16 @@
-import {EventEmitter, Injectable, Injector} from "@angular/core";
+import {EventEmitter, Injectable} from "@angular/core";
 import {Http} from "@angular/http";
-import {Map} from "leaflet";
+
+import {ConfigService} from "./config.service";
+import {LoadingService} from "./loading.service";
 import {StorageService} from "./storage.service";
+
+import {Map} from "leaflet";
 import latLng = L.latLng;
 import LatLngExpression = L.LatLngExpression;
 import LatLngLiteral = L.LatLngLiteral;
-import {ConfigService} from "./config.service";
+
 import {IPtStop} from "../core/ptStop.interface";
-import {LoadingService} from "./loading.service";
 import {IPtRelation} from "../core/ptRelation.interface";
 
 const DEFAULT_ICON = L.icon({
@@ -94,13 +97,21 @@ export class MapService {
         };
     }
 
+    /**
+     * Disables events propagation on map buttons (dragging of map, etc.).
+     * @param elementId
+     */
     public disableMouseEvent(elementId: string): void {
         let element = <HTMLElement>document.getElementById(elementId);
-
-        L.DomEvent.disableClickPropagation(element);
-        L.DomEvent.disableScrollPropagation(element);
+        if (element) {
+            L.DomEvent.disableClickPropagation(element);
+            L.DomEvent.disableScrollPropagation(element);
+        }
     }
 
+    /**
+     * Clears layer with downloaded data.
+     */
     public clearLayer() {
         if (this.ptLayer) {
             this.map.removeLayer(this.ptLayer);
@@ -108,7 +119,13 @@ export class MapService {
         }
     }
 
-    private stylePoint(feature, latlng) {
+    /**
+     * Styles leaflet markers.
+     * @param feature
+     * @param latlng
+     * @returns {any}
+     */
+    private stylePoint(feature, latlng): any {
         let iconUrl = "images/marker-icon.png";
         let shadowUrl = "";
         let fp = feature.properties;
@@ -157,6 +174,11 @@ export class MapService {
         return L.marker(latlng, {icon: myIcon});
     }
 
+    /**
+     * Styles leaflet lines.
+     * @param feature
+     * @returns {{color: string, weight: number, opacity: number}}
+     */
     private styleFeature(feature): object {
         switch (feature.properties.route) {
             case "bus":
@@ -170,6 +192,10 @@ export class MapService {
         }
     }
 
+    /**
+     * Renders GeoJson data on the map.
+     * @param transformedGeojson
+     */
     public renderTransformedGeojsonData(transformedGeojson): void {
         this.ptLayer = L.geoJSON(transformedGeojson, {
             filter: (feature) => {
@@ -192,6 +218,11 @@ export class MapService {
         this.ptLayer.addTo(this.map);
     }
 
+    /**
+     * Creates popup events for leaflet elements.
+     * @param feature
+     * @param layer
+     */
     public enablePopups(feature, layer): void {
         layer.on("click", e => {
             let latlng;
@@ -247,6 +278,10 @@ export class MapService {
         });
     }
 
+    /**
+     * Explores leaflet elements on mouse click.
+     * @param event
+     */
     private handleClick(event): void {
         console.log(event);
         let featureId = event.target["dataset"].id;
@@ -254,6 +289,11 @@ export class MapService {
         this.popupBtnClick.emit([featureType, featureId]);
     }
 
+    /**
+     *
+     * @param requestBody
+     * @param options
+     */
     public renderData(requestBody, options): void {
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map(res => res.json())
@@ -275,6 +315,9 @@ export class MapService {
             });
     }
 
+    /**
+     * Clears active map highlight (stop markers, route lines).
+     */
     public clearHighlight(): void {
         if (this.markerFrom !== undefined) {
             this.map.removeLayer(this.markerFrom);
@@ -290,6 +333,11 @@ export class MapService {
         }
     }
 
+    /**
+     * Returns coordinates for a stop specified by ID.
+     * @param refId
+     * @returns {{lat: number, lng: number}}
+     */
     public findCoordinates(refId): LatLngExpression {
        for (let stop of this.storageService.listOfStops) {
            if (stop.id === refId) {
@@ -298,11 +346,19 @@ export class MapService {
        }
     }
 
+    /**
+     * Highlights stop marker with a circle.
+     * @param stop
+     */
     public showStop(stop: IPtStop) {
         this.markerFrom = L.circleMarker( {lat: stop.lat, lng: stop.lon}, FROM_TO_LABEL);
         this.highlight = L.layerGroup([this.markerFrom]);
     }
 
+    /**
+     * Creates multiple relations highlights.
+     * @param filteredRelationsForStop
+     */
     public showRelatedRoutes(filteredRelationsForStop: object[]): void {
         if (filteredRelationsForStop) {
             this.storageService.stopsForRoute = [];
@@ -315,6 +371,11 @@ export class MapService {
         }
     }
 
+    /**
+     * Builds multiple relations highlights.
+     * @param rel
+     * @returns {boolean}
+     */
     public showRoutes(rel: any): boolean {
         let latlngs = Array();
         this.storageService.stopsForRoute = [];
@@ -340,6 +401,11 @@ export class MapService {
         }
     }
 
+    /**
+     * Builds and creates relation highlight.
+     * @param rel
+     * @returns {boolean}
+     */
     public showRoute(rel: any): boolean {
         let latlngs = Array();
         for (let member of rel.members) {
@@ -372,6 +438,10 @@ export class MapService {
         }
     }
 
+    /**
+     * Verifies if highlight is still active.
+     * @returns {any}
+     */
     public highlightIsActive(): boolean {
         return this.highlightFill || this.highlightStroke || this.markerFrom;
     }

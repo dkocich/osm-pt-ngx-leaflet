@@ -8,4 +8,6 @@ export class ConfigService {
     static overpassUrl = "https://overpass-api.de/api/interpreter";
     static apiTestUrl = "http://api06.dev.openstreetmap.org";
     static appName = p["name"] + "v" + p["version"];
+    public minDownloadZoom = 15;
+    public minDownloadDistance = 5000;
 }

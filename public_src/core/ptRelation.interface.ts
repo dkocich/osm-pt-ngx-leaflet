@@ -1,3 +1,5 @@
+import {OsmEntity} from "./osmEntity.interface";
+import {IPtMember} from "./ptMember";
 /**
  *  {
  *    "type": "relation",
@@ -36,14 +38,7 @@
  *    }
  *  }
  */
-export interface IPtRelation {
-    type: number;
-    id: number;
-    timestamp: string;
-    version: number;
-    changeset: number;
-    user: string;
-    uid: number;
-    members: object[];
-    tags: object;
+export interface IPtRelation extends OsmEntity {
+    type: "relation";
+    members: IPtMember[];
 }

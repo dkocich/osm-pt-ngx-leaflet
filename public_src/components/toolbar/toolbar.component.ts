@@ -1,8 +1,10 @@
 import {Component, ViewChild} from "@angular/core";
-import {MapService} from "../../services/map.service";
+
 import {TransporterComponent} from "../transporter/transporter.component";
-import {OverpassService} from "../../services/overpass.service";
+
 import {ConfigService} from "../../services/config.service";
+import {MapService} from "../../services/map.service";
+import {OverpassService} from "../../services/overpass.service";
 
 @Component({
     selector: "toolbar",
@@ -41,12 +43,12 @@ export class ToolbarComponent {
     }
 
     private checkMinZoomLevel (): boolean {
-        return this.mapService.map.getZoom() > 15;
+        return this.mapService.map.getZoom() > this.configService.minDownloadZoom;
     }
 
     private checkMinDistance(): boolean {
         let lastDownloadCenterDistance = this.mapService.map.getCenter().distanceTo(this.mapService.previousCenter);
-        return lastDownloadCenterDistance > 5000;
+        return lastDownloadCenterDistance > this.configService.minDownloadDistance;
     }
 
     private checkDownloadRules(): boolean {
