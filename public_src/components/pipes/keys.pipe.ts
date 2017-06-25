@@ -1,6 +1,6 @@
 import { PipeTransform, Pipe } from "@angular/core";
 
-@Pipe({name: "keys"})
+@Pipe({name: "keys", pure: true})
 export class KeysPipe implements PipeTransform {
     transform(value, args: string[]): any {
         let keys = [];

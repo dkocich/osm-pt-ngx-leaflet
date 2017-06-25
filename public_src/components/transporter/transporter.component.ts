@@ -1,6 +1,7 @@
 import {Component, ViewChild} from "@angular/core";
-import {ModalDirective} from "ngx-bootstrap";
+
 import {MapService} from "../../services/map.service";
+import {ModalDirective} from "ngx-bootstrap";
 import {OverpassService} from "../../services/overpass.service";
 
 @Component({

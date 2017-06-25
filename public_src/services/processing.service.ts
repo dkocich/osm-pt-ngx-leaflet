@@ -1,10 +1,12 @@
 import {Injectable} from "@angular/core";
-import {StorageService} from "./storage.service";
 import {Subject} from "rxjs/Subject";
+
+import {MapService} from "./map.service";
+import {StorageService} from "./storage.service";
+import {LoadingService} from "./loading.service";
+
 import {IPtStop} from "../core/ptStop.interface";
 import {IPtRelation} from "../core/ptRelation.interface";
-import {MapService} from "./map.service";
-import {LoadingService} from "./loading.service";
 
 @Injectable()
 export class ProcessingService {

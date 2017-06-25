@@ -1,13 +1,16 @@
-import {EventEmitter, Injectable, Injector} from "@angular/core";
+import {EventEmitter, Injectable} from "@angular/core";
 import {Http} from "@angular/http";
-import {Map} from "leaflet";
+
+import {ConfigService} from "./config.service";
+import {LoadingService} from "./loading.service";
 import {StorageService} from "./storage.service";
+
+import {Map} from "leaflet";
 import latLng = L.latLng;
 import LatLngExpression = L.LatLngExpression;
 import LatLngLiteral = L.LatLngLiteral;
-import {ConfigService} from "./config.service";
+
 import {IPtStop} from "../core/ptStop.interface";
-import {LoadingService} from "./loading.service";
 import {IPtRelation} from "../core/ptRelation.interface";
 
 const DEFAULT_ICON = L.icon({

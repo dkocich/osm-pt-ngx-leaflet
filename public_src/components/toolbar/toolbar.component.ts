@@ -1,8 +1,10 @@
 import {Component, ViewChild} from "@angular/core";
-import {MapService} from "../../services/map.service";
+
 import {TransporterComponent} from "../transporter/transporter.component";
-import {OverpassService} from "../../services/overpass.service";
+
 import {ConfigService} from "../../services/config.service";
+import {MapService} from "../../services/map.service";
+import {OverpassService} from "../../services/overpass.service";
 
 @Component({
     selector: "toolbar",
