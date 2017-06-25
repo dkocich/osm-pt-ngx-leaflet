@@ -96,9 +96,10 @@ export class MapService {
 
     public disableMouseEvent(elementId: string): void {
         let element = <HTMLElement>document.getElementById(elementId);
-
-        L.DomEvent.disableClickPropagation(element);
-        L.DomEvent.disableScrollPropagation(element);
+        if (element) {
+            L.DomEvent.disableClickPropagation(element);
+            L.DomEvent.disableScrollPropagation(element);
+        }
     }
 
     public clearLayer() {
