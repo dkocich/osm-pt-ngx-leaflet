@@ -7,73 +7,17 @@
     </div>
 
     <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="small">
-        <table class="table-responsive table-condensed table-bordered table-hover table-striped">
-            <thead>
-            <tr>
-                <td></td>
-                <td title="Id"><b>Id</b></td>
-                <td title="Route"><b>Route</b></td>
-                <td title="Reference"><b>Ref.</b></td>
-                <td title="Name"><b>Name</b></td>
-                <td title="Network"><b>Netw.</b></td>
-                <td title="Operator"><b>Oper.</b></td>
-                <td title="public_transport"><b>P_T</b></td>
-                <td title="public_transport:version"><b>P_T v.</b></td>
-                <td title="Type"><b>Type</b></td>
-                <td title="Complete"><b>Compl.</b></td>
-            </tr>
-            </thead>
-            <tbody #routeTableBody>
-            <tr *ngFor="let rel of listOfRelationsForStop">
-                <td class="explore" (click)="exploreRelation($event, rel)"><i class="fa fa-search" aria-hidden="true"></i></td>
-                <td>{{rel.id}}</td>
-                <td>{{rel.tags.route}}</td>
-                <td>{{rel.tags.ref}}</td>
-                <td>{{rel.tags.name}}</td>
-                <td>{{rel.tags.network}}</td>
-                <td>{{rel.tags.operator}}</td>
-                <td>{{rel.tags.public_transport}}</td>
-                <td>{{rel.tags["public_transport:version"]}}</td>
-                <td>{{rel.tags.type}}</td>
-                <td>{{rel.tags.complete}}</td>
-            </tr>
-            </tbody>
-        </table>
+        <div *ngFor="let rel of listOfRelationsForStop">
+            <span class="explore" (click)="exploreRelation($event, rel)"><i class="fa fa-search" aria-hidden="true"></i></span>
+            <span>{{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}</span>
+        </div>
     </div>
 
     <div *ngIf="listOfRelations.length !== 0 && !filteredView" class="small">
-        <table class="table-responsive table-condensed table-bordered table-hover table-striped">
-            <thead>
-                <tr>
-                    <td></td>
-                    <td title="Id"><b>Id</b></td>
-                    <td title="Route"><b>Route</b></td>
-                    <td title="Reference"><b>Ref.</b></td>
-                    <td title="Name"><b>Name</b></td>
-                    <td title="Network"><b>Netw.</b></td>
-                    <td title="Operator"><b>Oper.</b></td>
-                    <td title="public_transport"><b>P_T</b></td>
-                    <td title="public_transport:version"><b>P_T v.</b></td>
-                    <td title="Type"><b>Type</b></td>
-                    <td title="Complete"><b>Compl.</b></td>
-                </tr>
-            </thead>
-            <tbody #routeTableBody>
-                <tr *ngFor="let rel of listOfRelations" id="{{rel.id}}">
-                    <td class="explore" (click)="exploreRelation($event, rel)"><i class="fa fa-search" aria-hidden="true"></i></td>
-                    <td>{{rel.id}}</td>
-                    <td>{{rel.tags.route}}</td>
-                    <td>{{rel.tags.ref}}</td>
-                    <td>{{rel.tags.name}}</td>
-                    <td>{{rel.tags.network}}</td>
-                    <td>{{rel.tags.operator}}</td>
-                    <td>{{rel.tags.public_transport}}</td>
-                    <td>{{rel.tags["public_transport:version"]}}</td>
-                    <td>{{rel.tags.type}}</td>
-                    <td>{{rel.tags.complete}}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div *ngFor="let rel of listOfRelations" id="{{rel.id}}">
+            <span class="explore" (click)="exploreRelation($event, rel)"><i class="fa fa-search" aria-hidden="true"></i></span>
+            <span>{{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}</span>
+        </div>
     </div>
 
 </div>
