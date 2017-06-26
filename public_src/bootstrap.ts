@@ -12,9 +12,11 @@ import "font-awesome/css/font-awesome.css";
 import "leaflet/dist/leaflet.css";
 import "angular2-busy/build/style/busy.css";
 
+import Raven = require("raven-js");
+
 import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
 import {HttpModule} from "@angular/http";
-import {NgModule} from "@angular/core";
+import {ErrorHandler, NgModule} from "@angular/core";
 import {FormsModule}   from "@angular/forms";
 import {BrowserModule} from "@angular/platform-browser";
 import {AccordionModule, CarouselModule, ModalModule} from "ngx-bootstrap";
@@ -43,6 +45,16 @@ import {LoadingService} from "./services/loading.service";
 
 import {KeysPipe} from "./components/pipes/keys.pipe";
 
+Raven
+    .config("https://6603d76a7ee14d6b8f2cee2680870187@sentry.io/183940")
+    .install();
+
+export class RavenErrorHandler implements ErrorHandler {
+    handleError(err: any): void {
+        Raven.captureException(err.originalError || err);
+    }
+}
+
 @NgModule({
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
         ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot(),
@@ -68,7 +80,8 @@ import {KeysPipe} from "./components/pipes/keys.pipe";
         ProcessingService,
         ConfigService,
         LoadingService,
-        KeysPipe
+        KeysPipe,
+        {provide: ErrorHandler, useClass: RavenErrorHandler}
     ]
 })
 
