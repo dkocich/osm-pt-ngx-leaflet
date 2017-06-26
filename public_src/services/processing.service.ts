@@ -156,9 +156,9 @@ export class ProcessingService {
         if (this.mapService.showRoute(rel)) {
             this.mapService.drawTooltipFromTo(rel);
             this.filterStopsByRelation(rel);
-            this.refreshTagView(rel.tags);
             this.mapService.map.fitBounds(this.mapService.highlightStroke.getBounds());
         }
+        this.refreshTagView(rel.tags);
     }
 
     /**
