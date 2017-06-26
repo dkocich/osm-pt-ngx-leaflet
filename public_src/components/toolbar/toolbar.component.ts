@@ -1,6 +1,7 @@
 import {Component, ViewChild} from "@angular/core";
 
 import {TransporterComponent} from "../transporter/transporter.component";
+import {EditorComponent} from "../editor/editor.component";
 
 import {ConfigService} from "../../services/config.service";
 import {MapService} from "../../services/map.service";
@@ -20,6 +21,7 @@ export class ToolbarComponent {
     private filtering: boolean;
 
     @ViewChild(TransporterComponent) transporterComponent: TransporterComponent;
+    @ViewChild(EditorComponent) editorComponent: EditorComponent;
 
     constructor(private mapService: MapService, private overpassService: OverpassService,
                 private configService: ConfigService) {
@@ -30,6 +32,13 @@ export class ToolbarComponent {
     ngOnInit() {
         this.mapService.disableMouseEvent("toggle-download");
         this.mapService.disableMouseEvent("toggle-filter");
+
+        this.mapService.disableMouseEvent("toggle-edit");
+        this.mapService.disableMouseEvent("edits-backward-btn");
+        this.mapService.disableMouseEvent("edits-forward-btn");
+        this.mapService.disableMouseEvent("edits-count");
+        this.mapService.disableMouseEvent("stop-btn");
+        this.mapService.disableMouseEvent("platform-btn");
     }
 
     Initialize() {

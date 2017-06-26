@@ -1,8 +1,10 @@
 import {Component, ViewChild} from "@angular/core";
 
 import {MapService} from "../../services/map.service";
-import {ModalDirective} from "ngx-bootstrap";
 import {OverpassService} from "../../services/overpass.service";
+import {StorageService} from "../../services/storage.service";
+
+import {ModalDirective} from "ngx-bootstrap";
 
 @Component({
     selector: "transporter",
@@ -21,12 +23,24 @@ export class TransporterComponent {
     ];
     private queryShort = this.favoriteQueries[0].short;
     private queryRaw = decodeURIComponent(this.favoriteQueries[0].raw);
+    private editsSummary;
 
-    constructor(private mapService: MapService, private overpassService: OverpassService) { }
+    constructor(private mapService: MapService, private overpassService: OverpassService,
+                private storageService: StorageService) { }
 
     ngOnInit() {
         this.mapService.disableMouseEvent("download-data");
         this.mapService.disableMouseEvent("upload-data");
+        this.storageService.editsChanged.subscribe(
+            /**
+             * @param data - data event are true when storageService.edits change
+             */
+            (data) => {
+                if (data) {
+                    this.editsSummary = this.storageService.edits;
+                }
+            }
+        );
     }
 
     private requestData(requestBody): void {

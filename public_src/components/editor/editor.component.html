@@ -1,0 +1,48 @@
+<button id="toggle-edit" class="btn btn-default on-map" [class.btn-primary]="editing"
+        title="Enable edit mode" (click)="toggleEditMode()" btnCheckbox>
+    <i class="fa fa-pencil" aria-hidden="true"></i>
+</button>
+<button *ngIf="editing" id="edits-backward-btn" class="btn btn-default on-map"
+        title="Step back" (click)="stepBackward()" [disabled]="isInactive('backward')">
+    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+</button>
+<button *ngIf="editing" id="edits-forward-btn" class="btn btn-default on-map"
+        title="Step forward" (click)="stepForward()" [disabled]="isInactive('forward')">
+    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+</button>
+<span *ngIf="editing" id="edits-count" class="label label-info on-map">
+    <h6>{{currentEditStep }}/{{totalEditSteps }}</h6>
+</span>
+
+<div *ngIf="editing">
+    <button id="stop-btn" type="button" class="btn btn-default on-map"
+            title="Create new stop" (click)="createElement('stop')" disabled>
+        Stop
+    </button>
+    <button id="platform-btn" type="button" class="btn btn-default on-map"
+            title="Create new platform" (click)="createElement('platform')" disabled>
+        Platform
+    </button>
+</div>
+
+<div class="modal fade" bsModal #editModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="myEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Unsaved edits were found</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="continueEditing()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <button type="button" class="btn btn-lg btn-danger" title="Delete changes" (click)="deleteEdits()">
+                    <span class="glyphicon glyphicon-trash"></span> Delete changes
+                </button>
+                <button type="button" class="btn btn-lg btn-success" title="Continue editing" (click)="continueEditing()">
+                    <span class="glyphicon glyphicon-repeat"></span> Continue editing
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
