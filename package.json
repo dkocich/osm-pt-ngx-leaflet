@@ -50,7 +50,7 @@
     "bootstrap": "^3.3.7",
     "express": "^4.15.3",
     "font-awesome": "^4.7.0",
-    "leaflet": "^1.0.3",
+    "leaflet": "^1.1.0",
     "leaflet.vectorgrid": "^1.2.0",
     "ngx-bootstrap": "^1.7.1",
     "osm-auth": "github:osmlab/osm-auth",
