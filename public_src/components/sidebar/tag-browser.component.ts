@@ -14,7 +14,7 @@ import {OsmEntity} from "../../core/osmEntity.interface";
         require<any>("../../styles/main.less")
     ],
     providers: [],
-    changeDetection: ChangeDetectionStrategy.Default // default
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class TagBrowserComponent {
     private currentElement: OsmEntity;

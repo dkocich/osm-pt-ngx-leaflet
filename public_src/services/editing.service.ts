@@ -50,9 +50,9 @@ export class EditingService {
         this.updateCounter();
         // TODO add logic to apply all already created changes
         if (this.storageService.localJsonStorage) {
-            alert("TODO: Data are loaded - edits should be applied");
-            } else {
-            alert("TODO: No loaded data - can't apply saved edits to map now");
+            alert("TODO: Data are loaded - edits should be applied right now.");
+        } else {
+            alert("TODO: There are no loaded data - can't apply saved edits to map now.");
         }
     }
 
@@ -93,7 +93,7 @@ export class EditingService {
                 });
                 break;
             default:
-                alert("change type was not recognized" + JSON.stringify(editObj));
+                alert("Current change type was not recognized " + JSON.stringify(editObj));
         }
         this.processingService.refreshTagView(element);
         this.storageService.syncEdits();
@@ -184,7 +184,7 @@ export class EditingService {
                 alert("TODO: implement changing of tags");
                 break;
             default:
-                alert("change type was not recognized" + JSON.stringify(edit));
+                alert("Current change type was not recognized " + JSON.stringify(edit));
         }
     }
 
@@ -222,7 +222,7 @@ export class EditingService {
                 alert("TODO: implement changing of tags");
                 break;
             default:
-                alert("change type was not recognized" + JSON.stringify(edit));
+                alert("Current change type was not recognized " + JSON.stringify(edit));
         }
     }
 

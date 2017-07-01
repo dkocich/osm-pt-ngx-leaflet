@@ -10,7 +10,6 @@ import {EditingService} from "./editing.service";
 
 import {create} from "xmlbuilder";
 import XMLElementOrXMLNode = require("xmlbuilder");
-// let builder  = require("xmlbuilder").create();
 
 const CONTINUOUS_QUERY: string = `
 [out:json][timeout:25][bbox:{{bbox}}];
@@ -31,14 +30,10 @@ const CONTINUOUS_QUERY: string = `
 (._;>;);
 out meta;`;
 
-// import {osmAuth} from "osm-auth";
-// import osmAuth = require("osm-auth");
-
 @Injectable()
 export class OverpassService {
     public changeset;
     private changeset_id: string;
-    private test = "test bindu";
 
     constructor(private http: Http, private mapService: MapService,
                 private storageService: StorageService,
@@ -48,7 +43,7 @@ export class OverpassService {
                 private editingService: EditingService) { }
 
     /**
-     *
+     * Requests new batch of data from Overpass.
      */
     public requestNewOverpassData(): void {
         this.loadingService.show();
@@ -63,7 +58,6 @@ export class OverpassService {
     }
 
     /**
-     *
      * @param requestBody
      */
     public requestOverpassData(requestBody: string): void {
@@ -75,7 +69,7 @@ export class OverpassService {
     }
 
     /**
-     *
+     * Replaces {{bbox}} query string to actual bbox of the map view.
      * @param requestBody
      * @returns {string}
      */
@@ -122,6 +116,10 @@ export class OverpassService {
         this.putChangeset(this.changeset);
     }
 
+    /**
+     * Adds changeset ID as an attribute to the request.
+     * @param changeset_id
+     */
     private addChangesetId(changeset_id): void {
         this.changeset_id = changeset_id;
         let parser = new DOMParser();
@@ -132,7 +130,7 @@ export class OverpassService {
     }
 
     /**
-     * Creates new changeset.
+     * Creates new changeset on the API and returns its ID in the callback.
      * Put /api/0.6/changeset/create
      */
     public putChangeset(changeset): void {
