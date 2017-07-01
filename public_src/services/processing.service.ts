@@ -5,6 +5,7 @@ import {MapService} from "./map.service";
 import {StorageService} from "./storage.service";
 import {LoadingService} from "./loading.service";
 
+import {OsmEntity} from "../core/osmEntity.interface";
 import {IPtStop} from "../core/ptStop.interface";
 import {IPtRelation} from "../core/ptRelation.interface";
 
@@ -25,7 +26,6 @@ export class ProcessingService {
 
         this.mapService.popupBtnClick.subscribe(
             (data) => {
-                console.log(data);
                 let featureType = data[0];
                 let featureId = Number(data[1]);
                 let element = this.findElementById(featureId, featureType);
@@ -38,6 +38,19 @@ export class ProcessingService {
                 }
             }
         );
+
+        this.mapService.markerClick.subscribe(
+            /**
+             * @param data - string containing ID of clicked marker
+             */
+            (data) => {
+                let featureId = Number(data);
+                let element = this.findElementById(featureId);
+                console.log("LOG: Selected element is ", element);
+                if (!element) { alert("Cliked element was not found?!"); }
+                this.refreshTagView(element);
+            }
+        );
     }
 
     /**
@@ -46,11 +59,10 @@ export class ProcessingService {
      * @param featureType
      * @returns {IPtStop}
      */
-    private findElementById(featureId: number, featureType?: string): object {
+    public findElementById(featureId: number, featureType?: string): OsmEntity {
+        // TODO filter other element types
         for (let element of this.storageService.listOfStops) {
-            console.log(element.id, featureId);
             if (element.id === featureId) {
-                console.log(element);
                 return element;
             }
         }
@@ -88,7 +100,6 @@ export class ProcessingService {
      * @param response
      */
     public processResponse(response: object): void {
-        console.log(response);
         let transformedGeojson = this.mapService.osmtogeojson(response);
         this.storageService.localJsonStorage = response;
         this.storageService.localGeojsonStorage = transformedGeojson;
@@ -125,7 +136,7 @@ export class ProcessingService {
         console.log(
             "Total # of nodes: ", this.storageService.listOfStops.length,
             "Total # of relations: ", this.storageService.listOfRelations.length,
-            "Total # of master rel. ", this.storageService.listOfMasters.length);
+            "Total # of master rel.: ", this.storageService.listOfMasters.length);
     }
 
     /**
@@ -148,7 +159,7 @@ export class ProcessingService {
      *
      * @param data
      */
-    private refreshSidebarView(data: string): void  {
+    public refreshSidebarView(data: string): void  {
         this.refreshSidebarViewsSource.next(data);
     }
 
@@ -156,8 +167,8 @@ export class ProcessingService {
      *
      * @param element
      */
-    private refreshTagView(element): void  {
-        this.storageService.currentElement = element;
+    public refreshTagView(element: OsmEntity): void  {
+        this.storageService.currentElementsChange.emit(JSON.parse(JSON.stringify(element)));
         this.refreshSidebarView("tag");
     }
 
@@ -171,6 +182,7 @@ export class ProcessingService {
         if (this.mapService.showRoute(rel)) {
             this.mapService.drawTooltipFromTo(rel);
             this.filterStopsByRelation(rel);
+            this.refreshTagView(rel);
             this.mapService.map.fitBounds(this.mapService.highlightStroke.getBounds());
         }
         this.refreshTagView(rel.tags);
@@ -185,7 +197,7 @@ export class ProcessingService {
         this.mapService.showStop(stop);
         let filteredRelationsForStop = this.filterRelationsByStop(stop);
         this.mapService.showRelatedRoutes(filteredRelationsForStop);
-        this.refreshTagView(stop.tags);
+        this.refreshTagView(stop);
         this.mapService.map.panTo([stop.lat, stop.lon]);
     }
 

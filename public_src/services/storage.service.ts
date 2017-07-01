@@ -1,5 +1,6 @@
-import {Injectable} from "@angular/core";
+import {EventEmitter, Injectable} from "@angular/core";
 
+import {OsmEntity} from "../core/osmEntity.interface";
 import {IPtStop} from "../core/ptStop.interface";
 
 @Injectable()
@@ -21,9 +22,13 @@ export class StorageService {
     public platformsForRoute: object[] = [];
     public waysForRoute: object[] = [];
     public relationsForRoute: object[] = [];
-    public currentElement: object = {};
+    public currentElement: OsmEntity;
+    public currentElementsChange = new EventEmitter();
 
     public displayName: string = "";
+
+    public edits: object[] = [];
+    public editsChanged: EventEmitter<boolean> = new EventEmitter();
 
     public clearRouteData(): void {
         this.stopsForRoute = [];
@@ -32,7 +37,13 @@ export class StorageService {
         this.relationsForRoute = [];
     }
 
-    constructor() { }
+    constructor() {
+        this.currentElementsChange.subscribe(
+            (data) => {
+                this.currentElement = data;
+            }
+        );
+    }
 
     /**
      * Sets user details after login.
@@ -45,6 +56,14 @@ export class StorageService {
         localStorage.setItem("display_name", displayName);
         localStorage.setItem("id", id);
         localStorage.setItem("count", count);
+    }
+
+    /**
+     * Synchronizes localStorage edits content with current memory object array.
+     */
+    public syncEdits() {
+        localStorage.setItem("edits", JSON.stringify(this.edits));
+        this.editsChanged.emit(true);
     }
 
     /**
@@ -62,8 +81,8 @@ export class StorageService {
      * @returns {any}
      */
     public getSessionStorageItem(key: string): any {
-        let item: any = sessionStorage.getItem(key);
-        return JSON.parse(item);
+        let item: any = JSON.parse(sessionStorage.getItem(key));
+        return item;
     }
 
     /**
@@ -91,8 +110,8 @@ export class StorageService {
      * @returns {any}
      */
     public getLocalStorageItem(key: string): any {
-        let item = sessionStorage.getItem(key);
-        return JSON.parse(item);
+        let item: any = JSON.parse(localStorage.getItem(key));
+        return item;
     }
 
     /**
@@ -102,7 +121,13 @@ export class StorageService {
      */
     public pushToLocalStorageItem(key: string, value: object): void {
         let previousValue: string = localStorage.getItem(key);
-        localStorage.setItem(key, JSON.stringify(previousValue + value));
+        if (!previousValue) {
+            localStorage.setItem(key, JSON.stringify(value));
+        } else {
+            let previousObj: object[] = JSON.parse(previousValue);
+            previousObj.push(value);
+            localStorage.setItem(key, JSON.stringify(previousObj));
+        }
     }
 
     /**
@@ -121,9 +146,42 @@ export class StorageService {
 
     /**
      * Retrieves name of currently logged user.
-     * @returns {string|null}
+     * @returns {string|string|null}
      */
     public getDisplayName(): string {
         return this.displayName || localStorage.getItem("display_name");
     }
+
+    // /**
+    //  * Overwrites last step in the history of edits.
+    //  * @param key
+    //  * @param value
+    //  */
+    // public overwriteLastLocalStorageEdit(key: string, value: object): void {
+    //     let edits: any = JSON.parse(localStorage.getItem(key));
+    //     edits[edits.length - 1] = value;
+    //     localStorage.setItem(key, JSON.stringify(edits));
+    // }
+    //
+    // /**
+    //  *
+    //  */
+    // private countUniqueEdits(): any {
+    //     let idsArray = [];
+    //     // let arr =  this.edits;
+    //     //
+    //     // let counts = {};
+    //     // for (let i = 0; i < arr.length; i++) {
+    //     //     counts[arr[i]["id"]] = 1 + (counts[arr[i]["id"]] || 0);
+    //     // }
+    //
+    //     for (let edit of this.edits) {
+    //         if (!idsArray) {
+    //             idsArray.push(edit["id"]);
+    //         } else {
+    //
+    //         }
+    //     }
+    //     return idsArray.length;
+    // }
 }

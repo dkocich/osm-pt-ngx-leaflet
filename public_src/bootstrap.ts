@@ -34,6 +34,7 @@ import {RouteBrowserComponent} from "./components/sidebar/route-browser.componen
 import {StopBrowserComponent} from "./components/sidebar/stop-browser.component";
 import {TransporterComponent} from "./components/transporter/transporter.component";
 import {AuthComponent} from "./components/auth/auth.component";
+import {EditorComponent} from "./components/editor/editor.component";
 
 import {MapService} from "./services/map.service";
 import {GeocodingService} from "./services/geocoding.service";
@@ -42,6 +43,7 @@ import {StorageService} from "./services/storage.service";
 import {ProcessingService} from "./services/processing.service";
 import {ConfigService} from "./services/config.service";
 import {LoadingService} from "./services/loading.service";
+import {EditingService} from "./services/editing.service";
 
 import {KeysPipe} from "./components/pipes/keys.pipe";
 
@@ -69,6 +71,7 @@ export class RavenErrorHandler implements ErrorHandler {
         RouteBrowserComponent,
         StopBrowserComponent,
         TransporterComponent,
+        EditorComponent,
         AuthComponent,
         KeysPipe
     ],
@@ -80,6 +83,7 @@ export class RavenErrorHandler implements ErrorHandler {
         ProcessingService,
         ConfigService,
         LoadingService,
+        EditingService,
         KeysPipe,
         {provide: ErrorHandler, useClass: RavenErrorHandler}
     ]

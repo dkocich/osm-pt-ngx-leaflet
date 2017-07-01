@@ -6,12 +6,15 @@ import {LoadingService} from "./loading.service";
 import {StorageService} from "./storage.service";
 
 import {Map} from "leaflet";
+import domUtil = L.DomUtil;
 import latLng = L.latLng;
+import LatLng = L.LatLng;
 import LatLngExpression = L.LatLngExpression;
 import LatLngLiteral = L.LatLngLiteral;
 
 import {IPtStop} from "../core/ptStop.interface";
 import {IPtRelation} from "../core/ptRelation.interface";
+import {OsmEntity} from "../core/osmEntity.interface";
 
 const DEFAULT_ICON = L.icon({
     iconUrl: "",
@@ -69,7 +72,11 @@ export class MapService {
     private markerFrom: any = undefined;
     private markerTo: any = undefined;
 
+    public editingMode: boolean;
+
     public popupBtnClick: EventEmitter<any> = new EventEmitter();
+    public markerClick: EventEmitter<any> = new EventEmitter();
+    public markerEdit: EventEmitter<object> = new EventEmitter();
 
     constructor(private http: Http, private storageService: StorageService,
                 private configService: ConfigService, private loadingService: LoadingService) {
@@ -171,7 +178,7 @@ export class MapService {
             shadowSize: [24, 24],
             shadowAnchor: [22, 94]
         });
-        return L.marker(latlng, {icon: myIcon});
+        return L.marker(latlng, {icon: myIcon, draggable: false});
     }
 
     /**
@@ -213,6 +220,7 @@ export class MapService {
             },
             onEachFeature: (feature, layer) => {
                 this.enablePopups(feature, layer);
+                this.enableDrag(feature, layer);
             }
         });
         this.ptLayer.addTo(this.map);
@@ -230,6 +238,10 @@ export class MapService {
             let featureTypeId = feature.id.split("/");
             let featureType = featureTypeId[0];
             let featureId = featureTypeId[1];
+
+            // refresh tag viewer
+            this.handleMarkerClick(featureId);
+
             if (featureType === "node") {
                 popup +=
                     "<h4>Node <a href='//www.openstreetmap.org/node/" +
@@ -279,14 +291,85 @@ export class MapService {
     }
 
     /**
+     *
+     * @param feature
+     * @param layer
+     */
+    public enableDrag(feature, layer) {
+        layer.on("click", e => {
+            if (this.editingMode) {
+                let marker = e.target;
+                if (!marker.dragging._draggable) {
+                    marker.dragging.enable();
+                    // domUtil.addClass(marker._icon, "draggable");
+                    // marker.setZIndexOffset(1000);
+                    // domUtil.create("div", "handledrag", marker._icon);
+                    // marker
+                    //     .on("dragstart drag", function(e) {
+                    //         e.target.closePopup();
+                    //         domUtil.addClass(e.target._icon, "dragged");
+                    //     })
+                    //     .on("dragend", function(e) {
+                    //         domUtil.removeClass(e.target._icon, "dragged");
+                    //         // let newLoc = Climbo.funcs.latlngHuman( e.target.getLatLng(),"","",6);
+                    //         // //$.post("savepos.php", { move: newLoc, id: marker.options.id });
+                    //         // console.log("save position", newLoc);
+                    //     });
+                } else {
+                    // marker.dragging.disable();
+                    // domUtil.removeClass(marker._icon, "draggable");
+                    // marker.off("dragstart drag dragend");
+                    // marker._icon.removeChild(marker._icon.getElementsByClassName("handledrag")[0]);
+                }
+            }
+        });
+
+        layer.on("dragend", e => {
+            // console.log("LOG: dragend event during editing mode", e);
+            let marker = e.target;
+            let featureTypeId = marker.feature.properties.id.split("/");
+            let featureType = featureTypeId[0];
+            let featureId = featureTypeId[1];
+            let lat = marker.feature.geometry.coordinates[1];
+            let lng = marker.feature.geometry.coordinates[0];
+            let originalCoords: LatLng = new LatLng(lat, lng);
+            let newCoords: LatLng = marker["_latlng"]; // .; getLatLng()
+            let distance = originalCoords.distanceTo(newCoords);
+            if (distance > 100) {
+                marker.setLatLng(originalCoords).update();
+                alert("node was dragged more than 100 meters away -> resetting position");
+                return;
+            }
+            // console.log("distance is ", distance, " meters", marker);
+            let change = { from: {"lat": lat, "lng": lng },
+                "to": { "lat": newCoords["lat"], "lng": newCoords["lng"]}
+            };
+            // console.log("marker change is ", change);
+            // TODO markers geometry editing and history undo/redo
+            // this.markerEdit.emit({
+            //     "featureId": featureId,
+            //     "type": "change marker position",
+            //     "change": change });
+        });
+    }
+
+    /**
      * Explores leaflet elements on mouse click.
      * @param event
      */
     private handleClick(event): void {
-        console.log(event);
+        console.log("LOG: click event:", event);
         let featureId = event.target["dataset"].id;
         let featureType = event.target["dataset"].type;
         this.popupBtnClick.emit([featureType, featureId]);
+    }
+
+    /**
+     * Emits event when users clicks map marker.
+     * @param featureId
+     */
+    private handleMarkerClick(featureId: number): void {
+        this.markerClick.emit(featureId);
     }
 
     /**
@@ -308,6 +391,7 @@ export class MapService {
                     },
                     onEachFeature: (feature, layer) => {
                         this.enablePopups(feature, layer);
+                        this.enableDrag(feature, layer);
                     }
                 });
                 this.ptLayer.addTo(this.map);
@@ -467,6 +551,22 @@ export class MapService {
             this.highlight.addLayer(L.layerGroup([this.markerFrom, this.markerTo]));
         } else {
             this.highlight = L.layerGroup([this.markerFrom, this.markerTo]);
+        }
+    }
+
+    /**
+     *
+     * @param element
+     */
+    public zoomToElement(element: OsmEntity): void {
+        if (element.type === "node" ) {
+            this.map.panTo([element["lat"], element["lon"]]);
+        } else {
+            // TODO zoom to line feature
+            // if (this.mapService.map.hasLayer(this.mapService.map.ptLayer)) {
+            //     this.mapService.map.
+            // }
+            alert("cant zoom " + JSON.stringify(element));
         }
     }
 }

@@ -1,8 +1,7 @@
 <div class="content panel panel-body panel-default">
-    <h4 class="text-center text-danger" *ngIf="!elementTags">Please select a feature to browse tags.</h4>
+    <h4 class="text-center text-danger" *ngIf="!currentElement">Please select a feature to browse tags.</h4>
 
-    <div *ngIf="elementTags" class="small">
-
+    <div *ngIf="currentElement" class="small">
         <table class="table-responsive table-condensed table-bordered table-hover table-striped">
             <thead>
             <tr>
@@ -11,56 +10,39 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let tag of elementTags | keys;">
-                <td>{{tag.key }}</td>
-                <td>{{tag.value }}</td>
+            <tr *ngFor="let tag of currentElement['tags'] | keys;">
+                <td>
+                    <ng-container *ngIf="!editingMode">{{tag.key}}</ng-container>
+                    <input type="text" *ngIf="editingMode" value="{{tag.key}}" data-type="key"
+                           (blur)="createChange('change tag', tag.key, $event)">
+                </td>
+                <td>
+                    <ng-container *ngIf="!editingMode">{{tag.value}}</ng-container>
+                    <input type="text" *ngIf="editingMode" value="{{tag.value}}" data-type="value"
+                           (blur)="createChange('change tag', tag.key, $event)">
+                </td>
+                <td *ngIf="editingMode">
+                    <button class="btn btn-sm btn-danger glyphicon glyphicon-minus"
+                            aria-hidden="true" (click)="createChange('remove tag', tag.key)"></button>
+                </td>
             </tr>
-            <tr>
-                <!--<form class="form-group form-inline col-xs-12" #formCtrl="ngForm">-->
+            <tr *ngIf="editingMode">
                 <td>
-                    <input #k class="form-control" id="inputkey" type="text" [value]="tagKey"
-                           (keyup.enter)="updateKey(k.value)" (blur)="updateKey(k.value)"
-                           minlength="1" required>
+                    <input #k class="form-control" id="inputkey" type="text" [ngModel]="tagKey"
+                           (ngModelChange)="keyChange($event)" (keyup.enter)="updateKey(k.value)"
+                           (blur)="updateKey(k.value)" placeholder="Add new tag" minlength="1" required>
                 </td>
                 <td>
-                    <input class="form-control" id="inputvalue" type="text" [value]="tagValue"
-                           #v (keyup.enter)="updateValue(v.value)" (blur)="updateValue(v.value)"
-                           minlength="1" required>
+                    <input #v class="form-control" id="inputvalue" type="text" [ngModel]="tagValue"
+                           (ngModelChange)="valueChange($event)" (keyup.enter)="updateValue(v.value)"
+                           (blur)="updateValue(v.value)" placeholder="Add new value" minlength="1" required>
                 </td>
                 <td>
-                    <button class="btn btn-default glyphicon glyphicon-plus" aria-hidden="true"
-                            (click)="appendNewTag()" [disabled]="isUnchanged()" ></button>
+                    <button class="btn btn-sm btn-default glyphicon glyphicon-plus" aria-hidden="true"
+                            (click)="createChange('add tag')" [disabled]="isUnchanged()"></button>
                 </td>
-                <!--</form>-->
             </tr>
             </tbody>
         </table>
-
-        <!--<div> Current tag and value-->
-            <!--<p>-->
-                <!--{{tagKey}}-->
-                <!--{{tagValue}}-->
-            <!--</p>-->
-            <!--<p>-->
-                <!--{{elementTags | json }}-->
-            <!--</p>-->
-        <!--</div>-->
-        <!--<div> Current changes-->
-            <!--<p>-->
-                <!--{{elementChanges | json }}-->
-            <!--</p>-->
-        <!--</div>-->
-
-        <!--<label for="inputkey">Tags</label>-->
-        <!--<form class="form-group form-inline col-xs-12" #formCtrl="ngForm">-->
-            <!--<input #k class="form-control" id="inputkey" type="text" [value]="tagKey"-->
-                   <!--(keyup.enter)="updateKey(k.value)" (blur)="updateKey(k.value)"-->
-                   <!--minlength="1" required>-->
-            <!--<input class="form-control" id="inputvalue" type="text" [value]="tagValue"-->
-                   <!--#v (keyup.enter)="updateValue(v.value)" (blur)="updateValue(v.value)"-->
-                   <!--minlength="1" required>-->
-            <!--<button class="btn btn-default glyphicon glyphicon-plus" aria-hidden="true"-->
-                    <!--(click)="appendNewTag()" [disabled]="isUnchanged"></button>-->
-        <!--</form>-->
     </div>
 </div>
