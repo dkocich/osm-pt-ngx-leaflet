@@ -4,6 +4,9 @@ import {IPtStop} from "../core/ptStop.interface";
 
 @Injectable()
 export class StorageService {
+    public idsSet = new Set();
+    public elementsMap = new Map();
+
     public localJsonStorage: any;
     public localGeojsonStorage: object;
     public listOfStops: IPtStop[] = [];

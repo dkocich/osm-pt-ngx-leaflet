@@ -57,6 +57,16 @@ export class ProcessingService {
     }
 
     /**
+     * Returns elemenet with specific ID directly from mapped object.
+     * @param featureId
+     */
+    public getElementById(featureId: number): object {
+        if (this.storageService.elementsMap.has(featureId)) {
+            return this.storageService.elementsMap.get(featureId);
+        }
+    }
+
+    /**
      * Filters data in the sidebar depending on current view's bounding box.
      */
     public filterDataInBounds(): void {
@@ -92,19 +102,24 @@ export class ProcessingService {
      */
     public createLists(): void {
         this.storageService.localJsonStorage.elements.forEach( (element) => {
-            switch (element.type) {
-                case "node":
-                    if (element.tags && element.tags.bus === "yes") {
-                        this.storageService.listOfStops.push(element);
-                    }
-                    break;
-                case "relation":
-                    if (element.tags.public_transport === "stop_area") {
-                        this.storageService.listOfMasters.push(element);
-                    } else {
-                        this.storageService.listOfRelations.push(element);
+            if (!this.storageService.idsSet.has(element.id)) {
+                this.storageService.idsSet.add(element.id);
+                this.storageService.elementsMap.set(element.id, element);
+
+                switch (element.type) {
+                    case "node":
+                        if (element.tags && (element.tags.bus === "yes" || element.tags.public_transport)) {
+                            this.storageService.listOfStops.push(element);
+                        }
                         break;
-                    }
+                    case "relation":
+                        if (element.tags.public_transport === "stop_area") {
+                            this.storageService.listOfMasters.push(element);
+                        } else {
+                            this.storageService.listOfRelations.push(element);
+                            break;
+                        }
+                }
             }
         });
         console.log(
