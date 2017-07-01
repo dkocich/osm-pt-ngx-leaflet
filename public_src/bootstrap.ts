@@ -48,9 +48,11 @@ import {AuthService} from "./services/auth.service";
 
 import {KeysPipe} from "./components/pipes/keys.pipe";
 
-Raven
-    .config("https://6603d76a7ee14d6b8f2cee2680870187@sentry.io/183940")
-    .install();
+if (!(window.location.href).indexOf("localhost")) {
+    Raven
+        .config("https://6603d76a7ee14d6b8f2cee2680870187@sentry.io/183940")
+        .install();
+}
 
 export class RavenErrorHandler implements ErrorHandler {
     handleError(err: any): void {
