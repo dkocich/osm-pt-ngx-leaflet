@@ -44,6 +44,7 @@ import {ProcessingService} from "./services/processing.service";
 import {ConfigService} from "./services/config.service";
 import {LoadingService} from "./services/loading.service";
 import {EditingService} from "./services/editing.service";
+import {AuthService} from "./services/auth.service";
 
 import {KeysPipe} from "./components/pipes/keys.pipe";
 
@@ -84,6 +85,7 @@ export class RavenErrorHandler implements ErrorHandler {
         ConfigService,
         LoadingService,
         EditingService,
+        AuthService,
         KeysPipe,
         {provide: ErrorHandler, useClass: RavenErrorHandler}
     ]
