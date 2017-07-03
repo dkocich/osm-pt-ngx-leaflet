@@ -24,8 +24,11 @@ export class TransporterComponent {
     private queryShort = this.favoriteQueries[0].short;
     private queryRaw = decodeURIComponent(this.favoriteQueries[0].raw);
     private editsSummary;
+    private comment: string = "";
+    private source: string = "";
 
-    constructor(private mapService: MapService, private overpassService: OverpassService,
+    constructor(private mapService: MapService,
+                private overpassService: OverpassService,
                 private storageService: StorageService) { }
 
     ngOnInit() {
@@ -46,6 +49,10 @@ export class TransporterComponent {
     private requestData(requestBody): void {
         this.overpassService.requestOverpassData(requestBody);
         this.hideDownloadModal();
+    }
+
+    private uploadData(): void {
+        this.overpassService.uploadData({"comment": this.comment, "source": this.source});
     }
 
     private setQuery(event): void {
