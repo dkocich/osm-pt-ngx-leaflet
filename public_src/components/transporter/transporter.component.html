@@ -55,20 +55,28 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="uploadChangeSummary">Summary:</label>
-                    <textarea class="form-control" id="uploadChangeSummary" rows="10">
-                        {{editsSummary | json}}
-                    </textarea>
-                </div>
-                <div class="form-group">
-                    <label for="uploadComment">Comment:</label>
-                    <input type="text" id="uploadComment" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="uploadSource">Sources:</label>
-                    <input type="text" id="uploadSource" class="form-control">
-                </div>
+                <form #uploadForm="ngForm">
+                    <div class="form-group">
+                        <label for="uploadChangeSummary">Summary:</label>
+                        <textarea class="form-control" id="uploadChangeSummary" rows="10">
+                            {{editsSummary | json}}
+                        </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadComment">Comment:</label>
+                        <input name="comment" type="text" id="uploadComment" class="form-control"
+                               [(ngModel)]="comment">
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadSource">Sources:</label>
+                        <input name="source" type="text" id="uploadSource" class="form-control"
+                               [(ngModel)]="source">
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-success pull-right" (click)="uploadData()"
+                                [disabled]="!uploadForm.form.valid && !uploadForm.form.untouched">Confirm upload</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

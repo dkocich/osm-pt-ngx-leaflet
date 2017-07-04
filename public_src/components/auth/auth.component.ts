@@ -1,5 +1,7 @@
 import {Component} from "@angular/core";
 import {StorageService} from "../../services/storage.service";
+import {ConfigService} from "../../services/config.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
     selector: "auth",
@@ -11,16 +13,10 @@ import {StorageService} from "../../services/storage.service";
 })
 
 export class AuthComponent {
-    private osmAuth: any = require("osm-auth");
-    public auth: any = this.osmAuth({
-        oauth_secret: "vFXps19FPNhWzzGmWbrhNpMv3RYiI1RFL4oK8NPz",
-        oauth_consumer_key: "rPEtcWkEykSKlLccsDS0FaZ9DpGAVPoJfQXWubXl",
-        url: "https://www.openstreetmap.org",
-        singlepage: false
-    });
+
     private displayName: string;
 
-    constructor(private storageService: StorageService) { }
+    constructor(private storageService: StorageService, private authService: AuthService) { }
 
     ngOnInit() {
         this.displayName = this.getDisplayName();
@@ -31,7 +27,7 @@ export class AuthComponent {
     }
 
     private authenticate(): void {
-        this.auth.authenticate(this.gotAuthenticatedCallback.bind(this));
+        this.authService.oauth.authenticate(this.gotAuthenticatedCallback.bind(this));
     }
 
     private gotAuthenticatedCallback(err, response): void {
@@ -39,7 +35,7 @@ export class AuthComponent {
     }
 
     private logout(): void {
-        this.auth.logout();
+        this.authService.oauth.logout();
         document.getElementById("display_name").innerHTML = "";
         this.storageService.clearLocalStorage();
     }
@@ -65,14 +61,14 @@ export class AuthComponent {
     }
 
     private isAuthenticated(): void {
-        return this.auth.authenticated();
+        return this.authService.oauth.authenticated();
     }
 
     private showDetails(): void {
-        this.auth.xhr({
+        this.authService.oauth.xhr({
             method: "GET",
             path: "/api/0.6/user/details",
-            url: "https://www.openstreetmap.org",
+            url: ConfigService.apiTestUrl,
             singlepage: true
         }, this.gotDetailsCallback.bind(this));
     }
