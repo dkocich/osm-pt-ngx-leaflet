@@ -36,7 +36,7 @@ export class TransporterComponent {
         this.mapService.disableMouseEvent("upload-data");
         this.storageService.editsChanged.subscribe(
             /**
-             * @param data - data event are true when storageService.edits change
+             * @param data - data event is true when storageService.edits change
              */
             (data) => {
                 if (data) {

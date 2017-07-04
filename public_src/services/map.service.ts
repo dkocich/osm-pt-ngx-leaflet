@@ -337,7 +337,7 @@ export class MapService {
             let distance = originalCoords.distanceTo(newCoords);
             if (distance > 100) {
                 marker.setLatLng(originalCoords).update();
-                alert("node was dragged more than 100 meters away -> resetting position");
+                alert("Current node was dragged more than 100 meters away -> resetting position.");
                 return;
             }
             // console.log("distance is ", distance, " meters", marker);
@@ -516,7 +516,7 @@ export class MapService {
             return true;
         }
         else {
-            alert("Problem occurred while drawing line (zero length)." +
+            alert("Problem occurred while drawing line (it has zero length - no added stops?)." +
                 "\n\n" + JSON.stringify(rel));
             return false;
         }
@@ -566,7 +566,7 @@ export class MapService {
             // if (this.mapService.map.hasLayer(this.mapService.map.ptLayer)) {
             //     this.mapService.map.
             // }
-            alert("cant zoom " + JSON.stringify(element));
+            alert("FIXME: Can't zoom map to element " + JSON.stringify(element));
         }
     }
 }

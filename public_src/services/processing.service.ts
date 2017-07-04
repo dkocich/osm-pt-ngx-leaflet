@@ -60,19 +60,14 @@ export class ProcessingService {
      * @returns {IPtStop}
      */
     public findElementById(featureId: number, featureType?: string): OsmEntity {
-        // TODO filter other element types
-        for (let element of this.storageService.listOfStops) {
-            if (element.id === featureId) {
-                return element;
-            }
-        }
+        return this.getElementById(featureId);
     }
 
     /**
      * Returns elemenet with specific ID directly from mapped object.
      * @param featureId
      */
-    public getElementById(featureId: number): object {
+    public getElementById(featureId: number): OsmEntity {
         if (this.storageService.elementsMap.has(featureId)) {
             return this.storageService.elementsMap.get(featureId);
         }
@@ -185,7 +180,7 @@ export class ProcessingService {
             this.refreshTagView(rel);
             this.mapService.map.fitBounds(this.mapService.highlightStroke.getBounds());
         }
-        this.refreshTagView(rel.tags);
+        this.refreshTagView(rel);
     }
 
     /**
