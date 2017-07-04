@@ -9,7 +9,7 @@ export class ConfigService {
     static overpassUrl = "https://overpass-api.de/api/interpreter";
     static baseOsmUrl = "https://www.openstreetmap.org";
 
-    static apiUrl = "https://api.openstreetmap.org/api/0.6/node/2194519037";
+    static apiUrl = "https://api.openstreetmap.org/api/0.6";
     static apiConsumerSecret = "vFXps19FPNhWzzGmWbrhNpMv3RYiI1RFL4oK8NPz";
     static apiConsumerKey = "rPEtcWkEykSKlLccsDS0FaZ9DpGAVPoJfQXWubXl";
 
