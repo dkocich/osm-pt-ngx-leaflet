@@ -7,9 +7,9 @@ export class AuthService {
 
     private osmAuth: any = require("osm-auth");
     public oauth: any = this.osmAuth({
-        url: ConfigService.apiTestUrl,
-        oauth_secret: ConfigService.apiTestConsumerSecret,
-        oauth_consumer_key: ConfigService.apiTestConsumerKey,
+        url: ConfigService.apiUrl,
+        oauth_secret: ConfigService.apiConsumerSecret,
+        oauth_consumer_key: ConfigService.apiConsumerKey,
         singlepage: false
     });
 

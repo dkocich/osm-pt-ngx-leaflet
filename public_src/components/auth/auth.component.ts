@@ -68,7 +68,7 @@ export class AuthComponent {
         this.authService.oauth.xhr({
             method: "GET",
             path: "/api/0.6/user/details",
-            url: ConfigService.apiTestUrl,
+            url: ConfigService.apiUrl,
             singlepage: true
         }, this.gotDetailsCallback.bind(this));
     }
