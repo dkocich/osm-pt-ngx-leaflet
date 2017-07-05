@@ -220,7 +220,11 @@ export class ProcessingService {
      * @param rel
      */
     public filterStopsByRelation(rel: IPtRelation): void {
-        this.storageService.listOfStopsForRoute = rel.members;
+        rel.members.forEach((mem) => {
+            let stop = this.getElementById(mem.ref);
+            let stopWithMemberAttr = Object.assign(mem, stop);
+            this.storageService.listOfStopsForRoute.push(stopWithMemberAttr);
+        });
         this.activateFilteredStopView(true);
         this.refreshSidebarView("stop");
     }

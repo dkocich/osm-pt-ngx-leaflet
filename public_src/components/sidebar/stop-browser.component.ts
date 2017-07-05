@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import {StorageService} from "../../services/storage.service";
 import {MapService} from "../../services/map.service";
 import {ProcessingService} from "../../services/processing.service";
+import {EditingService} from "../../services/editing.service";
 
 @Component({
     selector: "stop-browser",
@@ -16,10 +17,12 @@ export class StopBrowserComponent {
     private listOfStops: object[] = this.storageService.listOfStops;
     public listOfStopsForRoute: object[] = this.storageService.listOfStopsForRoute;
     private filteredView: boolean;
+    private editingMode: boolean;
 
     constructor(private storageService: StorageService,
                 private processingService: ProcessingService,
-                private mapService: MapService) {
+                private mapService: MapService,
+                private editingService: EditingService) {
     }
 
     ngOnInit() {
@@ -28,11 +31,22 @@ export class StopBrowserComponent {
                 this.filteredView = data;
             }
         );
+
         this.processingService.refreshSidebarViews$.subscribe(
             data => {
                 if (data === "stop") {
                     this.listOfStopsForRoute = this.storageService.listOfStopsForRoute;
                 }
+            }
+        );
+
+        this.editingService.editingMode.subscribe(
+            /**
+             * @param data
+             */
+            (data) => {
+                console.log("Editing mode change in stopBrowser - ", data);
+                this.editingMode = data;
             }
         );
     }
