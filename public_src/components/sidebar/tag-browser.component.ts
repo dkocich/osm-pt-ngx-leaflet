@@ -40,11 +40,10 @@ export class TagBrowserComponent {
 
         this.editingService.editingMode.subscribe(
             /**
-             *
              * @param data
              */
             (data) => {
-                console.log("Editing mode change - ", data);
+                console.log("Editing mode change in tagBrowser - ", data);
                 this.editingMode = data;
             }
         );
