@@ -126,6 +126,13 @@ export class ProcessingService {
                             break;
                         }
                 }
+                let q: string = "[out:json][timeout:25][bbox:{{bbox}}];(rel(id:";
+                this.storageService.listOfRelations.forEach(function (rel) {
+                    // console.log(rel.id, rel.tags.ref, rel.tags.name);
+                    q = q + rel["id"] + ",";
+                });
+                q = ");<<;);out meta;";
+                console.log(q);
             }
         });
         console.log(
