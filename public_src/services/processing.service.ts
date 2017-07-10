@@ -103,6 +103,31 @@ export class ProcessingService {
         this.loadingService.hide();
     }
 
+    public processMastersResponse(response: object) {
+        response["elements"].forEach((element) => {
+            if (!this.storageService.elementsMap.has(element.id)) {
+                console.log("LOG: New element added:",
+                    element.tags.public_transport === "route_master", element);
+            }
+            this.storageService.elementsMap.set(element.id, element);
+            if (element.tags.public_transport === "route_master") {
+                this.storageService.listOfMasters.push(element);
+            } // do not add other relations because they should be already added
+        });
+        console.log("Total # of master rel. (route_master)", this.storageService.listOfMasters.length);
+
+        let masterIds = [];
+        this.storageService.listOfMasters.forEach( element => {
+            for (let member of element["members"]) {
+                masterIds.push(member["id"]);
+                let element = this.storageService.elementsMap.get(member["id"]);
+                element.hasMaster = true;
+                this.storageService.elementsMap.set(member["id"], element);
+            }
+        });
+        console.log("LOG: master IDs are:", masterIds);
+    }
+
     /**
      * Creates initial list of stops/relations.
      */
@@ -120,7 +145,7 @@ export class ProcessingService {
                         break;
                     case "relation":
                         if (element.tags.public_transport === "stop_area") {
-                            this.storageService.listOfMasters.push(element);
+                            this.storageService.listOfAreas.push(element);
                         } else {
                             this.storageService.listOfRelations.push(element);
                             break;
@@ -131,7 +156,7 @@ export class ProcessingService {
         console.log(
             "Total # of nodes: ", this.storageService.listOfStops.length,
             "Total # of relations: ", this.storageService.listOfRelations.length,
-            "Total # of master rel.: ", this.storageService.listOfMasters.length);
+            "Total # of master rel. (stop areas only): ", this.storageService.listOfAreas.length);
     }
 
     /**
@@ -171,6 +196,19 @@ export class ProcessingService {
      *
      * @param rel
      */
+    public refreshRelationView(rel: IPtRelation) {
+        this.storageService.listOfVariants = [];
+        for (let member of rel.members) {
+            let routeVariant = this.findElementById(member.ref);
+            this.storageService.listOfVariants.push(routeVariant);
+        }
+        this.refreshSidebarView("relation");
+    }
+
+    /**
+     *
+     * @param rel
+     */
     public exploreRelation(rel: any): void  {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.storageService.clearRouteData();
@@ -181,6 +219,20 @@ export class ProcessingService {
             this.mapService.map.fitBounds(this.mapService.highlightStroke.getBounds());
         }
         this.refreshTagView(rel);
+    }
+
+    /**
+     *
+     * @param rel
+     */
+    public exploreMaster(rel: any): void {
+        let routeVariants: object[] = [];
+        for (let member of rel.members) {
+            routeVariants.push(this.findElementById(member.ref));
+        }
+        this.mapService.showRelatedRoutes(routeVariants);
+        this.refreshTagView(rel);
+        this.refreshRelationView(rel);
     }
 
     /**

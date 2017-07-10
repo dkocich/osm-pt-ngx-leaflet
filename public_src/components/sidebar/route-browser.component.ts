@@ -13,6 +13,7 @@ import {ProcessingService} from "../../services/processing.service";
     providers: []
 })
 export class RouteBrowserComponent {
+    private listOfMasters: object[] = this.storageService.listOfMasters;
     private listOfRelations: object[] = this.storageService.listOfRelations;
     private listOfRelationsForStop: object[] = this.storageService.listOfRelationsForStop;
 
@@ -38,13 +39,15 @@ export class RouteBrowserComponent {
         );
     }
 
-    private cancelFilter() {
+    private cancelFilter(): void {
         this.processingService.activateFilteredRouteView(false);
     }
 
-    private exploreRelation($event, rel) {
+    private exploreRelation($event, rel: any): void {
         this.processingService.exploreRelation(rel);
     }
 
-    // listOfRelations = this.storageService.listOfRelations;
+    private exploreMaster($event, rel: any): void {
+        this.processingService.exploreMaster(rel);
+    }
 }

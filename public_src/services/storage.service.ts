@@ -12,7 +12,9 @@ export class StorageService {
     public localGeojsonStorage: object;
     public listOfStops: IPtStop[] = [];
     public listOfRelations: object[] = [];
+    public listOfAreas: object[] = [];
     public listOfMasters: object[] = [];
+    public listOfVariants: object[] = [];
 
     // filtering of sidebar
     public listOfStopsForRoute: object[] = [];

@@ -14,15 +14,30 @@ import XMLElementOrXMLNode = require("xmlbuilder");
 const CONTINUOUS_QUERY: string = `
 [out:json][timeout:25][bbox:{{bbox}}];
 (
-  node["route"="bus"];
-  way["route"="bus"];
-  relation["route"="bus"];
   node["route"="train"];
   way["route"="train"];
   relation["route"="train"];
+  node["route"="subway"];
+  way["route"="subway"];
+  relation["route"="subway"];
+  node["route"="monorail"];
+  way["route"="monorail"];
+  relation["route"="monorail"];
   node["route"="tram"];
   way["route"="tram"];
   relation["route"="tram"];
+  node["route"="bus"];
+  way["route"="bus"];
+  relation["route"="bus"];
+  node["route"="trolleybus"];
+  way["route"="trolleybus"];
+  relation["route"="trolleybus"];
+  node["route"="aerialway"];
+  way["route"="aerialway"];
+  relation["route"="aerialway"];
+  node["route"="ferry"];
+  way["route"="ferry"];
+  relation["route"="ferry"];
   node["public_transport"];
   way["public_transport"];
   relation["public_transport"];
@@ -54,8 +69,33 @@ export class OverpassService {
             .map(res => res.json())
             .subscribe(response => {
                 this.processingService.processResponse(response);
+                this.getRouteMasters();
             });
     }
+
+    /**
+     * Downloads route_master relations for all currently added route relations.
+     */
+    private getRouteMasters() {
+        let query: string = "[out:json][timeout:25][bbox:{{bbox}}];(rel(id:";
+        this.storageService.listOfRelations.forEach((rel, idx) => {
+            if (idx === this.storageService.listOfRelations.length - 1) {
+                query += rel["id"];
+            } else {
+                query += rel["id"] + ",";
+            }
+        });
+        query += ");<<;);out meta;";
+        console.log("LOG: querying route masters with this query: ", query);
+        let requestBody = this.replaceBboxString(query);
+        let options = this.setRequestOptions("application/X-www-form-urlencoded");
+        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+            .map(res => res.json())
+            .subscribe(response => {
+                this.processingService.processMastersResponse(response);
+            });
+    };
+
 
     /**
      * @param requestBody
