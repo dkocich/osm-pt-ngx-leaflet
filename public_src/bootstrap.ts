@@ -46,6 +46,8 @@ import {LoadingService} from "./services/loading.service";
 import {EditingService} from "./services/editing.service";
 import {AuthService} from "./services/auth.service";
 
+import {Angulartics2Module, Angulartics2GoogleAnalytics} from "angulartics2";
+
 import {KeysPipe} from "./components/pipes/keys.pipe";
 
 if (!(window.location.href).indexOf("localhost")) {
@@ -63,7 +65,8 @@ export class RavenErrorHandler implements ErrorHandler {
 @NgModule({
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
         ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot(),
-        BusyModule, BrowserAnimationsModule],
+        BusyModule, BrowserAnimationsModule, Angulartics2Module.forRoot([Angulartics2GoogleAnalytics])
+    ],
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,
