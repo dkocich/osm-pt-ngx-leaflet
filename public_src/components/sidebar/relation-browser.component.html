@@ -1,16 +1,25 @@
 <div class="content panel panel-body panel-default">
-    <div *ngIf="!listOfVariants">
-        <h4 class="text-center text-danger">This relation has no master relation.</h4>
+    <div *ngIf="listOfVariants.length === 0">
+        <h4 class="text-center text-danger">Selected relation has no master relation.</h4>
         <div class="text-center">
-            <button class="btn btn-success" disabled>Create master for currently selected element</button>
-            <button class="btn btn-default" disabled>Find existing master</button>
+            <button class="btn btn-success" tooltip="Create master for currently selected element/relation"
+                    container="body" disabled>Create master rel.</button>
+            <button class="btn btn-default" tooltip="Search existing master relation by attributes"
+                    container="body" disabled>Find existing master</button>
         </div>
     </div>
-    <h4>Route master's variants</h4>
-    <div *ngFor="let rel of listOfVariants">
-        <div id="{{rel.id}}">
-            <span class="explore" (click)="exploreRelation($event, rel)"><i class="fa fa-search" aria-hidden="true"></i></span>
-            <span>{{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}</span>
+    <div *ngIf="listOfVariants.length > 0">
+        This master relation contains {{listOfVariants.length}} route variants.
+        <h4>Route master's variants</h4>
+        <div *ngFor="let rel of listOfVariants">
+            <div id="{{rel.id}}" class="explore" (dblclick)="exploreRelation($event, rel)">
+                <ng-container *ngIf="!rel">One incomplete relation (double click to download)...</ng-container>
+                <i *ngIf="rel && isDownloaded(rel.id)" class="fa fa-check-square-o" aria-hidden="true"
+                   tooltip="Route is fully downloaded" container="body"></i>
+                <i *ngIf="rel && !isDownloaded(rel.id)" class="fa fa-square-o" aria-hidden="true"
+                   tooltip="Route is not fully downloaded" container="body"></i>
+                <span>{{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}</span>
+            </div>
         </div>
     </div>
 </div>

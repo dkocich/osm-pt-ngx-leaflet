@@ -10,6 +10,7 @@ export class StorageService {
     public elementsRendered = new Set();
     public elementsMap = new Map();
     public markersMap = new Map();
+    public elementsToHighlight = new Set();
 
     public localJsonStorage: any = new Map();
     public localGeojsonStorage: any = new Map();

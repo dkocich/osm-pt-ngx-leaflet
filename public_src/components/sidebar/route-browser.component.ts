@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 
+import { EditingService } from "../../services/editing.service";
 import { MapService } from "../../services/map.service";
 import { OverpassService } from "../../services/overpass.service";
 import { ProcessingService } from "../../services/processing.service";
@@ -15,6 +16,7 @@ import { StorageService } from "../../services/storage.service";
     template: require<any>("./route-browser.component.html")
 })
 export class RouteBrowserComponent {
+    private currentElement: any = { type: "not selected" };
     private listOfMasters: object[] = this.storageService.listOfMasters;
     private listOfRelations: object[] = this.storageService.listOfRelations;
     private listOfRelationsForStop: object[] = this.storageService.listOfRelationsForStop;
@@ -22,11 +24,14 @@ export class RouteBrowserComponent {
     private isRequesting: boolean;
     private filteredView: boolean;
     private idsHaveMaster = new Set();
+    private editingMode: boolean;
+    private membersEditing: boolean = false;
 
     constructor(private storageService: StorageService,
                 private processingService: ProcessingService,
                 private mapService: MapService,
-                private overpassService: OverpassService) {
+                private overpassService: OverpassService,
+                private editingService: EditingService) {
     }
 
     ngOnInit() {
@@ -39,19 +44,47 @@ export class RouteBrowserComponent {
             (data) => {
                 if (data === "route") {
                     this.listOfRelationsForStop = this.storageService.listOfRelationsForStop;
+                    this.currentElement = this.storageService.currentElement;
                 }
             }
         );
         this.processingService.refreshMasters.subscribe(
           (data) => {
               this.isRequesting = false;
-              data["idsHaveMaster"].forEach( (id) => this.idsHaveMaster.add(id) );
+              data["idsHaveMaster"].forEach( (id) => {
+                  this.idsHaveMaster.add(id);
+              });
           }
         );
+        this.editingService.editingMode.subscribe(
+            (data) => {
+                console.log("LOG (route-browser) Editing mode change in routeBrowser - ", data);
+                this.editingMode = data;
+            }
+        );
+    }
+
+    private toggleMembersEdit() {
+        this.membersEditing = !this.membersEditing;
+        this.mapService.membersEditing = this.membersEditing;
+        if (this.membersEditing) {
+            console.log("LOG (route-browser) Toggle members edit", this.membersEditing, this.storageService.currentElement);
+            this.editingService.redrawMembersHighlight();
+        } else {
+            this.mapService.clearCircleHighlight();
+        }
     }
 
     private hasMaster(relId: number): boolean {
         return this.idsHaveMaster.has(relId);
+    }
+
+    private isDownloaded(relId) {
+        return this.storageService.elementsDownloaded.has(relId);
+    }
+
+    private masterWasChecked(relId) {
+        return this.storageService.queriedMasters.has(relId);
     }
 
     private cancelFilter(): void {
@@ -59,7 +92,7 @@ export class RouteBrowserComponent {
     }
 
     private exploreRelation($event, rel: any): void {
-        this.processingService.exploreRelation(this.storageService.elementsMap.get(rel.id));
+        this.processingService.exploreRelation(this.storageService.elementsMap.get(rel.id), true);
     }
 
     private exploreMaster($event, rel: any): void {
@@ -70,5 +103,9 @@ export class RouteBrowserComponent {
         this.isRequesting = true;
         console.log("LOG (route-browser) Manually downloading masters");
         this.overpassService.getRouteMasters(1);
+    }
+
+    private createRoute() {
+        this.editingService.createRoute();
     }
 }

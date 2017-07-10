@@ -1,40 +1,61 @@
 <div class="content panel panel-body panel-default">
 
     <div class="text-center">
-        <h4 class="text-danger"
-            *ngIf="listOfRelations.length === 0">There are no loaded routes (zoom map).</h4>
-        <button class="btn btn-warning" *ngIf="filteredView" (click)="cancelFilter()" tooltip="Cancel filter showing only node's related routes">Cancel filter</button>
+        <h4 class="text-danger" *ngIf="listOfRelations.length === 0">There are no loaded routes (zoom map).</h4>
+        <span>
+            <button class="btn btn-warning" *ngIf="filteredView" (click)="cancelFilter()" tooltip="Cancel filter showing only node's related routes">Cancel filter</button>
+        </span>
+        <span *ngIf="editingMode">
+            <button type="button" class="btn btn-default" (click)="createRoute()"
+                    tooltip="Create a new empty route" container="body">
+                <i class="fa fa-road" aria-hidden="true"></i> Create route
+            </button>
+            <button type="button" class="btn btn-default" [disabled]="!editingMode"
+                    [class.btn-primary]="membersEditing" (click)="toggleMembersEdit()" tooltip="Toggle membership editing" container="body" btnCheckbox>
+                <i class="fa fa-list-ol" aria-hidden="true"></i> Change members
+            </button>
+        </span>
+        <span *ngIf="listOfRelations.length > 0" class="text-center medium">
+            <button type="button" class="btn btn-default" (click)="downloadMaster()" [disabled]="isRequesting"
+                    tooltip="Download master relations for currently available routes" container="body">
+                <i *ngIf="isRequesting" class="fa fa-spinner fa-spin"></i>
+                Download master relations
+                (<i class="fa fa-question-circle" aria-hidden="true" tooltip="Route's master relation was not checked" container="body"></i>)
+            </button>
+        </span>
     </div>
 
     <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="medium">
         <div *ngFor="let rel of listOfRelationsForStop">
-            <span class="explore" (click)="exploreRelation($event, rel)">
+            <span class="explore" (dblclick)="exploreRelation($event, rel)">
                 {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
             </span>
-        </div>
-    </div>
-
-    <div *ngIf="listOfRelations.length > 0" class="text-center e=medium">
-        <div>
-            <button type="button" class="btn btn-default" (click)="downloadMaster()" [disabled]="isRequesting"
-                    tooltip="Download master relations for currently available routes" container="body">
-                <span><i *ngIf="isRequesting" class="fa fa-spinner fa-spin"></i></span>Download master relations
-            </button>
         </div>
     </div>
 
     <div *ngIf="listOfRelations.length !== 0 && !filteredView" class="medium">
         <ng-container *ngFor="let rel of listOfMasters">
             <div id="{{rel.id}}">
-                <span class="explore" (click)="exploreMaster($event, rel)">
-                    {{rel.tags.route || "#TYPE" }} Route <b>MASTER</b> {{rel.tags.ref || "#REF"}}: {{rel.tags.name || "#NAME"}}
+                <span class="explore" (dblclick)="exploreMaster($event, rel)">
+                    {{rel.tags.route_master || "#ROUTE_MASTER"}} <i>route <b>MASTER</b></i> {{rel.tags.ref || "#REF"}}: {{rel.tags.name || "#NAME"}}
                 </span>
             </div>
         </ng-container>
         <ng-container *ngFor="let rel of listOfRelations">
             <ng-container *ngIf="!hasMaster(rel.id)">
                 <div id="{{rel.id}}">
-                    <span class="explore" (click)="exploreRelation($event, rel)">
+                    <span class="explore" (dblclick)="exploreRelation($event, rel)">
+                        <i *ngIf="rel.id < 0" class="fa fa-plus" tooltip="This relation is created by you" container="body" aria-hidden="true"></i>
+                        <span *ngIf="rel.id > 0">
+                            <i *ngIf="isDownloaded(rel.id)" class="fa fa-check-square-o" aria-hidden="true"
+                               tooltip="Route is fully downloaded" container="body"></i>
+                            <i *ngIf="!isDownloaded(rel.id)" class="fa fa-square-o" aria-hidden="true"
+                               tooltip="Route is not fully downloaded" container="body"></i>
+                            <i *ngIf="!masterWasChecked(rel.id)" class="fa fa-question-circle" aria-hidden="true"
+                               tooltip="Route's master relation was not checked" container="body"></i>
+                            <i *ngIf="masterWasChecked(rel.id)" class="fa fa-times-circle" aria-hidden="true"
+                               tooltip="Route has no master relation" container="body"></i>
+                        </span>
                         {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
                     </span>
                 </div>

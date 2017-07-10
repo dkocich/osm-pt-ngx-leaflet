@@ -65,7 +65,8 @@ export class ToolbarComponent {
         console.log(this.htRadioModel);
         if (this.highlightIsActive() && this.htRadioModel !== this.mapService.highlightType) {
             this.mapService.highlightType = this.htRadioModel;
-            this.processingService.exploreRelation(this.storageService.elementsMap.get(this.currentElement.id));
+            this.processingService.exploreRelation(
+                this.storageService.elementsMap.get(this.currentElement.id), true, false, false);
         }
     }
 
