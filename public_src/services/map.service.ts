@@ -493,7 +493,7 @@ export class MapService {
         }
         if (latlngs.length > 0) {
             HIGHLIGHT_FILL.color = "#" + (Math.floor(Math.random() * 0xffffff) | 0x0f0f0f).toString(16);
-            this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL);
+            this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL).bindTooltip(rel.tags.name);
             if (this.highlight) {
                 this.highlight.addLayer(L.layerGroup([this.highlightFill]));
             } else {
@@ -530,8 +530,8 @@ export class MapService {
         }
 
         if (latlngs.length > 0) {
-            this.highlightStroke = L.polyline(latlngs, HIGHLIGHT_STROKE);
-            this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL);
+            this.highlightStroke = L.polyline(latlngs, HIGHLIGHT_STROKE).bindTooltip(rel.tags.name);
+            this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL).bindTooltip(rel.tags.name);
             this.highlight = L.layerGroup([this.highlightStroke, this.highlightFill])
                 .addTo(this.map);
             return true;
