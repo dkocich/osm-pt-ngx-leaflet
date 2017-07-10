@@ -67,7 +67,7 @@ export class ProcessingService {
      * Returns elemenet with specific ID directly from mapped object.
      * @param featureId
      */
-    public getElementById(featureId: number): OsmEntity {
+    public getElementById(featureId: number): any {
         if (this.storageService.elementsMap.has(featureId)) {
             return this.storageService.elementsMap.get(featureId);
         }
@@ -157,6 +157,24 @@ export class ProcessingService {
             "Total # of nodes: ", this.storageService.listOfStops.length,
             "Total # of relations: ", this.storageService.listOfRelations.length,
             "Total # of master rel. (stop areas only): ", this.storageService.listOfAreas.length);
+    }
+
+    /**
+     * Highlights downloaded stop areas by rectangles.
+     */
+    public drawStopAreas() {
+        let boundaries = [];
+        for (let area of this.storageService.listOfAreas) {
+            let coords = [];
+            for (let member of area["members"]) {
+                if (member["type"] !== "node") continue;
+                let ref: IPtStop = this.getElementById(member.ref);
+                coords.push([ref.lat, ref.lon]);
+            }
+            let polyline = L.polyline(coords);
+            L.rectangle(polyline.getBounds(),{color: "#000000", fill: false, weight: 2})
+                .bindTooltip(area["tags"].name).addTo(this.mapService.map);
+        }
     }
 
     /**

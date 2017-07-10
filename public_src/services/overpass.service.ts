@@ -69,6 +69,7 @@ export class OverpassService {
             .map(res => res.json())
             .subscribe(response => {
                 this.processingService.processResponse(response);
+                this.processingService.drawStopAreas();
                 this.getRouteMasters();
             });
     }
