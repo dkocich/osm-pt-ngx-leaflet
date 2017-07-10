@@ -574,20 +574,4 @@ export class MapService {
             this.highlight = L.layerGroup([this.markerFrom, this.markerTo]);
         }
     }
-
-    /**
-     *
-     * @param element
-     */
-    public zoomToElement(element: OsmEntity): void {
-        if (element.type === "node" ) {
-            this.map.panTo([element["lat"], element["lon"]]);
-        } else {
-            // TODO zoom to line feature
-            // if (this.mapService.map.hasLayer(this.mapService.map.ptLayer)) {
-            //     this.mapService.map.
-            // }
-            alert("FIXME: Can't zoom map to element " + JSON.stringify(element));
-        }
-    }
 }

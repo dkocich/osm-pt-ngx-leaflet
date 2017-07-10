@@ -298,4 +298,25 @@ export class ProcessingService {
         this.activateFilteredStopView(true);
         this.refreshSidebarView("stop");
     }
+
+    /**
+     * Zooms to the input element (point position or relation geometry).
+     * @param element
+     */
+    public zoomToElement(element: OsmEntity): void {
+        if (element.type === "node" ) {
+            this.mapService.map.panTo([element["lat"], element["lon"]]);
+        } else {
+            let coords = [];
+            for (let member of element["members"]) {
+                if (member.type === "node") {
+                    let element = this.findElementById(member.ref);
+                    coords.push([element["lat"], element["lon"]]);
+                }
+            }
+            let polyline = L.polyline(coords);
+            this.mapService.map.fitBounds(polyline.getBounds());
+            console.log("LOG: fitBounds to relation geometry");
+        }
+    }
 }
