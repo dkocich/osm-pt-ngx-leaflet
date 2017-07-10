@@ -46,7 +46,7 @@ export class AppComponent {
             zoom: 14,
             minZoom: 4,
             maxZoom: 22,
-            layers: [this.mapService.baseMaps.CartoDB]
+            layers: [this.mapService.baseMaps.CartoDB_light]
         });
 
         L.control.zoom({ position: "topright" }).addTo(map);
