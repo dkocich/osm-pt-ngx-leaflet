@@ -69,8 +69,33 @@ export class OverpassService {
             .map(res => res.json())
             .subscribe(response => {
                 this.processingService.processResponse(response);
+                this.getRouteMasters();
             });
     }
+
+    /**
+     * Downloads route_master relations for all currently added route relations.
+     */
+    private getRouteMasters() {
+        let query: string = "[out:json][timeout:25][bbox:{{bbox}}];(rel(id:";
+        this.storageService.listOfRelations.forEach((rel, idx) => {
+            if (idx === this.storageService.listOfRelations.length - 1) {
+                query += rel["id"];
+            } else {
+                query += rel["id"] + ",";
+            }
+        });
+        query += ");<<;);out meta;";
+        console.log("LOG: querying route masters with this query: ", query);
+        let requestBody = this.replaceBboxString(query);
+        let options = this.setRequestOptions("application/X-www-form-urlencoded");
+        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+            .map(res => res.json())
+            .subscribe(response => {
+                this.processingService.processMastersResponse(response);
+            });
+    };
+
 
     /**
      * @param requestBody

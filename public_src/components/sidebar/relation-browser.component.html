@@ -1,9 +1,16 @@
 <div class="content panel panel-body panel-default">
-    <div *ngIf="!listOfRelations">
+    <div *ngIf="!listOfVariants">
         <h4 class="text-center text-danger">This relation has no master relation.</h4>
         <div class="text-center">
             <button class="btn btn-success" disabled>Create master for currently selected element</button>
             <button class="btn btn-default" disabled>Find existing master</button>
+        </div>
+    </div>
+    <h4>Route master's variants</h4>
+    <div *ngFor="let rel of listOfVariants">
+        <div id="{{rel.id}}">
+            <span class="explore" (click)="exploreRelation($event, rel)"><i class="fa fa-search" aria-hidden="true"></i></span>
+            <span>{{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}</span>
         </div>
     </div>
 </div>
