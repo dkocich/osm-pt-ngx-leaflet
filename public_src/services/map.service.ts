@@ -85,22 +85,43 @@ export class MapService {
             Empty: L.tileLayer("", {
                 attribution: ""
             }),
-            OpenStreetMap: L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+            OSM_standard: L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxNativeZoom: 19, maxZoom: 22,
+                attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, Tiles courtesy of <a href='https://openstreetmap.org/' target='_blank'>OpenStreetMap Team</a>"
+            }),
+            OSM_hot: L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
                 maxNativeZoom: 19, maxZoom: 22,
                 attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, Tiles courtesy of <a href='https://hot.openstreetmap.org/' target='_blank'>Humanitarian OpenStreetMap Team</a>"
+            }),
+            OSM_transport: L.tileLayer("http://{s}.tile2.opencyclemap.org/transport/{z}/{x}/{y}.png", {
+                maxNativeZoom: 19, maxZoom: 22,
+                attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, Tiles courtesy of <a href='https://opencyclemap.org/' target='_blank'>OpenStreetMap Team</a>"
+            }),
+            OSM_PT: L.tileLayer("http://www.openptmap.org/tiles/{z}/{x}/{y}.png", {
+                maxNativeZoom: 19, maxZoom: 22,
+                attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, Tiles courtesy of <a href='https://openptmap.org/' target='_blank'>OpenStreetMap Team</a>"
             }),
             Esri: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
                 maxNativeZoom: 19, maxZoom: 22,
                 attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community"
             }),
-            CartoDB: L.tileLayer("http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
+            CartoDB_light: L.tileLayer("http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
                 maxNativeZoom: 19, maxZoom: 22,
                 attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>"
             }),
-            EsriImagery: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+            CartoDB_dark: L.tileLayer("http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png", {
+                maxNativeZoom: 19, maxZoom: 22,
+                attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>"
+            }),
+            // TODO add authorization
+            // MapBox_imagery: L.tileLayer("http://{s}.tiles.mapbox.com/v4/{z}/{x}/{y}.png", {
+            //     maxNativeZoom: 19, maxZoom: 22,
+            //     attribution: "<a href='https://www.mapbox.com/about/maps/'>&copy; Mapbox</a>, <a href='http://www.openstreetmap.org/about/'>&copy; OpenStreetMap</a> and <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10'>Improve this map</a>"
+            // }),
+            Esri_imagery: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
                 maxNativeZoom: 19, maxZoom: 22,
                 attribution: "&copy; ESRI https://leaflet-extras.github.io/leaflet-providers/preview/"
-                })
+            })
         };
     }
 
@@ -472,7 +493,7 @@ export class MapService {
         }
         if (latlngs.length > 0) {
             HIGHLIGHT_FILL.color = "#" + (Math.floor(Math.random() * 0xffffff) | 0x0f0f0f).toString(16);
-            this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL);
+            this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL).bindTooltip(rel.tags.name);
             if (this.highlight) {
                 this.highlight.addLayer(L.layerGroup([this.highlightFill]));
             } else {
@@ -509,8 +530,8 @@ export class MapService {
         }
 
         if (latlngs.length > 0) {
-            this.highlightStroke = L.polyline(latlngs, HIGHLIGHT_STROKE);
-            this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL);
+            this.highlightStroke = L.polyline(latlngs, HIGHLIGHT_STROKE).bindTooltip(rel.tags.name);
+            this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL).bindTooltip(rel.tags.name);
             this.highlight = L.layerGroup([this.highlightStroke, this.highlightFill])
                 .addTo(this.map);
             return true;
