@@ -13,8 +13,6 @@ import LatLngExpression = L.LatLngExpression;
 import LatLngLiteral = L.LatLngLiteral;
 
 import {IPtStop} from "../core/ptStop.interface";
-import {IPtRelation} from "../core/ptRelation.interface";
-import {OsmEntity} from "../core/osmEntity.interface";
 
 const DEFAULT_ICON = L.icon({
     iconUrl: "",

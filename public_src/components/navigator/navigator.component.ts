@@ -1,7 +1,6 @@
 import {Component} from "@angular/core";
 import {GeocodingService} from "../../services/geocoding.service";
 import {MapService} from "../../services/map.service";
-import {Location} from "../../core/location.class";
 import {Map} from "leaflet";
 
 @Component({

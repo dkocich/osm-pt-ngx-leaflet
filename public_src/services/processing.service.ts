@@ -172,7 +172,7 @@ export class ProcessingService {
                 coords.push([ref.lat, ref.lon]);
             }
             let polyline = L.polyline(coords);
-            L.rectangle(polyline.getBounds(),{color: "#000000", fill: false, weight: 2})
+            L.rectangle(polyline.getBounds(), {color: "#000000", fill: false, weight: 2})
                 .bindTooltip(area["tags"].name).addTo(this.mapService.map);
         }
     }

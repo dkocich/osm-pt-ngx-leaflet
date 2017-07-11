@@ -1,4 +1,4 @@
-import {Http, Headers, Response} from "@angular/http";
+import {Http, Response} from "@angular/http";
 import {Location} from "../core/location.class";
 import {Injectable} from "@angular/core";
 
