@@ -6,7 +6,7 @@
         <button class="btn btn-warning" *ngIf="filteredView" (click)="cancelFilter()">Cancel filter</button>
     </div>
 
-    <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="small">
+    <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="medium">
         <div *ngFor="let rel of listOfRelationsForStop">
             <span class="explore" (click)="exploreRelation($event, rel)">
                 {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div *ngIf="listOfRelations.length !== 0 && !filteredView" class="small">
+    <div *ngIf="listOfRelations.length !== 0 && !filteredView" class="medium">
         <ng-container *ngFor="let rel of listOfMasters">
             <div id="{{rel.id}}">
                 <span class="explore" (click)="exploreMaster($event, rel)">

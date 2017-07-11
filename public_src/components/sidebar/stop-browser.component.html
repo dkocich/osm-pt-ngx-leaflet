@@ -6,7 +6,7 @@
         <button class="btn btn-warning" *ngIf="filteredView" (click)="cancelFilter()">Cancel filter</button>
     </div>
 
-    <div *ngIf="filteredView" class="small">
+    <div *ngIf="filteredView" class="medium">
         <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
             <thead>
             <tr>
@@ -33,7 +33,7 @@
         </table>
     </div>
 
-    <div *ngIf="listOfStops.length !== 0 && !filteredView;" class="small">
+    <div *ngIf="listOfStops.length !== 0 && !filteredView;" class="medium">
         <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
             <thead>
             <tr>
