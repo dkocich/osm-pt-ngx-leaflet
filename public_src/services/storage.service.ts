@@ -83,8 +83,7 @@ export class StorageService {
      * @returns {any}
      */
     public getSessionStorageItem(key: string): any {
-        let item: any = JSON.parse(sessionStorage.getItem(key));
-        return item;
+        return JSON.parse(sessionStorage.getItem(key));
     }
 
     /**
@@ -112,8 +111,7 @@ export class StorageService {
      * @returns {any}
      */
     public getLocalStorageItem(key: string): any {
-        let item: any = JSON.parse(localStorage.getItem(key));
-        return item;
+        return JSON.parse(localStorage.getItem(key));
     }
 
     /**

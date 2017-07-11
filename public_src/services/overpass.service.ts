@@ -95,7 +95,7 @@ export class OverpassService {
             .subscribe(response => {
                 this.processingService.processMastersResponse(response);
             });
-    };
+    }
 
 
     /**
@@ -131,8 +131,7 @@ export class OverpassService {
     private setRequestOptions(contentType): RequestOptions {
         let headers = new Headers();
         headers.append("Content-Type", contentType);
-        let options: RequestOptions = new RequestOptions({headers: headers});
-        return options;
+        return new RequestOptions({headers: headers});
     }
 
     /**

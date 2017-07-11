@@ -60,6 +60,7 @@ export class EditingService {
      * Handles the complete process of adding a change to the history.
      * @param element - changed entity
      * @param type - some comment about a created change
+     * @param change - change object
      */
     public addChange(element: any, type: string, change: object): any {
         let edits: object[] = this.storageService.edits;
@@ -152,12 +153,12 @@ export class EditingService {
 
     /**
      * Applies current step of edit.
-     * @param change
+     * @param edit - edit object
      */
     private applyChange(edit: any): void {
         if (!edit.id) alert(edit);
         let element = this.processingService.findElementById(edit["id"]);
-        this.mapService.zoomToElement(element);
+        this.processingService.zoomToElement(element);
         switch (edit.type) {
             case "add tag":
                 console.log("LOG: should add tag: ", edit);
@@ -190,11 +191,11 @@ export class EditingService {
 
     /**
      * Undoes/deletes current step of edit.
-     * @param change
+     * @param edit - edit object
      */
     private undoChange(edit: any): void {
         let element = this.processingService.findElementById(edit["id"]);
-        this.mapService.zoomToElement(element);
+        this.processingService.zoomToElement(element);
 
         switch (edit.type) {
             case "add tag":

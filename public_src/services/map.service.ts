@@ -13,8 +13,6 @@ import LatLngExpression = L.LatLngExpression;
 import LatLngLiteral = L.LatLngLiteral;
 
 import {IPtStop} from "../core/ptStop.interface";
-import {IPtRelation} from "../core/ptRelation.interface";
-import {OsmEntity} from "../core/osmEntity.interface";
 
 const DEFAULT_ICON = L.icon({
     iconUrl: "",
@@ -492,7 +490,7 @@ export class MapService {
             }
         }
         if (latlngs.length > 0) {
-            HIGHLIGHT_FILL.color = "#" + (Math.floor(Math.random() * 0xffffff) | 0x0f0f0f).toString(16);
+            HIGHLIGHT_FILL.color = rel.tags.colour || rel.tags.color || "#" + (Math.floor(Math.random() * 0xffffff) | 0x0f0f0f).toString(16);
             this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL).bindTooltip(rel.tags.name);
             if (this.highlight) {
                 this.highlight.addLayer(L.layerGroup([this.highlightFill]));
@@ -572,22 +570,6 @@ export class MapService {
             this.highlight.addLayer(L.layerGroup([this.markerFrom, this.markerTo]));
         } else {
             this.highlight = L.layerGroup([this.markerFrom, this.markerTo]);
-        }
-    }
-
-    /**
-     *
-     * @param element
-     */
-    public zoomToElement(element: OsmEntity): void {
-        if (element.type === "node" ) {
-            this.map.panTo([element["lat"], element["lon"]]);
-        } else {
-            // TODO zoom to line feature
-            // if (this.mapService.map.hasLayer(this.mapService.map.ptLayer)) {
-            //     this.mapService.map.
-            // }
-            alert("FIXME: Can't zoom map to element " + JSON.stringify(element));
         }
     }
 }
