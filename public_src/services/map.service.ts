@@ -238,7 +238,7 @@ export class MapService {
                 return this.styleFeature(feature);
             },
             onEachFeature: (feature, layer) => {
-                this.enablePopups(feature, layer);
+                this.enableClick(feature, layer);
                 this.enableDrag(feature, layer);
             }
         });
@@ -246,66 +246,17 @@ export class MapService {
     }
 
     /**
-     * Creates popup events for leaflet elements.
+     * Creates click events for leaflet elements.
      * @param feature
      * @param layer
      */
-    public enablePopups(feature, layer): void {
-        layer.on("click", e => {
-            let latlng;
-            let popup = "";
+    public enableClick(feature, layer): void {
+        layer.on("click", event => {
             let featureTypeId = feature.id.split("/");
             let featureType = featureTypeId[0];
             let featureId = featureTypeId[1];
-
-            // refresh tag viewer
             this.handleMarkerClick(featureId);
-
-            if (featureType === "node") {
-                popup +=
-                    "<h4>Node <a href='//www.openstreetmap.org/node/" +
-                    featureId + "' target='_blank'>" + featureId + "</a></h4>";
-            } else if (featureType === "way") {
-                popup +=
-                    "<h4>Way <a href='//www.openstreetmap.org/way/" +
-                    featureId + "' target='_blank'>" + featureId + "</a></h4>";
-            } else if (featureType === "relation") {
-                popup +=
-                    "<h4>Relation <a href='//www.openstreetmap.org/relation/" +
-                    featureId + "' target='_blank'>" + featureId + "</a></h4>";
-            } else {
-                popup +=
-                    "<h4>" + featureType + " #" + featureId + "</h4>";
-            }
-            if (feature.properties && Object.keys(feature.properties).length > 0) {
-                popup += "<h5>Tags:</h5><ul>";
-                for (let k in feature.properties) {
-                    let v = feature.properties[k];
-                    popup += "<li>" + k + "=" + v + "</li>";
-                }
-                popup += "</ul>";
-            }
-            if (featureType === "node") {
-                popup += "<h5>Coordinates:</h5>" + feature.geometry["coordinates"][1].toString() +
-                    ", " + feature.geometry["coordinates"][0].toString() + " (lat, lon)";
-            }
-            if (typeof e.target.getLatLng === "function") {
-                latlng = e.target.getLatLng(); // node-ish features (circles, markers, icons, placeholders)
-            } else {
-                latlng = e.latlng; // all other (lines, polygons, multipolygons)
-            }
-
-            popup += "<div #popupBtns class='text-center' id='popupBtns'></div>";
-
-            let p = L.popup({maxHeight: 600, offset: L.point(0, -20)})
-                .setLatLng(latlng)
-                .setContent(popup);
-            layer.unbindPopup().bindPopup(p).openPopup();
-            let htmlData = "<button type='button' class='btn btn-success' data-type='" + featureType + "' data-id='" + featureId + "'>" +
-                "<i class='fa fa-search' aria-hidden='true'></i>Show related</button>";
-            let el = document.getElementById("popupBtns");
-            el.innerHTML = htmlData;
-            el.addEventListener("click", event => this.handleClick(event));
+            this.handleClick(event);
         });
     }
 
@@ -409,7 +360,6 @@ export class MapService {
                         return this.styleFeature(feature);
                     },
                     onEachFeature: (feature, layer) => {
-                        this.enablePopups(feature, layer);
                         this.enableDrag(feature, layer);
                     }
                 });
