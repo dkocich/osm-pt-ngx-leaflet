@@ -21,3 +21,10 @@
 <div id="info">
     stops: {{info.s}}, relations: {{info.r}}, areas: {{info.a}} masters: {{info.m}}
 </div>
+
+<div id="selection" *ngIf="currentElement">
+    <h3 title="Zoom to current element" class="explore" (click)="zoomTo(currentElement)">Current selection</h3>
+    {{currentElement.tags.name || currentElement.tags.public_transport || ""}} (id: {{currentElement.id || ""}}, type: {{currentElement.type || ""}})
+    <span title="Show more information" class="explore" (click)="showInfo(currentElement)">
+        <i class="fa fa-question-circle" aria-hidden="true"></i></span>
+</div>
