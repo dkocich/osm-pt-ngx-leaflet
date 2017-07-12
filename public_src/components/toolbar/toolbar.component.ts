@@ -6,6 +6,7 @@ import {EditorComponent} from "../editor/editor.component";
 import {ConfigService} from "../../services/config.service";
 import {MapService} from "../../services/map.service";
 import {OverpassService} from "../../services/overpass.service";
+import {StorageService} from "../../services/storage.service";
 
 @Component({
     selector: "toolbar",
@@ -19,12 +20,18 @@ import {OverpassService} from "../../services/overpass.service";
 export class ToolbarComponent {
     public downloading: boolean;
     private filtering: boolean;
+    private info = {
+        "s": this.storageService.listOfStops.length,
+        "r": this.storageService.listOfRelations.length,
+        "a": this.storageService.listOfAreas.length,
+        "m": this.storageService.listOfMasters.length
+    };
 
     @ViewChild(TransporterComponent) transporterComponent: TransporterComponent;
     @ViewChild(EditorComponent) editorComponent: EditorComponent;
 
     constructor(private mapService: MapService, private overpassService: OverpassService,
-                private configService: ConfigService) {
+                private configService: ConfigService, private storageService: StorageService) {
         this.downloading = true;
         this.filtering = this.configService.cfgFilterLines;
     }
