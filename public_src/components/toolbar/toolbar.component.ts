@@ -7,6 +7,9 @@ import {ConfigService} from "../../services/config.service";
 import {MapService} from "../../services/map.service";
 import {OverpassService} from "../../services/overpass.service";
 import {StorageService} from "../../services/storage.service";
+import {ProcessingService} from "../../services/processing.service";
+
+import {OsmEntity} from "../../core/osmEntity.interface";
 
 @Component({
     selector: "toolbar",
@@ -20,6 +23,7 @@ import {StorageService} from "../../services/storage.service";
 export class ToolbarComponent {
     public downloading: boolean;
     private filtering: boolean;
+    private currentElement: OsmEntity;
     private info = {
         "s": this.storageService.listOfStops.length,
         "r": this.storageService.listOfRelations.length,
@@ -31,9 +35,18 @@ export class ToolbarComponent {
     @ViewChild(EditorComponent) editorComponent: EditorComponent;
 
     constructor(private mapService: MapService, private overpassService: OverpassService,
-                private configService: ConfigService, private storageService: StorageService) {
+                private configService: ConfigService, private storageService: StorageService,
+                private processingService: ProcessingService) {
         this.downloading = true;
         this.filtering = this.configService.cfgFilterLines;
+        this.processingService.refreshSidebarViews$.subscribe(
+            data => {
+                if (data === "tag") {
+                    console.log("Current selected element changed - ", data);
+                    this.currentElement = this.storageService.currentElement;
+                }
+            }
+        );
     }
 
     ngOnInit() {
@@ -78,6 +91,18 @@ export class ToolbarComponent {
                 this.initDownloader();
             });
         } else if (!this.downloading) this.mapService.map.off("zoomend moveend");
+    }
+
+    /**
+     *
+     * @param selection
+     */
+    private showInfo(selection: object) {
+        alert(JSON.stringify(selection, null, "\t"));
+    }
+
+    private zoomTo(selection: OsmEntity) {
+        this.processingService.zoomToElement(selection);
     }
 
     private showOptions(): void {

@@ -24,20 +24,20 @@ export class ProcessingService {
                 private mapService: MapService,
                 private loadingService: LoadingService) {
 
-        this.mapService.popupBtnClick.subscribe(
-            (data) => {
-                let featureType = data[0];
-                let featureId = Number(data[1]);
-                let element = this.findElementById(featureId, featureType);
-                if (!element) {
-                    alert("Element was not found?!");
-                } else if (featureType === "node") {
-                    this.exploreStop(element);
-                } else if (featureType === "relation") {
-                    this.exploreRelation(element);
-                }
-            }
-        );
+        // this.mapService.popupBtnClick.subscribe(
+        //     (data) => {
+        //         let featureType = data[0];
+        //         let featureId = Number(data[1]);
+        //         let element = this.findElementById(featureId, featureType);
+        //         if (!element) {
+        //             alert("Element was not found?!");
+        //         } else if (featureType === "node") {
+        //             this.exploreStop(element);
+        //         } else if (featureType === "relation") {
+        //             this.exploreRelation(element);
+        //         }
+        //     }
+        // );
 
         this.mapService.markerClick.subscribe(
             /**
@@ -46,8 +46,8 @@ export class ProcessingService {
             (data) => {
                 let featureId = Number(data);
                 let element = this.findElementById(featureId);
+                if (!element) alert("Clicked element was not found?!");
                 console.log("LOG: Selected element is ", element);
-                if (!element) { alert("Cliked element was not found?!"); }
                 this.refreshTagView(element);
             }
         );

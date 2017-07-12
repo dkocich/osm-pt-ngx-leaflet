@@ -72,7 +72,7 @@ export class MapService {
 
     public editingMode: boolean;
 
-    public popupBtnClick: EventEmitter<any> = new EventEmitter();
+    // public popupBtnClick: EventEmitter<any> = new EventEmitter();
     public markerClick: EventEmitter<any> = new EventEmitter();
     public markerEdit: EventEmitter<object> = new EventEmitter();
 
@@ -252,11 +252,7 @@ export class MapService {
      */
     public enableClick(feature, layer): void {
         layer.on("click", event => {
-            let featureTypeId = feature.id.split("/");
-            let featureType = featureTypeId[0];
-            let featureId = featureTypeId[1];
-            this.handleMarkerClick(featureId);
-            this.handleClick(event);
+            this.handleMarkerClick(feature);
         });
     }
 
@@ -324,22 +320,16 @@ export class MapService {
     }
 
     /**
-     * Explores leaflet elements on mouse click.
-     * @param event
-     */
-    private handleClick(event): void {
-        console.log("LOG: click event:", event);
-        let featureId = event.target["dataset"].id;
-        let featureType = event.target["dataset"].type;
-        this.popupBtnClick.emit([featureType, featureId]);
-    }
-
-    /**
      * Emits event when users clicks map marker.
-     * @param featureId
+     * @param feature
      */
-    private handleMarkerClick(featureId: number): void {
+    private handleMarkerClick(feature: any): void {
+        let featureTypeId = feature.id.split("/");
+        let featureType = featureTypeId[0];
+        let featureId = featureTypeId[1];
         this.markerClick.emit(featureId);
+        // explores leaflet element
+        // this.popupBtnClick.emit([featureType, featureId]);
     }
 
     /**
