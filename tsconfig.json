@@ -10,6 +10,7 @@
     "noImplicitAny": false,
     "skipLibCheck": true,
     "lib": ["es2015", "es2017", "dom"],
+    "typeRoots": [ "node_modules/@types" ],
     "types": [
       "node",
       "jasmine"
