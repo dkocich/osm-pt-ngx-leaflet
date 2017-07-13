@@ -49,16 +49,14 @@ export class TagBrowserComponent {
         );
     }
 
+    private checkUnchanged(change): boolean {
+        return change.from.key === change.to.key && change.from.value === change.to.value;
+    }
+
     private createChange(type: string, key?: string, event?): void {
         let change: object;
 
         if (type === "change tag") {
-
-            // FIXME quit function when user leaves input field without any change
-            if (key === event.target.value || key === this.currentElement.tags[key]) {
-                console.log("LOG: no input edit change, should quit");
-                return;
-            }
 
             // handles changes from one of two input text areas
             switch (event.target["dataset"].type) {
@@ -67,16 +65,18 @@ export class TagBrowserComponent {
                         "from": {"key": key, "value": this.currentElement.tags[key] },
                         "to": {"key": event.target.value, "value": this.currentElement.tags[key] }
                     };
-                    delete this.currentElement.tags[key];
+                    if (this.checkUnchanged(change)) return;
                     this.currentElement.tags[event.target.value] = this.currentElement.tags[key];
+                    delete this.currentElement.tags[key];
                     break;
                 case "value":
                     change = {
                         "from": {"key": key, "value": this.currentElement.tags[key] },
                         "to": {"key": key, "value": event.target.value }
                     };
-                    delete this.currentElement.tags[key];
+                    if (this.checkUnchanged(change)) return;
                     this.currentElement.tags[key] = event.target.value;
+                    // delete this.currentElement.tags[key];
                     break;
                 default:
                     alert("form type not found");
