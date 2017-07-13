@@ -452,13 +452,13 @@ export class MapService {
     public showRoute(rel: any): boolean {
         let latlngs = Array();
         for (let member of rel.members) {
-            if (member.type === "node" && ["stop", "stop_entry_only"]
+            if (member.type === "node" && ["stop", "stop_entry_only", "stop_exit_only"]
                     .indexOf(member.role) > -1) {
                 this.storageService.stopsForRoute.push(member.ref);
                 let latlng: LatLngExpression = this.findCoordinates(member.ref);
                 if (latlng) latlngs.push(latlng);
             }
-            else if (member.type === "node" && ["platform", "platform_entry_only"]
+            else if (member.type === "node" && ["platform", "platform_entry_only", "platform_exit_only"]
                     .indexOf(member.role) > -1) {
                 this.storageService.platformsForRoute.push(member.ref);
             }
