@@ -66,8 +66,8 @@ export class TagBrowserComponent {
                         "to": {"key": event.target.value, "value": this.currentElement.tags[key] }
                     };
                     if (this.checkUnchanged(change)) return;
-                    delete this.currentElement.tags[key];
                     this.currentElement.tags[event.target.value] = this.currentElement.tags[key];
+                    delete this.currentElement.tags[key];
                     break;
                 case "value":
                     change = {
@@ -75,8 +75,8 @@ export class TagBrowserComponent {
                         "to": {"key": key, "value": event.target.value }
                     };
                     if (this.checkUnchanged(change)) return;
-                    delete this.currentElement.tags[key];
                     this.currentElement.tags[key] = event.target.value;
+                    // delete this.currentElement.tags[key];
                     break;
                 default:
                     alert("form type not found");

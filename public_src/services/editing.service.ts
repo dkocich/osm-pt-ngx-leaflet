@@ -57,6 +57,28 @@ export class EditingService {
     }
 
     /**
+     * Checks if the last edit was made on the same tag like the new change.
+     * @param change
+     * @returns {boolean}
+     */
+    private shouldCombineChanges(change) {
+        let last = this.storageService.edits[this.storageService.edits.length - 1];
+        return last["change"].to.key === change.from.key && last["change"].to.value === change.from.value;
+    }
+
+    /**
+     * Checks if last two changes are on the same tag and combines them in edit. history together.
+     * @param editObj
+     */
+    private combineChanges(editObj) {
+        console.log("LOG: combining changes");
+        let last = this.storageService.edits[this.storageService.edits.length - 1];
+        last["change"].to.key = editObj.change.to.key;
+        last["change"].to.value = editObj.change.to.value;
+        this.storageService.edits[this.storageService.edits.length - 1] = last;
+    }
+
+    /**
      * Handles the complete process of adding a change to the history.
      * @param element - changed entity
      * @param type - some comment about a created change
@@ -72,7 +94,12 @@ export class EditingService {
         if (this.isBrowsingHistoryOfChanges()) {
             this.deleteMoreRecentChanges(this.currentEditStep);
         }
-        this.storageService.edits.push(editObj);
+
+        if (type === "change tag" && this.storageService.edits.length && this.shouldCombineChanges(change)) {
+            this.combineChanges(editObj);
+        } else {
+            this.storageService.edits.push(editObj);
+        }
 
         switch (editObj.type) {
             case "add tag":
@@ -90,6 +117,16 @@ export class EditingService {
                     if (element.id === editObj.id) {
                         delete element.tags[editObj.change.key];
                         console.log("LOG: removed element: ", element);
+                    }
+                });
+                break;
+            case "change tag":
+                console.log("LOG: I should make this change: ", editObj);
+                this.storageService.localJsonStorage.elements.forEach( (element) => {
+                    if (element.id === editObj.id) {
+                        delete element.tags[editObj.change.from.key];
+                        element.tags[editObj.change.to.key] = editObj.change.to.value;
+                        console.log("LOG: changed element: ", element);
                     }
                 });
                 break;
