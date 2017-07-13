@@ -218,8 +218,15 @@ export class EditingService {
                 });
                 break;
             case "change tag":
-                // TODO
-                alert("TODO: implement changing of tags");
+                console.log("LOG: should reapply this changed tag: ", edit);
+                this.storageService.localJsonStorage.elements.forEach( (element) => {
+                    if (element.id === edit.id) {
+                        delete element.tags[edit.change.from.key];
+                        element.tags[edit.change.to.key] = edit.change.to.value;
+                        console.log("LOG: changed again", element);
+                        this.processingService.refreshTagView(element);
+                    }
+                });
                 break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
@@ -256,8 +263,15 @@ export class EditingService {
                 });
                 break;
             case "change tag":
-                // TODO
-                alert("TODO: implement changing of tags");
+                console.log("LOG: should undo this changed tag: ", edit);
+                this.storageService.localJsonStorage.elements.forEach( (element) => {
+                    if (element.id === edit.id) {
+                        delete element.tags[edit.change.to.key];
+                        element.tags[edit.change.from.key] = edit.change.from.value;
+                        console.log("LOG: changed again", element);
+                        this.processingService.refreshTagView(element);
+                    }
+                });
                 break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
