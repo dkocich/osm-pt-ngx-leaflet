@@ -13,7 +13,7 @@
 </nav>
 
 <div id="map">
-    <div [ngBusy]="{busy: isLoading(), message: 'Loading...', backdrop: true, delay: 500, minDuration: 1}"
+    <div [ngBusy]="{busy: isLoading(), message: getStatus(), backdrop: true, delay: 500, minDuration: 1}"
          *ngIf="isLoading()"></div>
     <navigator></navigator>
     <toolbar></toolbar>

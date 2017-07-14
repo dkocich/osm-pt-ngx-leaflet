@@ -38,6 +38,10 @@ export class AppComponent {
         return this.loadingService.isLoading();
     }
 
+    private getStatus(): string {
+        return this.loadingService.getStatus();
+    }
+
     ngOnInit() {
         let map = L.map("map", {
             zoomAnimation: false,
