@@ -31,6 +31,7 @@ export class StorageService {
 
     public edits: object[] = [];
     public editsChanged: EventEmitter<boolean> = new EventEmitter();
+    public stats: EventEmitter<object> = new EventEmitter();
 
     public clearRouteData(): void {
         this.stopsForRoute = [];
@@ -45,6 +46,19 @@ export class StorageService {
                 this.currentElement = data;
             }
         );
+    }
+
+    /**
+     * Logs basic data statistics.
+     */
+    public logStats() {
+        let stats = {
+            "s": this.listOfStops.length,
+            "r": this.listOfRelations.length,
+            "a": this.listOfAreas.length,
+            "m": this.listOfMasters.length
+        };
+        this.stats.emit(stats);
     }
 
     /**

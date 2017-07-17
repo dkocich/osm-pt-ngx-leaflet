@@ -24,12 +24,7 @@ export class ToolbarComponent {
     public downloading: boolean;
     private filtering: boolean;
     private currentElement: OsmEntity;
-    private info = {
-        "s": this.storageService.listOfStops.length,
-        "r": this.storageService.listOfRelations.length,
-        "a": this.storageService.listOfAreas.length,
-        "m": this.storageService.listOfMasters.length
-    };
+    private stats = {"s": 0, "r": 0, "a": 0, "m": 0};
 
     @ViewChild(TransporterComponent) transporterComponent: TransporterComponent;
     @ViewChild(EditorComponent) editorComponent: EditorComponent;
@@ -47,6 +42,7 @@ export class ToolbarComponent {
                 }
             }
         );
+        this.storageService.stats.subscribe(data => this.stats = data);
     }
 
     ngOnInit() {
