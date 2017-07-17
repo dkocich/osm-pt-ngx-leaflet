@@ -115,6 +115,7 @@ export class ProcessingService {
             } // do not add other relations because they should be already added
         });
         console.log("Total # of master rel. (route_master)", this.storageService.listOfMasters.length);
+        this.storageService.logStats();
 
         let masterIds = [];
         this.storageService.listOfMasters.forEach( element => {
@@ -157,6 +158,7 @@ export class ProcessingService {
             "Total # of nodes: ", this.storageService.listOfStops.length,
             "Total # of relations: ", this.storageService.listOfRelations.length,
             "Total # of master rel. (stop areas only): ", this.storageService.listOfAreas.length);
+        this.storageService.logStats();
     }
 
     /**
