@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {EventEmitter, Injectable} from "@angular/core";
 import {Subject} from "rxjs/Subject";
 
 import {MapService} from "./map.service";
@@ -19,6 +19,9 @@ export class ProcessingService {
     public showRelationsForStop$ = this.showRelationsForStopSource.asObservable();
     public showStopsForRoute$ = this.showStopsForRouteSource.asObservable();
     public refreshSidebarViews$ = this.refreshSidebarViewsSource.asObservable();
+
+    public membersToDownload: EventEmitter<object> = new EventEmitter();
+    public refreshMasters: EventEmitter<object> = new EventEmitter();
 
     constructor(private storageService: StorageService,
                 private mapService: MapService,
@@ -103,30 +106,65 @@ export class ProcessingService {
         this.loadingService.hide();
     }
 
-    public processMastersResponse(response: object) {
-        response["elements"].forEach((element) => {
+    /**
+     *
+     * @param response
+     */
+    public processNodeResponse(response) {
+        for (let element of response.elements) {
             if (!this.storageService.elementsMap.has(element.id)) {
-                console.log("LOG: New element added:",
-                    element.tags.public_transport === "route_master", element);
+                this.storageService.elementsMap.set(element.id, element);
+
+                switch (element.type) {
+                    case "node":
+                        // only nodes are fully downloaded
+                        this.storageService.elementsDownloaded.add(element.id);
+
+                        if (element.tags && (element.tags.bus === "yes" || element.tags.public_transport)) {
+                            this.storageService.listOfStops.push(element);
+                        }
+                        break;
+                    case "relation":
+                        if (element.tags.public_transport === "stop_area") {
+                            this.storageService.listOfAreas.push(element);
+                        } else {
+                            this.storageService.listOfRelations.push(element);
+                            break;
+                        }
+                }
             }
-            this.storageService.elementsMap.set(element.id, element);
-            if (element.tags.public_transport === "route_master") {
-                this.storageService.listOfMasters.push(element);
-            } // do not add other relations because they should be already added
+        }
+        this.storageService.logStats();
+    }
+
+    /**
+     *
+     * @param response
+     */
+    public processMastersResponse(response: object) {
+        response["elements"].forEach( element => {
+            if (!this.storageService.elementsMap.has(element.id)) {
+                console.log("LOG: New element added:", element.tags.public_transport === "route_master", element);
+                this.storageService.elementsMap.set(element.id, element);
+                this.storageService.elementsDownloaded.add(element.id);
+                if (element.tags.public_transport === "route_master") {
+                    this.storageService.listOfMasters.push(element);
+                } else {
+                    console.log("WARNING: new elements? " , element);
+                }// do not add other relations because they should be already added
+            }
         });
         console.log("Total # of master rel. (route_master)", this.storageService.listOfMasters.length);
         this.storageService.logStats();
 
-        let masterIds = [];
-        this.storageService.listOfMasters.forEach( element => {
-            for (let member of element["members"]) {
-                masterIds.push(member["id"]);
-                let element = this.storageService.elementsMap.get(member["id"]);
-                element.hasMaster = true;
-                this.storageService.elementsMap.set(member["id"], element);
+        let idsHaveMaster: number[] = [];
+        this.storageService.listOfMasters.forEach( master => {
+            for (let member of master["members"]) {
+                idsHaveMaster.push(member["ref"]);
             }
         });
-        console.log("LOG: master IDs are:", masterIds);
+        this.refreshMasters.emit({ "idsHaveMaster": idsHaveMaster });
+        console.log("LOG (processing s.) Master IDs are:", idsHaveMaster);
     }
 
     /**
@@ -134,8 +172,7 @@ export class ProcessingService {
      */
     public createLists(): void {
         this.storageService.localJsonStorage.elements.forEach( (element) => {
-            if (!this.storageService.idsSet.has(element.id)) {
-                this.storageService.idsSet.add(element.id);
+            if (!this.storageService.elementsMap.has(element.id)) {
                 this.storageService.elementsMap.set(element.id, element);
 
                 switch (element.type) {
@@ -154,10 +191,6 @@ export class ProcessingService {
                 }
             }
         });
-        console.log(
-            "Total # of nodes: ", this.storageService.listOfStops.length,
-            "Total # of relations: ", this.storageService.listOfRelations.length,
-            "Total # of master rel. (stop areas only): ", this.storageService.listOfAreas.length);
         this.storageService.logStats();
     }
 
@@ -226,19 +259,46 @@ export class ProcessingService {
     }
 
     /**
-     *
+     * Explores relation by downloading its members and highlighting stops position with a line.
      * @param rel
+     * @param refreshTagView?
      */
-    public exploreRelation(rel: any): void  {
+    public exploreRelation(rel: any, refreshTagView?: boolean): void  {
+        let missingElements = [];
+        let allowedRefs = ["stop", "stop_exit_only", "stop_entry_only",
+            "platform", "platform_exit_only", "platform_entry_only"];
+        rel["members"].forEach( member => {
+           if (!this.storageService.elementsMap.has(member.ref) &&
+               ["node"].indexOf(member.type) > -1 && allowedRefs.indexOf(member.role) > -1 )
+               missingElements.push(member.ref);
+        });
+
+        // check if relation and all its members are downloaded -> get missing
+        if (!this.storageService.elementsDownloaded.has(rel.id) &&
+            rel["members"].length > 0 && missingElements.length > 0) {
+            this.membersToDownload.emit({"rel": rel, "missingElements": missingElements});
+            // return alert("FIXME: Relation is not (completely) downloaded! Missing: " + missingElements.join(", "));
+        } else if (this.storageService.elementsDownloaded.has(rel.id)) {
+            this.downloadedMissingMembers(rel, true);
+        } else {
+            return alert("FIXME: Some other problem with relation: " + JSON.stringify(rel));
+        }
+    }
+
+    /**
+     * Runs rest of the route's higlighting process after the missing members are downloaded.
+     * @param rel
+     * @param refreshTagView
+     */
+    public downloadedMissingMembers(rel: any, refreshTagView?: boolean): void {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.storageService.clearRouteData();
         if (this.mapService.showRoute(rel)) {
             this.mapService.drawTooltipFromTo(rel);
             this.filterStopsByRelation(rel);
-            this.refreshTagView(rel);
             this.mapService.map.fitBounds(this.mapService.highlightStroke.getBounds());
         }
-        this.refreshTagView(rel);
+        if (refreshTagView) this.refreshTagView(rel);
     }
 
     /**
@@ -246,11 +306,17 @@ export class ProcessingService {
      * @param rel
      */
     public exploreMaster(rel: any): void {
-        let routeVariants: object[] = [];
-        for (let member of rel.members) {
-            routeVariants.push(this.findElementById(member.ref));
+        // if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
+        // let routeVariants: object[] = [];
+        // for (let member of rel.members) {
+        //     routeVariants.push(this.findElementById(member.ref));
+        // }
+        console.log("LOG (processing s.) First master's variant was found: ", this.storageService.elementsMap.has(rel.members[0].ref));
+        if (!this.storageService.elementsMap.has(rel.members[0].ref)) {
+            return alert("FIXME: first master's variant is not fully downloaded.");
         }
-        this.mapService.showRelatedRoutes(routeVariants);
+        this.exploreRelation(this.findElementById(rel.members[0].ref), false);
+        // this.mapService.showRelatedRoutes(routeVariants);
         this.refreshTagView(rel);
         this.refreshRelationView(rel);
     }
@@ -307,14 +373,23 @@ export class ProcessingService {
      */
     public zoomToElement(element: OsmEntity): void {
         if (element.type === "node" ) {
-            this.mapService.map.panTo([element["lat"], element["lon"]]);
+            if (!element["lat"] || !element["lon"]) {
+                return alert("Warning: Element has no coordinates." + element);
+            } else {
+                this.mapService.map.panTo([element["lat"], element["lon"]]);
+            }
         } else {
             let coords = [];
             for (let member of element["members"]) {
                 if (member.type === "node") {
                     let element = this.findElementById(member.ref);
-                    coords.push([element["lat"], element["lon"]]);
+                    if (element["lat"] && element["lon"]) {
+                        coords.push([element["lat"], element["lon"]]);
+                    }
                 }
+            }
+            if (coords.length < 2) {
+                return alert("FIXME: Not enough coordinates to fitBounds");
             }
             let polyline = L.polyline(coords);
             this.mapService.map.fitBounds(polyline.getBounds());

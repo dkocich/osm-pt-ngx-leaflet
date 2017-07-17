@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import {StorageService} from "../../services/storage.service";
 import {MapService} from "../../services/map.service";
 import {ProcessingService} from "../../services/processing.service";
+import {OverpassService} from "../../services/overpass.service";
 
 @Component({
     selector: "route-browser",
@@ -17,11 +18,14 @@ export class RouteBrowserComponent {
     private listOfRelations: object[] = this.storageService.listOfRelations;
     private listOfRelationsForStop: object[] = this.storageService.listOfRelationsForStop;
 
+    private isRequesting: boolean;
     private filteredView: boolean;
+    private idsHaveMaster = new Set();
 
     constructor(private storageService: StorageService,
                 private processingService: ProcessingService,
-                private mapService: MapService) {
+                private mapService: MapService,
+                private overpassService: OverpassService) {
     }
 
     ngOnInit() {
@@ -37,6 +41,16 @@ export class RouteBrowserComponent {
                 }
             }
         );
+        this.processingService.refreshMasters.subscribe(
+          data => {
+              this.isRequesting = false;
+              data["idsHaveMaster"].forEach( id => this.idsHaveMaster.add(id) );
+          }
+        );
+    }
+
+    private hasMaster(relId: number): boolean {
+        return this.idsHaveMaster.has(relId);
     }
 
     private cancelFilter(): void {
@@ -49,5 +63,11 @@ export class RouteBrowserComponent {
 
     private exploreMaster($event, rel: any): void {
         this.processingService.exploreMaster(rel);
+    }
+
+    private downloadMaster() {
+        this.isRequesting = true;
+        console.log("LOG (route-browser) manually downloading masters");
+        this.overpassService.getRouteMasters(1);
     }
 }
