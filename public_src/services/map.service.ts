@@ -273,7 +273,7 @@ export class MapService {
      * @param layer
      */
     public enableClick(feature, layer): void {
-        layer.on("click", event => {
+        layer.on("click", (event) => {
             this.handleMarkerClick(feature);
         });
     }
@@ -284,7 +284,7 @@ export class MapService {
      * @param layer
      */
     public enableDrag(feature, layer) {
-        layer.on("click", e => {
+        layer.on("click", (e) => {
             if (this.editingMode) {
                 let marker = e.target;
                 if (!marker.dragging._draggable) {
@@ -312,7 +312,7 @@ export class MapService {
             }
         });
 
-        layer.on("dragend", e => {
+        layer.on("dragend", (e) => {
             // console.log("LOG: dragend event during editing mode", e);
             let marker = e.target;
             let featureTypeId = marker.feature.properties.id.split("/");
@@ -361,8 +361,8 @@ export class MapService {
      */
     public renderData(requestBody, options): void {
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
-            .map(res => res.json())
-            .subscribe(result => {
+            .map((res) => res.json())
+            .subscribe((result) => {
                 let transformed = this.osmtogeojson(result);
                 this.ptLayer = L.geoJSON(transformed, {
                     pointToLayer: (feature, latlng) => {

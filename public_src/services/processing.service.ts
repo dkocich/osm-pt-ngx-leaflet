@@ -142,7 +142,7 @@ export class ProcessingService {
      * @param response
      */
     public processMastersResponse(response: object) {
-        response["elements"].forEach( element => {
+        response["elements"].forEach( (element) => {
             if (!this.storageService.elementsMap.has(element.id)) {
                 console.log("LOG: New element added:", element.tags.public_transport === "route_master", element);
                 this.storageService.elementsMap.set(element.id, element);
@@ -158,7 +158,7 @@ export class ProcessingService {
         this.storageService.logStats();
 
         let idsHaveMaster: number[] = [];
-        this.storageService.listOfMasters.forEach( master => {
+        this.storageService.listOfMasters.forEach( (master) => {
             for (let member of master["members"]) {
                 idsHaveMaster.push(member["ref"]);
             }
@@ -267,7 +267,7 @@ export class ProcessingService {
         let missingElements = [];
         let allowedRefs = ["stop", "stop_exit_only", "stop_entry_only",
             "platform", "platform_exit_only", "platform_entry_only"];
-        rel["members"].forEach( member => {
+        rel["members"].forEach( (member) => {
            if (!this.storageService.elementsMap.has(member.ref) &&
                ["node"].indexOf(member.type) > -1 && allowedRefs.indexOf(member.role) > -1 )
                missingElements.push(member.ref);

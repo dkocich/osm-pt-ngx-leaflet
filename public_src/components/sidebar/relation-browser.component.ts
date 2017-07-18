@@ -21,7 +21,7 @@ export class RelationBrowserComponent {
 
     ngOnInit() {
         this.processingService.refreshSidebarViews$.subscribe(
-            data => {
+            (data) => {
                 if (data === "relation") {
                     this.listOfVariants = this.storageService.listOfVariants;
                     console.log("LOG: list of variants " , this.storageService.listOfVariants);

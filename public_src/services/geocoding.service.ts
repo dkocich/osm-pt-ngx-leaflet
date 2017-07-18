@@ -16,8 +16,8 @@ export class GeocodingService {
     public geocode(address: string): any {
         return this.http
             .get("https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(address))
-            .map(res => res.json())
-            .map(result => {
+            .map((res) => res.json())
+            .map((result) => {
                 if (result.status !== "OK") { throw new Error("unable to geocode address"); }
 
                 let location = new Location();
@@ -42,10 +42,10 @@ export class GeocodingService {
     public getCurrentLocation(): any {
         return this.http
             .get("https://ipv4.myexternalip.com/json")
-            .map(res => res.json().ip)
-            .flatMap(ip => this.http.get("https://freegeoip.net/json/" + ip))
+            .map((res) => res.json().ip)
+            .flatMap((ip) => this.http.get("https://freegeoip.net/json/" + ip))
             .map((res: Response) => res.json())
-            .map(result => {
+            .map((result) => {
                 let location = new Location();
 
                 location.address = result.city + ", " + result.region_code + " " + result.zip_code + ", " + result.country_code;

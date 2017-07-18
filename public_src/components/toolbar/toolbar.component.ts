@@ -35,14 +35,14 @@ export class ToolbarComponent {
         this.downloading = true;
         this.filtering = this.configService.cfgFilterLines;
         this.processingService.refreshSidebarViews$.subscribe(
-            data => {
+            (data) => {
                 if (data === "tag") {
                     console.log("Current selected element changed - ", data);
                     this.currentElement = this.storageService.currentElement;
                 }
             }
         );
-        this.storageService.stats.subscribe(data => this.stats = data);
+        this.storageService.stats.subscribe((data) => this.stats = data);
     }
 
     ngOnInit() {

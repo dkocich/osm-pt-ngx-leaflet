@@ -31,9 +31,9 @@ export class NavigatorComponent {
         if (!this.address) { return; }
 
         this.geocoder.geocode(this.address)
-        .subscribe(location => {
+        .subscribe((location) => {
             this.map.fitBounds(location.viewBounds, {});
             this.address = location.address;
-        }, error => console.error(error));
+        }, (error) => console.error(error));
     }
 }

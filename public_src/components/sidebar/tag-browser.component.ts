@@ -31,7 +31,7 @@ export class TagBrowserComponent {
 
     ngOnInit() {
         this.processingService.refreshSidebarViews$.subscribe(
-            data => {
+            (data) => {
                 if (data === "tag") {
                     console.log("Current selected element changed - ", data);
                     this.currentElement = this.storageService.currentElement;

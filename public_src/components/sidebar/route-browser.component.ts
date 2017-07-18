@@ -31,21 +31,21 @@ export class RouteBrowserComponent {
 
     ngOnInit() {
         this.processingService.showRelationsForStop$.subscribe(
-            data => {
+            (data) => {
                 this.filteredView = data;
             }
         );
         this.processingService.refreshSidebarViews$.subscribe(
-            data => {
+            (data) => {
                 if (data === "route") {
                     this.listOfRelationsForStop = this.storageService.listOfRelationsForStop;
                 }
             }
         );
         this.processingService.refreshMasters.subscribe(
-          data => {
+          (data) => {
               this.isRequesting = false;
-              data["idsHaveMaster"].forEach( id => this.idsHaveMaster.add(id) );
+              data["idsHaveMaster"].forEach( (id) => this.idsHaveMaster.add(id) );
           }
         );
     }

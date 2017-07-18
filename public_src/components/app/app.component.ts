@@ -65,8 +65,8 @@ export class AppComponent {
         });
         this.geocoder.getCurrentLocation()
             .subscribe(
-                location => map.panTo([location.latitude, location.longitude]),
-                err => console.error(err)
+                (location) => map.panTo([location.latitude, location.longitude]),
+                (err) => console.error(err)
             );
         this.toolbarComponent.Initialize();
     }

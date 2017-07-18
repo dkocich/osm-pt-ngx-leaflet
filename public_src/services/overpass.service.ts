@@ -40,7 +40,7 @@ export class OverpassService {
          * @param data - string containing ID of clicked marker
          */
         this.mapService.markerClick.subscribe(
-            data => {
+            (data) => {
                 let featureId = Number(data);
                 if (!this.storageService.elementsDownloaded.has(featureId)) {
                     console.log("LOG: requesting started for ", featureId);
@@ -57,7 +57,7 @@ export class OverpassService {
          * {"rel": rel, "missingElements": missingElements}
          */
         this.processingService.membersToDownload.subscribe(
-            data => {
+            (data) => {
                 let rel = data["rel"];
                 let missingElements = data["missingElements"];
                 this.getRelationData(rel, missingElements);
@@ -82,8 +82,8 @@ export class OverpassService {
         requestBody = this.replaceBboxString(requestBody);
         let options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
-            .map(res => res.json())
-            .subscribe(response => {
+            .map((res) => res.json())
+            .subscribe((response) => {
                 if (!response) {
                     this.loadingService.hide();
                     return alert("FIXME: No response, please try to click anything again.");
@@ -115,8 +115,8 @@ export class OverpassService {
         // this.loadingService.show("Loading relation's missing members...");
         let options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
-            .map(res => res.json())
-            .subscribe(response => {
+            .map((res) => res.json())
+            .subscribe((response) => {
                 if (!response) {
                     this.loadingService.hide();
                     return alert("No response, try again please.");
@@ -144,7 +144,7 @@ export class OverpassService {
         let options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.mapService.previousCenter = [this.mapService.map.getCenter().lat, this.mapService.map.getCenter().lng];
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
-            .map(res => {
+            .map((res) => {
                 this.loadingService.hide();
                 console.log("LOG: response", res);
                 if (res.status === 200) {
@@ -157,7 +157,7 @@ export class OverpassService {
                     }.bind(this), 5000);
                 }
             })
-            .subscribe(response => {
+            .subscribe((response) => {
                 this.processingService.processResponse(response);
                 // FIXME
                 // this.processingService.drawStopAreas();
@@ -170,7 +170,7 @@ export class OverpassService {
      */
     private findRouteIdsWithoutMaster(): Array<number> {
         let idsArr = [];
-        this.storageService.listOfRelations.forEach( rel => {
+        this.storageService.listOfRelations.forEach( (rel) => {
             if (!this.storageService.queriedMasters.has(rel["id"])) idsArr.push(rel["id"]);
         });
         return idsArr;
@@ -181,7 +181,7 @@ export class OverpassService {
      * @param {number[]} idsArr
      */
     private markQueriedRelations(idsArr: number[]): void {
-        idsArr.forEach( id => this.storageService.queriedMasters.add(id) );
+        idsArr.forEach( (id) => this.storageService.queriedMasters.add(id) );
     }
 
     /**
@@ -211,8 +211,8 @@ export class OverpassService {
         requestBody = this.replaceBboxString(requestBody);
         let options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
-            .map(res => res.json())
-            .subscribe(response => {
+            .map((res) => res.json())
+            .subscribe((response) => {
                 this.loadingService.hide();
                 if (!response) return alert("FIXME: No response, please try to select other master rel. again.");
                 this.markQueriedRelations(idsArr);

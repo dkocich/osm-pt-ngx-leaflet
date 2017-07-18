@@ -28,13 +28,13 @@ export class StopBrowserComponent {
 
     ngOnInit() {
         this.processingService.showStopsForRoute$.subscribe(
-            data => {
+            (data) => {
                 this.filteredView = data;
             }
         );
 
         this.processingService.refreshSidebarViews$.subscribe(
-            data => {
+            (data) => {
                 if (data === "stop") {
                     this.listOfStopsForRoute = this.storageService.listOfStopsForRoute;
                 }
