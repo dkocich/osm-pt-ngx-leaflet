@@ -60,21 +60,18 @@ export class MapService {
     public map: Map;
     public baseMaps: any;
     public previousCenter: [number, number] = [0.0, 0.0];
-    private ptLayer: any;
     public osmtogeojson: any = require("osmtogeojson");
     public bounds;
-
-    private highlightFill: any = undefined;
     public highlightStroke: any = undefined;
-    private highlight: any = undefined;
-    private markerFrom: any = undefined;
-    private markerTo: any = undefined;
-
     public editingMode: boolean;
-
     // public popupBtnClick: EventEmitter<any> = new EventEmitter();
     public markerClick: EventEmitter<any> = new EventEmitter();
     public markerEdit: EventEmitter<object> = new EventEmitter();
+    private ptLayer: any;
+    private highlightFill: any = undefined;
+    private highlight: any = undefined;
+    private markerFrom: any = undefined;
+    private markerTo: any = undefined;
 
     constructor(private http: Http, private storageService: StorageService,
                 private configService: ConfigService, private loadingService: LoadingService) {
@@ -83,42 +80,60 @@ export class MapService {
             Empty: L.tileLayer("", {
                 attribution: ""
             }),
-            OSM_standard: L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                maxNativeZoom: 19, maxZoom: 22,
-                attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, Tiles courtesy of <a href='https://openstreetmap.org/' target='_blank'>OpenStreetMap Team</a>"
-            }),
-            OSM_hot: L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
-                maxNativeZoom: 19, maxZoom: 22,
-                attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, Tiles courtesy of <a href='https://hot.openstreetmap.org/' target='_blank'>Humanitarian OpenStreetMap Team</a>"
-            }),
-            OSM_transport: L.tileLayer("http://{s}.tile2.opencyclemap.org/transport/{z}/{x}/{y}.png", {
-                maxNativeZoom: 19, maxZoom: 22,
-                attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, Tiles courtesy of <a href='https://opencyclemap.org/' target='_blank'>OpenStreetMap Team</a>"
-            }),
-            OSM_PT: L.tileLayer("http://www.openptmap.org/tiles/{z}/{x}/{y}.png", {
-                maxNativeZoom: 19, maxZoom: 22,
-                attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, Tiles courtesy of <a href='https://openptmap.org/' target='_blank'>OpenStreetMap Team</a>"
-            }),
-            Esri: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
-                maxNativeZoom: 19, maxZoom: 22,
-                attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community"
+            CartoDB_dark: L.tileLayer("http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png", {
+                attribution: `&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap
+                    </a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>`,
+                maxNativeZoom: 19, maxZoom: 22
             }),
             CartoDB_light: L.tileLayer("http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png", {
-                maxNativeZoom: 19, maxZoom: 22,
-                attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>"
+                attribution: `&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap
+                    </a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>`,
+                maxNativeZoom: 19, maxZoom: 22
             }),
-            CartoDB_dark: L.tileLayer("http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png", {
-                maxNativeZoom: 19, maxZoom: 22,
-                attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>"
+            Esri: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/" +
+                    "World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
+                attribution: `Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap,
+                    iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan,
+                    METI, Esri China (Hong Kong), and the GIS User Community`,
+                maxNativeZoom: 19, maxZoom: 22
+            }),
+            Esri_imagery: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/" +
+                    "World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+                attribution: `Tiles &copy; Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye,
+                    Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community `,
+                maxNativeZoom: 19, maxZoom: 22
             }),
             // TODO add authorization
-            // MapBox_imagery: L.tileLayer("http://{s}.tiles.mapbox.com/v4/{z}/{x}/{y}.png", {
-            //     maxNativeZoom: 19, maxZoom: 22,
-            //     attribution: "<a href='https://www.mapbox.com/about/maps/'>&copy; Mapbox</a>, <a href='http://www.openstreetmap.org/about/'>&copy; OpenStreetMap</a> and <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10'>Improve this map</a>"
-            // }),
-            Esri_imagery: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-                maxNativeZoom: 19, maxZoom: 22,
-                attribution: "&copy; ESRI https://leaflet-extras.github.io/leaflet-providers/preview/"
+            MapBox_imagery: L.tileLayer("http://{s}.tiles.mapbox.com/v4/{z}/{x}/{y}.png", {
+                attribution: `<a href='https://www.mapbox.com/about/maps/'>&copy; Mapbox</a>,
+                <a href='http://www.openstreetmap.org/about/'>&copy; OpenStreetMap</a> and
+                <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10'>Improve this map</a>`,
+                maxNativeZoom: 19, maxZoom: 22
+            }),
+            OSM_hot: L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+                attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
+                OpenStreetMap</a>, Tiles courtesy of <a href='https://hot.openstreetmap.org/'
+                target='_blank'>Humanitarian OpenStreetMap Team</a>`,
+                maxNativeZoom: 19, maxZoom: 22
+            }),
+            OSM_standard: L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
+                OpenStreetMap</a>, Tiles courtesy of <a href='https://openstreetmap.org/'
+                target='_blank'>OpenStreetMap Team</a>`,
+                maxNativeZoom: 19, maxZoom: 22
+            }),
+            OSM_PT: L.tileLayer("http://www.openptmap.org/tiles/{z}/{x}/{y}.png", {
+                attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
+                OpenStreetMap</a>, Tiles courtesy of <a href='https://openptmap.org/'
+                target='_blank'>OpenStreetMap Team</a>`,
+                maxNativeZoom: 19, maxZoom: 22
+            }),
+            OSM_transport: L.tileLayer("http://{s}.tile2.opencyclemap.org/" +
+                "transport/{z}/{x}/{y}.png", {
+                attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
+                OpenStreetMap</a>, Tiles courtesy of <a href='https://opencyclemap.org/'
+                target='_blank'>OpenStreetMap Team</a>`,
+                maxNativeZoom: 19, maxZoom: 22
             })
         };
     }
