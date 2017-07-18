@@ -1,8 +1,8 @@
 import {EventEmitter, Injectable} from "@angular/core";
 
-import {StorageService} from "./storage.service";
-import {ProcessingService} from "./processing.service";
 import {MapService} from "./map.service";
+import {ProcessingService} from "./processing.service";
+import {StorageService} from "./storage.service";
 
 import {OsmEntity} from "../core/osmEntity.interface";
 

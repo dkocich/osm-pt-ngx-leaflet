@@ -35,13 +35,6 @@ export class StorageService {
     public editsChanged: EventEmitter<boolean> = new EventEmitter();
     public stats: EventEmitter<object> = new EventEmitter();
 
-    public clearRouteData(): void {
-        this.stopsForRoute = [];
-        this.platformsForRoute = [];
-        this.waysForRoute = [];
-        this.relationsForRoute = [];
-    }
-
     constructor() {
         this.currentElementsChange.subscribe(
             (data) => {
@@ -61,13 +54,20 @@ export class StorageService {
             "Total # of master rel. (master rel.): ", this.listOfMasters.length,
             "elDownloaded: ", this.elementsDownloaded.size, "elRendered: ", this.elementsRendered.size,
             "elMap: ", this.elementsMap.size, "queriedM: ", this.queriedMasters.size);
-        let stats = {
-            "s": this.listOfStops.length,
-            "r": this.listOfRelations.length,
-            "a": this.listOfAreas.length,
-            "m": this.listOfMasters.length
+        const stats = {
+            a: this.listOfAreas.length,
+            m: this.listOfMasters.length,
+            r: this.listOfRelations.length,
+            s: this.listOfStops.length
         };
         this.stats.emit(stats);
+    }
+
+    public clearRouteData(): void {
+        this.stopsForRoute = [];
+        this.platformsForRoute = [];
+        this.waysForRoute = [];
+        this.relationsForRoute = [];
     }
 
     /**

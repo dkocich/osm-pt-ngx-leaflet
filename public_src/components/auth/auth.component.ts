@@ -1,22 +1,24 @@
 import {Component} from "@angular/core";
-import {StorageService} from "../../services/storage.service";
-import {ConfigService} from "../../services/config.service";
+
 import {AuthService} from "../../services/auth.service";
+import {ConfigService} from "../../services/config.service";
+import {StorageService} from "../../services/storage.service";
 
 @Component({
+    providers: [],
     selector: "auth",
-    template: require<any>("./auth.component.html"),
     styles: [
         require<any>("./auth.component.less")
     ],
-    providers: []
+    template: require<any>("./auth.component.html")
 })
 
 export class AuthComponent {
 
     private displayName: string;
 
-    constructor(private storageService: StorageService, private authService: AuthService) { }
+    constructor(private storageService: StorageService, private authService: AuthService) {
+    }
 
     ngOnInit() {
         this.displayName = this.getDisplayName();

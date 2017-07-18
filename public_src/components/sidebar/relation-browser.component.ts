@@ -4,13 +4,13 @@ import {ProcessingService} from "../../services/processing.service";
 import {StorageService} from "../../services/storage.service";
 
 @Component({
+    providers: [],
     selector: "relation-browser",
-    template: require<any>("./relation-browser.component.html"),
     styles: [
         require<any>("./relation-browser.component.less"),
         require<any>("../../styles/main.less")
     ],
-    providers: []
+    template: require<any>("./relation-browser.component.html")
 })
 export class RelationBrowserComponent {
     private listOfVariants = this.storageService.listOfVariants;

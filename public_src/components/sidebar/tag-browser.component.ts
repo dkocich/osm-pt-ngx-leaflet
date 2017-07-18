@@ -1,20 +1,20 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from "@angular/core";
 
+import {EditingService} from "../../services/editing.service";
 import {ProcessingService} from "../../services/processing.service";
 import {StorageService} from "../../services/storage.service";
-import {EditingService} from "../../services/editing.service";
 
 import {OsmEntity} from "../../core/osmEntity.interface";
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Default,
+    providers: [],
     selector: "tag-browser",
-    template: require<any>("./tag-browser.component.html"),
     styles: [
         require<any>("./tag-browser.component.less"),
         require<any>("../../styles/main.less")
     ],
-    providers: [],
-    changeDetection: ChangeDetectionStrategy.Default
+    template: require<any>("./tag-browser.component.html")
 })
 export class TagBrowserComponent {
     private currentElement: OsmEntity;
@@ -26,7 +26,8 @@ export class TagBrowserComponent {
     constructor(private processingService: ProcessingService,
                 private storageService: StorageService,
                 private editingService: EditingService,
-                private cd: ChangeDetectorRef) { }
+                private cd: ChangeDetectorRef) {
+    }
 
     ngOnInit() {
         this.processingService.refreshSidebarViews$.subscribe(

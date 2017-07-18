@@ -1,13 +1,13 @@
 import {EventEmitter, Injectable} from "@angular/core";
 import {Subject} from "rxjs/Subject";
 
+import {LoadingService} from "./loading.service";
 import {MapService} from "./map.service";
 import {StorageService} from "./storage.service";
-import {LoadingService} from "./loading.service";
 
 import {OsmEntity} from "../core/osmEntity.interface";
-import {IPtStop} from "../core/ptStop.interface";
 import {IPtRelation} from "../core/ptRelation.interface";
+import {IPtStop} from "../core/ptStop.interface";
 
 @Injectable()
 export class ProcessingService {

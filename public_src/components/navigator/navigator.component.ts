@@ -1,16 +1,16 @@
 import {Component} from "@angular/core";
+import {Map} from "leaflet";
 import {GeocodingService} from "../../services/geocoding.service";
 import {MapService} from "../../services/map.service";
-import {Map} from "leaflet";
 
 @Component({
+    providers: [],
     selector: "navigator",
-    template: require<any>("./navigator.component.html"),
     styles: [
         require<any>("./navigator.component.less"),
         require<any>("../../styles/main.less")
     ],
-    providers: []
+    template: require<any>("./navigator.component.html")
 })
 export class NavigatorComponent {
     address: string;

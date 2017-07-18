@@ -3,7 +3,9 @@ import {ConfigService} from "./config.service";
 
 @Injectable()
 export class AuthService {
-    constructor() { }
+    constructor() {
+        //
+    }
 
     private osmAuth: any = require("osm-auth");
     public oauth: any = this.osmAuth({

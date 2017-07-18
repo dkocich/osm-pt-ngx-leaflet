@@ -1,19 +1,19 @@
 import {Component, ViewChild} from "@angular/core";
 
+import {EditingService} from "../../services/editing.service";
 import {MapService} from "../../services/map.service";
 import {StorageService} from "../../services/storage.service";
-import {EditingService} from "../../services/editing.service";
 
 import {ModalDirective} from "ngx-bootstrap";
 
 @Component({
+    providers: [],
     selector: "editor",
-    template: require<any>("./editor.component.html"),
     styles: [
         require<any>("./editor.component.less"),
         require<any>("../../styles/main.less")
     ],
-    providers: []
+    template: require<any>("./editor.component.html")
 })
 export class EditorComponent {
     private totalEditSteps: number = 0;
@@ -21,7 +21,8 @@ export class EditorComponent {
     private editing: boolean = false;
 
     constructor(private mapService: MapService, private storageService: StorageService,
-                private editingService: EditingService) { }
+                private editingService: EditingService) {
+    }
 
     @ViewChild("editModal") public editModal: ModalDirective;
 

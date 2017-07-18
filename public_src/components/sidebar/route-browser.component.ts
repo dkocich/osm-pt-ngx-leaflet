@@ -1,17 +1,18 @@
 import {Component} from "@angular/core";
-import {StorageService} from "../../services/storage.service";
+
 import {MapService} from "../../services/map.service";
-import {ProcessingService} from "../../services/processing.service";
 import {OverpassService} from "../../services/overpass.service";
+import {ProcessingService} from "../../services/processing.service";
+import {StorageService} from "../../services/storage.service";
 
 @Component({
+    providers: [],
     selector: "route-browser",
-    template: require<any>("./route-browser.component.html"),
     styles: [
         require<any>("./route-browser.component.less"),
         require<any>("../../styles/main.less")
     ],
-    providers: []
+    template: require<any>("./route-browser.component.html")
 })
 export class RouteBrowserComponent {
     private listOfMasters: object[] = this.storageService.listOfMasters;

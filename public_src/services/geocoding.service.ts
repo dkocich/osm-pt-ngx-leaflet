@@ -1,6 +1,6 @@
+import {Injectable} from "@angular/core";
 import {Http, Response} from "@angular/http";
 import {Location} from "../core/location.class";
-import {Injectable} from "@angular/core";
 
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";

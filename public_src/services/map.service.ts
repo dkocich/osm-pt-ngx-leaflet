@@ -16,43 +16,43 @@ import {IPtStop} from "../core/ptStop.interface";
 
 const DEFAULT_ICON = L.icon({
     iconUrl: "",
-    shadowUrl: "",
+    shadowAnchor: [22, 94],
     shadowSize: [24, 24],
-    shadowAnchor: [22, 94]
+    shadowUrl: ""
 });
 const HIGHLIGHT_FILL = {
     color: "#ffff00",
-    weight: 6,
-    opacity: 0.6
+    opacity: 0.6,
+    weight: 6
 };
 const HIGHLIGHT_STROKE = {
     color: "#FF0000",
-    weight: 12,
-    opacity: 0.6
+    opacity: 0.6,
+    weight: 12
 };
 const FROM_TO_LABEL = {
     color: "#ffaa00",
     opacity: 0.6,
 };
 const REL_BUS_STYLE = {
-    "color": "#0000FF",
-    "weight": 6,
-    "opacity": 0.3
+    color: "#0000FF",
+    opacity: 0.3,
+    weight: 6
 };
 const REL_TRAIN_STYLE = {
-    "color": "#000000",
-    "weight": 6,
-    "opacity": 0.3
+    color: "#000000",
+    opacity: 0.3,
+    weight: 6
 };
 const REL_TRAM_STYLE = {
-    "color": "#FF0000",
-    "weight": 6,
-    "opacity": 0.3
+    color: "#FF0000",
+    opacity: 0.3,
+    weight: 6
 };
 const OTHER_STYLE = {
-    "color": "#00FF00",
-    "weight": 6,
-    "opacity": 0.3
+    color: "#00FF00",
+    opacity: 0.3,
+    weight: 6
 };
 
 @Injectable()

@@ -1,11 +1,12 @@
 import {Injectable} from "@angular/core";
 import {Headers, Http, RequestOptions} from "@angular/http";
+
+import {AuthService} from "./auth.service";
+import {ConfigService} from "./config.service";
+import {LoadingService} from "./loading.service";
 import {MapService} from "./map.service";
 import {ProcessingService} from "./processing.service";
 import {StorageService} from "./storage.service";
-import {LoadingService} from "./loading.service";
-import {ConfigService} from "./config.service";
-import {AuthService} from "./auth.service";
 
 import {create} from "xmlbuilder";
 

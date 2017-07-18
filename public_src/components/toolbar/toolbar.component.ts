@@ -1,30 +1,30 @@
 import {Component, ViewChild} from "@angular/core";
 
-import {TransporterComponent} from "../transporter/transporter.component";
 import {EditorComponent} from "../editor/editor.component";
+import {TransporterComponent} from "../transporter/transporter.component";
 
 import {ConfigService} from "../../services/config.service";
 import {MapService} from "../../services/map.service";
 import {OverpassService} from "../../services/overpass.service";
-import {StorageService} from "../../services/storage.service";
 import {ProcessingService} from "../../services/processing.service";
+import {StorageService} from "../../services/storage.service";
 
 import {OsmEntity} from "../../core/osmEntity.interface";
 
 @Component({
+    providers: [],
     selector: "toolbar",
-    template: require<any>("./toolbar.component.html"),
     styles: [
         require<any>("./toolbar.component.less"),
         require<any>("../../styles/main.less")
     ],
-    providers: []
+    template: require<any>("./toolbar.component.html")
 })
 export class ToolbarComponent {
     public downloading: boolean;
     private filtering: boolean;
     private currentElement: OsmEntity;
-    private stats = {"s": 0, "r": 0, "a": 0, "m": 0};
+    private stats = {s: 0, r: 0, a: 0, m: 0};
 
     @ViewChild(TransporterComponent) transporterComponent: TransporterComponent;
     @ViewChild(EditorComponent) editorComponent: EditorComponent;
