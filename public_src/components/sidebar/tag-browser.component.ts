@@ -20,8 +20,8 @@ export class TagBrowserComponent {
     private currentElement: IOsmEntity;
     private editingMode: boolean;
 
-    @Input() tagKey: string = "";
-    @Input() tagValue: string = "";
+    @Input() public tagKey: string = "";
+    @Input() public tagValue: string = "";
 
     constructor(private processingService: ProcessingService,
                 private storageService: StorageService,

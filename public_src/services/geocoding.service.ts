@@ -7,7 +7,7 @@ import "rxjs/add/operator/mergeMap";
 
 @Injectable()
 export class GeocodingService {
-    http: Http;
+    public http: Http;
 
     constructor(http: Http) {
         this.http = http;

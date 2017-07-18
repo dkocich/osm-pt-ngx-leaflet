@@ -13,7 +13,7 @@ import {MapService} from "../../services/map.service";
     template: require<any>("./navigator.component.html")
 })
 export class NavigatorComponent {
-    address: string;
+    public address: string;
 
     private map: Map;
 

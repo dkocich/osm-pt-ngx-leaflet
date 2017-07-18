@@ -54,7 +54,7 @@ if (!(window.location.href).indexOf("localhost")) {
 }
 
 export class RavenErrorHandler implements ErrorHandler {
-    handleError(err: any): void {
+    public handleError(err: any): void {
         Raven.captureException(err.originalError || err);
     }
 }

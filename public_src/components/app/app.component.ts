@@ -19,8 +19,8 @@ import {ToolbarComponent} from "../toolbar/toolbar.component";
 })
 export class AppComponent {
 
-    @ViewChild(ToolbarComponent) toolbarComponent: ToolbarComponent;
-    @ViewChild(AuthComponent) authComponent: AuthComponent;
+    @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
+    @ViewChild(AuthComponent) public authComponent: AuthComponent;
 
     constructor(private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService) {

@@ -26,8 +26,8 @@ export class ToolbarComponent {
     private currentElement: IOsmEntity;
     private stats = {s: 0, r: 0, a: 0, m: 0};
 
-    @ViewChild(TransporterComponent) transporterComponent: TransporterComponent;
-    @ViewChild(EditorComponent) editorComponent: EditorComponent;
+    @ViewChild(TransporterComponent) public transporterComponent: TransporterComponent;
+    @ViewChild(EditorComponent) public editorComponent: EditorComponent;
 
     constructor(private mapService: MapService, private overpassService: OverpassService,
                 private configService: ConfigService, private storageService: StorageService,
@@ -57,7 +57,7 @@ export class ToolbarComponent {
         this.mapService.disableMouseEvent("platform-btn");
     }
 
-    Initialize() {
+    public Initialize() {
         this.mapService.map.on("zoomend moveend", () => {
             this.initDownloader();
         });
