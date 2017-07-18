@@ -4,7 +4,7 @@ import {MapService} from "./map.service";
 import {ProcessingService} from "./processing.service";
 import {StorageService} from "./storage.service";
 
-import {OsmEntity} from "../core/osmEntity.interface";
+import {IOsmEntity} from "../core/osmEntity.interface";
 
 @Injectable()
 export class EditingService {
@@ -153,7 +153,7 @@ export class EditingService {
     public createNewElement (type: string): void {
         // TODO fill attributes, focus tag editor on element, continue editing
 
-        let newElement: OsmEntity;
+        let newElement: IOsmEntity;
         switch (type) {
             case "stop":
                 newElement.tags = {

@@ -1,4 +1,4 @@
-import {OsmEntity} from "./osmEntity.interface";
+import {IOsmEntity} from "./osmEntity.interface";
 import {IPtMember} from "./ptMember";
 /**
  *  {
@@ -38,7 +38,7 @@ import {IPtMember} from "./ptMember";
  *    }
  *  }
  */
-export interface IPtRelation extends OsmEntity {
+export interface IPtRelation extends IOsmEntity {
     type: "relation";
     members: IPtMember[];
 }

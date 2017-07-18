@@ -1,4 +1,4 @@
-export interface OsmEntity {
+export interface IOsmEntity {
     type: string;
     id: number;
     timestamp: string;

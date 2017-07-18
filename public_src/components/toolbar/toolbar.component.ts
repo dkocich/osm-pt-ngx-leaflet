@@ -9,7 +9,7 @@ import {OverpassService} from "../../services/overpass.service";
 import {ProcessingService} from "../../services/processing.service";
 import {StorageService} from "../../services/storage.service";
 
-import {OsmEntity} from "../../core/osmEntity.interface";
+import {IOsmEntity} from "../../core/osmEntity.interface";
 
 @Component({
     providers: [],
@@ -23,7 +23,7 @@ import {OsmEntity} from "../../core/osmEntity.interface";
 export class ToolbarComponent {
     public downloading: boolean;
     private filtering: boolean;
-    private currentElement: OsmEntity;
+    private currentElement: IOsmEntity;
     private stats = {s: 0, r: 0, a: 0, m: 0};
 
     @ViewChild(TransporterComponent) transporterComponent: TransporterComponent;
@@ -97,7 +97,7 @@ export class ToolbarComponent {
         alert(JSON.stringify(selection, null, "\t"));
     }
 
-    private zoomTo(selection: OsmEntity) {
+    private zoomTo(selection: IOsmEntity) {
         this.processingService.zoomToElement(selection);
     }
 

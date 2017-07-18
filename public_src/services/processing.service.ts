@@ -5,7 +5,7 @@ import {LoadingService} from "./loading.service";
 import {MapService} from "./map.service";
 import {StorageService} from "./storage.service";
 
-import {OsmEntity} from "../core/osmEntity.interface";
+import {IOsmEntity} from "../core/osmEntity.interface";
 import {IPtRelation} from "../core/ptRelation.interface";
 import {IPtStop} from "../core/ptStop.interface";
 
@@ -62,7 +62,7 @@ export class ProcessingService {
      * @param featureType
      * @returns {IPtStop}
      */
-    public findElementById(featureId: number, featureType?: string): OsmEntity {
+    public findElementById(featureId: number, featureType?: string): IOsmEntity {
         return this.getElementById(featureId);
     }
 
@@ -240,7 +240,7 @@ export class ProcessingService {
      *
      * @param element
      */
-    public refreshTagView(element: OsmEntity): void  {
+    public refreshTagView(element: IOsmEntity): void  {
         this.storageService.currentElementsChange.emit(JSON.parse(JSON.stringify(element)));
         this.refreshSidebarView("tag");
     }
@@ -371,7 +371,7 @@ export class ProcessingService {
      * Zooms to the input element (point position or relation geometry).
      * @param element
      */
-    public zoomToElement(element: OsmEntity): void {
+    public zoomToElement(element: IOsmEntity): void {
         if (element.type === "node" ) {
             if (!element["lat"] || !element["lon"]) {
                 return alert("Warning: Element has no coordinates." + element);

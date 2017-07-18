@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from "@angular/core";
 
-import {OsmEntity} from "../core/osmEntity.interface";
+import {IOsmEntity} from "../core/osmEntity.interface";
 import {IPtStop} from "../core/ptStop.interface";
 
 @Injectable()
@@ -26,7 +26,7 @@ export class StorageService {
     public platformsForRoute: object[] = [];
     public waysForRoute: object[] = [];
     public relationsForRoute: object[] = [];
-    public currentElement: OsmEntity;
+    public currentElement: IOsmEntity;
     public currentElementsChange = new EventEmitter();
 
     public displayName: string = "";

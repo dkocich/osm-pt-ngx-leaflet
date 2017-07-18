@@ -4,7 +4,7 @@ import {EditingService} from "../../services/editing.service";
 import {ProcessingService} from "../../services/processing.service";
 import {StorageService} from "../../services/storage.service";
 
-import {OsmEntity} from "../../core/osmEntity.interface";
+import {IOsmEntity} from "../../core/osmEntity.interface";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
@@ -17,7 +17,7 @@ import {OsmEntity} from "../../core/osmEntity.interface";
     template: require<any>("./tag-browser.component.html")
 })
 export class TagBrowserComponent {
-    private currentElement: OsmEntity;
+    private currentElement: IOsmEntity;
     private editingMode: boolean;
 
     @Input() tagKey: string = "";
