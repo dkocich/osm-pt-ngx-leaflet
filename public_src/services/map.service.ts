@@ -206,11 +206,11 @@ export class MapService {
             }
         }
         let myIcon = L.icon({
-            iconUrl: iconUrl,
-            shadowUrl: shadowUrl,
             iconAnchor: [7, 7],
+            iconUrl: iconUrl,
+            shadowAnchor: [22, 94],
             shadowSize: [24, 24],
-            shadowAnchor: [22, 94]
+            shadowUrl: shadowUrl
         });
         return L.marker(latlng, {icon: myIcon, draggable: false});
     }
@@ -250,17 +250,17 @@ export class MapService {
                     return true;
                 }
             },
-            pointToLayer: (feature, latlng) => {
-                return this.stylePoint(feature, latlng);
-            },
-            style: (feature) => {
-                return this.styleFeature(feature);
-            },
             onEachFeature: (feature, layer) => {
                 // prevent rendering elements twice later
                 this.storageService.elementsRendered.add(feature.id);
                 this.enableClick(feature, layer);
                 this.enableDrag(feature, layer);
+            },
+            pointToLayer: (feature, latlng) => {
+                return this.stylePoint(feature, latlng);
+            },
+            style: (feature) => {
+                return this.styleFeature(feature);
             }
         });
         console.log("LOG (map s.): adding PTlayer to map again:", this.ptLayer);
@@ -365,14 +365,14 @@ export class MapService {
             .subscribe((result) => {
                 let transformed = this.osmtogeojson(result);
                 this.ptLayer = L.geoJSON(transformed, {
+                    onEachFeature: (feature, layer) => {
+                        this.enableDrag(feature, layer);
+                    },
                     pointToLayer: (feature, latlng) => {
                         return this.stylePoint(feature, latlng);
                     },
                     style: (feature) => {
                         return this.styleFeature(feature);
-                    },
-                    onEachFeature: (feature, layer) => {
-                        this.enableDrag(feature, layer);
                     }
                 });
                 this.ptLayer.addTo(this.map);
@@ -522,12 +522,18 @@ export class MapService {
         let route = rel.tags.route || "#ROUTE";
         let ref = rel.tags.ref || "#REF";
 
-        this.markerFrom = L.circleMarker( latlngFrom, FROM_TO_LABEL)
-            .bindTooltip("From: " + from + " (" + route + " " + ref + ")", {
-                permanent: true, className: "from-to-label", offset: [0, 0]});
         this.markerTo = L.circleMarker( latlngTo, FROM_TO_LABEL)
             .bindTooltip("To: " + to + " (" + route + " " + ref + ")", {
-                permanent: true, className: "from-to-label", offset: [0, 0]});
+                className: "from-to-label",
+                offset: [0, 0],
+                permanent: true
+            });
+        this.markerFrom = L.circleMarker( latlngFrom, FROM_TO_LABEL)
+            .bindTooltip("From: " + from + " (" + route + " " + ref + ")", {
+                className: "from-to-label",
+                offset: [0, 0],
+                permanent: true
+            });
         if (this.highlight) {
             this.highlight.addLayer(L.layerGroup([this.markerFrom, this.markerTo]));
         } else {

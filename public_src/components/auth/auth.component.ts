@@ -51,9 +51,9 @@ export class AuthComponent {
         let u = res.getElementsByTagName("user")[0];
         let changesets = res.getElementsByTagName("changesets")[0];
         let o = {
+            count: changesets.getAttribute("count"),
             display_name: u.getAttribute("display_name"),
-            id: u.getAttribute("id"),
-            count: changesets.getAttribute("count")
+            id: u.getAttribute("id")
         };
         this.storageService.setUserData(o.display_name, o.id, o.count);
         document.getElementById("display_name").innerHTML = o["display_name"];
@@ -70,8 +70,8 @@ export class AuthComponent {
         this.authService.oauth.xhr({
             method: "GET",
             path: "/api/0.6/user/details",
-            url: ConfigService.apiUrl,
-            singlepage: true
+            singlepage: true,
+            url: ConfigService.apiUrl
         }, this.gotDetailsCallback.bind(this));
     }
 

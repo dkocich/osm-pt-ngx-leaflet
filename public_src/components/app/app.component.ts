@@ -46,13 +46,13 @@ export class AppComponent {
 
     ngOnInit() {
         let map = L.map("map", {
-            zoomAnimation: false,
-            zoomControl: false,
             center: L.latLng(49.686, 18.351),
-            zoom: 14,
-            minZoom: 4,
+            layers: [this.mapService.baseMaps.CartoDB_light],
             maxZoom: 22,
-            layers: [this.mapService.baseMaps.CartoDB_light]
+            minZoom: 4,
+            zoom: 14,
+            zoomAnimation: false,
+            zoomControl: false
         });
 
         L.control.zoom({ position: "topright" }).addTo(map);

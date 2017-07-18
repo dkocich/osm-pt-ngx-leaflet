@@ -87,9 +87,9 @@ export class EditingService {
     public addChange(element: any, type: string, change: object): any {
         let edits: object[] = this.storageService.edits;
         let editObj: any = {
+            "change": change,
             "id": element.id,
-            "type": type,
-            "change": change
+            "type": type
         };
         if (this.isBrowsingHistoryOfChanges()) {
             this.deleteMoreRecentChanges(this.currentEditStep);

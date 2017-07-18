@@ -297,10 +297,10 @@ export class OverpassService {
      */
     public putChangeset(changeset): void {
         this.authService.oauth.xhr({
+            content: "<osm><changeset></changeset></osm>", // changeset,
             method: "PUT",
-            path: "/api/0.6/changeset/create",
             options: { header: { "Content-Type": "text/xml" } },
-            content: "<osm><changeset></changeset></osm>" // changeset
+            path: "/api/0.6/changeset/create"
         }, this.createdChangeset.bind(this));
     }
 
@@ -374,10 +374,10 @@ export class OverpassService {
         let xmlString = xml.end({ pretty: true});
         console.log("LOG: uploading this XML ", xml, xmlString);
         this.authService.oauth.xhr.bind(this)({
+            content: xmlString, // .osmChangeJXON(this.changes) // JXON.stringify(),
             method: "POST",
-            path: "/api/0.6/changeset/" + this.changeset_id + "/upload",
             options: { header: { "Content-Type": "text/xml" } },
-            content: xmlString // .osmChangeJXON(this.changes) // JXON.stringify()
+            path: "/api/0.6/changeset/" + this.changeset_id + "/upload"
         }, this.uploadedChangeset.bind(this));
     }
 
@@ -395,8 +395,8 @@ export class OverpassService {
             // Still attempt to close changeset, but ignore response because iD/issues/2667
             this.authService.oauth.xhr({
                 method: "PUT",
-                path: "/api/0.6/changeset/" + this.changeset_id + "/close",
-                options: { header: { "Content-Type": "text/xml" } }
+                options: { header: { "Content-Type": "text/xml" } },
+                path: "/api/0.6/changeset/" + this.changeset_id + "/close"
             }, function() { return true; });
         }.bind(this), 2500);
     }
