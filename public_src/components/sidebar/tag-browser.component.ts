@@ -17,11 +17,10 @@ import { IOsmEntity } from "../../core/osmEntity.interface";
     template: require<any>("./tag-browser.component.html")
 })
 export class TagBrowserComponent {
-    private currentElement: IOsmEntity;
-    private editingMode: boolean;
-
     @Input() public tagKey: string = "";
     @Input() public tagValue: string = "";
+    private currentElement: IOsmEntity;
+    private editingMode: boolean;
 
     constructor(private processingService: ProcessingService,
                 private storageService: StorageService,

@@ -22,12 +22,12 @@ import { IOsmEntity } from "../../core/osmEntity.interface";
 })
 export class ToolbarComponent {
     public downloading: boolean;
-    private filtering: boolean;
-    private currentElement: IOsmEntity;
-    private stats = { s: 0, r: 0, a: 0, m: 0 };
-
     @ViewChild(TransporterComponent) public transporterComponent: TransporterComponent;
     @ViewChild(EditorComponent) public editorComponent: EditorComponent;
+    private filtering: boolean;
+
+    private currentElement: IOsmEntity;
+    private stats = { s: 0, r: 0, a: 0, m: 0 };
 
     constructor(private mapService: MapService, private overpassService: OverpassService,
                 private configService: ConfigService, private storageService: StorageService,

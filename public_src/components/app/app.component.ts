@@ -21,27 +21,10 @@ export class AppComponent {
 
     @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
     @ViewChild(AuthComponent) public authComponent: AuthComponent;
+    @ViewChild("helpModal") public helpModal: ModalDirective;
 
     constructor(private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService) {
-    }
-
-    @ViewChild("helpModal") public helpModal: ModalDirective;
-
-    private showHelpModal(): void {
-        this.helpModal.show();
-    }
-
-    private hideHelpModal(): void {
-        this.helpModal.hide();
-    }
-
-    private isLoading(): boolean {
-        return this.loadingService.isLoading();
-    }
-
-    private getStatus(): string {
-        return this.loadingService.getStatus();
     }
 
     ngOnInit() {
@@ -69,5 +52,21 @@ export class AppComponent {
                 (err) => console.error(err)
             );
         this.toolbarComponent.Initialize();
+    }
+
+    private showHelpModal(): void {
+        this.helpModal.show();
+    }
+
+    private hideHelpModal(): void {
+        this.helpModal.hide();
+    }
+
+    private isLoading(): boolean {
+        return this.loadingService.isLoading();
+    }
+
+    private getStatus(): string {
+        return this.loadingService.getStatus();
     }
 }

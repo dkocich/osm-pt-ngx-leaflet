@@ -16,6 +16,8 @@ import { ModalDirective } from "ngx-bootstrap";
     template: require<any>("./transporter.component.html")
 })
 export class TransporterComponent {
+    @ViewChild("downloadModal") public downloadModal: ModalDirective;
+    @ViewChild("uploadModal") public uploadModal: ModalDirective;
     private favoriteQueries = [
         {
             id: 1,
@@ -36,9 +38,10 @@ export class TransporterComponent {
     private queryShort = this.favoriteQueries[0].short;
     private queryRaw = decodeURIComponent(this.favoriteQueries[0].raw);
     private editsSummary;
-    private comment: string = "";
-    private source: string = "";
 
+    private comment: string = "";
+
+    private source: string = "";
     constructor(private mapService: MapService,
                 private overpassService: OverpassService,
                 private storageService: StorageService) {
@@ -59,26 +62,6 @@ export class TransporterComponent {
         );
     }
 
-    private requestData(requestBody): void {
-        this.overpassService.requestOverpassData(requestBody);
-        this.hideDownloadModal();
-    }
-
-    private uploadData(): void {
-        this.overpassService.uploadData({ "comment": this.comment, "source": this.source });
-    }
-
-    private setQuery(event): void {
-        this.queryShort = event.target.textContent;
-        const filtered = this.favoriteQueries.filter( (iter) => {
-            return iter.short === event.target.textContent;
-        });
-        this.queryRaw = decodeURIComponent(filtered[0].raw);
-    }
-
-    @ViewChild("downloadModal") public downloadModal: ModalDirective;
-    @ViewChild("uploadModal") public uploadModal: ModalDirective;
-
     public showDownloadModal(): void {
         this.downloadModal.show();
         this.mapService.disableMouseEvent("modalDownload");
@@ -95,5 +78,22 @@ export class TransporterComponent {
 
     public hideUploadModal(): void {
         this.uploadModal.hide();
+    }
+
+    private requestData(requestBody): void {
+        this.overpassService.requestOverpassData(requestBody);
+        this.hideDownloadModal();
+    }
+
+    private uploadData(): void {
+        this.overpassService.uploadData({ "comment": this.comment, "source": this.source });
+    }
+
+    private setQuery(event): void {
+        this.queryShort = event.target.textContent;
+        const filtered = this.favoriteQueries.filter( (iter) => {
+            return iter.short === event.target.textContent;
+        });
+        this.queryRaw = decodeURIComponent(filtered[0].raw);
     }
 }

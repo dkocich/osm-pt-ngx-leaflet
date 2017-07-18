@@ -15,8 +15,8 @@ import { StorageService } from "../../services/storage.service";
     template: require<any>("./stop-browser.component.html")
 })
 export class StopBrowserComponent {
-    private listOfStops: object[] = this.storageService.listOfStops;
     public listOfStopsForRoute: object[] = this.storageService.listOfStopsForRoute;
+    private listOfStops: object[] = this.storageService.listOfStops;
     private filteredView: boolean;
     private editingMode: boolean;
 

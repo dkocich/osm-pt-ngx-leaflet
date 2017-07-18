@@ -161,79 +161,6 @@ export class MapService {
     }
 
     /**
-     * Styles leaflet markers.
-     * @param feature
-     * @param latlng
-     * @returns {any}
-     */
-    private stylePoint(feature, latlng): any {
-        let iconUrl = "images/marker-icon.png";
-        let shadowUrl = "";
-        const fp = feature.properties;
-        if ("public_transport" in fp ) { // && fp["railway"] === undefined
-            if (fp["public_transport"] === "platform") {
-                iconUrl = "images/transport/platform.svg";
-            } else if (fp["public_transport"] === "stop_position") {
-                iconUrl = "images/transport/bus.png";
-            } else if (fp["public_transport"] === "station") {
-                iconUrl = "images/transport/station.svg";
-            }
-        } else if ("highway" in fp) {
-            if (fp["highway"] === "bus_stop") {
-                iconUrl = "images/transport/bus.png";
-            } else if (fp["highway"] === "traffic_signals") {
-                iconUrl = "images/traffic/traffic_signals.png";
-            } else if (fp["highway"] === "crossing") {
-                iconUrl = "images/traffic/crossing.png";
-            }
-        } else if ("railway" in fp) {
-            if (["crossing", "level_crossing", "railway_crossing"].indexOf(fp["railway"]) > -1) {
-                iconUrl = "images/transport/railway/crossing.png";
-            } else if (fp["railway"] === ["tram_stop"]) {
-                iconUrl = "images/transport/railway/tram.png";
-            } else if (fp["railway"] === "stop_position") {
-                iconUrl = "images/transport/train.png";
-            } else if (fp["public_transport"] === "station") {
-                iconUrl = "images/transport/railway_station.png";
-            }
-        }
-        if ("public_transport:version" in fp) {
-            if (fp["public_transport:version"] === "1" ) {
-                shadowUrl = "images/nr1-24x24.png";
-            }
-            if (fp["public_transport:version"] === "2" ) {
-                iconUrl = "images/nr2-24x24.png";
-            }
-        }
-        const myIcon = L.icon({
-            iconAnchor: [7, 7],
-            iconUrl,
-            shadowAnchor: [22, 94],
-            shadowSize: [24, 24],
-            shadowUrl
-        });
-        return L.marker(latlng, { icon: myIcon, draggable: false });
-    }
-
-    /**
-     * Styles leaflet lines.
-     * @param feature
-     * @returns {{color: string, weight: number, opacity: number}}
-     */
-    private styleFeature(feature): object {
-        switch (feature.properties.route) {
-            case "bus":
-                return REL_BUS_STYLE;
-            case "train":
-                return REL_TRAIN_STYLE;
-            case "tram":
-                return REL_TRAM_STYLE;
-            default:
-                return OTHER_STYLE;
-        }
-    }
-
-    /**
      * Renders GeoJson data on the map.
      * @param transformedGeojson
      */
@@ -342,19 +269,6 @@ export class MapService {
     }
 
     /**
-     * Emits event when users clicks map marker.
-     * @param feature
-     */
-    private handleMarkerClick(feature: any): void {
-        const featureTypeId = feature.id.split("/");
-        const featureType = featureTypeId[0];
-        const featureId = featureTypeId[1];
-        this.markerClick.emit(featureId);
-        // explores leaflet element
-        // this.popupBtnClick.emit([featureType, featureId]);
-    }
-
-    /**
      *
      * @param requestBody
      * @param options
@@ -404,11 +318,11 @@ export class MapService {
      * @returns {{lat: number, lng: number}}
      */
     public findCoordinates(refId): LatLngExpression {
-       for (const stop of this.storageService.listOfStops) {
-           if (stop.id === refId) {
-               return { lat: stop.lat, lng: stop.lon };
-           }
-       }
+        for (const stop of this.storageService.listOfStops) {
+            if (stop.id === refId) {
+                return { lat: stop.lat, lng: stop.lon };
+            }
+        }
     }
 
     /**
@@ -544,5 +458,91 @@ export class MapService {
         } else {
             this.highlight = L.layerGroup([this.markerFrom, this.markerTo]);
         }
+    }
+
+    /**
+     * Styles leaflet markers.
+     * @param feature
+     * @param latlng
+     * @returns {any}
+     */
+    private stylePoint(feature, latlng): any {
+        let iconUrl = "images/marker-icon.png";
+        let shadowUrl = "";
+        const fp = feature.properties;
+        if ("public_transport" in fp ) { // && fp["railway"] === undefined
+            if (fp["public_transport"] === "platform") {
+                iconUrl = "images/transport/platform.svg";
+            } else if (fp["public_transport"] === "stop_position") {
+                iconUrl = "images/transport/bus.png";
+            } else if (fp["public_transport"] === "station") {
+                iconUrl = "images/transport/station.svg";
+            }
+        } else if ("highway" in fp) {
+            if (fp["highway"] === "bus_stop") {
+                iconUrl = "images/transport/bus.png";
+            } else if (fp["highway"] === "traffic_signals") {
+                iconUrl = "images/traffic/traffic_signals.png";
+            } else if (fp["highway"] === "crossing") {
+                iconUrl = "images/traffic/crossing.png";
+            }
+        } else if ("railway" in fp) {
+            if (["crossing", "level_crossing", "railway_crossing"].indexOf(fp["railway"]) > -1) {
+                iconUrl = "images/transport/railway/crossing.png";
+            } else if (fp["railway"] === ["tram_stop"]) {
+                iconUrl = "images/transport/railway/tram.png";
+            } else if (fp["railway"] === "stop_position") {
+                iconUrl = "images/transport/train.png";
+            } else if (fp["public_transport"] === "station") {
+                iconUrl = "images/transport/railway_station.png";
+            }
+        }
+        if ("public_transport:version" in fp) {
+            if (fp["public_transport:version"] === "1" ) {
+                shadowUrl = "images/nr1-24x24.png";
+            }
+            if (fp["public_transport:version"] === "2" ) {
+                iconUrl = "images/nr2-24x24.png";
+            }
+        }
+        const myIcon = L.icon({
+            iconAnchor: [7, 7],
+            iconUrl,
+            shadowAnchor: [22, 94],
+            shadowSize: [24, 24],
+            shadowUrl
+        });
+        return L.marker(latlng, { icon: myIcon, draggable: false });
+    }
+
+    /**
+     * Styles leaflet lines.
+     * @param feature
+     * @returns {{color: string, weight: number, opacity: number}}
+     */
+    private styleFeature(feature): object {
+        switch (feature.properties.route) {
+            case "bus":
+                return REL_BUS_STYLE;
+            case "train":
+                return REL_TRAIN_STYLE;
+            case "tram":
+                return REL_TRAM_STYLE;
+            default:
+                return OTHER_STYLE;
+        }
+    }
+
+    /**
+     * Emits event when users clicks map marker.
+     * @param feature
+     */
+    private handleMarkerClick(feature: any): void {
+        const featureTypeId = feature.id.split("/");
+        const featureType = featureTypeId[0];
+        const featureId = featureTypeId[1];
+        this.markerClick.emit(featureId);
+        // explores leaflet element
+        // this.popupBtnClick.emit([featureType, featureId]);
     }
 }

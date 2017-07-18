@@ -16,6 +16,7 @@ import { ModalDirective } from "ngx-bootstrap";
     template: require<any>("./editor.component.html")
 })
 export class EditorComponent {
+    @ViewChild("editModal") public editModal: ModalDirective;
     private totalEditSteps: number = 0;
     private currentEditStep: number = 0;
     private editing: boolean = false;
@@ -23,8 +24,6 @@ export class EditorComponent {
     constructor(private mapService: MapService, private storageService: StorageService,
                 private editingService: EditingService) {
     }
-
-    @ViewChild("editModal") public editModal: ModalDirective;
 
     ngOnInit() {
         this.editingService.currentTotalSteps.subscribe(

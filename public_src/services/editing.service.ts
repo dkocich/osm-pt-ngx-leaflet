@@ -57,28 +57,6 @@ export class EditingService {
     }
 
     /**
-     * Checks if the last edit was made on the same tag like the new change.
-     * @param change
-     * @returns {boolean}
-     */
-    private shouldCombineChanges(change) {
-        const last = this.storageService.edits[this.storageService.edits.length - 1];
-        return last["change"].to.key === change.from.key && last["change"].to.value === change.from.value;
-    }
-
-    /**
-     * Checks if last two changes are on the same tag and combines them in edit. history together.
-     * @param editObj
-     */
-    private combineChanges(editObj) {
-        console.log("LOG (editing s.) Combining changes");
-        const last = this.storageService.edits[this.storageService.edits.length - 1];
-        last["change"].to.key = editObj.change.to.key;
-        last["change"].to.value = editObj.change.to.value;
-        this.storageService.edits[this.storageService.edits.length - 1] = last;
-    }
-
-    /**
      * Handles the complete process of adding a change to the history.
      * @param element - changed entity
      * @param type - some comment about a created change
@@ -139,14 +117,6 @@ export class EditingService {
     }
 
     /**
-     * Emits numbers which are visible in toolbar counter while editing.
-     */
-    private updateCounter(): void {
-        this.currentEditStep = this.totalEditSteps = this.storageService.edits.length;
-        this.currentTotalSteps.emit({ "current": this.currentEditStep, "total": this.totalEditSteps });
-    }
-
-    /**
      * Handles adding of different PT elements and fills attributes automatically.
      * @param type
      */
@@ -170,6 +140,53 @@ export class EditingService {
             default:
                 console.log("LOG (editing s.) Type was created: ", type);
         }
+    }
+
+    /**
+     * Handles switching between edits (undoing/applying changes, map move)
+     * @param direction - "forward" or "backward"
+     */
+    public step(direction: string) {
+        // TODO
+        if (direction === "forward") {
+            const edit = this.storageService.edits[this.currentEditStep - 1];
+            console.log("LOG (editing s.) Moving forward in history");
+            this.applyChange(edit);
+        } else if (direction === "backward") {
+            const edit = this.storageService.edits[this.currentEditStep];
+            console.log("LOG (editing s.) Moving backward in history");
+            this.undoChange(edit);
+        }
+    }
+
+    /**
+     * Checks if the last edit was made on the same tag like the new change.
+     * @param change
+     * @returns {boolean}
+     */
+    private shouldCombineChanges(change) {
+        const last = this.storageService.edits[this.storageService.edits.length - 1];
+        return last["change"].to.key === change.from.key && last["change"].to.value === change.from.value;
+    }
+
+    /**
+     * Checks if last two changes are on the same tag and combines them in edit. history together.
+     * @param editObj
+     */
+    private combineChanges(editObj) {
+        console.log("LOG (editing s.) Combining changes");
+        const last = this.storageService.edits[this.storageService.edits.length - 1];
+        last["change"].to.key = editObj.change.to.key;
+        last["change"].to.value = editObj.change.to.value;
+        this.storageService.edits[this.storageService.edits.length - 1] = last;
+    }
+
+    /**
+     * Emits numbers which are visible in toolbar counter while editing.
+     */
+    private updateCounter(): void {
+        this.currentEditStep = this.totalEditSteps = this.storageService.edits.length;
+        this.currentTotalSteps.emit({ "current": this.currentEditStep, "total": this.totalEditSteps });
     }
 
     /**
@@ -277,23 +294,6 @@ export class EditingService {
                 break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
-        }
-    }
-
-    /**
-     * Handles switching between edits (undoing/applying changes, map move)
-     * @param direction - "forward" or "backward"
-     */
-    public step(direction: string) {
-        // TODO
-        if (direction === "forward") {
-            const edit = this.storageService.edits[this.currentEditStep - 1];
-            console.log("LOG (editing s.) Moving forward in history");
-            this.applyChange(edit);
-        } else if (direction === "backward") {
-            const edit = this.storageService.edits[this.currentEditStep];
-            console.log("LOG (editing s.) Moving backward in history");
-            this.undoChange(edit);
         }
     }
 }

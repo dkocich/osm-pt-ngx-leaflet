@@ -3,10 +3,6 @@ import { ConfigService } from "./config.service";
 
 @Injectable()
 export class AuthService {
-    constructor() {
-        //
-    }
-
     private osmAuth: any = require("osm-auth");
     public oauth: any = this.osmAuth({
         oauth_consumer_key: ConfigService.apiConsumerKey,
@@ -15,4 +11,7 @@ export class AuthService {
         url: ConfigService.baseOsmUrl
     });
 
+    constructor() {
+        //
+    }
 }

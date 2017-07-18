@@ -19,7 +19,6 @@ export class ProcessingService {
     public showRelationsForStop$ = this.showRelationsForStopSource.asObservable();
     public showStopsForRoute$ = this.showStopsForRouteSource.asObservable();
     public refreshSidebarViews$ = this.refreshSidebarViewsSource.asObservable();
-
     public membersToDownload: EventEmitter<object> = new EventEmitter();
     public refreshMasters: EventEmitter<object> = new EventEmitter();
 

@@ -66,6 +66,105 @@ export class OverpassService {
     }
 
     /**
+     * Requests new batch of data from Overpass.
+     */
+    public requestNewOverpassData(): void {
+        this.loadingService.show("Loading bus stops...");
+        const requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
+        const options = this.setRequestOptions("application/X-www-form-urlencoded");
+        this.mapService.previousCenter = [this.mapService.map.getCenter().lat, this.mapService.map.getCenter().lng];
+        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+            .map((res) => {
+                this.loadingService.hide();
+                console.log("LOG (overpass)", res);
+                if (res.status === 200) {
+                    return res.json();
+                } else {
+                    console.log("LOG (overpass s.) Stops response error", res.status, res.text);
+                    return setTimeout(function() {
+                        console.log("LOG (overpass) Request error - new request?");
+                        this.requestNewOverpassData();
+                    }.bind(this), 5000);
+                }
+            })
+            .subscribe((response) => {
+                this.processingService.processResponse(response);
+                // FIXME
+                // this.processingService.drawStopAreas();
+                // this.getRouteMasters();
+            });
+    }
+
+    /**
+     * Downloads route_master relations for currently added route relations.
+     * @minNumOfRelations: number
+     */
+    public getRouteMasters(minNumOfRelations?: number) {
+        if (!minNumOfRelations) {
+            minNumOfRelations = 10;
+        }
+        this.loadingService.show("Loading route master relations...");
+        const idsArr: Array<number> = this.findRouteIdsWithoutMaster();
+        if (idsArr.length <= minNumOfRelations) {
+            this.loadingService.hide();
+            return console.log("LOG (overpass s.) Not enough relations to download - stop");
+        } else if (!idsArr.length ) {
+            // do not query masters if all relations are already known
+            this.loadingService.hide();
+            return;
+        }
+        let requestBody: string = `
+            [out:json][timeout:25][bbox:{{bbox}}];
+            (
+              rel(id:${idsArr.join(", ")});
+              <<;
+            );
+            out meta;`;
+        console.log("LOG (overpass s.) Querying rel.'s route masters with query:", requestBody);
+        requestBody = this.replaceBboxString(requestBody);
+        const options = this.setRequestOptions("application/X-www-form-urlencoded");
+        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+            .map((res) => res.json())
+            .subscribe((response) => {
+                this.loadingService.hide();
+                if (!response) {
+                    return alert("FIXME: No response, please try to select other master rel. again.");
+                }
+                this.markQueriedRelations(idsArr);
+                this.processingService.processMastersResponse(response);
+            });
+    }
+
+    /**
+     * @param requestBody
+     */
+    public requestOverpassData(requestBody: string): void {
+        this.loadingService.show();
+        this.mapService.clearLayer();
+        requestBody = this.replaceBboxString(requestBody);
+        const options = this.setRequestOptions("application/X-www-form-urlencoded");
+        this.mapService.renderData(requestBody, options);
+    }
+
+    public uploadData(metadata: object) {
+        this.changeset = this.createChangeset(metadata);
+        this.putChangeset(this.changeset);
+    }
+
+    /**
+     * Creates new changeset on the API and returns its ID in the callback.
+     * Put /api/0.6/changeset/create
+     */
+    public putChangeset(changeset): void {
+        this.authService.oauth.xhr({
+            content: "<osm><changeset></changeset></osm>", // changeset,
+            method: "PUT",
+            options: { header: { "Content-Type": "text/xml" } },
+            path: "/api/0.6/changeset/create"
+        }, this.createdChangeset.bind(this));
+    }
+
+    /**
      * Downloads all data for currently selected node.
      * @param featureId
      */
@@ -138,36 +237,6 @@ export class OverpassService {
     }
 
     /**
-     * Requests new batch of data from Overpass.
-     */
-    public requestNewOverpassData(): void {
-        this.loadingService.show("Loading bus stops...");
-        const requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
-        const options = this.setRequestOptions("application/X-www-form-urlencoded");
-        this.mapService.previousCenter = [this.mapService.map.getCenter().lat, this.mapService.map.getCenter().lng];
-        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
-            .map((res) => {
-                this.loadingService.hide();
-                console.log("LOG (overpass)", res);
-                if (res.status === 200) {
-                    return res.json();
-                } else {
-                    console.log("LOG (overpass s.) Stops response error", res.status, res.text);
-                    return setTimeout(function() {
-                        console.log("LOG (overpass) Request error - new request?");
-                        this.requestNewOverpassData();
-                    }.bind(this), 5000);
-                }
-            })
-            .subscribe((response) => {
-                this.processingService.processResponse(response);
-                // FIXME
-                // this.processingService.drawStopAreas();
-                // this.getRouteMasters();
-            });
-    }
-
-    /**
      * Finds routes which were not queried to find their possible master relation.
      */
     private findRouteIdsWithoutMaster(): Array<number> {
@@ -186,57 +255,6 @@ export class OverpassService {
      */
     private markQueriedRelations(idsArr: number[]): void {
         idsArr.forEach( (id) => this.storageService.queriedMasters.add(id) );
-    }
-
-    /**
-     * Downloads route_master relations for currently added route relations.
-     * @minNumOfRelations: number
-     */
-    public getRouteMasters(minNumOfRelations?: number) {
-        if (!minNumOfRelations) {
-            minNumOfRelations = 10;
-        }
-        this.loadingService.show("Loading route master relations...");
-        const idsArr: Array<number> = this.findRouteIdsWithoutMaster();
-        if (idsArr.length <= minNumOfRelations) {
-            this.loadingService.hide();
-            return console.log("LOG (overpass s.) Not enough relations to download - stop");
-        } else if (!idsArr.length ) {
-            // do not query masters if all relations are already known
-            this.loadingService.hide();
-            return;
-        }
-        let requestBody: string = `
-            [out:json][timeout:25][bbox:{{bbox}}];
-            (
-              rel(id:${idsArr.join(", ")});
-              <<;
-            );
-            out meta;`;
-        console.log("LOG (overpass s.) Querying rel.'s route masters with query:", requestBody);
-        requestBody = this.replaceBboxString(requestBody);
-        const options = this.setRequestOptions("application/X-www-form-urlencoded");
-        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
-            .map((res) => res.json())
-            .subscribe((response) => {
-                this.loadingService.hide();
-                if (!response) {
-                    return alert("FIXME: No response, please try to select other master rel. again.");
-                }
-                this.markQueriedRelations(idsArr);
-                this.processingService.processMastersResponse(response);
-            });
-    }
-
-    /**
-     * @param requestBody
-     */
-    public requestOverpassData(requestBody: string): void {
-        this.loadingService.show();
-        this.mapService.clearLayer();
-        requestBody = this.replaceBboxString(requestBody);
-        const options = this.setRequestOptions("application/X-www-form-urlencoded");
-        this.mapService.renderData(requestBody, options);
     }
 
     /**
@@ -281,11 +299,6 @@ export class OverpassService {
         return changeset;
     }
 
-    public uploadData(metadata: object) {
-        this.changeset = this.createChangeset(metadata);
-        this.putChangeset(this.changeset);
-    }
-
     /**
      * Adds changeset ID as an attribute to the request.
      * @param changeset_id
@@ -297,19 +310,6 @@ export class OverpassService {
         doc.querySelector("changeset").setAttribute("id", changeset_id);
         this.changeset = doc;
         console.log("LOG (overpass)", this.changeset, doc);
-    }
-
-    /**
-     * Creates new changeset on the API and returns its ID in the callback.
-     * Put /api/0.6/changeset/create
-     */
-    public putChangeset(changeset): void {
-        this.authService.oauth.xhr({
-            content: "<osm><changeset></changeset></osm>", // changeset,
-            method: "PUT",
-            options: { header: { "Content-Type": "text/xml" } },
-            path: "/api/0.6/changeset/create"
-        }, this.createdChangeset.bind(this));
     }
 
     /**
