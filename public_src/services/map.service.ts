@@ -225,6 +225,10 @@ export class MapService {
     public renderTransformedGeojsonData(transformedGeojson): void {
         this.ptLayer = L.geoJSON(transformedGeojson, {
             filter: (feature) => {
+                // filter away already rendered elements
+                if (this.storageService.elementsRendered.has(feature.id)) {
+                    return false;
+                }
                 if (this.configService.cfgFilterLines) {
                     return "public_transport" in feature.properties && feature.id[0] === "n";
                 } else {
@@ -238,10 +242,13 @@ export class MapService {
                 return this.styleFeature(feature);
             },
             onEachFeature: (feature, layer) => {
+                // prevent rendering elements twice later
+                this.storageService.elementsRendered.add(feature.id);
                 this.enableClick(feature, layer);
                 this.enableDrag(feature, layer);
             }
         });
+        console.log("LOG (map s.): adding PTlayer to map again:", this.ptLayer);
         this.ptLayer.addTo(this.map);
     }
 

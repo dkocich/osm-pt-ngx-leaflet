@@ -14,6 +14,14 @@
         </div>
     </div>
 
+    <div *ngIf="listOfRelations.length > 0" class="text-center e=medium">
+        <div>
+            <button type="button" class="btn btn-default" (click)="downloadMaster()" [disabled]="isRequesting">
+                <span><i *ngIf="isRequesting" class="fa fa-spinner fa-spin"></i></span>Download master relations
+            </button>
+        </div>
+    </div>
+
     <div *ngIf="listOfRelations.length !== 0 && !filteredView" class="medium">
         <ng-container *ngFor="let rel of listOfMasters">
             <div id="{{rel.id}}">
@@ -23,11 +31,13 @@
             </div>
         </ng-container>
         <ng-container *ngFor="let rel of listOfRelations">
-            <div id="{{rel.id}}">
-                <span class="explore" (click)="exploreRelation($event, rel)">
-                    {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
-                </span>
-            </div>
+            <ng-container *ngIf="!hasMaster(rel.id)">
+                <div id="{{rel.id}}">
+                    <span class="explore" (click)="exploreRelation($event, rel)">
+                        {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
+                    </span>
+                </div>
+            </ng-container>
         </ng-container>
     </div>
 

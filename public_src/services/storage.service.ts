@@ -5,7 +5,9 @@ import {IPtStop} from "../core/ptStop.interface";
 
 @Injectable()
 export class StorageService {
-    public idsSet = new Set();
+    public elementsDownloaded = new Set();
+    public queriedMasters = new Set();
+    public elementsRendered = new Set();
     public elementsMap = new Map();
 
     public localJsonStorage: any;
@@ -52,6 +54,13 @@ export class StorageService {
      * Logs basic data statistics.
      */
     public logStats() {
+        console.log(
+            "Total # of nodes: ", this.listOfStops.length,
+            "Total # of relations: ", this.listOfRelations.length,
+            "Total # of master rel. (stop areas only): ", this.listOfAreas.length,
+            "Total # of master rel. (master rel.): ", this.listOfMasters.length,
+            "elDownloaded: ", this.elementsDownloaded.size, "elRendered: ", this.elementsRendered.size,
+            "elMap: ", this.elementsMap.size, "queriedM: ", this.queriedMasters.size);
         let stats = {
             "s": this.listOfStops.length,
             "r": this.listOfRelations.length,

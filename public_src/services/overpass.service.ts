@@ -6,41 +6,21 @@ import {StorageService} from "./storage.service";
 import {LoadingService} from "./loading.service";
 import {ConfigService} from "./config.service";
 import {AuthService} from "./auth.service";
-import {EditingService} from "./editing.service";
 
 import {create} from "xmlbuilder";
-import XMLElementOrXMLNode = require("xmlbuilder");
 
 const CONTINUOUS_QUERY: string = `
 [out:json][timeout:25][bbox:{{bbox}}];
 (
   node["route"="train"];
-  way["route"="train"];
-  relation["route"="train"];
   node["route"="subway"];
-  way["route"="subway"];
-  relation["route"="subway"];
   node["route"="monorail"];
-  way["route"="monorail"];
-  relation["route"="monorail"];
   node["route"="tram"];
-  way["route"="tram"];
-  relation["route"="tram"];
   node["route"="bus"];
-  way["route"="bus"];
-  relation["route"="bus"];
   node["route"="trolleybus"];
-  way["route"="trolleybus"];
-  relation["route"="trolleybus"];
   node["route"="aerialway"];
-  way["route"="aerialway"];
-  relation["route"="aerialway"];
   node["route"="ferry"];
-  way["route"="ferry"];
-  relation["route"="ferry"];
   node["public_transport"];
-  way["public_transport"];
-  relation["public_transport"];
 );
 (._;>;);
 out meta;`;
@@ -54,49 +34,190 @@ export class OverpassService {
                 private storageService: StorageService,
                 private processingService: ProcessingService,
                 private loadingService: LoadingService,
-                private authService: AuthService,
-                private editingService: EditingService) { }
+                private authService: AuthService) {
+        /**
+         * @param data - string containing ID of clicked marker
+         */
+        this.mapService.markerClick.subscribe(
+            data => {
+                let featureId = Number(data);
+                if (!this.storageService.elementsDownloaded.has(featureId)) {
+                    console.log("LOG: requesting started for ", featureId);
+                    this.getNodeData(featureId);
+                    this.storageService.elementsDownloaded.add(featureId);
+                    console.log("LOG: requesting finished for", featureId);
+                }
+            }
+        );
+
+        /**
+         * Handles downloading of missing relation members (nodes, ways).
+         * @param data - object with rel and array containing IDs to download (member.ref)
+         * {"rel": rel, "missingElements": missingElements}
+         */
+        this.processingService.membersToDownload.subscribe(
+            data => {
+                let rel = data["rel"];
+                let missingElements = data["missingElements"];
+                this.getRelationData(rel, missingElements);
+            }
+        );
+    }
+
+    /**
+     * Downloads all data for currently selected node.
+     * @param featureId
+     */
+    private getNodeData(featureId) {
+        let requestBody = `
+            [out:json][timeout:25][bbox:{{bbox}}];
+            (
+              node(id:${featureId})
+            );
+            (._;<);
+            out meta;`;
+        console.log("LOG (overpass s.) querying nodes", requestBody);
+        this.loadingService.show("Loading clicked feature data...");
+        requestBody = this.replaceBboxString(requestBody);
+        let options = this.setRequestOptions("application/X-www-form-urlencoded");
+        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+            .map(res => res.json())
+            .subscribe(response => {
+                if (!response) {
+                    this.loadingService.hide();
+                    return alert("FIXME: No response, please try to click anything again.");
+                }
+                console.log(response);
+                this.processingService.processNodeResponse(response);
+                this.loadingService.hide();
+                this.getRouteMasters(10);
+                // TODO this.processingService.drawStopAreas();
+            });
+    }
+
+    /**
+     * Downloads all missing data for currently explored relation.
+     * @param rel
+     * @param missingElements
+     */
+    private getRelationData(rel: any, missingElements: number[]) {
+        if (missingElements.length === 0) return alert("This relation has no stops: \n" + JSON.stringify(rel));
+        let requestBody = `
+            [out:json][timeout:25];
+            (
+              node(id:${missingElements})
+            );
+            (._;);
+            out meta;`;
+        console.log("LOG (overpass s.) Should download missing members with query:", requestBody, missingElements);
+        // FIXME loading can't be closed sometimes?
+        // this.loadingService.show("Loading relation's missing members...");
+        let options = this.setRequestOptions("application/X-www-form-urlencoded");
+        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+            .map(res => res.json())
+            .subscribe(response => {
+                if (!response) {
+                    this.loadingService.hide();
+                    return alert("No response, try again please.");
+                }
+                this.processingService.processNodeResponse(response);
+
+                let transformedGeojson = this.mapService.osmtogeojson(response);
+                // FIXME save all requests...
+                // this.storageService.localGeojsonStorage = transformedGeojson;
+                this.mapService.renderTransformedGeojsonData(transformedGeojson);
+
+                // continue with the rest of "exploreRelation" function
+                console.log("LOG (map s.) Continue with downloaded missing members", rel);
+                this.storageService.elementsDownloaded.add(rel.id);
+                this.processingService.downloadedMissingMembers(rel, true);
+            });
+    }
 
     /**
      * Requests new batch of data from Overpass.
      */
     public requestNewOverpassData(): void {
-        this.loadingService.show();
+        this.loadingService.show("Loading bus stops...");
         let requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
         let options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.mapService.previousCenter = [this.mapService.map.getCenter().lat, this.mapService.map.getCenter().lng];
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
-            .map(res => res.json())
+            .map(res => {
+                this.loadingService.hide();
+                console.log("LOG: response", res);
+                if (res.status === 200) {
+                    return res.json();
+                } else {
+                    console.log("LOG (overpass s.) stops response error", res.status, res.text);
+                    return setTimeout(function() {
+                        console.log("LOG: request error - new request?");
+                        this.requestNewOverpassData();
+                    }.bind(this), 5000);
+                }
+            })
             .subscribe(response => {
                 this.processingService.processResponse(response);
-                this.processingService.drawStopAreas();
-                this.getRouteMasters();
+                // FIXME
+                // this.processingService.drawStopAreas();
+                // this.getRouteMasters();
             });
     }
 
     /**
-     * Downloads route_master relations for all currently added route relations.
+     * Finds routes which were not queried to find their possible master relation.
      */
-    private getRouteMasters() {
-        let query: string = "[out:json][timeout:25][bbox:{{bbox}}];(rel(id:";
-        this.storageService.listOfRelations.forEach((rel, idx) => {
-            if (idx === this.storageService.listOfRelations.length - 1) {
-                query += rel["id"];
-            } else {
-                query += rel["id"] + ",";
-            }
+    private findRouteIdsWithoutMaster(): Array<number> {
+        let idsArr = [];
+        this.storageService.listOfRelations.forEach( rel => {
+            if (!this.storageService.queriedMasters.has(rel["id"])) idsArr.push(rel["id"]);
         });
-        query += ");<<;);out meta;";
-        console.log("LOG: querying route masters with this query: ", query);
-        let requestBody = this.replaceBboxString(query);
+        return idsArr;
+    }
+
+    /**
+     *
+     * @param {number[]} idsArr
+     */
+    private markQueriedRelations(idsArr: number[]): void {
+        idsArr.forEach( id => this.storageService.queriedMasters.add(id) );
+    }
+
+    /**
+     * Downloads route_master relations for currently added route relations.
+     * @minNumOfRelations: number
+     */
+    public getRouteMasters(minNumOfRelations?: number) {
+        if (!minNumOfRelations) minNumOfRelations = 10;
+        this.loadingService.show("Loading route master relations...");
+        let idsArr: Array<number> = this.findRouteIdsWithoutMaster();
+        if (idsArr.length <= minNumOfRelations) {
+            this.loadingService.hide();
+            return console.log("LOG (overpass s.) Not enough relations to download - stop");
+        } else if (!idsArr.length ) {
+            // do not query masters if all relations are already known
+            this.loadingService.hide();
+            return;
+        }
+        let requestBody: string = `
+            [out:json][timeout:25][bbox:{{bbox}}];
+            (
+              rel(id:${idsArr.join(", ")});
+              <<;
+            );
+            out meta;`;
+        console.log("LOG (overpass s.) Querying rel.'s route masters with query:", requestBody);
+        requestBody = this.replaceBboxString(requestBody);
         let options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map(res => res.json())
             .subscribe(response => {
+                this.loadingService.hide();
+                if (!response) return alert("FIXME: No response, please try to select other master rel. again.");
+                this.markQueriedRelations(idsArr);
                 this.processingService.processMastersResponse(response);
             });
     }
-
 
     /**
      * @param requestBody

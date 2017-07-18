@@ -19,5 +19,5 @@ export class ConfigService {
 
     static appName = p["name"] + " v" + p["version"];
     public minDownloadZoom = 15;
-    public minDownloadDistance = 5000;
+    public minDownloadDistance = 600;
 }
