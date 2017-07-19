@@ -324,7 +324,8 @@ export class ProcessingService {
         // for (let member of rel.members) {
         //     routeVariants.push(this.findElementById(member.ref));
         // }
-        console.log("LOG (processing s.) First master's variant was found: ", this.storageService.elementsMap.has(rel.members[0].ref));
+        console.log("LOG (processing s.) First master's variant was found: ",
+            this.storageService.elementsMap.has(rel.members[0].ref));
         if (!this.storageService.elementsMap.has(rel.members[0].ref)) {
             return alert("FIXME: first master's variant is not fully downloaded.");
         }

@@ -48,7 +48,8 @@ export class GeocodingService {
             .map((result) => {
                 const location = new Location();
 
-                location.address = result.city + ", " + result.region_code + " " + result.zip_code + ", " + result.country_code;
+                location.address = result.city + ", " + result.region_code + " " + result.zip_code +
+                    ", " + result.country_code;
                 location.latitude = result.latitude;
                 location.longitude = result.longitude;
 
