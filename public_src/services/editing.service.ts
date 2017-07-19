@@ -104,29 +104,29 @@ export class EditingService {
         switch (editObj.type) {
             case "add tag":
                 console.log("LOG: should add this tag: ", editObj);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === editObj.id) {
-                        element.tags[editObj.change.key] = editObj.change.value;
-                        console.log("LOG: added element: ", element);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === editObj.id) {
+                        elem.tags[editObj.change.key] = editObj.change.value;
+                        console.log("LOG: added element: ", elem);
                     }
                 });
                 break;
             case "remove tag":
                 console.log("LOG: should remove this tag: ", editObj);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === editObj.id) {
-                        delete element.tags[editObj.change.key];
-                        console.log("LOG: removed element: ", element);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === editObj.id) {
+                        delete elem.tags[editObj.change.key];
+                        console.log("LOG: removed element: ", elem);
                     }
                 });
                 break;
             case "change tag":
                 console.log("LOG: I should make this change: ", editObj);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === editObj.id) {
-                        delete element.tags[editObj.change.from.key];
-                        element.tags[editObj.change.to.key] = editObj.change.to.value;
-                        console.log("LOG: changed element: ", element);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === editObj.id) {
+                        delete elem.tags[editObj.change.from.key];
+                        elem.tags[editObj.change.to.key] = editObj.change.to.value;
+                        console.log("LOG: changed element: ", elem);
                     }
                 });
                 break;
@@ -201,32 +201,32 @@ export class EditingService {
         switch (edit.type) {
             case "add tag":
                 console.log("LOG: should add tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
-                        element.tags[edit.change.key] = edit.change.value;
-                        console.log("LOG: added again", element);
-                        this.processingService.refreshTagView(element);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
+                        elem.tags[edit.change.key] = edit.change.value;
+                        console.log("LOG: added again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;
             case "remove tag":
                 console.log("LOG: should remove tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
-                        delete element.tags[edit.change.key];
-                        console.log("LOG: removed again", element);
-                        this.processingService.refreshTagView(element);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
+                        delete elem.tags[edit.change.key];
+                        console.log("LOG: removed again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;
             case "change tag":
                 console.log("LOG: should reapply this changed tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
                         delete element.tags[edit.change.from.key];
-                        element.tags[edit.change.to.key] = edit.change.to.value;
-                        console.log("LOG: changed again", element);
-                        this.processingService.refreshTagView(element);
+                        elem.tags[edit.change.to.key] = edit.change.to.value;
+                        console.log("LOG: changed again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;
@@ -246,32 +246,32 @@ export class EditingService {
         switch (edit.type) {
             case "add tag":
                 console.log("LOG: should remove this added tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
-                        delete element.tags[edit.change.key];
-                        console.log("LOG: removed again", element);
-                        this.processingService.refreshTagView(element);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
+                        delete elem.tags[edit.change.key];
+                        console.log("LOG: removed again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;
             case "remove tag":
                 console.log("LOG: should add this removed tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
-                        element.tags[edit.change.key] = edit.change.value;
-                        console.log("LOG: added again", element);
-                        this.processingService.refreshTagView(element);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
+                        elem.tags[edit.change.key] = edit.change.value;
+                        console.log("LOG: added again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;
             case "change tag":
                 console.log("LOG: should undo this changed tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
-                        delete element.tags[edit.change.to.key];
-                        element.tags[edit.change.from.key] = edit.change.from.value;
-                        console.log("LOG: changed again", element);
-                        this.processingService.refreshTagView(element);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
+                        delete elem.tags[edit.change.to.key];
+                        elem.tags[edit.change.from.key] = edit.change.from.value;
+                        console.log("LOG: changed again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;

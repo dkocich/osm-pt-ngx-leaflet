@@ -398,9 +398,9 @@ export class ProcessingService {
             const coords = [];
             for (const member of element["members"]) {
                 if (member.type === "node") {
-                    const element = this.findElementById(member.ref);
-                    if (element["lat"] && element["lon"]) {
-                        coords.push([element["lat"], element["lon"]]);
+                    const elem = this.findElementById(member.ref);
+                    if (elem["lat"] && elem["lon"]) {
+                        coords.push([elem["lat"], elem["lon"]]);
                     }
                 }
             }
