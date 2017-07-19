@@ -70,8 +70,8 @@ export class TransporterComponent {
 
     private setQuery(event): void {
         this.queryShort = event.target.textContent;
-        const filtered = this.favoriteQueries.filter(function (iter) {
-           return iter.short === event.target.textContent;
+        const filtered = this.favoriteQueries.filter( (iter) => {
+            return iter.short === event.target.textContent;
         });
         this.queryRaw = decodeURIComponent(filtered[0].raw);
     }

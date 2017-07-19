@@ -107,7 +107,7 @@ export class ToolbarComponent {
 
     private showOptions(): void {
         document.getElementById("toggle-filter").style.display = "inline";
-        setTimeout( function() {
+        setTimeout( () => {
             document.getElementById("toggle-filter").style.display = "none";
         }, 5000);
     }

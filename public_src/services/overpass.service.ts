@@ -364,7 +364,7 @@ export class OverpassService {
             const objectType = xml.ele(el["type"], tagsObj); // adds XML element node|way|relation
             if (el["type"] === "relation" && el["members"]) {
                 const members = el["members"]; // array of objects
-                members.forEach(function(mem) {
+                members.forEach( (mem) => {
                     if (mem === members[members.length - 1]) {
                         objectType.ele("member", { "type": mem["type"], "ref": mem["ref"], "role": mem["role"] });
                     } else {
@@ -411,7 +411,9 @@ export class OverpassService {
                 method: "PUT",
                 options: { header: { "Content-Type": "text/xml" } },
                 path: "/api/0.6/changeset/" + this.changeset_id + "/close"
-            }, function() { return true; });
+            }, () => {
+                return true;
+            });
         }.bind(this), 2500);
     }
 }
