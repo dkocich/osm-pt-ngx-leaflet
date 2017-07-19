@@ -143,7 +143,7 @@ export class MapService {
      * @param elementId
      */
     public disableMouseEvent(elementId: string): void {
-        let element = <HTMLElement>document.getElementById(elementId);
+        const element = <HTMLElement>document.getElementById(elementId);
         if (element) {
             L.DomEvent.disableClickPropagation(element);
             L.DomEvent.disableScrollPropagation(element);
@@ -169,7 +169,7 @@ export class MapService {
     private stylePoint(feature, latlng): any {
         let iconUrl = "images/marker-icon.png";
         let shadowUrl = "";
-        let fp = feature.properties;
+        const fp = feature.properties;
         if ("public_transport" in fp ) { // && fp["railway"] === undefined
             if (fp["public_transport"] === "platform") {
                 iconUrl = "images/transport/platform.svg";
@@ -205,7 +205,7 @@ export class MapService {
                 iconUrl = "images/nr2-24x24.png";
             }
         }
-        let myIcon = L.icon({
+        const myIcon = L.icon({
             iconAnchor: [7, 7],
             iconUrl: iconUrl,
             shadowAnchor: [22, 94],
@@ -286,7 +286,7 @@ export class MapService {
     public enableDrag(feature, layer) {
         layer.on("click", (e) => {
             if (this.editingMode) {
-                let marker = e.target;
+                const marker = e.target;
                 if (!marker.dragging._draggable) {
                     marker.dragging.enable();
                     // domUtil.addClass(marker._icon, "draggable");
@@ -314,22 +314,22 @@ export class MapService {
 
         layer.on("dragend", (e) => {
             // console.log("LOG: dragend event during editing mode", e);
-            let marker = e.target;
-            let featureTypeId = marker.feature.properties.id.split("/");
-            let featureType = featureTypeId[0];
-            let featureId = featureTypeId[1];
-            let lat = marker.feature.geometry.coordinates[1];
-            let lng = marker.feature.geometry.coordinates[0];
-            let originalCoords: LatLng = new LatLng(lat, lng);
-            let newCoords: LatLng = marker["_latlng"]; // .; getLatLng()
-            let distance = originalCoords.distanceTo(newCoords);
+            const marker = e.target;
+            const featureTypeId = marker.feature.properties.id.split("/");
+            const featureType = featureTypeId[0];
+            const featureId = featureTypeId[1];
+            const lat = marker.feature.geometry.coordinates[1];
+            const lng = marker.feature.geometry.coordinates[0];
+            const originalCoords: LatLng = new LatLng(lat, lng);
+            const newCoords: LatLng = marker["_latlng"]; // .; getLatLng()
+            const distance = originalCoords.distanceTo(newCoords);
             if (distance > 100) {
                 marker.setLatLng(originalCoords).update();
                 alert("Current node was dragged more than 100 meters away -> resetting position.");
                 return;
             }
             // console.log("distance is ", distance, " meters", marker);
-            let change = { from: {"lat": lat, "lng": lng },
+            const change = { from: {"lat": lat, "lng": lng },
                 "to": { "lat": newCoords["lat"], "lng": newCoords["lng"]}
             };
             // console.log("marker change is ", change);
@@ -346,9 +346,9 @@ export class MapService {
      * @param feature
      */
     private handleMarkerClick(feature: any): void {
-        let featureTypeId = feature.id.split("/");
-        let featureType = featureTypeId[0];
-        let featureId = featureTypeId[1];
+        const featureTypeId = feature.id.split("/");
+        const featureType = featureTypeId[0];
+        const featureId = featureTypeId[1];
         this.markerClick.emit(featureId);
         // explores leaflet element
         // this.popupBtnClick.emit([featureType, featureId]);
@@ -363,7 +363,7 @@ export class MapService {
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map((res) => res.json())
             .subscribe((result) => {
-                let transformed = this.osmtogeojson(result);
+                const transformed = this.osmtogeojson(result);
                 this.ptLayer = L.geoJSON(transformed, {
                     onEachFeature: (feature, layer) => {
                         this.enableDrag(feature, layer);
@@ -404,7 +404,7 @@ export class MapService {
      * @returns {{lat: number, lng: number}}
      */
     public findCoordinates(refId): LatLngExpression {
-       for (let stop of this.storageService.listOfStops) {
+       for (const stop of this.storageService.listOfStops) {
            if (stop.id === refId) {
                return {lat: stop.lat, lng: stop.lon};
            }
@@ -427,7 +427,7 @@ export class MapService {
     public showRelatedRoutes(filteredRelationsForStop: object[]): void {
         if (filteredRelationsForStop) {
             this.storageService.stopsForRoute = [];
-            for (let rel of filteredRelationsForStop) {
+            for (const rel of filteredRelationsForStop) {
                 this.showRoutes(rel);
             }
             if (this.highlight) {
@@ -442,12 +442,12 @@ export class MapService {
      * @returns {boolean}
      */
     public showRoutes(rel: any): boolean {
-        let latlngs = Array();
+        const latlngs = Array();
         this.storageService.stopsForRoute = [];
-        for (let member of rel.members) {
+        for (const member of rel.members) {
             if (member.type === "node" && ["stop", "stop_entry_only"].indexOf(member.role) > -1) {
                 this.storageService.stopsForRoute.push(member.ref);
-                let latlng: LatLngExpression = this.findCoordinates(member.ref);
+                const latlng: LatLngExpression = this.findCoordinates(member.ref);
                 if (latlng) latlngs.push(latlng);
             }
         }
@@ -472,12 +472,12 @@ export class MapService {
      * @returns {boolean}
      */
     public showRoute(rel: any): boolean {
-        let latlngs = Array();
-        for (let member of rel.members) {
+        const latlngs = Array();
+        for (const member of rel.members) {
             if (member.type === "node" && ["stop", "stop_entry_only", "stop_exit_only"]
                     .indexOf(member.role) > -1) {
                 this.storageService.stopsForRoute.push(member.ref);
-                let latlng: LatLngExpression = this.findCoordinates(member.ref);
+                const latlng: LatLngExpression = this.findCoordinates(member.ref);
                 if (latlng) latlngs.push(latlng);
             }
             else if (member.type === "node" && ["platform", "platform_entry_only", "platform_exit_only"]
@@ -512,15 +512,15 @@ export class MapService {
     }
 
     public drawTooltipFromTo(rel): void {
-        let latlngFrom: LatLngExpression = this.findCoordinates(
+        const latlngFrom: LatLngExpression = this.findCoordinates(
             this.storageService.stopsForRoute[0]);
-        let latlngTo: LatLngExpression = this.findCoordinates(
+        const latlngTo: LatLngExpression = this.findCoordinates(
             this.storageService.stopsForRoute[this.storageService.stopsForRoute.length - 1]);
 
-        let from = rel.tags.from || "#FROM";
-        let to = rel.tags.to || "#TO";
-        let route = rel.tags.route || "#ROUTE";
-        let ref = rel.tags.ref || "#REF";
+        const from = rel.tags.from || "#FROM";
+        const to = rel.tags.to || "#TO";
+        const route = rel.tags.route || "#ROUTE";
+        const ref = rel.tags.ref || "#REF";
 
         this.markerTo = L.circleMarker( latlngTo, FROM_TO_LABEL)
             .bindTooltip("To: " + to + " (" + route + " " + ref + ")", {

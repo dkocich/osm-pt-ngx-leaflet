@@ -72,7 +72,7 @@ export class ToolbarComponent {
     }
 
     private checkMinDistance(): boolean {
-        let lastDownloadCenterDistance = this.mapService.map.getCenter().distanceTo(this.mapService.previousCenter);
+        const lastDownloadCenterDistance = this.mapService.map.getCenter().distanceTo(this.mapService.previousCenter);
         return lastDownloadCenterDistance > this.configService.minDownloadDistance;
     }
 

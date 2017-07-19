@@ -115,7 +115,7 @@ export class StorageService {
      * @param value
      */
     public pushToSessionStorageItem(key: string, value: object): void {
-        let previousValue: any = sessionStorage.getItem(key);
+        const previousValue: any = sessionStorage.getItem(key);
         sessionStorage.setItem(key, JSON.stringify(previousValue + value));
     }
 
@@ -143,11 +143,11 @@ export class StorageService {
      * @param value
      */
     public pushToLocalStorageItem(key: string, value: object): void {
-        let previousValue: string = localStorage.getItem(key);
+        const previousValue: string = localStorage.getItem(key);
         if (!previousValue) {
             localStorage.setItem(key, JSON.stringify(value));
         } else {
-            let previousObj: object[] = JSON.parse(previousValue);
+            const previousObj: object[] = JSON.parse(previousValue);
             previousObj.push(value);
             localStorage.setItem(key, JSON.stringify(previousObj));
         }

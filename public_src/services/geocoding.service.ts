@@ -20,12 +20,12 @@ export class GeocodingService {
             .map((result) => {
                 if (result.status !== "OK") { throw new Error("unable to geocode address"); }
 
-                let location = new Location();
+                const location = new Location();
                 location.address = result.results[0].formatted_address;
                 location.latitude = result.results[0].geometry.location.lat;
                 location.longitude = result.results[0].geometry.location.lng;
 
-                let viewPort = result.results[0].geometry.viewport;
+                const viewPort = result.results[0].geometry.viewport;
                 location.viewBounds = L.latLngBounds(
                   {
                     lat: viewPort.southwest.lat,
@@ -46,7 +46,7 @@ export class GeocodingService {
             .flatMap((ip) => this.http.get("https://freegeoip.net/json/" + ip))
             .map((res: Response) => res.json())
             .map((result) => {
-                let location = new Location();
+                const location = new Location();
 
                 location.address = result.city + ", " + result.region_code + " " + result.zip_code + ", " + result.country_code;
                 location.latitude = result.latitude;

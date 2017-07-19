@@ -47,8 +47,8 @@ export class ProcessingService {
              * @param data - string containing ID of clicked marker
              */
             (data) => {
-                let featureId = Number(data);
-                let element = this.findElementById(featureId);
+                const featureId = Number(data);
+                const element = this.findElementById(featureId);
                 if (!element) alert("Clicked element was not found?!");
                 console.log("LOG: Selected element is ", element);
                 this.refreshTagView(element);
@@ -82,8 +82,8 @@ export class ProcessingService {
     public filterDataInBounds(): void {
         if (!this.storageService.localJsonStorage) return;
         this.mapService.bounds = this.mapService.map.getBounds();
-        for (let stop of this.storageService.listOfStops) {
-            let el = document.getElementById(stop.id.toString());
+        for (const stop of this.storageService.listOfStops) {
+            const el = document.getElementById(stop.id.toString());
             if (!el) return;
             if (el && this.mapService.bounds.contains([stop.lat, stop.lon])) {
                 el.style.display = "table-row";
@@ -98,7 +98,7 @@ export class ProcessingService {
      * @param response
      */
     public processResponse(response: object): void {
-        let transformedGeojson = this.mapService.osmtogeojson(response);
+        const transformedGeojson = this.mapService.osmtogeojson(response);
         this.storageService.localJsonStorage = response;
         this.storageService.localGeojsonStorage = transformedGeojson;
         this.createLists();
@@ -111,7 +111,7 @@ export class ProcessingService {
      * @param response
      */
     public processNodeResponse(response) {
-        for (let element of response.elements) {
+        for (const element of response.elements) {
             if (!this.storageService.elementsMap.has(element.id)) {
                 this.storageService.elementsMap.set(element.id, element);
 
@@ -157,9 +157,9 @@ export class ProcessingService {
         console.log("Total # of master rel. (route_master)", this.storageService.listOfMasters.length);
         this.storageService.logStats();
 
-        let idsHaveMaster: number[] = [];
+        const idsHaveMaster: number[] = [];
         this.storageService.listOfMasters.forEach( (master) => {
-            for (let member of master["members"]) {
+            for (const member of master["members"]) {
                 idsHaveMaster.push(member["ref"]);
             }
         });
@@ -198,15 +198,15 @@ export class ProcessingService {
      * Highlights downloaded stop areas by rectangles.
      */
     public drawStopAreas() {
-        let boundaries = [];
-        for (let area of this.storageService.listOfAreas) {
-            let coords = [];
-            for (let member of area["members"]) {
+        const boundaries = [];
+        for (const area of this.storageService.listOfAreas) {
+            const coords = [];
+            for (const member of area["members"]) {
                 if (member["type"] !== "node") continue;
-                let ref: IPtStop = this.getElementById(member.ref);
+                const ref: IPtStop = this.getElementById(member.ref);
                 coords.push([ref.lat, ref.lon]);
             }
-            let polyline = L.polyline(coords);
+            const polyline = L.polyline(coords);
             L.rectangle(polyline.getBounds(), {color: "#000000", fill: false, weight: 2})
                 .bindTooltip(area["tags"].name).addTo(this.mapService.map);
         }
@@ -251,8 +251,8 @@ export class ProcessingService {
      */
     public refreshRelationView(rel: IPtRelation) {
         this.storageService.listOfVariants = [];
-        for (let member of rel.members) {
-            let routeVariant = this.findElementById(member.ref);
+        for (const member of rel.members) {
+            const routeVariant = this.findElementById(member.ref);
             this.storageService.listOfVariants.push(routeVariant);
         }
         this.refreshSidebarView("relation");
@@ -264,8 +264,8 @@ export class ProcessingService {
      * @param refreshTagView?
      */
     public exploreRelation(rel: any, refreshTagView?: boolean): void  {
-        let missingElements = [];
-        let allowedRefs = ["stop", "stop_exit_only", "stop_entry_only",
+        const missingElements = [];
+        const allowedRefs = ["stop", "stop_exit_only", "stop_entry_only",
             "platform", "platform_exit_only", "platform_entry_only"];
         rel["members"].forEach( (member) => {
            if (!this.storageService.elementsMap.has(member.ref) &&
@@ -328,7 +328,7 @@ export class ProcessingService {
     public exploreStop(stop: any): void {
         if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         this.mapService.showStop(stop);
-        let filteredRelationsForStop = this.filterRelationsByStop(stop);
+        const filteredRelationsForStop = this.filterRelationsByStop(stop);
         this.mapService.showRelatedRoutes(filteredRelationsForStop);
         this.refreshTagView(stop);
         this.mapService.map.panTo([stop.lat, stop.lon]);
@@ -341,8 +341,8 @@ export class ProcessingService {
     public filterRelationsByStop(stop: IPtStop): object[] {
         this.storageService.listOfRelationsForStop = [];
 
-        for (let relation of this.storageService.listOfRelations) {
-            for (let member of relation["members"]) {
+        for (const relation of this.storageService.listOfRelations) {
+            for (const member of relation["members"]) {
                 if (member["ref"] === stop.id) {
                     this.storageService.listOfRelationsForStop.push(relation);
                 }
@@ -359,8 +359,8 @@ export class ProcessingService {
      */
     public filterStopsByRelation(rel: IPtRelation): void {
         rel.members.forEach((mem) => {
-            let stop = this.getElementById(mem.ref);
-            let stopWithMemberAttr = Object.assign(mem, stop);
+            const stop = this.getElementById(mem.ref);
+            const stopWithMemberAttr = Object.assign(mem, stop);
             this.storageService.listOfStopsForRoute.push(stopWithMemberAttr);
         });
         this.activateFilteredStopView(true);
@@ -379,10 +379,10 @@ export class ProcessingService {
                 this.mapService.map.panTo([element["lat"], element["lon"]]);
             }
         } else {
-            let coords = [];
-            for (let member of element["members"]) {
+            const coords = [];
+            for (const member of element["members"]) {
                 if (member.type === "node") {
-                    let element = this.findElementById(member.ref);
+                    const element = this.findElementById(member.ref);
                     if (element["lat"] && element["lon"]) {
                         coords.push([element["lat"], element["lon"]]);
                     }
@@ -391,7 +391,7 @@ export class ProcessingService {
             if (coords.length < 2) {
                 return alert("FIXME: Not enough coordinates to fitBounds");
             }
-            let polyline = L.polyline(coords);
+            const polyline = L.polyline(coords);
             this.mapService.map.fitBounds(polyline.getBounds());
             console.log("LOG: fitBounds to relation geometry");
         }

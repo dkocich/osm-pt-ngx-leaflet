@@ -36,7 +36,7 @@ export class EditingService {
              * "change": {"from": {"lat": ..., "lng": ... }, "to": {"lat": ..., "lng": ... } } }
              */
             (data) => {
-                let element = this.processingService.findElementById(Number(data.featureId));
+                const element = this.processingService.findElementById(Number(data.featureId));
                 this.addChange(element, data.type, data.change);
             }
         );
@@ -62,7 +62,7 @@ export class EditingService {
      * @returns {boolean}
      */
     private shouldCombineChanges(change) {
-        let last = this.storageService.edits[this.storageService.edits.length - 1];
+        const last = this.storageService.edits[this.storageService.edits.length - 1];
         return last["change"].to.key === change.from.key && last["change"].to.value === change.from.value;
     }
 
@@ -72,7 +72,7 @@ export class EditingService {
      */
     private combineChanges(editObj) {
         console.log("LOG: combining changes");
-        let last = this.storageService.edits[this.storageService.edits.length - 1];
+        const last = this.storageService.edits[this.storageService.edits.length - 1];
         last["change"].to.key = editObj.change.to.key;
         last["change"].to.value = editObj.change.to.value;
         this.storageService.edits[this.storageService.edits.length - 1] = last;
@@ -85,8 +85,8 @@ export class EditingService {
      * @param change - change object
      */
     public addChange(element: any, type: string, change: object): any {
-        let edits: object[] = this.storageService.edits;
-        let editObj: any = {
+        const edits: object[] = this.storageService.edits;
+        const editObj: any = {
             "change": change,
             "id": element.id,
             "type": type
@@ -194,7 +194,7 @@ export class EditingService {
      */
     private applyChange(edit: any): void {
         if (!edit.id) alert(edit);
-        let element = this.processingService.findElementById(edit["id"]);
+        const element = this.processingService.findElementById(edit["id"]);
         this.processingService.zoomToElement(element);
         switch (edit.type) {
             case "add tag":
@@ -238,7 +238,7 @@ export class EditingService {
      * @param edit - edit object
      */
     private undoChange(edit: any): void {
-        let element = this.processingService.findElementById(edit["id"]);
+        const element = this.processingService.findElementById(edit["id"]);
         this.processingService.zoomToElement(element);
 
         switch (edit.type) {
@@ -285,11 +285,11 @@ export class EditingService {
     public step(direction: string) {
         // TODO
         if (direction === "forward") {
-            let edit = this.storageService.edits[this.currentEditStep - 1];
+            const edit = this.storageService.edits[this.currentEditStep - 1];
             console.log("LOG: Moving forward in history");
             this.applyChange(edit);
         } else if (direction === "backward") {
-            let edit = this.storageService.edits[this.currentEditStep];
+            const edit = this.storageService.edits[this.currentEditStep];
             console.log("LOG: Moving backward in history");
             this.undoChange(edit);
         }

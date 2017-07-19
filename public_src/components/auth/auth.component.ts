@@ -48,9 +48,9 @@ export class AuthComponent {
             document.getElementById("user").style.display = "block";
             return;
         }
-        let u = res.getElementsByTagName("user")[0];
-        let changesets = res.getElementsByTagName("changesets")[0];
-        let o = {
+        const u = res.getElementsByTagName("user")[0];
+        const changesets = res.getElementsByTagName("changesets")[0];
+        const o = {
             count: changesets.getAttribute("count"),
             display_name: u.getAttribute("display_name"),
             id: u.getAttribute("id")

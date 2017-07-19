@@ -45,7 +45,7 @@ export class AppComponent {
     }
 
     ngOnInit() {
-        let map = L.map("map", {
+        const map = L.map("map", {
             center: L.latLng(49.686, 18.351),
             layers: [this.mapService.baseMaps.CartoDB_light],
             maxZoom: 22,

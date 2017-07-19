@@ -41,7 +41,7 @@ export class OverpassService {
          */
         this.mapService.markerClick.subscribe(
             (data) => {
-                let featureId = Number(data);
+                const featureId = Number(data);
                 if (!this.storageService.elementsDownloaded.has(featureId)) {
                     console.log("LOG: requesting started for ", featureId);
                     this.getNodeData(featureId);
@@ -58,8 +58,8 @@ export class OverpassService {
          */
         this.processingService.membersToDownload.subscribe(
             (data) => {
-                let rel = data["rel"];
-                let missingElements = data["missingElements"];
+                const rel = data["rel"];
+                const missingElements = data["missingElements"];
                 this.getRelationData(rel, missingElements);
             }
         );
@@ -80,7 +80,7 @@ export class OverpassService {
         console.log("LOG (overpass s.) querying nodes", requestBody);
         this.loadingService.show("Loading clicked feature data...");
         requestBody = this.replaceBboxString(requestBody);
-        let options = this.setRequestOptions("application/X-www-form-urlencoded");
+        const options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map((res) => res.json())
             .subscribe((response) => {
@@ -103,7 +103,7 @@ export class OverpassService {
      */
     private getRelationData(rel: any, missingElements: number[]) {
         if (missingElements.length === 0) return alert("This relation has no stops: \n" + JSON.stringify(rel));
-        let requestBody = `
+        const requestBody = `
             [out:json][timeout:25];
             (
               node(id:${missingElements})
@@ -113,7 +113,7 @@ export class OverpassService {
         console.log("LOG (overpass s.) Should download missing members with query:", requestBody, missingElements);
         // FIXME loading can't be closed sometimes?
         // this.loadingService.show("Loading relation's missing members...");
-        let options = this.setRequestOptions("application/X-www-form-urlencoded");
+        const options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map((res) => res.json())
             .subscribe((response) => {
@@ -123,7 +123,7 @@ export class OverpassService {
                 }
                 this.processingService.processNodeResponse(response);
 
-                let transformedGeojson = this.mapService.osmtogeojson(response);
+                const transformedGeojson = this.mapService.osmtogeojson(response);
                 // FIXME save all requests...
                 // this.storageService.localGeojsonStorage = transformedGeojson;
                 this.mapService.renderTransformedGeojsonData(transformedGeojson);
@@ -140,8 +140,8 @@ export class OverpassService {
      */
     public requestNewOverpassData(): void {
         this.loadingService.show("Loading bus stops...");
-        let requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
-        let options = this.setRequestOptions("application/X-www-form-urlencoded");
+        const requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
+        const options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.mapService.previousCenter = [this.mapService.map.getCenter().lat, this.mapService.map.getCenter().lng];
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map((res) => {
@@ -169,7 +169,7 @@ export class OverpassService {
      * Finds routes which were not queried to find their possible master relation.
      */
     private findRouteIdsWithoutMaster(): Array<number> {
-        let idsArr = [];
+        const idsArr = [];
         this.storageService.listOfRelations.forEach( (rel) => {
             if (!this.storageService.queriedMasters.has(rel["id"])) idsArr.push(rel["id"]);
         });
@@ -191,7 +191,7 @@ export class OverpassService {
     public getRouteMasters(minNumOfRelations?: number) {
         if (!minNumOfRelations) minNumOfRelations = 10;
         this.loadingService.show("Loading route master relations...");
-        let idsArr: Array<number> = this.findRouteIdsWithoutMaster();
+        const idsArr: Array<number> = this.findRouteIdsWithoutMaster();
         if (idsArr.length <= minNumOfRelations) {
             this.loadingService.hide();
             return console.log("LOG (overpass s.) Not enough relations to download - stop");
@@ -209,7 +209,7 @@ export class OverpassService {
             out meta;`;
         console.log("LOG (overpass s.) Querying rel.'s route masters with query:", requestBody);
         requestBody = this.replaceBboxString(requestBody);
-        let options = this.setRequestOptions("application/X-www-form-urlencoded");
+        const options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map((res) => res.json())
             .subscribe((response) => {
@@ -227,7 +227,7 @@ export class OverpassService {
         this.loadingService.show();
         this.mapService.clearLayer();
         requestBody = this.replaceBboxString(requestBody);
-        let options = this.setRequestOptions("application/X-www-form-urlencoded");
+        const options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.mapService.renderData(requestBody, options);
     }
 
@@ -237,11 +237,11 @@ export class OverpassService {
      * @returns {string}
      */
     private replaceBboxString(requestBody: string): string {
-        let b = this.mapService.map.getBounds();
-        let s = b.getSouth().toString();
-        let w = b.getWest().toString();
-        let n = b.getNorth().toString();
-        let e = b.getEast().toString();
+        const b = this.mapService.map.getBounds();
+        const s = b.getSouth().toString();
+        const w = b.getWest().toString();
+        const n = b.getNorth().toString();
+        const e = b.getEast().toString();
         return requestBody.replace(new RegExp("{{bbox}}", "g"), [s, w, n, e].join(", "));
     }
 
@@ -251,7 +251,7 @@ export class OverpassService {
      * @returns {RequestOptions}
      */
     private setRequestOptions(contentType): RequestOptions {
-        let headers = new Headers();
+        const headers = new Headers();
         headers.append("Content-Type", contentType);
         return new RequestOptions({headers: headers});
     }
@@ -263,7 +263,7 @@ export class OverpassService {
      */
     private createChangeset(metadata: object): string {
         console.log(metadata["source"], metadata["comment"]);
-        let changeset = create("osm").ele("changeset")
+        const changeset = create("osm").ele("changeset")
             .ele("tag", {"k": "created_by", "v": ConfigService.appName}).up()
             .ele("tag", {"k": "source", "v": metadata["source"] }).up()
             .ele("tag", {"k": "comment", "v": metadata["comment"] })
@@ -284,8 +284,8 @@ export class OverpassService {
      */
     private addChangesetId(changeset_id): void {
         this.changeset_id = changeset_id;
-        let parser = new DOMParser();
-        let doc = parser.parseFromString(this.changeset, "application/xml");
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(this.changeset, "application/xml");
         doc.querySelector("changeset").setAttribute("id", changeset_id);
         this.changeset = doc;
         console.log(this.changeset, doc);
@@ -313,16 +313,16 @@ export class OverpassService {
         if (err) return alert("Error while creating new changeset " + err);
         console.log("LOG: created new changeset with ID: ", changeset_id);
         this.addChangesetId(changeset_id);
-        let osmChangeContent = "<osmChange></osmChange>";
+        const osmChangeContent = "<osmChange></osmChange>";
         if (!this.storageService.edits) { return alert("LOG: create some edits before uploading changes"); }
         // get unique IDs of all edits and add only these to changeset
-        let idsChanged = new Set();
-        for (let edit of this.storageService.edits) {
+        const idsChanged = new Set();
+        for (const edit of this.storageService.edits) {
             if (!idsChanged.has(edit["id"])) idsChanged.add(edit["id"]);
         }
-        let changedElements = [];
-        let changedElementsArr = Array.from(idsChanged.keys());
-        for (let element of this.storageService.localJsonStorage.elements) {
+        const changedElements = [];
+        const changedElementsArr = Array.from(idsChanged.keys());
+        for (const element of this.storageService.localJsonStorage.elements) {
             if (changedElementsArr.indexOf(element.id) > -1) {
                 changedElements.push(element);
             }
@@ -330,12 +330,12 @@ export class OverpassService {
 
         console.log("LOG: changed documents: ", changedElements);
         // TODO - add XML element <create> later create (maybe delete too)
-        let xml = create("osmChange", {"@version": "0.6", "@generator": ConfigService.appName } )
+        const xml = create("osmChange", {"@version": "0.6", "@generator": ConfigService.appName } )
             .ele("modify");
-        for (let el of changedElements) {
+        for (const el of changedElements) {
             console.log("LOG: I should transform ", el);
-            let tagsObj: object = {};
-            for (let key of Object.keys(el)) {
+            const tagsObj: object = {};
+            for (const key of Object.keys(el)) {
                 // do not add some attributes because they are added automatically on API
                 if (["members", "tags", "type", "timestamp", "uid", "user"].indexOf(key) === -1) {
                     // adds - id="123", uid="123", etc.
@@ -349,9 +349,9 @@ export class OverpassService {
 
                 }
             }
-            let objectType = xml.ele(el["type"], tagsObj); // adds XML element node|way|relation
+            const objectType = xml.ele(el["type"], tagsObj); // adds XML element node|way|relation
             if (el["type"] === "relation" && el["members"]) {
-                let members = el["members"]; // array of objects
+                const members = el["members"]; // array of objects
                 members.forEach(function(mem) {
                     if (mem === members[members.length - 1]) {
                         objectType.ele("member", {"type": mem["type"], "ref": mem["ref"], "role": mem["role"]});
@@ -361,8 +361,8 @@ export class OverpassService {
                 });
             }
             if (el["tags"]) {
-                let tags = Object.keys(el["tags"]); // objects
-                for (let tag of tags) {
+                const tags = Object.keys(el["tags"]); // objects
+                for (const tag of tags) {
                     if (tag === tags[tags.length - 1]) {
                         objectType.ele("tag", {"k": tag, "v": el["tags"][tag]});
                     } else {
@@ -371,7 +371,7 @@ export class OverpassService {
                 }
             }
         }
-        let xmlString = xml.end({ pretty: true});
+        const xmlString = xml.end({ pretty: true});
         console.log("LOG: uploading this XML ", xml, xmlString);
         this.authService.oauth.xhr.bind(this)({
             content: xmlString, // .osmChangeJXON(this.changes) // JXON.stringify(),
