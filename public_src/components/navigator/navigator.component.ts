@@ -1,7 +1,7 @@
-import {Component} from "@angular/core";
-import {Map} from "leaflet";
-import {GeocodingService} from "../../services/geocoding.service";
-import {MapService} from "../../services/map.service";
+import { Component } from "@angular/core";
+import { Map } from "leaflet";
+import { GeocodingService } from "../../services/geocoding.service";
+import { MapService } from "../../services/map.service";
 
 @Component({
     providers: [],

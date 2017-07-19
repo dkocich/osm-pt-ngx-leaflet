@@ -1,14 +1,14 @@
-import {Injectable} from "@angular/core";
-import {Headers, Http, RequestOptions} from "@angular/http";
+import { Injectable } from "@angular/core";
+import { Headers, Http, RequestOptions } from "@angular/http";
 
-import {AuthService} from "./auth.service";
-import {ConfigService} from "./config.service";
-import {LoadingService} from "./loading.service";
-import {MapService} from "./map.service";
-import {ProcessingService} from "./processing.service";
-import {StorageService} from "./storage.service";
+import { AuthService } from "./auth.service";
+import { ConfigService } from "./config.service";
+import { LoadingService } from "./loading.service";
+import { MapService } from "./map.service";
+import { ProcessingService } from "./processing.service";
+import { StorageService } from "./storage.service";
 
-import {create} from "xmlbuilder";
+import { create } from "xmlbuilder";
 
 const CONTINUOUS_QUERY: string = `
 [out:json][timeout:25][bbox:{{bbox}}];
@@ -102,7 +102,9 @@ export class OverpassService {
      * @param missingElements
      */
     private getRelationData(rel: any, missingElements: number[]) {
-        if (missingElements.length === 0) return alert("This relation has no stops: \n" + JSON.stringify(rel));
+        if (missingElements.length === 0) {
+            return alert("This relation has no stops: \n" + JSON.stringify(rel));
+        }
         const requestBody = `
             [out:json][timeout:25];
             (
@@ -171,7 +173,9 @@ export class OverpassService {
     private findRouteIdsWithoutMaster(): Array<number> {
         const idsArr = [];
         this.storageService.listOfRelations.forEach( (rel) => {
-            if (!this.storageService.queriedMasters.has(rel["id"])) idsArr.push(rel["id"]);
+            if (!this.storageService.queriedMasters.has(rel["id"])) {
+                idsArr.push(rel["id"]);
+            }
         });
         return idsArr;
     }
@@ -189,7 +193,9 @@ export class OverpassService {
      * @minNumOfRelations: number
      */
     public getRouteMasters(minNumOfRelations?: number) {
-        if (!minNumOfRelations) minNumOfRelations = 10;
+        if (!minNumOfRelations) {
+            minNumOfRelations = 10;
+        }
         this.loadingService.show("Loading route master relations...");
         const idsArr: Array<number> = this.findRouteIdsWithoutMaster();
         if (idsArr.length <= minNumOfRelations) {
@@ -214,7 +220,9 @@ export class OverpassService {
             .map((res) => res.json())
             .subscribe((response) => {
                 this.loadingService.hide();
-                if (!response) return alert("FIXME: No response, please try to select other master rel. again.");
+                if (!response) {
+                    return alert("FIXME: No response, please try to select other master rel. again.");
+                }
                 this.markQueriedRelations(idsArr);
                 this.processingService.processMastersResponse(response);
             });
@@ -253,7 +261,7 @@ export class OverpassService {
     private setRequestOptions(contentType): RequestOptions {
         const headers = new Headers();
         headers.append("Content-Type", contentType);
-        return new RequestOptions({headers: headers});
+        return new RequestOptions({ headers: headers });
     }
 
     /**
@@ -264,10 +272,10 @@ export class OverpassService {
     private createChangeset(metadata: object): string {
         console.log(metadata["source"], metadata["comment"]);
         const changeset = create("osm").ele("changeset")
-            .ele("tag", {"k": "created_by", "v": ConfigService.appName}).up()
-            .ele("tag", {"k": "source", "v": metadata["source"] }).up()
-            .ele("tag", {"k": "comment", "v": metadata["comment"] })
-            .end({ pretty: true});
+            .ele("tag", { "k": "created_by", "v": ConfigService.appName }).up()
+            .ele("tag", { "k": "source", "v": metadata["source"] }).up()
+            .ele("tag", { "k": "comment", "v": metadata["comment"] })
+            .end({ pretty: true });
 
         console.log(changeset);
         return changeset;
@@ -310,7 +318,9 @@ export class OverpassService {
      * @param changeset_id
      */
     private createdChangeset(err, changeset_id) {
-        if (err) return alert("Error while creating new changeset " + err);
+        if (err) {
+            return alert("Error while creating new changeset " + err);
+        }
         console.log("LOG: created new changeset with ID: ", changeset_id);
         this.addChangesetId(changeset_id);
         const osmChangeContent = "<osmChange></osmChange>";
@@ -318,7 +328,9 @@ export class OverpassService {
         // get unique IDs of all edits and add only these to changeset
         const idsChanged = new Set();
         for (const edit of this.storageService.edits) {
-            if (!idsChanged.has(edit["id"])) idsChanged.add(edit["id"]);
+            if (!idsChanged.has(edit["id"])) {
+                idsChanged.add(edit["id"]);
+            }
         }
         const changedElements = [];
         const changedElementsArr = Array.from(idsChanged.keys());
@@ -330,7 +342,7 @@ export class OverpassService {
 
         console.log("LOG: changed documents: ", changedElements);
         // TODO - add XML element <create> later create (maybe delete too)
-        const xml = create("osmChange", {"@version": "0.6", "@generator": ConfigService.appName } )
+        const xml = create("osmChange", { "@version": "0.6", "@generator": ConfigService.appName } )
             .ele("modify");
         for (const el of changedElements) {
             console.log("LOG: I should transform ", el);
@@ -354,9 +366,9 @@ export class OverpassService {
                 const members = el["members"]; // array of objects
                 members.forEach(function(mem) {
                     if (mem === members[members.length - 1]) {
-                        objectType.ele("member", {"type": mem["type"], "ref": mem["ref"], "role": mem["role"]});
+                        objectType.ele("member", { "type": mem["type"], "ref": mem["ref"], "role": mem["role"] });
                     } else {
-                        objectType.ele("member", {"type": mem["type"], "ref": mem["ref"], "role": mem["role"]}).up();
+                        objectType.ele("member", { "type": mem["type"], "ref": mem["ref"], "role": mem["role"] }).up();
                     }
                 });
             }
@@ -364,14 +376,14 @@ export class OverpassService {
                 const tags = Object.keys(el["tags"]); // objects
                 for (const tag of tags) {
                     if (tag === tags[tags.length - 1]) {
-                        objectType.ele("tag", {"k": tag, "v": el["tags"][tag]});
+                        objectType.ele("tag", { "k": tag, "v": el["tags"][tag] });
                     } else {
-                        objectType.ele("tag", {"k": tag, "v": el["tags"][tag]}).up();
+                        objectType.ele("tag", { "k": tag, "v": el["tags"][tag] }).up();
                     }
                 }
             }
         }
-        const xmlString = xml.end({ pretty: true});
+        const xmlString = xml.end({ pretty: true });
         console.log("LOG: uploading this XML ", xml, xmlString);
         this.authService.oauth.xhr.bind(this)({
             content: xmlString, // .osmChangeJXON(this.changes) // JXON.stringify(),
@@ -386,7 +398,9 @@ export class OverpassService {
      * @param err
      */
     private uploadedChangeset(err) {
-        if (err) return alert("Error after data uploading. Changeset is not closed." + err);
+        if (err) {
+            return alert("Error after data uploading. Changeset is not closed." + err);
+        }
         // Upload was successful, safe to call the callback.
         // Add delay to allow for postgres replication #1646 #2678
         window.setTimeout(function() {

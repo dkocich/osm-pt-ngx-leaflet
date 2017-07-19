@@ -14,38 +14,38 @@ import "leaflet/dist/leaflet.css";
 
 import Raven = require("raven-js");
 
-import {ErrorHandler, NgModule} from "@angular/core";
-import {FormsModule} from "@angular/forms";
-import {HttpModule} from "@angular/http";
-import {BrowserModule} from "@angular/platform-browser";
-import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {BusyModule} from "angular2-busy";
-import {AccordionModule, CarouselModule, ModalModule} from "ngx-bootstrap";
+import { ErrorHandler, NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { HttpModule } from "@angular/http";
+import { BrowserModule } from "@angular/platform-browser";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { BusyModule } from "angular2-busy";
+import { AccordionModule, CarouselModule, ModalModule } from "ngx-bootstrap";
 
-import {AppComponent} from "./components/app/app.component";
-import {AuthComponent} from "./components/auth/auth.component";
-import {EditorComponent} from "./components/editor/editor.component";
-import {NavigatorComponent} from "./components/navigator/navigator.component";
-import {RelationBrowserComponent} from "./components/sidebar/relation-browser.component";
-import {RouteBrowserComponent} from "./components/sidebar/route-browser.component";
-import {StopBrowserComponent} from "./components/sidebar/stop-browser.component";
-import {TagBrowserComponent} from "./components/sidebar/tag-browser.component";
-import {ToolbarComponent} from "./components/toolbar/toolbar.component";
-import {TransporterComponent} from "./components/transporter/transporter.component";
+import { AppComponent } from "./components/app/app.component";
+import { AuthComponent } from "./components/auth/auth.component";
+import { EditorComponent } from "./components/editor/editor.component";
+import { NavigatorComponent } from "./components/navigator/navigator.component";
+import { RelationBrowserComponent } from "./components/sidebar/relation-browser.component";
+import { RouteBrowserComponent } from "./components/sidebar/route-browser.component";
+import { StopBrowserComponent } from "./components/sidebar/stop-browser.component";
+import { TagBrowserComponent } from "./components/sidebar/tag-browser.component";
+import { ToolbarComponent } from "./components/toolbar/toolbar.component";
+import { TransporterComponent } from "./components/transporter/transporter.component";
 
-import {AuthService} from "./services/auth.service";
-import {ConfigService} from "./services/config.service";
-import {EditingService} from "./services/editing.service";
-import {GeocodingService} from "./services/geocoding.service";
-import {LoadingService} from "./services/loading.service";
-import {MapService} from "./services/map.service";
-import {OverpassService} from "./services/overpass.service";
-import {ProcessingService} from "./services/processing.service";
-import {StorageService} from "./services/storage.service";
+import { AuthService } from "./services/auth.service";
+import { ConfigService } from "./services/config.service";
+import { EditingService } from "./services/editing.service";
+import { GeocodingService } from "./services/geocoding.service";
+import { LoadingService } from "./services/loading.service";
+import { MapService } from "./services/map.service";
+import { OverpassService } from "./services/overpass.service";
+import { ProcessingService } from "./services/processing.service";
+import { StorageService } from "./services/storage.service";
 
-import {KeysPipe} from "./components/pipes/keys.pipe";
+import { KeysPipe } from "./components/pipes/keys.pipe";
 
 if (!(window.location.href).indexOf("localhost")) {
     Raven
@@ -88,7 +88,7 @@ export class RavenErrorHandler implements ErrorHandler {
         EditingService,
         AuthService,
         KeysPipe,
-        {provide: ErrorHandler, useClass: RavenErrorHandler}
+        { provide: ErrorHandler, useClass: RavenErrorHandler }
     ]
 })
 

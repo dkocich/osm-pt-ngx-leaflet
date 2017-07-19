@@ -1,4 +1,4 @@
-import {IOsmEntity} from "./osmEntity.interface";
+import { IOsmEntity } from "./osmEntity.interface";
 /**
  * {
  *    "type": "node",

@@ -1,15 +1,15 @@
-import {Component, ViewChild} from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 
-import {EditorComponent} from "../editor/editor.component";
-import {TransporterComponent} from "../transporter/transporter.component";
+import { EditorComponent } from "../editor/editor.component";
+import { TransporterComponent } from "../transporter/transporter.component";
 
-import {ConfigService} from "../../services/config.service";
-import {MapService} from "../../services/map.service";
-import {OverpassService} from "../../services/overpass.service";
-import {ProcessingService} from "../../services/processing.service";
-import {StorageService} from "../../services/storage.service";
+import { ConfigService } from "../../services/config.service";
+import { MapService } from "../../services/map.service";
+import { OverpassService } from "../../services/overpass.service";
+import { ProcessingService } from "../../services/processing.service";
+import { StorageService } from "../../services/storage.service";
 
-import {IOsmEntity} from "../../core/osmEntity.interface";
+import { IOsmEntity } from "../../core/osmEntity.interface";
 
 @Component({
     providers: [],
@@ -24,7 +24,7 @@ export class ToolbarComponent {
     public downloading: boolean;
     private filtering: boolean;
     private currentElement: IOsmEntity;
-    private stats = {s: 0, r: 0, a: 0, m: 0};
+    private stats = { s: 0, r: 0, a: 0, m: 0 };
 
     @ViewChild(TransporterComponent) public transporterComponent: TransporterComponent;
     @ViewChild(EditorComponent) public editorComponent: EditorComponent;
@@ -64,7 +64,9 @@ export class ToolbarComponent {
     }
 
     private initDownloader(): void {
-        if (this.checkDownloadRules()) this.overpassService.requestNewOverpassData();
+        if (this.checkDownloadRules()) {
+            this.overpassService.requestNewOverpassData();
+        }
     }
 
     private checkMinZoomLevel (): boolean {
@@ -86,7 +88,9 @@ export class ToolbarComponent {
             this.mapService.map.on("zoomend moveend", () => {
                 this.initDownloader();
             });
-        } else if (!this.downloading) this.mapService.map.off("zoomend moveend");
+        } else if (!this.downloading) {
+            this.mapService.map.off("zoomend moveend");
+        }
     }
 
     /**

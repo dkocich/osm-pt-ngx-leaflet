@@ -1,8 +1,8 @@
-import {Component} from "@angular/core";
+import { Component } from "@angular/core";
 
-import {AuthService} from "../../services/auth.service";
-import {ConfigService} from "../../services/config.service";
-import {StorageService} from "../../services/storage.service";
+import { AuthService } from "../../services/auth.service";
+import { ConfigService } from "../../services/config.service";
+import { StorageService } from "../../services/storage.service";
 
 @Component({
     providers: [],

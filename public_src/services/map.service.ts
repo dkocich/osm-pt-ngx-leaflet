@@ -1,18 +1,18 @@
-import {EventEmitter, Injectable} from "@angular/core";
-import {Http} from "@angular/http";
+import { EventEmitter, Injectable } from "@angular/core";
+import { Http } from "@angular/http";
 
-import {ConfigService} from "./config.service";
-import {LoadingService} from "./loading.service";
-import {StorageService} from "./storage.service";
+import { ConfigService } from "./config.service";
+import { LoadingService } from "./loading.service";
+import { StorageService } from "./storage.service";
 
-import {Map} from "leaflet";
+import { Map } from "leaflet";
 import domUtil = L.DomUtil;
 import latLng = L.latLng;
 import LatLng = L.LatLng;
 import LatLngExpression = L.LatLngExpression;
 import LatLngLiteral = L.LatLngLiteral;
 
-import {IPtStop} from "../core/ptStop.interface";
+import { IPtStop } from "../core/ptStop.interface";
 
 const DEFAULT_ICON = L.icon({
     iconUrl: "",
@@ -212,7 +212,7 @@ export class MapService {
             shadowSize: [24, 24],
             shadowUrl: shadowUrl
         });
-        return L.marker(latlng, {icon: myIcon, draggable: false});
+        return L.marker(latlng, { icon: myIcon, draggable: false });
     }
 
     /**
@@ -329,8 +329,8 @@ export class MapService {
                 return;
             }
             // console.log("distance is ", distance, " meters", marker);
-            const change = { from: {"lat": lat, "lng": lng },
-                "to": { "lat": newCoords["lat"], "lng": newCoords["lng"]}
+            const change = { from: { "lat": lat, "lng": lng },
+                "to": { "lat": newCoords["lat"], "lng": newCoords["lng"] }
             };
             // console.log("marker change is ", change);
             // TODO markers geometry editing and history undo/redo
@@ -406,7 +406,7 @@ export class MapService {
     public findCoordinates(refId): LatLngExpression {
        for (const stop of this.storageService.listOfStops) {
            if (stop.id === refId) {
-               return {lat: stop.lat, lng: stop.lon};
+               return { lat: stop.lat, lng: stop.lon };
            }
        }
     }
@@ -416,7 +416,7 @@ export class MapService {
      * @param stop
      */
     public showStop(stop: IPtStop) {
-        this.markerFrom = L.circleMarker( {lat: stop.lat, lng: stop.lon}, FROM_TO_LABEL);
+        this.markerFrom = L.circleMarker( { lat: stop.lat, lng: stop.lon }, FROM_TO_LABEL);
         this.highlight = L.layerGroup([this.markerFrom]);
     }
 
@@ -448,7 +448,9 @@ export class MapService {
             if (member.type === "node" && ["stop", "stop_entry_only"].indexOf(member.role) > -1) {
                 this.storageService.stopsForRoute.push(member.ref);
                 const latlng: LatLngExpression = this.findCoordinates(member.ref);
-                if (latlng) latlngs.push(latlng);
+                if (latlng) {
+                    latlngs.push(latlng);
+                }
             }
         }
         if (latlngs.length > 0) {
@@ -478,7 +480,9 @@ export class MapService {
                     .indexOf(member.role) > -1) {
                 this.storageService.stopsForRoute.push(member.ref);
                 const latlng: LatLngExpression = this.findCoordinates(member.ref);
-                if (latlng) latlngs.push(latlng);
+                if (latlng) {
+                    latlngs.push(latlng);
+                }
             }
             else if (member.type === "node" && ["platform", "platform_entry_only", "platform_exit_only"]
                     .indexOf(member.role) > -1) {

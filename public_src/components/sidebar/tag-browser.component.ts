@@ -1,10 +1,10 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
 
-import {EditingService} from "../../services/editing.service";
-import {ProcessingService} from "../../services/processing.service";
-import {StorageService} from "../../services/storage.service";
+import { EditingService } from "../../services/editing.service";
+import { ProcessingService } from "../../services/processing.service";
+import { StorageService } from "../../services/storage.service";
 
-import {IOsmEntity} from "../../core/osmEntity.interface";
+import { IOsmEntity } from "../../core/osmEntity.interface";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
@@ -63,19 +63,23 @@ export class TagBrowserComponent {
             switch (event.target["dataset"].type) {
                 case "key":
                     change = {
-                        "from": {"key": key, "value": this.currentElement.tags[key] },
-                        "to": {"key": event.target.value, "value": this.currentElement.tags[key] }
+                        "from": { "key": key, "value": this.currentElement.tags[key] },
+                        "to": { "key": event.target.value, "value": this.currentElement.tags[key] }
                     };
-                    if (this.checkUnchanged(change)) return;
+                    if (this.checkUnchanged(change)) {
+                        return;
+                    }
                     this.currentElement.tags[event.target.value] = this.currentElement.tags[key];
                     delete this.currentElement.tags[key];
                     break;
                 case "value":
                     change = {
-                        "from": {"key": key, "value": this.currentElement.tags[key] },
-                        "to": {"key": key, "value": event.target.value }
+                        "from": { "key": key, "value": this.currentElement.tags[key] },
+                        "to": { "key": key, "value": event.target.value }
                     };
-                    if (this.checkUnchanged(change)) return;
+                    if (this.checkUnchanged(change)) {
+                        return;
+                    }
                     this.currentElement.tags[key] = event.target.value;
                     // delete this.currentElement.tags[key];
                     break;
@@ -89,13 +93,13 @@ export class TagBrowserComponent {
                 " for object: ", this.currentElement);
             this.currentElement.tags[this.tagKey] = this.tagValue;
             this.storageService.currentElement.tags[this.tagKey] = this.tagValue;
-            change = {"key": this.tagKey, "value": this.tagValue };
+            change = { "key": this.tagKey, "value": this.tagValue };
             this.tagKey = this.tagValue = "";
 
         } else if (type === "remove tag") {
             console.log("LOG: Removed tags are", this.currentElement, key, this.currentElement.tags[key],
                 " for object: ", this.currentElement);
-            change = {"key": key, "value": this.currentElement.tags[key] };
+            change = { "key": key, "value": this.currentElement.tags[key] };
 
             delete this.currentElement.tags[key];
             delete this.storageService.currentElement["tags"][key];

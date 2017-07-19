@@ -1,16 +1,16 @@
-import {Component, ViewChild} from "@angular/core";
-import {CarouselConfig, ModalDirective} from "ngx-bootstrap";
+import { Component, ViewChild } from "@angular/core";
+import { CarouselConfig, ModalDirective } from "ngx-bootstrap";
 
-import {GeocodingService} from "../../services/geocoding.service";
-import {LoadingService} from "../../services/loading.service";
-import {MapService} from "../../services/map.service";
-import {ProcessingService} from "../../services/processing.service";
+import { GeocodingService } from "../../services/geocoding.service";
+import { LoadingService } from "../../services/loading.service";
+import { MapService } from "../../services/map.service";
+import { ProcessingService } from "../../services/processing.service";
 
-import {AuthComponent} from "../auth/auth.component";
-import {ToolbarComponent} from "../toolbar/toolbar.component";
+import { AuthComponent } from "../auth/auth.component";
+import { ToolbarComponent } from "../toolbar/toolbar.component";
 
 @Component({
-    providers: [{provide: CarouselConfig, useValue: {noPause: false}}],
+    providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
     selector: "app",
     styles: [
         require<any>("./app.component.less")

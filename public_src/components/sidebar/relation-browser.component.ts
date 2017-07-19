@@ -1,7 +1,7 @@
-import {Component} from "@angular/core";
+import { Component } from "@angular/core";
 
-import {ProcessingService} from "../../services/processing.service";
-import {StorageService} from "../../services/storage.service";
+import { ProcessingService } from "../../services/processing.service";
+import { StorageService } from "../../services/storage.service";
 
 @Component({
     providers: [],

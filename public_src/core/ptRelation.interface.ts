@@ -1,5 +1,5 @@
-import {IOsmEntity} from "./osmEntity.interface";
-import {IPtMember} from "./ptMember";
+import { IOsmEntity } from "./osmEntity.interface";
+import { IPtMember } from "./ptMember";
 /**
  *  {
  *    "type": "relation",

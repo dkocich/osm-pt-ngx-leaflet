@@ -1,13 +1,13 @@
-import {EventEmitter, Injectable} from "@angular/core";
-import {Subject} from "rxjs/Subject";
+import { EventEmitter, Injectable } from "@angular/core";
+import { Subject } from "rxjs/Subject";
 
-import {LoadingService} from "./loading.service";
-import {MapService} from "./map.service";
-import {StorageService} from "./storage.service";
+import { LoadingService } from "./loading.service";
+import { MapService } from "./map.service";
+import { StorageService } from "./storage.service";
 
-import {IOsmEntity} from "../core/osmEntity.interface";
-import {IPtRelation} from "../core/ptRelation.interface";
-import {IPtStop} from "../core/ptStop.interface";
+import { IOsmEntity } from "../core/osmEntity.interface";
+import { IPtRelation } from "../core/ptRelation.interface";
+import { IPtStop } from "../core/ptStop.interface";
 
 @Injectable()
 export class ProcessingService {
@@ -49,7 +49,9 @@ export class ProcessingService {
             (data) => {
                 const featureId = Number(data);
                 const element = this.findElementById(featureId);
-                if (!element) alert("Clicked element was not found?!");
+                if (!element) {
+                    alert("Clicked element was not found?!");
+                }
                 console.log("LOG: Selected element is ", element);
                 this.refreshTagView(element);
             }
@@ -80,11 +82,15 @@ export class ProcessingService {
      * Filters data in the sidebar depending on current view's bounding box.
      */
     public filterDataInBounds(): void {
-        if (!this.storageService.localJsonStorage) return;
+        if (!this.storageService.localJsonStorage) {
+            return;
+        }
         this.mapService.bounds = this.mapService.map.getBounds();
         for (const stop of this.storageService.listOfStops) {
             const el = document.getElementById(stop.id.toString());
-            if (!el) return;
+            if (!el) {
+                return;
+            }
             if (el && this.mapService.bounds.contains([stop.lat, stop.lon])) {
                 el.style.display = "table-row";
             } else {
@@ -202,12 +208,14 @@ export class ProcessingService {
         for (const area of this.storageService.listOfAreas) {
             const coords = [];
             for (const member of area["members"]) {
-                if (member["type"] !== "node") continue;
+                if (member["type"] !== "node") {
+                    continue;
+                }
                 const ref: IPtStop = this.getElementById(member.ref);
                 coords.push([ref.lat, ref.lon]);
             }
             const polyline = L.polyline(coords);
-            L.rectangle(polyline.getBounds(), {color: "#000000", fill: false, weight: 2})
+            L.rectangle(polyline.getBounds(), { color: "#000000", fill: false, weight: 2 })
                 .bindTooltip(area["tags"].name).addTo(this.mapService.map);
         }
     }
@@ -269,14 +277,15 @@ export class ProcessingService {
             "platform", "platform_exit_only", "platform_entry_only"];
         rel["members"].forEach( (member) => {
            if (!this.storageService.elementsMap.has(member.ref) &&
-               ["node"].indexOf(member.type) > -1 && allowedRefs.indexOf(member.role) > -1 )
+               ["node"].indexOf(member.type) > -1 && allowedRefs.indexOf(member.role) > -1 ) {
                missingElements.push(member.ref);
+           }
         });
 
         // check if relation and all its members are downloaded -> get missing
         if (!this.storageService.elementsDownloaded.has(rel.id) &&
             rel["members"].length > 0 && missingElements.length > 0) {
-            this.membersToDownload.emit({"rel": rel, "missingElements": missingElements});
+            this.membersToDownload.emit({ "rel": rel, "missingElements": missingElements });
             // return alert("FIXME: Relation is not (completely) downloaded! Missing: " + missingElements.join(", "));
         } else if (this.storageService.elementsDownloaded.has(rel.id)) {
             this.downloadedMissingMembers(rel, true);
@@ -291,14 +300,18 @@ export class ProcessingService {
      * @param refreshTagView
      */
     public downloadedMissingMembers(rel: any, refreshTagView?: boolean): void {
-        if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
+        if (this.mapService.highlightIsActive()) {
+            this.mapService.clearHighlight();
+        }
         this.storageService.clearRouteData();
         if (this.mapService.showRoute(rel)) {
             this.mapService.drawTooltipFromTo(rel);
             this.filterStopsByRelation(rel);
             this.mapService.map.fitBounds(this.mapService.highlightStroke.getBounds());
         }
-        if (refreshTagView) this.refreshTagView(rel);
+        if (refreshTagView) {
+            this.refreshTagView(rel);
+        }
     }
 
     /**
@@ -326,7 +339,9 @@ export class ProcessingService {
      * @param stop
      */
     public exploreStop(stop: any): void {
-        if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
+        if (this.mapService.highlightIsActive()) {
+            this.mapService.clearHighlight();
+        }
         this.mapService.showStop(stop);
         const filteredRelationsForStop = this.filterRelationsByStop(stop);
         this.mapService.showRelatedRoutes(filteredRelationsForStop);

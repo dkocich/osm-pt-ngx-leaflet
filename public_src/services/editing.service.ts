@@ -1,10 +1,10 @@
-import {EventEmitter, Injectable} from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 
-import {MapService} from "./map.service";
-import {ProcessingService} from "./processing.service";
-import {StorageService} from "./storage.service";
+import { MapService } from "./map.service";
+import { ProcessingService } from "./processing.service";
+import { StorageService } from "./storage.service";
 
-import {IOsmEntity} from "../core/osmEntity.interface";
+import { IOsmEntity } from "../core/osmEntity.interface";
 
 @Injectable()
 export class EditingService {
@@ -143,7 +143,7 @@ export class EditingService {
      */
     private updateCounter(): void {
         this.currentEditStep = this.totalEditSteps = this.storageService.edits.length;
-        this.currentTotalSteps.emit({"current": this.currentEditStep, "total": this.totalEditSteps});
+        this.currentTotalSteps.emit({ "current": this.currentEditStep, "total": this.totalEditSteps });
     }
 
     /**
@@ -193,7 +193,9 @@ export class EditingService {
      * @param edit - edit object
      */
     private applyChange(edit: any): void {
-        if (!edit.id) alert(edit);
+        if (!edit.id) {
+            alert(edit);
+        }
         const element = this.processingService.findElementById(edit["id"]);
         this.processingService.zoomToElement(element);
         switch (edit.type) {

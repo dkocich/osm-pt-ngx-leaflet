@@ -1,10 +1,10 @@
-import {Component, ViewChild} from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 
-import {MapService} from "../../services/map.service";
-import {OverpassService} from "../../services/overpass.service";
-import {StorageService} from "../../services/storage.service";
+import { MapService } from "../../services/map.service";
+import { OverpassService } from "../../services/overpass.service";
+import { StorageService } from "../../services/storage.service";
 
-import {ModalDirective} from "ngx-bootstrap";
+import { ModalDirective } from "ngx-bootstrap";
 
 @Component({
     providers: [],
@@ -65,7 +65,7 @@ export class TransporterComponent {
     }
 
     private uploadData(): void {
-        this.overpassService.uploadData({"comment": this.comment, "source": this.source});
+        this.overpassService.uploadData({ "comment": this.comment, "source": this.source });
     }
 
     private setQuery(event): void {

@@ -1,9 +1,9 @@
-import {Component} from "@angular/core";
+import { Component } from "@angular/core";
 
-import {EditingService} from "../../services/editing.service";
-import {MapService} from "../../services/map.service";
-import {ProcessingService} from "../../services/processing.service";
-import {StorageService} from "../../services/storage.service";
+import { EditingService } from "../../services/editing.service";
+import { MapService } from "../../services/map.service";
+import { ProcessingService } from "../../services/processing.service";
+import { StorageService } from "../../services/storage.service";
 
 @Component({
     providers: [],

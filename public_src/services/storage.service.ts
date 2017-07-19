@@ -1,7 +1,7 @@
-import {EventEmitter, Injectable} from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 
-import {IOsmEntity} from "../core/osmEntity.interface";
-import {IPtStop} from "../core/ptStop.interface";
+import { IOsmEntity } from "../core/osmEntity.interface";
+import { IPtStop } from "../core/ptStop.interface";
 
 @Injectable()
 export class StorageService {
