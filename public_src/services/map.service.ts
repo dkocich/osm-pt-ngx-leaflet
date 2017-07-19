@@ -207,10 +207,10 @@ export class MapService {
         }
         const myIcon = L.icon({
             iconAnchor: [7, 7],
-            iconUrl: iconUrl,
+            iconUrl,
             shadowAnchor: [22, 94],
             shadowSize: [24, 24],
-            shadowUrl: shadowUrl
+            shadowUrl
         });
         return L.marker(latlng, { icon: myIcon, draggable: false });
     }

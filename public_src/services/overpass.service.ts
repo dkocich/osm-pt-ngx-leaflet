@@ -261,7 +261,7 @@ export class OverpassService {
     private setRequestOptions(contentType): RequestOptions {
         const headers = new Headers();
         headers.append("Content-Type", contentType);
-        return new RequestOptions({ headers: headers });
+        return new RequestOptions({ headers });
     }
 
     /**
