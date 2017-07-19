@@ -43,10 +43,10 @@ export class OverpassService {
             (data) => {
                 const featureId = Number(data);
                 if (!this.storageService.elementsDownloaded.has(featureId)) {
-                    console.log("LOG: requesting started for ", featureId);
+                    console.log("LOG (overpass) Requesting started for ", featureId);
                     this.getNodeData(featureId);
                     this.storageService.elementsDownloaded.add(featureId);
-                    console.log("LOG: requesting finished for", featureId);
+                    console.log("LOG (overpass) Requesting finished for", featureId);
                 }
             }
         );
@@ -77,7 +77,7 @@ export class OverpassService {
             );
             (._;<);
             out meta;`;
-        console.log("LOG (overpass s.) querying nodes", requestBody);
+        console.log("LOG (overpass s.) Querying nodes", requestBody);
         this.loadingService.show("Loading clicked feature data...");
         requestBody = this.replaceBboxString(requestBody);
         const options = this.setRequestOptions("application/X-www-form-urlencoded");
@@ -88,7 +88,7 @@ export class OverpassService {
                     this.loadingService.hide();
                     return alert("FIXME: No response, please try to click anything again.");
                 }
-                console.log(response);
+                console.log("LOG (overpass)", response);
                 this.processingService.processNodeResponse(response);
                 this.loadingService.hide();
                 this.getRouteMasters(10);
@@ -131,7 +131,7 @@ export class OverpassService {
                 this.mapService.renderTransformedGeojsonData(transformedGeojson);
 
                 // continue with the rest of "exploreRelation" function
-                console.log("LOG (map s.) Continue with downloaded missing members", rel);
+                console.log("LOG (overpass s.) Continue with downloaded missing members", rel);
                 this.storageService.elementsDownloaded.add(rel.id);
                 this.processingService.downloadedMissingMembers(rel, true);
             });
@@ -148,13 +148,13 @@ export class OverpassService {
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map((res) => {
                 this.loadingService.hide();
-                console.log("LOG: response", res);
+                console.log("LOG (overpass)", res);
                 if (res.status === 200) {
                     return res.json();
                 } else {
-                    console.log("LOG (overpass s.) stops response error", res.status, res.text);
+                    console.log("LOG (overpass s.) Stops response error", res.status, res.text);
                     return setTimeout(function() {
-                        console.log("LOG: request error - new request?");
+                        console.log("LOG (overpass) Request error - new request?");
                         this.requestNewOverpassData();
                     }.bind(this), 5000);
                 }
@@ -270,14 +270,14 @@ export class OverpassService {
      * @returns {string}
      */
     private createChangeset(metadata: object): string {
-        console.log(metadata["source"], metadata["comment"]);
+        console.log("LOG (overpass)", metadata["source"], metadata["comment"]);
         const changeset = create("osm").ele("changeset")
             .ele("tag", { "k": "created_by", "v": ConfigService.appName }).up()
             .ele("tag", { "k": "source", "v": metadata["source"] }).up()
             .ele("tag", { "k": "comment", "v": metadata["comment"] })
             .end({ pretty: true });
 
-        console.log(changeset);
+        console.log("LOG (overpass)", changeset);
         return changeset;
     }
 
@@ -296,7 +296,7 @@ export class OverpassService {
         const doc = parser.parseFromString(this.changeset, "application/xml");
         doc.querySelector("changeset").setAttribute("id", changeset_id);
         this.changeset = doc;
-        console.log(this.changeset, doc);
+        console.log("LOG (overpass)", this.changeset, doc);
     }
 
     /**
@@ -321,7 +321,7 @@ export class OverpassService {
         if (err) {
             return alert("Error while creating new changeset " + err);
         }
-        console.log("LOG: created new changeset with ID: ", changeset_id);
+        console.log("LOG (overpass) Created new changeset with ID: ", changeset_id);
         this.addChangesetId(changeset_id);
         const osmChangeContent = "<osmChange></osmChange>";
         if (!this.storageService.edits) { return alert("LOG: create some edits before uploading changes"); }
@@ -340,12 +340,12 @@ export class OverpassService {
             }
         }
 
-        console.log("LOG: changed documents: ", changedElements);
+        console.log("LOG (overpass) Changed documents: ", changedElements);
         // TODO - add XML element <create> later create (maybe delete too)
         const xml = create("osmChange", { "@version": "0.6", "@generator": ConfigService.appName } )
             .ele("modify");
         for (const el of changedElements) {
-            console.log("LOG: I should transform ", el);
+            console.log("LOG (overpass) I should transform ", el);
             const tagsObj: object = {};
             for (const key of Object.keys(el)) {
                 // do not add some attributes because they are added automatically on API
@@ -384,7 +384,7 @@ export class OverpassService {
             }
         }
         const xmlString = xml.end({ pretty: true });
-        console.log("LOG: uploading this XML ", xml, xmlString);
+        console.log("LOG (overpass) Uploading this XML ", xml, xmlString);
         this.authService.oauth.xhr.bind(this)({
             content: xmlString, // .osmChangeJXON(this.changes) // JXON.stringify(),
             method: "POST",
@@ -404,7 +404,7 @@ export class OverpassService {
         // Upload was successful, safe to call the callback.
         // Add delay to allow for postgres replication #1646 #2678
         window.setTimeout(function() {
-            console.log("timeout 2500");
+            console.log("LOG (overpass) Timeout 2500");
             // callback(null, this.changeset);
             // Still attempt to close changeset, but ignore response because iD/issues/2667
             this.authService.oauth.xhr({

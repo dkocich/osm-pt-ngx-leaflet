@@ -46,7 +46,7 @@ export class StopBrowserComponent {
              * @param data
              */
             (data) => {
-                console.log("Editing mode change in stopBrowser - ", data);
+                console.log("LOG (stop-browser) Editing mode change in stopBrowser - ", data);
                 this.editingMode = data;
             }
         );

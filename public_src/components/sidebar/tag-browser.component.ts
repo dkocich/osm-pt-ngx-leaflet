@@ -33,7 +33,7 @@ export class TagBrowserComponent {
         this.processingService.refreshSidebarViews$.subscribe(
             (data) => {
                 if (data === "tag") {
-                    console.log("Current selected element changed - ", data);
+                    console.log("LOG (tag-browser) Current selected element changed - ", data);
                     this.currentElement = this.storageService.currentElement;
                 }
             }
@@ -44,7 +44,7 @@ export class TagBrowserComponent {
              * @param data
              */
             (data) => {
-                console.log("Editing mode change in tagBrowser - ", data);
+                console.log("LOG (tag-browser) Editing mode change in tagBrowser - ", data);
                 this.editingMode = data;
             }
         );
@@ -86,10 +86,10 @@ export class TagBrowserComponent {
                 default:
                     alert("form type not found");
             }
-            // console.log("LOG: Changed tags are: ", this.tagKey, this.tagValue, event);
+            // console.log("LOG (tag-browser) Changed tags are: ", this.tagKey, this.tagValue, event);
 
         } else if (type === "add tag") {
-            console.log("LOG: Added tags are", key, this.currentElement.tags[key],
+            console.log("LOG (tag-browser) Added tags are", key, this.currentElement.tags[key],
                 " for object: ", this.currentElement);
             this.currentElement.tags[this.tagKey] = this.tagValue;
             this.storageService.currentElement.tags[this.tagKey] = this.tagValue;
@@ -97,7 +97,7 @@ export class TagBrowserComponent {
             this.tagKey = this.tagValue = "";
 
         } else if (type === "remove tag") {
-            console.log("LOG: Removed tags are", this.currentElement, key, this.currentElement.tags[key],
+            console.log("LOG (tag-browser) Removed tags are", this.currentElement, key, this.currentElement.tags[key],
                 " for object: ", this.currentElement);
             change = { "key": key, "value": this.currentElement.tags[key] };
 
@@ -122,10 +122,10 @@ export class TagBrowserComponent {
     }
 
     private keyChange($event) {
-        console.log($event);
+        console.log("LOG (tag-browser)", $event);
     }
 
     private valueChange($event) {
-        console.log($event);
+        console.log("LOG (tag-browser)", $event);
     }
 }

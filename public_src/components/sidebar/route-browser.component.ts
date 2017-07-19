@@ -68,7 +68,7 @@ export class RouteBrowserComponent {
 
     private downloadMaster() {
         this.isRequesting = true;
-        console.log("LOG (route-browser) manually downloading masters");
+        console.log("LOG (route-browser) Manually downloading masters");
         this.overpassService.getRouteMasters(1);
     }
 }

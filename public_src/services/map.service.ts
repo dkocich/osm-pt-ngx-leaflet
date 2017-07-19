@@ -263,7 +263,7 @@ export class MapService {
                 return this.styleFeature(feature);
             }
         });
-        console.log("LOG (map s.): adding PTlayer to map again:", this.ptLayer);
+        console.log("LOG (map s.) Adding PTlayer to map again", this.ptLayer);
         this.ptLayer.addTo(this.map);
     }
 
@@ -301,7 +301,7 @@ export class MapService {
                     //         domUtil.removeClass(e.target._icon, "dragged");
                     //         // let newLoc = Climbo.funcs.latlngHuman( e.target.getLatLng(),"","",6);
                     //         // //$.post("savepos.php", { move: newLoc, id: marker.options.id });
-                    //         // console.log("save position", newLoc);
+                    //         // console.log("LOG (map s.) Save position", newLoc);
                     //     });
                 } else {
                     // marker.dragging.disable();
@@ -313,7 +313,7 @@ export class MapService {
         });
 
         layer.on("dragend", (e) => {
-            // console.log("LOG: dragend event during editing mode", e);
+            // console.log("LOG (map s.) Dragend event during editing mode", e);
             const marker = e.target;
             const featureTypeId = marker.feature.properties.id.split("/");
             const featureType = featureTypeId[0];
@@ -328,11 +328,11 @@ export class MapService {
                 alert("Current node was dragged more than 100 meters away -> resetting position.");
                 return;
             }
-            // console.log("distance is ", distance, " meters", marker);
+            // console.log("LOG (map s.) Distance is", distance, "meters", marker);
             const change = { from: { "lat": lat, "lng": lng },
                 "to": { "lat": newCoords["lat"], "lng": newCoords["lng"] }
             };
-            // console.log("marker change is ", change);
+            // console.log("LOG (map s.) Marker change is ", change);
             // TODO markers geometry editing and history undo/redo
             // this.markerEdit.emit({
             //     "featureId": featureId,

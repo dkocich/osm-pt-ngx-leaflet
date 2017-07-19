@@ -37,7 +37,7 @@ export class ToolbarComponent {
         this.processingService.refreshSidebarViews$.subscribe(
             (data) => {
                 if (data === "tag") {
-                    console.log("Current selected element changed - ", data);
+                    console.log("LOG (toolbar) Current selected element changed - ", data);
                     this.currentElement = this.storageService.currentElement;
                 }
             }

@@ -52,7 +52,7 @@ export class ProcessingService {
                 if (!element) {
                     alert("Clicked element was not found?!");
                 }
-                console.log("LOG: Selected element is ", element);
+                console.log("LOG (processing s.) Selected element is ", element);
                 this.refreshTagView(element);
             }
         );
@@ -150,17 +150,17 @@ export class ProcessingService {
     public processMastersResponse(response: object) {
         response["elements"].forEach( (element) => {
             if (!this.storageService.elementsMap.has(element.id)) {
-                console.log("LOG: New element added:", element.tags.public_transport === "route_master", element);
+                console.log("LOG (processing s.) New element added:", element.tags.public_transport === "route_master", element);
                 this.storageService.elementsMap.set(element.id, element);
                 this.storageService.elementsDownloaded.add(element.id);
                 if (element.tags.public_transport === "route_master") {
                     this.storageService.listOfMasters.push(element);
                 } else {
-                    console.log("WARNING: new elements? " , element);
+                    console.log("LOG (processing s.) WARNING: new elements? " , element);
                 }// do not add other relations because they should be already added
             }
         });
-        console.log("Total # of master rel. (route_master)", this.storageService.listOfMasters.length);
+        console.log("LOG (processing s.) Total # of master rel. (route_master)", this.storageService.listOfMasters.length);
         this.storageService.logStats();
 
         const idsHaveMaster: number[] = [];
@@ -409,7 +409,7 @@ export class ProcessingService {
             }
             const polyline = L.polyline(coords);
             this.mapService.map.fitBounds(polyline.getBounds());
-            console.log("LOG: fitBounds to relation geometry");
+            console.log("LOG (processing s.) FitBounds to relation geometry");
         }
     }
 }

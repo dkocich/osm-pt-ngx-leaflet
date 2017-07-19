@@ -29,7 +29,7 @@ export class EditorComponent {
     ngOnInit() {
         this.editingService.currentTotalSteps.subscribe(
             (data) => {
-                // console.log("subscribed to counter ", data);
+                // console.log("LOG (editor) subscribed to counter ", data);
                 this.currentEditStep = data.current;
                 this.totalEditSteps = data.total;
             }
@@ -42,7 +42,7 @@ export class EditorComponent {
         } else {
             this.storageService.setLocalStorageItem("edits", []);
         }
-        console.log("LOG: Current edits are: ", this.storageService.edits);
+        console.log("LOG (editor) Current edits are: ", this.storageService.edits);
     }
 
     /**
@@ -88,7 +88,7 @@ export class EditorComponent {
      */
     private stepForward(): void {
         this.currentEditStep++;
-        console.log(this.currentEditStep, this.totalEditSteps);
+        console.log("LOG (editor)", this.currentEditStep, this.totalEditSteps);
         this.editingService.currentTotalSteps.emit({
             "current": this.currentEditStep, "total": this.totalEditSteps});
         this.editingService.step("forward");
@@ -108,7 +108,7 @@ export class EditorComponent {
      * @returns {boolean} - when true then button is disabled
      */
     private isInactive(type: string): boolean {
-        // console.log(this.totalEditSteps, this.currentEditStep);
+        // console.log("LOG (editor)", this.totalEditSteps, this.currentEditStep);
         switch (type) {
             case "backward":
                 return this.totalEditSteps - this.currentEditStep === this.totalEditSteps;

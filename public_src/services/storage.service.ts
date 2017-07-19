@@ -47,7 +47,7 @@ export class StorageService {
      * Logs basic data statistics.
      */
     public logStats() {
-        console.log(
+        console.log("LOG (storage)",
             "Total # of nodes: ", this.listOfStops.length,
             "Total # of relations: ", this.listOfRelations.length,
             "Total # of master rel. (stop areas only): ", this.listOfAreas.length,
