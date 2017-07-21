@@ -36,7 +36,7 @@ export class EditingService {
              * "change": {"from": {"lat": ..., "lng": ... }, "to": {"lat": ..., "lng": ... } } }
              */
             (data) => {
-                const element = this.processingService.findElementById(Number(data.featureId));
+                const element = this.processingService.getElementById(Number(data.featureId));
                 this.addChange(element, data.type, data.change);
             }
         );
@@ -213,7 +213,7 @@ export class EditingService {
         if (!edit.id) {
             alert(edit);
         }
-        const element = this.processingService.findElementById(edit["id"]);
+        const element = this.processingService.getElementById(edit["id"]);
         this.processingService.zoomToElement(element);
         switch (edit.type) {
             case "add tag":
@@ -257,7 +257,7 @@ export class EditingService {
      * @param edit - edit object
      */
     private undoChange(edit: any): void {
-        const element = this.processingService.findElementById(edit["id"]);
+        const element = this.processingService.getElementById(edit["id"]);
         this.processingService.zoomToElement(element);
 
         switch (edit.type) {

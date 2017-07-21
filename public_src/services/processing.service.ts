@@ -47,7 +47,7 @@ export class ProcessingService {
              */
             (data) => {
                 const featureId = Number(data);
-                const element = this.findElementById(featureId);
+                const element = this.getElementById(featureId);
                 if (!element) {
                     alert("Clicked element was not found?!");
                 }
@@ -55,16 +55,6 @@ export class ProcessingService {
                 this.refreshTagView(element);
             }
         );
-    }
-
-    /**
-     * Returns element with specific ID.
-     * @param featureId
-     * @param featureType
-     * @returns {IPtStop}
-     */
-    public findElementById(featureId: number, featureType?: string): IOsmEntity {
-        return this.getElementById(featureId);
     }
 
     /**
@@ -261,7 +251,7 @@ export class ProcessingService {
     public refreshRelationView(rel: IPtRelation) {
         this.storageService.listOfVariants = [];
         for (const member of rel.members) {
-            const routeVariant = this.findElementById(member.ref);
+            const routeVariant = this.getElementById(member.ref);
             this.storageService.listOfVariants.push(routeVariant);
         }
         this.refreshSidebarView("relation");
@@ -330,7 +320,7 @@ export class ProcessingService {
         if (!this.storageService.elementsMap.has(rel.members[0].ref)) {
             return alert("FIXME: first master's variant is not fully downloaded.");
         }
-        this.exploreRelation(this.findElementById(rel.members[0].ref), false);
+        this.exploreRelation(this.getElementById(rel.members[0].ref), false);
         // this.mapService.showRelatedRoutes(routeVariants);
         this.refreshTagView(rel);
         this.refreshRelationView(rel);
@@ -399,7 +389,7 @@ export class ProcessingService {
             const coords = [];
             for (const member of element["members"]) {
                 if (member.type === "node") {
-                    const elem = this.findElementById(member.ref);
+                    const elem = this.getElementById(member.ref);
                     if (elem["lat"] && elem["lon"]) {
                         coords.push([elem["lat"], elem["lon"]]);
                     }
