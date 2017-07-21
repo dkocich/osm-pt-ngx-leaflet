@@ -38,7 +38,8 @@ export class ToolbarComponent {
         this.processingService.refreshSidebarViews$.subscribe(
             (data) => {
                 if (data === "tag") {
-                    console.log("LOG (toolbar) Current selected element changed - ", data);
+                    console.log("LOG (toolbar) Current selected element changed - ", data,
+                        this.currentElement, this.storageService.currentElement);
                     this.currentElement = this.storageService.currentElement;
                 }
             }
@@ -106,6 +107,10 @@ export class ToolbarComponent {
      */
     private showInfo(selection: object): void {
         alert(JSON.stringify(selection, null, "\t"));
+    }
+
+    private cancelSelection(): void {
+        this.processingService.cancelSelection();
     }
 
     private zoomTo(selection: IOsmEntity): void {

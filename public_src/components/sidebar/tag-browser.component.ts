@@ -44,9 +44,11 @@ export class TagBrowserComponent {
         this.processingService.refreshSidebarViews$.subscribe(
             (data) => {
                 if (data === "tag") {
-                    console.log("LOG (tag-browser) Current selected element changed - ", data);
+                    console.log("LOG (tag-browser) Current selected element changed - ",
+                        data, this.currentElement, this.storageService.currentElement);
+                    delete this.currentElement;
                     this.currentElement = this.storageService.currentElement;
-                } else if (data === "delete tag") {
+                } else if (data === "cancel selection") {
                     this.currentElement = undefined;
                     delete this.currentElement;
                 }

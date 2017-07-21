@@ -6,7 +6,6 @@ import { ProcessingService } from "../../services/processing.service";
 import { StorageService } from "../../services/storage.service";
 import { DragulaService } from "ng2-dragula";
 
-import { IOsmEntity } from "../../core/osmEntity.interface";
 import { IPtRelation } from "../../core/ptRelation.interface";
 import { IPtStop } from "../../core/ptStop.interface";
 
@@ -21,7 +20,7 @@ import { IPtStop } from "../../core/ptStop.interface";
 })
 export class StopBrowserComponent {
     public listOfStopsForRoute: object[] = this.storageService.listOfStopsForRoute;
-    private currentElement: IOsmEntity;
+    private currentElement: any = { type: "not selected" };
     private listOfStops: object[] = this.storageService.listOfStops;
     private filteredView: boolean;
     private editingMode: boolean;
@@ -49,6 +48,12 @@ export class StopBrowserComponent {
                     this.listOfStopsForRoute = this.storageService.listOfStopsForRoute;
                     this.currentElement = this.storageService.currentElement;
                     console.log(this.currentElement, this.listOfStopsForRoute);
+                } else if (data === "cancel selection") {
+                    this.listOfStopsForRoute = undefined;
+                    delete this.listOfStopsForRoute;
+                    this.currentElement = undefined;
+                    delete this.currentElement;
+                    this.filteredView = false;
                 }
             }
         );
@@ -93,5 +98,13 @@ export class StopBrowserComponent {
 
     private exploreStop($event: any, stop: IPtStop): void {
         this.processingService.exploreStop(stop);
+    }
+
+    private reorderingEnabled(): boolean {
+        if (this.currentElement) {
+            return this.currentElement.type === "relation";
+        } else {
+            return false;
+        }
     }
 }
