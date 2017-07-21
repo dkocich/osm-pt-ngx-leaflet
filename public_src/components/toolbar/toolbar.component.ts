@@ -1,33 +1,33 @@
-import {Component, ViewChild} from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 
-import {TransporterComponent} from "../transporter/transporter.component";
-import {EditorComponent} from "../editor/editor.component";
+import { EditorComponent } from "../editor/editor.component";
+import { TransporterComponent } from "../transporter/transporter.component";
 
-import {ConfigService} from "../../services/config.service";
-import {MapService} from "../../services/map.service";
-import {OverpassService} from "../../services/overpass.service";
-import {StorageService} from "../../services/storage.service";
-import {ProcessingService} from "../../services/processing.service";
+import { ConfigService } from "../../services/config.service";
+import { MapService } from "../../services/map.service";
+import { OverpassService } from "../../services/overpass.service";
+import { ProcessingService } from "../../services/processing.service";
+import { StorageService } from "../../services/storage.service";
 
-import {OsmEntity} from "../../core/osmEntity.interface";
+import { IOsmEntity } from "../../core/osmEntity.interface";
 
 @Component({
+    providers: [],
     selector: "toolbar",
-    template: require<any>("./toolbar.component.html"),
     styles: [
         require<any>("./toolbar.component.less"),
         require<any>("../../styles/main.less")
     ],
-    providers: []
+    template: require<any>("./toolbar.component.html")
 })
 export class ToolbarComponent {
     public downloading: boolean;
+    @ViewChild(TransporterComponent) public transporterComponent: TransporterComponent;
+    @ViewChild(EditorComponent) public editorComponent: EditorComponent;
     private filtering: boolean;
-    private currentElement: OsmEntity;
-    private stats = {"s": 0, "r": 0, "a": 0, "m": 0};
 
-    @ViewChild(TransporterComponent) transporterComponent: TransporterComponent;
-    @ViewChild(EditorComponent) editorComponent: EditorComponent;
+    private currentElement: IOsmEntity;
+    private stats = { s: 0, r: 0, a: 0, m: 0 };
 
     constructor(private mapService: MapService, private overpassService: OverpassService,
                 private configService: ConfigService, private storageService: StorageService,
@@ -35,14 +35,14 @@ export class ToolbarComponent {
         this.downloading = true;
         this.filtering = this.configService.cfgFilterLines;
         this.processingService.refreshSidebarViews$.subscribe(
-            data => {
+            (data) => {
                 if (data === "tag") {
-                    console.log("Current selected element changed - ", data);
+                    console.log("LOG (toolbar) Current selected element changed - ", data);
                     this.currentElement = this.storageService.currentElement;
                 }
             }
         );
-        this.storageService.stats.subscribe(data => this.stats = data);
+        this.storageService.stats.subscribe((data) => this.stats = data);
     }
 
     ngOnInit() {
@@ -57,14 +57,16 @@ export class ToolbarComponent {
         this.mapService.disableMouseEvent("platform-btn");
     }
 
-    Initialize() {
+    public Initialize() {
         this.mapService.map.on("zoomend moveend", () => {
             this.initDownloader();
         });
     }
 
     private initDownloader(): void {
-        if (this.checkDownloadRules()) this.overpassService.requestNewOverpassData();
+        if (this.checkDownloadRules()) {
+            this.overpassService.requestNewOverpassData();
+        }
     }
 
     private checkMinZoomLevel (): boolean {
@@ -72,7 +74,7 @@ export class ToolbarComponent {
     }
 
     private checkMinDistance(): boolean {
-        let lastDownloadCenterDistance = this.mapService.map.getCenter().distanceTo(this.mapService.previousCenter);
+        const lastDownloadCenterDistance = this.mapService.map.getCenter().distanceTo(this.mapService.previousCenter);
         return lastDownloadCenterDistance > this.configService.minDownloadDistance;
     }
 
@@ -86,7 +88,9 @@ export class ToolbarComponent {
             this.mapService.map.on("zoomend moveend", () => {
                 this.initDownloader();
             });
-        } else if (!this.downloading) this.mapService.map.off("zoomend moveend");
+        } else if (!this.downloading) {
+            this.mapService.map.off("zoomend moveend");
+        }
     }
 
     /**
@@ -97,13 +101,13 @@ export class ToolbarComponent {
         alert(JSON.stringify(selection, null, "\t"));
     }
 
-    private zoomTo(selection: OsmEntity) {
+    private zoomTo(selection: IOsmEntity) {
         this.processingService.zoomToElement(selection);
     }
 
     private showOptions(): void {
         document.getElementById("toggle-filter").style.display = "inline";
-        setTimeout( function() {
+        setTimeout( () => {
             document.getElementById("toggle-filter").style.display = "none";
         }, 5000);
     }

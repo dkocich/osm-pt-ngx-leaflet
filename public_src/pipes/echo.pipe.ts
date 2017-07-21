@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from "@angular/core";
     name: "echo"
 })
 export class EchoPipe implements PipeTransform {
-    transform(value: any): any {
+    public transform(value: any): any {
         return value;
     }
 }

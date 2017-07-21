@@ -1,24 +1,75 @@
 {
+    "extends": [
+        "tslint:recommended",
+        "tslint-eslint-rules"
+    ],
     "rules": {
+        "array-type": ["array-simple"],
+        "arrow-parens": true,
         "class-name": true,
         "comment-format": [
             true,
             "check-space"
         ],
+        "no-consecutive-blank-lines": [true, 1],
+        "curly": true,
         "indent": [
             true,
             "spaces"
         ],
+        "forin": true,
+        "max-classes-per-file": [false, 1],
+        "max-line-length": false,
+        "member-access": false,
+        "member-ordering": [
+            false,
+            {
+                "order": [
+                    "public-static-field",
+                    "private-static-field",
+                    "protected-static-field",
+                    "public-instance-field",
+                    "protected-instance-field",
+                    "private-instance-field",
+                    "public-constructor",
+                    "private-constructor",
+                    "protected-constructor",
+                    "public-static-method",
+                    "protected-static-method",
+                    "private-static-method",
+                    "public-instance-method",
+                    "protected-instance-method",
+                    "private-instance-method"
+                ]
+            }
+        ],
+        "no-angle-bracket-type-assertion": true,
+        "no-bitwise": false,
+        "no-console": false,
         "no-duplicate-variable": true,
         "no-eval": true,
         "no-internal-module": true,
+        "no-namespace": false,
+        "no-reference": false,
+        "no-shadowed-variable": true,
+        "no-string-literal": false,
         "no-trailing-whitespace": true,
         "no-var-keyword": true,
+        "no-var-requires": false,
+        "object-literal-key-quotes": [false, "as-needed"],
+        "object-literal-sort-keys": false,
+        "object-curly-spacing": [
+            true,
+            "always"
+        ],
         "one-line": [
             true,
             "check-open-brace",
             "check-whitespace"
         ],
+        "one-variable-per-declaration": true,
+        "ordered-imports": false,
+        "prefer-const": false,
         "quotemark": [
             true,
             "double"
@@ -27,6 +78,8 @@
             true,
             "always"
         ],
+        "space-before-function-paren": false,
+        "trailing-comma": false,
         "triple-equals": [
             true,
             "allow-null-check"

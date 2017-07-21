@@ -1,7 +1,7 @@
-import {EventEmitter, Injectable} from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 
-import {OsmEntity} from "../core/osmEntity.interface";
-import {IPtStop} from "../core/ptStop.interface";
+import { IOsmEntity } from "../core/osmEntity.interface";
+import { IPtStop } from "../core/ptStop.interface";
 
 @Injectable()
 export class StorageService {
@@ -26,7 +26,7 @@ export class StorageService {
     public platformsForRoute: object[] = [];
     public waysForRoute: object[] = [];
     public relationsForRoute: object[] = [];
-    public currentElement: OsmEntity;
+    public currentElement: IOsmEntity;
     public currentElementsChange = new EventEmitter();
 
     public displayName: string = "";
@@ -34,13 +34,6 @@ export class StorageService {
     public edits: object[] = [];
     public editsChanged: EventEmitter<boolean> = new EventEmitter();
     public stats: EventEmitter<object> = new EventEmitter();
-
-    public clearRouteData(): void {
-        this.stopsForRoute = [];
-        this.platformsForRoute = [];
-        this.waysForRoute = [];
-        this.relationsForRoute = [];
-    }
 
     constructor() {
         this.currentElementsChange.subscribe(
@@ -54,20 +47,27 @@ export class StorageService {
      * Logs basic data statistics.
      */
     public logStats() {
-        console.log(
+        console.log("LOG (storage)",
             "Total # of nodes: ", this.listOfStops.length,
             "Total # of relations: ", this.listOfRelations.length,
             "Total # of master rel. (stop areas only): ", this.listOfAreas.length,
             "Total # of master rel. (master rel.): ", this.listOfMasters.length,
             "elDownloaded: ", this.elementsDownloaded.size, "elRendered: ", this.elementsRendered.size,
             "elMap: ", this.elementsMap.size, "queriedM: ", this.queriedMasters.size);
-        let stats = {
-            "s": this.listOfStops.length,
-            "r": this.listOfRelations.length,
-            "a": this.listOfAreas.length,
-            "m": this.listOfMasters.length
+        const stats = {
+            a: this.listOfAreas.length,
+            m: this.listOfMasters.length,
+            r: this.listOfRelations.length,
+            s: this.listOfStops.length
         };
         this.stats.emit(stats);
+    }
+
+    public clearRouteData(): void {
+        this.stopsForRoute = [];
+        this.platformsForRoute = [];
+        this.waysForRoute = [];
+        this.relationsForRoute = [];
     }
 
     /**
@@ -115,7 +115,7 @@ export class StorageService {
      * @param value
      */
     public pushToSessionStorageItem(key: string, value: object): void {
-        let previousValue: any = sessionStorage.getItem(key);
+        const previousValue: any = sessionStorage.getItem(key);
         sessionStorage.setItem(key, JSON.stringify(previousValue + value));
     }
 
@@ -143,11 +143,11 @@ export class StorageService {
      * @param value
      */
     public pushToLocalStorageItem(key: string, value: object): void {
-        let previousValue: string = localStorage.getItem(key);
+        const previousValue: string = localStorage.getItem(key);
         if (!previousValue) {
             localStorage.setItem(key, JSON.stringify(value));
         } else {
-            let previousObj: object[] = JSON.parse(previousValue);
+            const previousObj: object[] = JSON.parse(previousValue);
             previousObj.push(value);
             localStorage.setItem(key, JSON.stringify(previousObj));
         }

@@ -1,19 +1,19 @@
-import {Component} from "@angular/core";
-import {GeocodingService} from "../../services/geocoding.service";
-import {MapService} from "../../services/map.service";
-import {Map} from "leaflet";
+import { Component } from "@angular/core";
+import { Map } from "leaflet";
+import { GeocodingService } from "../../services/geocoding.service";
+import { MapService } from "../../services/map.service";
 
 @Component({
+    providers: [],
     selector: "navigator",
-    template: require<any>("./navigator.component.html"),
     styles: [
         require<any>("./navigator.component.less"),
         require<any>("../../styles/main.less")
     ],
-    providers: []
+    template: require<any>("./navigator.component.html")
 })
 export class NavigatorComponent {
-    address: string;
+    public address: string;
 
     private map: Map;
 
@@ -31,9 +31,9 @@ export class NavigatorComponent {
         if (!this.address) { return; }
 
         this.geocoder.geocode(this.address)
-        .subscribe(location => {
+        .subscribe((location) => {
             this.map.fitBounds(location.viewBounds, {});
             this.address = location.address;
-        }, error => console.error(error));
+        }, (error) => console.error(error));
     }
 }

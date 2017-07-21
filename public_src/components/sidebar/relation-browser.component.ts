@@ -1,16 +1,16 @@
-import {Component} from "@angular/core";
+import { Component } from "@angular/core";
 
-import {ProcessingService} from "../../services/processing.service";
-import {StorageService} from "../../services/storage.service";
+import { ProcessingService } from "../../services/processing.service";
+import { StorageService } from "../../services/storage.service";
 
 @Component({
+    providers: [],
     selector: "relation-browser",
-    template: require<any>("./relation-browser.component.html"),
     styles: [
         require<any>("./relation-browser.component.less"),
         require<any>("../../styles/main.less")
     ],
-    providers: []
+    template: require<any>("./relation-browser.component.html")
 })
 export class RelationBrowserComponent {
     private listOfVariants = this.storageService.listOfVariants;
@@ -21,10 +21,10 @@ export class RelationBrowserComponent {
 
     ngOnInit() {
         this.processingService.refreshSidebarViews$.subscribe(
-            data => {
+            (data) => {
                 if (data === "relation") {
                     this.listOfVariants = this.storageService.listOfVariants;
-                    console.log("LOG: list of variants " , this.storageService.listOfVariants);
+                    console.log("LOG (relation) List of variants " , this.storageService.listOfVariants);
                 }
             }
         );

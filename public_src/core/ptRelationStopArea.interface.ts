@@ -4,7 +4,7 @@
  * "type": "public_transport"
  */
 export class IPtRelationStopArea {
-    name: string;
-    public_transport: string = "stop_area";
-    type: string;
+    public name: string;
+    public public_transport: string = "stop_area";
+    public type: string;
 }

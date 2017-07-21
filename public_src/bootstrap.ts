@@ -3,50 +3,49 @@
 
 import "leaflet";
 import "leaflet.vectorgrid";
+import "reflect-metadata";
 import "zone.js/dist/zone";
 import "zone.js/dist/long-stack-trace-zone";
-import "reflect-metadata";
 
+import "angular2-busy/build/style/busy.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.css";
 import "leaflet/dist/leaflet.css";
-import "angular2-busy/build/style/busy.css";
 
 import Raven = require("raven-js");
 
-import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
-import {HttpModule} from "@angular/http";
-import {ErrorHandler, NgModule} from "@angular/core";
-import {FormsModule}   from "@angular/forms";
-import {BrowserModule} from "@angular/platform-browser";
-import {AccordionModule, CarouselModule, ModalModule} from "ngx-bootstrap";
+import { ErrorHandler, NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { HttpModule } from "@angular/http";
+import { BrowserModule } from "@angular/platform-browser";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { BusyModule } from "angular2-busy";
+import { AccordionModule, CarouselModule, ModalModule } from "ngx-bootstrap";
 
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {BusyModule} from "angular2-busy";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { AppComponent } from "./components/app/app.component";
+import { AuthComponent } from "./components/auth/auth.component";
+import { EditorComponent } from "./components/editor/editor.component";
+import { NavigatorComponent } from "./components/navigator/navigator.component";
+import { RelationBrowserComponent } from "./components/sidebar/relation-browser.component";
+import { RouteBrowserComponent } from "./components/sidebar/route-browser.component";
+import { StopBrowserComponent } from "./components/sidebar/stop-browser.component";
+import { TagBrowserComponent } from "./components/sidebar/tag-browser.component";
+import { ToolbarComponent } from "./components/toolbar/toolbar.component";
+import { TransporterComponent } from "./components/transporter/transporter.component";
 
-import {AppComponent} from "./components/app/app.component";
-import {NavigatorComponent} from "./components/navigator/navigator.component";
-import {ToolbarComponent} from "./components/toolbar/toolbar.component";
-import {RelationBrowserComponent} from "./components/sidebar/relation-browser.component";
-import {TagBrowserComponent} from "./components/sidebar/tag-browser.component";
-import {RouteBrowserComponent} from "./components/sidebar/route-browser.component";
-import {StopBrowserComponent} from "./components/sidebar/stop-browser.component";
-import {TransporterComponent} from "./components/transporter/transporter.component";
-import {AuthComponent} from "./components/auth/auth.component";
-import {EditorComponent} from "./components/editor/editor.component";
+import { AuthService } from "./services/auth.service";
+import { ConfigService } from "./services/config.service";
+import { EditingService } from "./services/editing.service";
+import { GeocodingService } from "./services/geocoding.service";
+import { LoadingService } from "./services/loading.service";
+import { MapService } from "./services/map.service";
+import { OverpassService } from "./services/overpass.service";
+import { ProcessingService } from "./services/processing.service";
+import { StorageService } from "./services/storage.service";
 
-import {MapService} from "./services/map.service";
-import {GeocodingService} from "./services/geocoding.service";
-import {OverpassService} from "./services/overpass.service";
-import {StorageService} from "./services/storage.service";
-import {ProcessingService} from "./services/processing.service";
-import {ConfigService} from "./services/config.service";
-import {LoadingService} from "./services/loading.service";
-import {EditingService} from "./services/editing.service";
-import {AuthService} from "./services/auth.service";
-
-import {KeysPipe} from "./components/pipes/keys.pipe";
+import { KeysPipe } from "./components/pipes/keys.pipe";
 
 if (!(window.location.href).indexOf("localhost")) {
     Raven
@@ -55,15 +54,12 @@ if (!(window.location.href).indexOf("localhost")) {
 }
 
 export class RavenErrorHandler implements ErrorHandler {
-    handleError(err: any): void {
+    public handleError(err: any): void {
         Raven.captureException(err.originalError || err);
     }
 }
 
 @NgModule({
-    imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
-        ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot(),
-        BusyModule, BrowserAnimationsModule],
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,
@@ -78,6 +74,9 @@ export class RavenErrorHandler implements ErrorHandler {
         AuthComponent,
         KeysPipe
     ],
+    imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
+        ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot(),
+        BusyModule, BrowserAnimationsModule],
     providers: [
         MapService,
         GeocodingService,
@@ -89,7 +88,7 @@ export class RavenErrorHandler implements ErrorHandler {
         EditingService,
         AuthService,
         KeysPipe,
-        {provide: ErrorHandler, useClass: RavenErrorHandler}
+        { provide: ErrorHandler, useClass: RavenErrorHandler }
     ]
 })
 

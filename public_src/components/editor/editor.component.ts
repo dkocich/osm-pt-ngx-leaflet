@@ -1,34 +1,34 @@
-import {Component, ViewChild} from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 
-import {MapService} from "../../services/map.service";
-import {StorageService} from "../../services/storage.service";
-import {EditingService} from "../../services/editing.service";
+import { EditingService } from "../../services/editing.service";
+import { MapService } from "../../services/map.service";
+import { StorageService } from "../../services/storage.service";
 
-import {ModalDirective} from "ngx-bootstrap";
+import { ModalDirective } from "ngx-bootstrap";
 
 @Component({
+    providers: [],
     selector: "editor",
-    template: require<any>("./editor.component.html"),
     styles: [
         require<any>("./editor.component.less"),
         require<any>("../../styles/main.less")
     ],
-    providers: []
+    template: require<any>("./editor.component.html")
 })
 export class EditorComponent {
+    @ViewChild("editModal") public editModal: ModalDirective;
     private totalEditSteps: number = 0;
     private currentEditStep: number = 0;
     private editing: boolean = false;
 
     constructor(private mapService: MapService, private storageService: StorageService,
-                private editingService: EditingService) { }
-
-    @ViewChild("editModal") public editModal: ModalDirective;
+                private editingService: EditingService) {
+    }
 
     ngOnInit() {
         this.editingService.currentTotalSteps.subscribe(
             (data) => {
-                // console.log("subscribed to counter ", data);
+                // console.log("LOG (editor) subscribed to counter ", data);
                 this.currentEditStep = data.current;
                 this.totalEditSteps = data.total;
             }
@@ -41,7 +41,7 @@ export class EditorComponent {
         } else {
             this.storageService.setLocalStorageItem("edits", []);
         }
-        console.log("LOG: Current edits are: ", this.storageService.edits);
+        console.log("LOG (editor) Current edits are: ", this.storageService.edits);
     }
 
     /**
@@ -87,7 +87,7 @@ export class EditorComponent {
      */
     private stepForward(): void {
         this.currentEditStep++;
-        console.log(this.currentEditStep, this.totalEditSteps);
+        console.log("LOG (editor)", this.currentEditStep, this.totalEditSteps);
         this.editingService.currentTotalSteps.emit({
             "current": this.currentEditStep, "total": this.totalEditSteps});
         this.editingService.step("forward");
@@ -107,7 +107,7 @@ export class EditorComponent {
      * @returns {boolean} - when true then button is disabled
      */
     private isInactive(type: string): boolean {
-        // console.log(this.totalEditSteps, this.currentEditStep);
+        // console.log("LOG (editor)", this.totalEditSteps, this.currentEditStep);
         switch (type) {
             case "backward":
                 return this.totalEditSteps - this.currentEditStep === this.totalEditSteps;

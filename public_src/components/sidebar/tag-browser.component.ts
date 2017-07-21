@@ -1,38 +1,38 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
 
-import {ProcessingService} from "../../services/processing.service";
-import {StorageService} from "../../services/storage.service";
-import {EditingService} from "../../services/editing.service";
+import { EditingService } from "../../services/editing.service";
+import { ProcessingService } from "../../services/processing.service";
+import { StorageService } from "../../services/storage.service";
 
-import {OsmEntity} from "../../core/osmEntity.interface";
+import { IOsmEntity } from "../../core/osmEntity.interface";
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.Default,
+    providers: [],
     selector: "tag-browser",
-    template: require<any>("./tag-browser.component.html"),
     styles: [
         require<any>("./tag-browser.component.less"),
         require<any>("../../styles/main.less")
     ],
-    providers: [],
-    changeDetection: ChangeDetectionStrategy.Default
+    template: require<any>("./tag-browser.component.html")
 })
 export class TagBrowserComponent {
-    private currentElement: OsmEntity;
+    @Input() public tagKey: string = "";
+    @Input() public tagValue: string = "";
+    private currentElement: IOsmEntity;
     private editingMode: boolean;
-
-    @Input() tagKey: string = "";
-    @Input() tagValue: string = "";
 
     constructor(private processingService: ProcessingService,
                 private storageService: StorageService,
                 private editingService: EditingService,
-                private cd: ChangeDetectorRef) { }
+                private cd: ChangeDetectorRef) {
+    }
 
     ngOnInit() {
         this.processingService.refreshSidebarViews$.subscribe(
-            data => {
+            (data) => {
                 if (data === "tag") {
-                    console.log("Current selected element changed - ", data);
+                    console.log("LOG (tag-browser) Current selected element changed - ", data);
                     this.currentElement = this.storageService.currentElement;
                 }
             }
@@ -43,7 +43,7 @@ export class TagBrowserComponent {
              * @param data
              */
             (data) => {
-                console.log("Editing mode change in tagBrowser - ", data);
+                console.log("LOG (tag-browser) Editing mode change in tagBrowser - ", data);
                 this.editingMode = data;
             }
         );
@@ -62,39 +62,43 @@ export class TagBrowserComponent {
             switch (event.target["dataset"].type) {
                 case "key":
                     change = {
-                        "from": {"key": key, "value": this.currentElement.tags[key] },
-                        "to": {"key": event.target.value, "value": this.currentElement.tags[key] }
+                        "from": { "key": key, "value": this.currentElement.tags[key] },
+                        "to": { "key": event.target.value, "value": this.currentElement.tags[key] }
                     };
-                    if (this.checkUnchanged(change)) return;
+                    if (this.checkUnchanged(change)) {
+                        return;
+                    }
                     this.currentElement.tags[event.target.value] = this.currentElement.tags[key];
                     delete this.currentElement.tags[key];
                     break;
                 case "value":
                     change = {
-                        "from": {"key": key, "value": this.currentElement.tags[key] },
-                        "to": {"key": key, "value": event.target.value }
+                        "from": { "key": key, "value": this.currentElement.tags[key] },
+                        "to": { "key": key, "value": event.target.value }
                     };
-                    if (this.checkUnchanged(change)) return;
+                    if (this.checkUnchanged(change)) {
+                        return;
+                    }
                     this.currentElement.tags[key] = event.target.value;
                     // delete this.currentElement.tags[key];
                     break;
                 default:
                     alert("form type not found");
             }
-            // console.log("LOG: Changed tags are: ", this.tagKey, this.tagValue, event);
+            // console.log("LOG (tag-browser) Changed tags are: ", this.tagKey, this.tagValue, event);
 
         } else if (type === "add tag") {
-            console.log("LOG: Added tags are", key, this.currentElement.tags[key],
+            console.log("LOG (tag-browser) Added tags are", key, this.currentElement.tags[key],
                 " for object: ", this.currentElement);
             this.currentElement.tags[this.tagKey] = this.tagValue;
             this.storageService.currentElement.tags[this.tagKey] = this.tagValue;
-            change = {"key": this.tagKey, "value": this.tagValue };
+            change = { "key": this.tagKey, "value": this.tagValue };
             this.tagKey = this.tagValue = "";
 
         } else if (type === "remove tag") {
-            console.log("LOG: Removed tags are", this.currentElement, key, this.currentElement.tags[key],
+            console.log("LOG (tag-browser) Removed tags are", this.currentElement, key, this.currentElement.tags[key],
                 " for object: ", this.currentElement);
-            change = {"key": key, "value": this.currentElement.tags[key] };
+            change = { "key": key, "value": this.currentElement.tags[key] };
 
             delete this.currentElement.tags[key];
             delete this.storageService.currentElement["tags"][key];
@@ -117,10 +121,10 @@ export class TagBrowserComponent {
     }
 
     private keyChange($event) {
-        console.log($event);
+        console.log("LOG (tag-browser)", $event);
     }
 
     private valueChange($event) {
-        console.log($event);
+        console.log("LOG (tag-browser)", $event);
     }
 }

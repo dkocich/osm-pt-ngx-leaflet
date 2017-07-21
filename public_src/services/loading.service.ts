@@ -1,10 +1,12 @@
-import {Injectable} from "@angular/core";
+import { Injectable } from "@angular/core";
 
 @Injectable()
 export class LoadingService {
     private _isLoading: boolean = false;
     private _statusMessage: string = "Loading...";
-    constructor() { }
+    constructor() {
+        //
+    }
 
     public isLoading(): boolean {
         return this._isLoading;

@@ -1,22 +1,24 @@
-import {Component} from "@angular/core";
-import {StorageService} from "../../services/storage.service";
-import {ConfigService} from "../../services/config.service";
-import {AuthService} from "../../services/auth.service";
+import { Component } from "@angular/core";
+
+import { AuthService } from "../../services/auth.service";
+import { ConfigService } from "../../services/config.service";
+import { StorageService } from "../../services/storage.service";
 
 @Component({
+    providers: [],
     selector: "auth",
-    template: require<any>("./auth.component.html"),
     styles: [
         require<any>("./auth.component.less")
     ],
-    providers: []
+    template: require<any>("./auth.component.html")
 })
 
 export class AuthComponent {
 
     private displayName: string;
 
-    constructor(private storageService: StorageService, private authService: AuthService) { }
+    constructor(private storageService: StorageService, private authService: AuthService) {
+    }
 
     ngOnInit() {
         this.displayName = this.getDisplayName();
@@ -46,12 +48,12 @@ export class AuthComponent {
             document.getElementById("user").style.display = "block";
             return;
         }
-        let u = res.getElementsByTagName("user")[0];
-        let changesets = res.getElementsByTagName("changesets")[0];
-        let o = {
+        const u = res.getElementsByTagName("user")[0];
+        const changesets = res.getElementsByTagName("changesets")[0];
+        const o = {
+            count: changesets.getAttribute("count"),
             display_name: u.getAttribute("display_name"),
-            id: u.getAttribute("id"),
-            count: changesets.getAttribute("count")
+            id: u.getAttribute("id")
         };
         this.storageService.setUserData(o.display_name, o.id, o.count);
         document.getElementById("display_name").innerHTML = o["display_name"];
@@ -68,8 +70,8 @@ export class AuthComponent {
         this.authService.oauth.xhr({
             method: "GET",
             path: "/api/0.6/user/details",
-            url: ConfigService.apiUrl,
-            singlepage: true
+            singlepage: true,
+            url: ConfigService.apiUrl
         }, this.gotDetailsCallback.bind(this));
     }
 

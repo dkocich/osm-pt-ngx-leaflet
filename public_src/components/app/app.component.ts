@@ -1,30 +1,58 @@
-import {Component, ViewChild} from "@angular/core";
-import {ToolbarComponent} from "../toolbar/toolbar.component";
-import {MapService} from "../../services/map.service";
-import {GeocodingService} from "../../services/geocoding.service";
-import {AuthComponent} from "../auth/auth.component";
-import {CarouselConfig, ModalDirective} from "ngx-bootstrap";
-import {LoadingService} from "../../services/loading.service";
-import {ProcessingService} from "../../services/processing.service";
+import { Component, ViewChild } from "@angular/core";
+import { CarouselConfig, ModalDirective } from "ngx-bootstrap";
+
+import { GeocodingService } from "../../services/geocoding.service";
+import { LoadingService } from "../../services/loading.service";
+import { MapService } from "../../services/map.service";
+import { ProcessingService } from "../../services/processing.service";
+
+import { AuthComponent } from "../auth/auth.component";
+import { ToolbarComponent } from "../toolbar/toolbar.component";
 
 @Component({
+    providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
     selector: "app",
-    template: require<any>("./app.component.html"),
     styles: [
         require<any>("./app.component.less")
     ],
-    providers: [{provide: CarouselConfig, useValue: {noPause: false}}]
+    template: require<any>("./app.component.html")
 })
 export class AppComponent {
 
-    @ViewChild(ToolbarComponent) toolbarComponent: ToolbarComponent;
-    @ViewChild(AuthComponent) authComponent: AuthComponent;
+    @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
+    @ViewChild(AuthComponent) public authComponent: AuthComponent;
+    @ViewChild("helpModal") public helpModal: ModalDirective;
 
     constructor(private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService) {
     }
 
-    @ViewChild("helpModal") public helpModal: ModalDirective;
+    ngOnInit() {
+        const map = L.map("map", {
+            center: L.latLng(49.686, 18.351),
+            layers: [this.mapService.baseMaps.CartoDB_light],
+            maxZoom: 22,
+            minZoom: 4,
+            zoom: 14,
+            zoomAnimation: false,
+            zoomControl: false
+        });
+
+        L.control.zoom({ position: "topright" }).addTo(map);
+        L.control.layers(this.mapService.baseMaps).addTo(map);
+        L.control.scale().addTo(map);
+
+        this.mapService.map = map;
+        this.mapService.map.on("zoomend moveend", () => {
+            this.processingService.filterDataInBounds();
+        });
+        this.geocoder.getCurrentLocation()
+            .subscribe(
+                (location) => map.panTo([location.latitude, location.longitude]),
+                (err) => console.error(err)
+            );
+        this.toolbarComponent.Initialize();
+    }
 
     private showHelpModal(): void {
         this.helpModal.show();
@@ -40,32 +68,5 @@ export class AppComponent {
 
     private getStatus(): string {
         return this.loadingService.getStatus();
-    }
-
-    ngOnInit() {
-        let map = L.map("map", {
-            zoomAnimation: false,
-            zoomControl: false,
-            center: L.latLng(49.686, 18.351),
-            zoom: 14,
-            minZoom: 4,
-            maxZoom: 22,
-            layers: [this.mapService.baseMaps.CartoDB_light]
-        });
-
-        L.control.zoom({ position: "topright" }).addTo(map);
-        L.control.layers(this.mapService.baseMaps).addTo(map);
-        L.control.scale().addTo(map);
-
-        this.mapService.map = map;
-        this.mapService.map.on("zoomend moveend", () => {
-            this.processingService.filterDataInBounds();
-        });
-        this.geocoder.getCurrentLocation()
-            .subscribe(
-                location => map.panTo([location.latitude, location.longitude]),
-                err => console.error(err)
-            );
-        this.toolbarComponent.Initialize();
     }
 }

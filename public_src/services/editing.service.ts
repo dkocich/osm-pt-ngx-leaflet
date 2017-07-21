@@ -1,10 +1,10 @@
-import {EventEmitter, Injectable} from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 
-import {StorageService} from "./storage.service";
-import {ProcessingService} from "./processing.service";
-import {MapService} from "./map.service";
+import { MapService } from "./map.service";
+import { ProcessingService } from "./processing.service";
+import { StorageService } from "./storage.service";
 
-import {OsmEntity} from "../core/osmEntity.interface";
+import { IOsmEntity } from "../core/osmEntity.interface";
 
 @Injectable()
 export class EditingService {
@@ -36,7 +36,7 @@ export class EditingService {
              * "change": {"from": {"lat": ..., "lng": ... }, "to": {"lat": ..., "lng": ... } } }
              */
             (data) => {
-                let element = this.processingService.findElementById(Number(data.featureId));
+                const element = this.processingService.findElementById(Number(data.featureId));
                 this.addChange(element, data.type, data.change);
             }
         );
@@ -57,39 +57,17 @@ export class EditingService {
     }
 
     /**
-     * Checks if the last edit was made on the same tag like the new change.
-     * @param change
-     * @returns {boolean}
-     */
-    private shouldCombineChanges(change) {
-        let last = this.storageService.edits[this.storageService.edits.length - 1];
-        return last["change"].to.key === change.from.key && last["change"].to.value === change.from.value;
-    }
-
-    /**
-     * Checks if last two changes are on the same tag and combines them in edit. history together.
-     * @param editObj
-     */
-    private combineChanges(editObj) {
-        console.log("LOG: combining changes");
-        let last = this.storageService.edits[this.storageService.edits.length - 1];
-        last["change"].to.key = editObj.change.to.key;
-        last["change"].to.value = editObj.change.to.value;
-        this.storageService.edits[this.storageService.edits.length - 1] = last;
-    }
-
-    /**
      * Handles the complete process of adding a change to the history.
      * @param element - changed entity
      * @param type - some comment about a created change
      * @param change - change object
      */
     public addChange(element: any, type: string, change: object): any {
-        let edits: object[] = this.storageService.edits;
-        let editObj: any = {
+        const edits: object[] = this.storageService.edits;
+        const editObj: any = {
+            "change": change,
             "id": element.id,
-            "type": type,
-            "change": change
+            "type": type
         };
         if (this.isBrowsingHistoryOfChanges()) {
             this.deleteMoreRecentChanges(this.currentEditStep);
@@ -103,30 +81,30 @@ export class EditingService {
 
         switch (editObj.type) {
             case "add tag":
-                console.log("LOG: should add this tag: ", editObj);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === editObj.id) {
-                        element.tags[editObj.change.key] = editObj.change.value;
-                        console.log("LOG: added element: ", element);
+                console.log("LOG (editing s.) Should add this tag: ", editObj);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === editObj.id) {
+                        elem.tags[editObj.change.key] = editObj.change.value;
+                        console.log("LOG (editing s.) Added element: ", elem);
                     }
                 });
                 break;
             case "remove tag":
-                console.log("LOG: should remove this tag: ", editObj);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === editObj.id) {
-                        delete element.tags[editObj.change.key];
-                        console.log("LOG: removed element: ", element);
+                console.log("LOG (editing s.) Should remove this tag: ", editObj);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === editObj.id) {
+                        delete elem.tags[editObj.change.key];
+                        console.log("LOG (editing s.) Removed element: ", elem);
                     }
                 });
                 break;
             case "change tag":
-                console.log("LOG: I should make this change: ", editObj);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === editObj.id) {
-                        delete element.tags[editObj.change.from.key];
-                        element.tags[editObj.change.to.key] = editObj.change.to.value;
-                        console.log("LOG: changed element: ", element);
+                console.log("LOG (editing s.) I should make this change: ", editObj);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === editObj.id) {
+                        delete elem.tags[editObj.change.from.key];
+                        elem.tags[editObj.change.to.key] = editObj.change.to.value;
+                        console.log("LOG (editing s.) Changed element: ", elem);
                     }
                 });
                 break;
@@ -139,21 +117,13 @@ export class EditingService {
     }
 
     /**
-     * Emits numbers which are visible in toolbar counter while editing.
-     */
-    private updateCounter(): void {
-        this.currentEditStep = this.totalEditSteps = this.storageService.edits.length;
-        this.currentTotalSteps.emit({"current": this.currentEditStep, "total": this.totalEditSteps});
-    }
-
-    /**
      * Handles adding of different PT elements and fills attributes automatically.
      * @param type
      */
     public createNewElement (type: string): void {
         // TODO fill attributes, focus tag editor on element, continue editing
 
-        let newElement: OsmEntity;
+        let newElement: IOsmEntity;
         switch (type) {
             case "stop":
                 newElement.tags = {
@@ -168,8 +138,55 @@ export class EditingService {
                 };
                 break;
             default:
-                console.log("LOG: type was created: ", type);
+                console.log("LOG (editing s.) Type was created: ", type);
         }
+    }
+
+    /**
+     * Handles switching between edits (undoing/applying changes, map move)
+     * @param direction - "forward" or "backward"
+     */
+    public step(direction: string) {
+        // TODO
+        if (direction === "forward") {
+            const edit = this.storageService.edits[this.currentEditStep - 1];
+            console.log("LOG (editing s.) Moving forward in history");
+            this.applyChange(edit);
+        } else if (direction === "backward") {
+            const edit = this.storageService.edits[this.currentEditStep];
+            console.log("LOG (editing s.) Moving backward in history");
+            this.undoChange(edit);
+        }
+    }
+
+    /**
+     * Checks if the last edit was made on the same tag like the new change.
+     * @param change
+     * @returns {boolean}
+     */
+    private shouldCombineChanges(change) {
+        const last = this.storageService.edits[this.storageService.edits.length - 1];
+        return last["change"].to.key === change.from.key && last["change"].to.value === change.from.value;
+    }
+
+    /**
+     * Checks if last two changes are on the same tag and combines them in edit. history together.
+     * @param editObj
+     */
+    private combineChanges(editObj) {
+        console.log("LOG (editing s.) Combining changes");
+        const last = this.storageService.edits[this.storageService.edits.length - 1];
+        last["change"].to.key = editObj.change.to.key;
+        last["change"].to.value = editObj.change.to.value;
+        this.storageService.edits[this.storageService.edits.length - 1] = last;
+    }
+
+    /**
+     * Emits numbers which are visible in toolbar counter while editing.
+     */
+    private updateCounter(): void {
+        this.currentEditStep = this.totalEditSteps = this.storageService.edits.length;
+        this.currentTotalSteps.emit({ "current": this.currentEditStep, "total": this.totalEditSteps });
     }
 
     /**
@@ -193,38 +210,40 @@ export class EditingService {
      * @param edit - edit object
      */
     private applyChange(edit: any): void {
-        if (!edit.id) alert(edit);
-        let element = this.processingService.findElementById(edit["id"]);
+        if (!edit.id) {
+            alert(edit);
+        }
+        const element = this.processingService.findElementById(edit["id"]);
         this.processingService.zoomToElement(element);
         switch (edit.type) {
             case "add tag":
-                console.log("LOG: should add tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
-                        element.tags[edit.change.key] = edit.change.value;
-                        console.log("LOG: added again", element);
-                        this.processingService.refreshTagView(element);
+                console.log("LOG (editing s.) Should add tag: ", edit);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
+                        elem.tags[edit.change.key] = edit.change.value;
+                        console.log("LOG (editing s.) Added again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;
             case "remove tag":
-                console.log("LOG: should remove tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
-                        delete element.tags[edit.change.key];
-                        console.log("LOG: removed again", element);
-                        this.processingService.refreshTagView(element);
+                console.log("LOG (editing s.) Should remove tag: ", edit);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
+                        delete elem.tags[edit.change.key];
+                        console.log("LOG (editing s.) Removed again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;
             case "change tag":
-                console.log("LOG: should reapply this changed tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
+                console.log("LOG (editing s.) Should reapply this changed tag: ", edit);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
                         delete element.tags[edit.change.from.key];
-                        element.tags[edit.change.to.key] = edit.change.to.value;
-                        console.log("LOG: changed again", element);
-                        this.processingService.refreshTagView(element);
+                        elem.tags[edit.change.to.key] = edit.change.to.value;
+                        console.log("LOG (editing s.) Changed again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;
@@ -238,60 +257,43 @@ export class EditingService {
      * @param edit - edit object
      */
     private undoChange(edit: any): void {
-        let element = this.processingService.findElementById(edit["id"]);
+        const element = this.processingService.findElementById(edit["id"]);
         this.processingService.zoomToElement(element);
 
         switch (edit.type) {
             case "add tag":
-                console.log("LOG: should remove this added tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
-                        delete element.tags[edit.change.key];
-                        console.log("LOG: removed again", element);
-                        this.processingService.refreshTagView(element);
+                console.log("LOG (editing s.) Should remove this added tag: ", edit);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
+                        delete elem.tags[edit.change.key];
+                        console.log("LOG (editing s.) Removed again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;
             case "remove tag":
-                console.log("LOG: should add this removed tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
-                        element.tags[edit.change.key] = edit.change.value;
-                        console.log("LOG: added again", element);
-                        this.processingService.refreshTagView(element);
+                console.log("LOG (editing s.) Should add this removed tag: ", edit);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
+                        elem.tags[edit.change.key] = edit.change.value;
+                        console.log("LOG (editing s.) Added again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;
             case "change tag":
-                console.log("LOG: should undo this changed tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (element) => {
-                    if (element.id === edit.id) {
-                        delete element.tags[edit.change.to.key];
-                        element.tags[edit.change.from.key] = edit.change.from.value;
-                        console.log("LOG: changed again", element);
-                        this.processingService.refreshTagView(element);
+                console.log("LOG (editing s.) Should undo this changed tag: ", edit);
+                this.storageService.localJsonStorage.elements.forEach( (elem) => {
+                    if (elem.id === edit.id) {
+                        delete elem.tags[edit.change.to.key];
+                        elem.tags[edit.change.from.key] = edit.change.from.value;
+                        console.log("LOG (editing s.) Changed again", elem);
+                        this.processingService.refreshTagView(elem);
                     }
                 });
                 break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
-        }
-    }
-
-    /**
-     * Handles switching between edits (undoing/applying changes, map move)
-     * @param direction - "forward" or "backward"
-     */
-    public step(direction: string) {
-        // TODO
-        if (direction === "forward") {
-            let edit = this.storageService.edits[this.currentEditStep - 1];
-            console.log("LOG: Moving forward in history");
-            this.applyChange(edit);
-        } else if (direction === "backward") {
-            let edit = this.storageService.edits[this.currentEditStep];
-            console.log("LOG: Moving backward in history");
-            this.undoChange(edit);
         }
     }
 }
