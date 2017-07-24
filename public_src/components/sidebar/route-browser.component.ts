@@ -59,11 +59,11 @@ export class RouteBrowserComponent {
     }
 
     private exploreRelation($event, rel: any): void {
-        this.processingService.exploreRelation(rel);
+        this.processingService.exploreRelation(this.storageService.elementsMap.get(rel.id));
     }
 
     private exploreMaster($event, rel: any): void {
-        this.processingService.exploreMaster(rel);
+        this.processingService.exploreMaster(this.storageService.elementsMap.get(rel.id));
     }
 
     private downloadMaster() {

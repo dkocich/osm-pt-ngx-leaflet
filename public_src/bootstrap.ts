@@ -9,6 +9,7 @@ import "zone.js/dist/long-stack-trace-zone";
 
 import "angular2-busy/build/style/busy.css";
 import "bootstrap/dist/css/bootstrap.css";
+import "dragula/dist/dragula.css";
 import "font-awesome/css/font-awesome.css";
 import "leaflet/dist/leaflet.css";
 
@@ -22,6 +23,7 @@ import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { BusyModule } from "angular2-busy";
+import { DragulaModule } from "ng2-dragula";
 import { AccordionModule, CarouselModule, ModalModule } from "ngx-bootstrap";
 
 import { AppComponent } from "./components/app/app.component";
@@ -76,7 +78,7 @@ export class RavenErrorHandler implements ErrorHandler {
     ],
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
         ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot(),
-        BusyModule, BrowserAnimationsModule],
+        BusyModule, BrowserAnimationsModule, DragulaModule],
     providers: [
         MapService,
         GeocodingService,

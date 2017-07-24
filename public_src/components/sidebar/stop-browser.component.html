@@ -3,25 +3,40 @@
     <div class="text-center">
         <h4 class="text-danger"
             *ngIf="listOfStops.length === 0">There are no loaded stops (zoom map).</h4>
-        <button class="btn btn-warning" *ngIf="filteredView" (click)="cancelFilter()">Cancel filter</button>
+        <ng-container *ngIf="filteredView">
+            <button class="btn btn-warning" (click)="cancelFilter()">Cancel filter</button>
+        </ng-container>
+        <ng-container *ngIf="editingMode">
+            <button class="btn btn-warning" (click)="reorderMembers(currentElement)">Reorder members</button>
+        </ng-container>
     </div>
 
     <div *ngIf="filteredView" class="medium">
         <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
             <thead>
             <tr>
-                <td></td>
                 <td><b>#</b></td>
                 <td><b>Role</b></td>
                 <td><b>Name/Id</b></td>
                 <td title="route_ref"><b>Route ref.</b></td>
             </tr>
             </thead>
-            <tbody>
-                <tr *ngFor="let stop of listOfStopsForRoute; let i = index ;" class="explore" (click)="exploreStop($event, stop)">
+            <tbody *ngIf="!editingMode">
+            <tr *ngFor="let stop of listOfStopsForRoute; let i = index ;" class="explore" (dblclick)="exploreStop($event, stop)">
+                <td>{{i + 1}}.</td>
+                <td>{{stop.role}}</td>
+                <td>
+                    <img *ngIf="stop.tags.public_transport === 'platform'" src="/images/transport/platform.png" alt="platform">
+                    <img *ngIf="stop.tags.public_transport === 'stop_position'" src="/images/transport/bus.png" alt="stop">
+                    {{stop.tags.name || stop.id}}
+                </td>
+                <td>{{stop.tags.route_ref}}</td>
+            </tr>
+            </tbody>
+            <tbody *ngIf="editingMode" [dragula]="'my-box'" [dragulaModel]="listOfStopsForRoute">
+                <tr *ngFor="let stop of listOfStopsForRoute; let i = index ;" class="explore" (dblclick)="exploreStop($event, stop)">
                     <td>{{i + 1}}.</td>
-                    <td *ngIf="!editingMode">{{stop.role}}</td>
-                    <td *ngIf="editingMode"><input type="text" value="{{stop.role}}" disabled></td>
+                    <td><input type="text" value="{{stop.role}}" disabled></td>
                     <td>
                         <img *ngIf="stop.tags.public_transport === 'platform'" src="/images/transport/platform.png" alt="platform">
                         <img *ngIf="stop.tags.public_transport === 'stop_position'" src="/images/transport/bus.png" alt="stop">
@@ -43,7 +58,7 @@
             </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let stop of listOfStops" id="{{stop.id}}" class="explore" (click)="exploreStop($event, stop)">
+                <tr *ngFor="let stop of listOfStops" id="{{stop.id}}" class="explore" (dblclick)="exploreStop($event, stop)">
                     <td>{{stop.tags.name || stop.id}}</td>
                     <td>{{stop.tags.public_transport}}</td>
                     <td>{{stop.tags.route_ref}}</td>
