@@ -365,10 +365,13 @@ export class ProcessingService {
      * @param rel
      */
     public filterStopsByRelation(rel: IPtRelation): void {
+        this.storageService.listOfStopsForRoute.length = 0;
         rel.members.forEach((mem) => {
-            const stop = this.getElementById(mem.ref);
-            const stopWithMemberAttr = Object.assign(mem, stop);
-            this.storageService.listOfStopsForRoute.push(stopWithMemberAttr);
+            if (this.storageService.elementsMap.has(mem.ref)) {
+                const stop = this.getElementById(mem.ref);
+                const stopWithMemberAttr = Object.assign(mem, stop);
+                this.storageService.listOfStopsForRoute.push(stopWithMemberAttr);
+            }
         });
         this.activateFilteredStopView(true);
         this.refreshSidebarView("stop");
