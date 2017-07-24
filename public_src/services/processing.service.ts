@@ -369,8 +369,8 @@ export class ProcessingService {
         rel.members.forEach((mem) => {
             if (this.storageService.elementsMap.has(mem.ref)) {
                 const stop = this.getElementById(mem.ref);
-                const stopWithMemberAttr = Object.assign(mem, stop);
-                this.storageService.listOfStopsForRoute.push(stopWithMemberAttr);
+                const stopWithMemberAttr = Object.assign(JSON.parse(JSON.stringify(mem)), JSON.parse(JSON.stringify(stop)));
+                this.storageService.listOfStopsForRoute.push(JSON.parse(JSON.stringify(stopWithMemberAttr)));
             }
         });
         this.activateFilteredStopView(true);
