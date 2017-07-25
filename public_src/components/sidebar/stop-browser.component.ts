@@ -4,6 +4,9 @@ import { EditingService } from "../../services/editing.service";
 import { MapService } from "../../services/map.service";
 import { ProcessingService } from "../../services/processing.service";
 import { StorageService } from "../../services/storage.service";
+import { DragulaService } from "ng2-dragula";
+
+import { IOsmEntity } from "../../core/osmEntity.interface";
 
 @Component({
     providers: [],
@@ -16,6 +19,7 @@ import { StorageService } from "../../services/storage.service";
 })
 export class StopBrowserComponent {
     public listOfStopsForRoute: object[] = this.storageService.listOfStopsForRoute;
+    private currentElement: IOsmEntity;
     private listOfStops: object[] = this.storageService.listOfStops;
     private filteredView: boolean;
     private editingMode: boolean;
@@ -23,7 +27,11 @@ export class StopBrowserComponent {
     constructor(private storageService: StorageService,
                 private processingService: ProcessingService,
                 private mapService: MapService,
-                private editingService: EditingService) {
+                private editingService: EditingService,
+                private dragulaService: DragulaService) {
+        dragulaService.drop.subscribe((value) => {
+            this.onDrop(value.slice(1));
+        });
     }
 
     ngOnInit() {
@@ -37,6 +45,8 @@ export class StopBrowserComponent {
             (data) => {
                 if (data === "stop") {
                     this.listOfStopsForRoute = this.storageService.listOfStopsForRoute;
+                    this.currentElement = this.storageService.currentElement;
+                    console.log(this.currentElement, this.listOfStopsForRoute);
                 }
             }
         );
@@ -50,6 +60,29 @@ export class StopBrowserComponent {
                 this.editingMode = data;
             }
         );
+    }
+
+    private reorderMembers(rel) {
+        this.editingService.reorderMembers(rel);
+    }
+
+    private createChange() {
+        const type = "change members";
+        let elementsWithoutRole = this.currentElement["members"].filter( (member) => {
+            return member["role"] === "";
+        });
+        let change = {
+            from: JSON.parse(JSON.stringify(this.currentElement["members"])),
+            to: JSON.parse(JSON.stringify([...this.listOfStopsForRoute, ...elementsWithoutRole]))
+        };
+        this.editingService.addChange(this.currentElement, type, change);
+    }
+
+    private onDrop(args) {
+        if (this.currentElement.type !== "relation") {
+            return alert("FIXME: wrong type of current element - select relation one more time please.");
+        }
+        this.createChange();
     }
 
     private cancelFilter() {

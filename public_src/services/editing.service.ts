@@ -73,7 +73,15 @@ export class EditingService {
             this.deleteMoreRecentChanges(this.currentEditStep);
         }
 
-        if (type === "change tag" && this.storageService.edits.length && this.shouldCombineChanges(change)) {
+        if (type === "change members") {
+            if (this.changeIsEqual(editObj)) {
+                return alert("FIXME: problem - change is same as previous edit in the history");
+            }
+            this.simplifyMembers(editObj);
+        }
+
+        if (["change tag", "change members"].indexOf(type) > -1 &&
+            this.storageService.edits.length && this.shouldCombineChanges(editObj)) {
             this.combineChanges(editObj);
         } else {
             this.storageService.edits.push(editObj);
@@ -108,10 +116,21 @@ export class EditingService {
                     }
                 });
                 break;
+            case "change members":
+                console.log("LOG: I should change members", editObj);
+                let currObj = this.storageService.elementsMap.get(editObj.id);
+                currObj.members = editObj.change.to;
+                this.storageService.elementsMap.set(editObj.id, currObj);
+                break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(editObj));
         }
-        this.processingService.refreshTagView(element);
+        if (["add tag", "remove tag", "change tag"].indexOf(type) > -1 ) {
+            this.processingService.refreshTagView(element);
+        } else if (type === "change members") {
+            this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(editObj.id));
+            this.processingService.exploreRelation(this.storageService.elementsMap.get(editObj.id));
+        }
         this.storageService.syncEdits();
         this.updateCounter();
     }
@@ -159,14 +178,52 @@ export class EditingService {
         }
     }
 
+
+    /**
+     * @rel
+     */
+    public reorderMembers(rel) {
+        if (!rel.members) {
+            return alert(JSON.stringify(rel) + "FIXME please select relation");
+        }
+
+        const newOrder = [];
+        rel["members"].forEach( (mem) => {
+            if (["stop", "stop_exit_only", "stop_entry_only"].indexOf(mem["role"]) > -1) {
+                newOrder.push(mem);
+            }
+        });
+        rel["members"].forEach( (mem) => {
+            if (["platform", "platform_exit_only", "platform_entry_only"].indexOf(mem["role"]) > -1) {
+                newOrder.push(mem);
+            }
+        });
+        rel["members"].forEach( (mem) => {
+            if (["stop", "stop_exit_only", "stop_entry_only", "platform", "platform_exit_only",
+                    "platform_entry_only"].indexOf(mem["role"]) === -1) {
+                newOrder.push(mem);
+            }
+        });
+        let change = {
+            from: JSON.parse(JSON.stringify(rel.members)),
+            to: JSON.parse(JSON.stringify(newOrder))
+        };
+        this.addChange(rel, "change members", change);
+    }
+
     /**
      * Checks if the last edit was made on the same tag like the new change.
      * @param change
      * @returns {boolean}
      */
-    private shouldCombineChanges(change) {
+    private shouldCombineChanges(editObj) {
         const last = this.storageService.edits[this.storageService.edits.length - 1];
-        return last["change"].to.key === change.from.key && last["change"].to.value === change.from.value;
+        switch (editObj.type) {
+            case "change tags":
+                return last["change"].to.key === editObj.change.from.key && last["change"].to.value === editObj.change.from.value;
+            case "change members":
+                return last["id"] === editObj.id;
+        }
     }
 
     /**
@@ -176,9 +233,16 @@ export class EditingService {
     private combineChanges(editObj) {
         console.log("LOG (editing s.) Combining changes");
         const last = this.storageService.edits[this.storageService.edits.length - 1];
-        last["change"].to.key = editObj.change.to.key;
-        last["change"].to.value = editObj.change.to.value;
-        this.storageService.edits[this.storageService.edits.length - 1] = last;
+        switch (editObj.type) {
+            case "change tags":
+                last["change"].to.key = editObj.change.to.key;
+                last["change"].to.value = editObj.change.to.value;
+                this.storageService.edits[this.storageService.edits.length - 1] = last;
+                break;
+            case "change members":
+                last["change"].to = editObj.change.to;
+                break;
+        }
     }
 
     /**
@@ -247,6 +311,14 @@ export class EditingService {
                     }
                 });
                 break;
+            case "change members":
+                console.log("LOG (editing s.) Should undo this change members", edit);
+                let currObj = this.storageService.elementsMap.get(edit.id);
+                currObj.members = edit.change.to;
+                this.storageService.elementsMap.set(edit.id, currObj);
+                this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(edit.id));
+                this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id));
+                break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
         }
@@ -292,8 +364,33 @@ export class EditingService {
                     }
                 });
                 break;
+            case "change members":
+                console.log("LOG (editing s.) Should undo this changed members", edit);
+                let currObj = this.storageService.elementsMap.get(edit.id);
+                delete currObj.members;
+                currObj.members = edit.change.from;
+                this.storageService.elementsMap.set(edit.id, currObj);
+                // this.processingService.refreshSidebarView("stop");
+                this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(edit.id));
+                this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id));
+                break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
         }
+    }
+
+    private simplifyMembers(editObj) {
+        for (const member of editObj.change.to) {
+            for (const key of Object.keys(member)) {
+                if (["type", "ref", "role"].indexOf(key) === -1) {
+                    delete member[key];
+                }
+            }
+        }
+    }
+
+    private changeIsEqual(editObj) {
+        console.log(JSON.stringify(editObj.change.from).length, JSON.stringify(editObj.change.to).length);
+        return JSON.stringify(editObj.change.from) === JSON.stringify(editObj.change.to);
     }
 }
