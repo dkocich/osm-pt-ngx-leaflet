@@ -42,7 +42,7 @@ export class OverpassService {
         this.mapService.markerClick.subscribe(
             (data) => {
                 const featureId = Number(data);
-                if (!this.storageService.elementsDownloaded.has(featureId)) {
+                if (!this.storageService.elementsDownloaded.has(featureId) && featureId > 0) {
                     console.log("LOG (overpass) Requesting started for ", featureId);
                     this.getNodeData(featureId);
                     this.storageService.elementsDownloaded.add(featureId);

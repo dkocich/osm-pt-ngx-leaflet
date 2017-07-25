@@ -15,12 +15,12 @@
 </span>
 
 <div *ngIf="editing">
-    <button id="stop-btn" type="button" class="btn btn-default on-map"
-            title="Create new stop" (click)="createElement('stop')" disabled>
+    <button id="stop-btn" type="button" class="btn btn-default on-map" [class.btn-primary]="creatingElementOfType === 'stop'"
+            title="Create new stop" (click)="createElement('stop')">
         Stop
     </button>
-    <button id="platform-btn" type="button" class="btn btn-default on-map"
-            title="Create new platform" (click)="createElement('platform')" disabled>
+    <button id="platform-btn" type="button" class="btn btn-default on-map" [class.btn-primary]="creatingElementOfType === 'platform'"
+            title="Create new platform" (click)="createElement('platform')">
         Platform
     </button>
 </div>

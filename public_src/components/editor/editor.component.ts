@@ -20,6 +20,7 @@ export class EditorComponent {
     private totalEditSteps: number = 0;
     private currentEditStep: number = 0;
     private editing: boolean = false;
+    private creatingElementOfType: string = "";
 
     constructor(private mapService: MapService, private storageService: StorageService,
                 private editingService: EditingService) {
@@ -33,6 +34,12 @@ export class EditorComponent {
                 this.totalEditSteps = data.total;
             }
         );
+        this.mapService.map.on("click", (event: MouseEvent) => {
+            if (this.editing && this.creatingElementOfType !== "") {
+                this.editingService.createElement(this.creatingElementOfType, event);
+                this.creatingElementOfType = "";
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -98,7 +105,11 @@ export class EditorComponent {
      * @param type
      */
     private createElement(type: string): void {
-        this.editingService.createNewElement(type);
+        if (this.creatingElementOfType === type) {
+            this.creatingElementOfType = "";
+        } else {
+            this.creatingElementOfType = type;
+        }
     }
 
     /**
@@ -107,6 +118,8 @@ export class EditorComponent {
      * @returns {boolean} - when true then button is disabled
      */
     private isInactive(type: string): boolean {
+        this.mapService.disableMouseEvent("edits-backward-btn");
+        this.mapService.disableMouseEvent("edits-forward-btn");
         // console.log("LOG (editor)", this.totalEditSteps, this.currentEditStep);
         switch (type) {
             case "backward":
@@ -123,5 +136,14 @@ export class EditorComponent {
         this.editing = !this.editing;
         this.editingService.editingMode.emit(this.editing);
         this.mapService.editingMode = this.editing;
+        if (this.editing) {
+            setTimeout( () => {
+                this.mapService.disableMouseEvent("edits-backward-btn");
+                this.mapService.disableMouseEvent("edits-forward-btn");
+                this.mapService.disableMouseEvent("edits-count");
+                this.mapService.disableMouseEvent("stop-btn");
+                this.mapService.disableMouseEvent("platform-btn");
+            }, 250);
+        }
     }
 }

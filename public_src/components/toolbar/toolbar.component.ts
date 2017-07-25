@@ -48,13 +48,10 @@ export class ToolbarComponent {
     ngOnInit() {
         this.mapService.disableMouseEvent("toggle-download");
         this.mapService.disableMouseEvent("toggle-filter");
-
         this.mapService.disableMouseEvent("toggle-edit");
         this.mapService.disableMouseEvent("edits-backward-btn");
         this.mapService.disableMouseEvent("edits-forward-btn");
         this.mapService.disableMouseEvent("edits-count");
-        this.mapService.disableMouseEvent("stop-btn");
-        this.mapService.disableMouseEvent("platform-btn");
     }
 
     public Initialize() {

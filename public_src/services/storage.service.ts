@@ -9,6 +9,7 @@ export class StorageService {
     public queriedMasters = new Set();
     public elementsRendered = new Set();
     public elementsMap = new Map();
+    public markersMap = new Map();
 
     public localJsonStorage: any;
     public localGeojsonStorage: object;

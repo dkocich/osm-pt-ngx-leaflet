@@ -4,7 +4,7 @@ import { MapService } from "./map.service";
 import { ProcessingService } from "./processing.service";
 import { StorageService } from "./storage.service";
 
-import { IOsmEntity } from "../core/osmEntity.interface";
+import { IPtStop } from "../core/ptStop.interface";
 
 @Injectable()
 export class EditingService {
@@ -13,6 +13,7 @@ export class EditingService {
     public totalEditSteps: number;
     public currentTotalSteps: EventEmitter<object> = new EventEmitter();
     public elementChanges: any = [];
+    private editing: boolean;
 
     constructor(private storageService: StorageService,
                 private processingService: ProcessingService,
@@ -38,6 +39,23 @@ export class EditingService {
             (data) => {
                 const element = this.processingService.getElementById(Number(data.featureId));
                 this.addChange(element, data.type, data.change);
+            }
+        );
+
+        this.editingMode.subscribe(
+            /**
+             * @param data
+             */
+            (data) => {
+                console.log("LOG (editing s.) Editing mode change in editingService- ", data);
+                this.editing = data;
+                this.storageService.markersMap.forEach( (marker) => {
+                    if (this.editing === false) {
+                        marker.dragging.disable();
+                    } else if (this.editing === true) {
+                        marker.dragging.enable();
+                    }
+                });
             }
         );
     }
@@ -122,6 +140,23 @@ export class EditingService {
                 currObj.members = editObj.change.to;
                 this.storageService.elementsMap.set(editObj.id, currObj);
                 break;
+            case "add element":
+                console.log("LOG: I should add element", editObj);
+                if (!this.storageService.elementsMap.get(editObj.id)) {
+                    this.storageService.elementsMap.set(editObj.id, editObj.change.to);
+                } else {
+                    alert("FIXME: this new id already exist " +
+                        JSON.stringify(this.storageService.elementsMap.get(editObj.id)));
+                }
+                this.processingService.refreshTagView(this.storageService.elementsMap.get(editObj.id));
+                break;
+            case "modify element":
+                console.log("LOG: I should modify element", editObj);
+                const modObj = this.storageService.elementsMap.get(editObj.id);
+                modObj.lat = editObj.change.to.lat;
+                modObj.lon = editObj.change.to.lon;
+                this.storageService.elementsMap.set(editObj.id, modObj);
+                break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(editObj));
         }
@@ -130,6 +165,8 @@ export class EditingService {
         } else if (type === "change members") {
             this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(editObj.id));
             this.processingService.exploreRelation(this.storageService.elementsMap.get(editObj.id));
+        } else if (type === "modify element") {
+            // TODO?
         }
         this.storageService.syncEdits();
         this.updateCounter();
@@ -139,26 +176,129 @@ export class EditingService {
      * Handles adding of different PT elements and fills attributes automatically.
      * @param type
      */
-    public createNewElement (type: string): void {
-        // TODO fill attributes, focus tag editor on element, continue editing
-
-        let newElement: IOsmEntity;
-        switch (type) {
+    public createElement (creatingElementOfType: string, event): void {
+        let newId: number = this.findNewId();
+        const marker = this.initializeNewMarker(creatingElementOfType, event, newId);
+        this.createNewMarkerEvents(marker);
+        this.storageService.markersMap.set(newId, marker);
+        marker.addTo(this.mapService.map);
+        const latlng = marker.getLatLng();
+        let newElement: IPtStop = {
+            changeset: -999,
+            id: newId,
+            lat: latlng.lat,
+            lon: latlng.lng,
+            tags: {},
+            timestamp: new Date().toISOString().split(".")[0] + "Z",
+            type: "node",
+            uid: Number(localStorage.getItem("id")),
+            user: localStorage.getItem("display_name"),
+            version: 1
+        };
+        switch (creatingElementOfType) {
             case "stop":
                 newElement.tags = {
-                    "name": "",
-                    "public_transport": "stop_position"
+                    name: "",
+                    public_transport: "stop_position"
                 };
                 break;
             case "platform":
                 newElement.tags = {
-                    "name": "",
-                    "public_transport": "platform"
+                    name: "",
+                    public_transport: "platform"
                 };
                 break;
             default:
-                console.log("LOG (editing s.) Type was created: ", type);
+                console.log("LOG (editing s.) Type was created: ", creatingElementOfType);
         }
+        let change = { from: undefined, to: newElement };
+        this.addChange(newElement, "add element", change);
+    }
+
+    /**
+     * Handles repositioning of newly created node elements.
+     * @param marker
+     * @param event
+     */
+    public repositionElement(marker, event) {
+        const opt = event.target.options;
+        const newPosition = event.target.getLatLng();
+        let change = {
+            from: {
+                lat: opt.lat,
+                lon: opt.lng
+            },
+            to: {
+                lat: newPosition.lat,
+                lon: newPosition.lng
+            }
+        };
+        if (!this.storageService.elementsMap.has(opt.featureId)) {
+            return alert("FIXME: missing storageService mapping for an element? " + opt.featureId);
+        }
+        // update position in marker's options
+        const m = this.storageService.markersMap.get(opt.featureId);
+        m.options.lat = newPosition.lat;
+        m.options.lng = newPosition.lng;
+
+        const element = this.storageService.elementsMap.get(opt.featureId);
+        this.addChange(element, "modify element", change);
+    }
+
+    /**
+     * Binds events to created markers.
+     * @param marker
+     */
+    private createNewMarkerEvents(marker): void {
+        marker.on("dragend", (event) => {
+            this.repositionElement(marker, event);
+        });
+        marker.on("click", (event) => {
+            const featureId = marker.options.featureId;
+            this.mapService.markerClick.emit(featureId);
+        });
+    }
+
+    /**
+     * Creates new marker with unique ID, icon, options and metadata attributes.
+     * @param {string} creatingElementOfType
+     * @param event
+     * @param {number} newId
+     * @returns {any}
+     */
+    private initializeNewMarker(creatingElementOfType: string, event, newId: number): any {
+        let iconUrl;
+        switch (creatingElementOfType) {
+            case "stop":
+                iconUrl = require<any>("../images/transport/bus.png");
+                break;
+            case "platform":
+                iconUrl = require<any>("../images/transport/platform.png");
+                break;
+            default:
+                iconUrl = require<any>("../../node_modules/leaflet/dist/images/marker-icon.png");
+        }
+        const marker = L.marker(event["latlng"], {
+            icon: L.icon({
+                iconUrl
+            }),
+            riseOnHover: true,
+            draggable: true
+        }).bindPopup("New " + creatingElementOfType + " #" + newId, {
+            offset: L.point(12, 6)
+        });
+        marker.options["featureId"] = newId;
+        marker.options["lat"] = event["latlng"].lat;
+        marker.options["lng"] = event["latlng"].lng;
+        return marker;
+    }
+
+    private findNewId(): number {
+        let newId: number = -1;
+        while (this.storageService.elementsMap.has(newId) && newId > -100) {
+            newId--;
+        }
+        return newId;
     }
 
     /**
@@ -177,7 +317,6 @@ export class EditingService {
             this.undoChange(edit);
         }
     }
-
 
     /**
      * @rel
@@ -275,10 +414,8 @@ export class EditingService {
      */
     private applyChange(edit: any): void {
         if (!edit.id) {
-            alert(edit);
+            alert("FIXME: missing edit id " + JSON.stringify(edit));
         }
-        const element = this.processingService.getElementById(edit["id"]);
-        this.processingService.zoomToElement(element);
         switch (edit.type) {
             case "add tag":
                 console.log("LOG (editing s.) Should add tag: ", edit);
@@ -312,16 +449,34 @@ export class EditingService {
                 });
                 break;
             case "change members":
-                console.log("LOG (editing s.) Should undo this change members", edit);
+                console.log("LOG (editing s.) Should reapply this changed members", edit);
                 let currObj = this.storageService.elementsMap.get(edit.id);
                 currObj.members = edit.change.to;
                 this.storageService.elementsMap.set(edit.id, currObj);
                 this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(edit.id));
                 this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id));
                 break;
+            case "add element":
+                console.log("LOG (editing s.) Should recreate this created element", edit);
+                this.storageService.elementsMap.set(edit.id, edit.change.to);
+                this.mapService.map.addLayer(this.storageService.markersMap.get(edit.id));
+                this.processingService.refreshTagView(this.storageService.elementsMap.get(edit.id));
+                break;
+            case "modify element":
+                console.log("LOG: Should reapply element modification", edit);
+                const modElem = this.storageService.elementsMap.get(edit.id);
+                modElem.lat = edit.change.to.lat;
+                modElem.lon = edit.change.to.lon;
+
+                const marker = this.storageService.markersMap.get(edit.id);
+                marker.setLatLng({ lat: modElem.lat, lng: modElem.lon });
+                this.storageService.elementsMap.set(edit.id, modElem);
+                break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
         }
+        const element = this.processingService.getElementById(edit["id"]);
+        this.processingService.zoomToElement(element);
     }
 
     /**
@@ -329,8 +484,6 @@ export class EditingService {
      * @param edit - edit object
      */
     private undoChange(edit: any): void {
-        const element = this.processingService.getElementById(edit["id"]);
-        this.processingService.zoomToElement(element);
 
         switch (edit.type) {
             case "add tag":
@@ -374,9 +527,26 @@ export class EditingService {
                 this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(edit.id));
                 this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id));
                 break;
+            case "add element":
+                console.log("LOG (editing s.) Should undo this created element", edit);
+                this.mapService.map.removeLayer(this.storageService.markersMap.get(edit.id));
+                this.processingService.refreshTagView(this.storageService.elementsMap.get(edit.id));
+                break;
+            case "modify element":
+                console.log("LOG: Should undo element modification", edit);
+                const modElem = this.storageService.elementsMap.get(edit.id);
+                modElem.lat = edit.change.from.lat;
+                modElem.lon = edit.change.from.lon;
+
+                const marker = this.storageService.markersMap.get(edit.id);
+                marker.setLatLng({ lat: modElem.lat, lng: modElem.lon });
+                this.storageService.elementsMap.set(edit.id, modElem);
+                break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
         }
+        const element = this.processingService.getElementById(edit["id"]);
+        this.processingService.zoomToElement(element);
     }
 
     private simplifyMembers(editObj) {
