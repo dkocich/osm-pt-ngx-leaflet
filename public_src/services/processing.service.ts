@@ -384,7 +384,7 @@ export class ProcessingService {
     public zoomToElement(element: IOsmEntity): void {
         if (element.type === "node" ) {
             if (!element["lat"] || !element["lon"]) {
-                return alert("Warning: Element has no coordinates." + element);
+                return alert("Warning: Element has no coordinates." + JSON.stringify(element));
             } else {
                 this.mapService.map.panTo([element["lat"], element["lon"]]);
             }
