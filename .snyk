@@ -5,11 +5,11 @@ ignore:
   'npm:concat-stream:20160901':
     - osmtogeojson > concat-stream:
         reason: None given
-        expires: '2017-06-26T22:49:28.420Z'
+        expires: '2017-08-27T16:56:23.877Z'
     - osmtogeojson > geojson-numeric > concat-stream:
         reason: None given
-        expires: '2017-06-26T22:49:28.421Z'
+        expires: '2017-08-27T16:56:23.878Z'
     - osmtogeojson > geojson-rewind > concat-stream:
         reason: None given
-        expires: '2017-06-26T22:49:28.421Z'
+        expires: '2017-08-27T16:56:23.878Z'
 patch: {}

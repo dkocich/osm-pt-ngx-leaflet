@@ -14,14 +14,12 @@ import { StorageService } from "../../services/storage.service";
 })
 
 export class AuthComponent {
-
     private displayName: string;
+    private imgHref: string;
 
     constructor(private storageService: StorageService, private authService: AuthService) {
-    }
-
-    ngOnInit() {
         this.displayName = this.getDisplayName();
+        this.imgHref = this.storageService.getImgHref();
     }
 
     private getDisplayName() {
@@ -50,16 +48,18 @@ export class AuthComponent {
         }
         const u = res.getElementsByTagName("user")[0];
         const changesets = res.getElementsByTagName("changesets")[0];
-        const o = {
+        const d = res.getElementsByTagName("description")[0];
+        const i = res.getElementsByTagName("img")[0];
+        const userDetails = {
+            account_created: u.getAttribute("account_created"),
             count: changesets.getAttribute("count"),
+            description: d.innerHTML,
             display_name: u.getAttribute("display_name"),
-            id: u.getAttribute("id")
+            id: u.getAttribute("id"),
+            img_href: i.getAttribute("href")
         };
-        this.storageService.setUserData(o.display_name, o.id, o.count);
-        document.getElementById("display_name").innerHTML = o["display_name"];
-        // for (let k in o) {
-        //     document.getElementById(k).innerHTML = o[k];
-        // }
+        this.storageService.setUserData(userDetails);
+        // document.getElementById("display_name").innerHTML = userDetails["display_name"];
     }
 
     private isAuthenticated(): void {

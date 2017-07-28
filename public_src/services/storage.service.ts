@@ -31,6 +31,7 @@ export class StorageService {
     public currentElementsChange = new EventEmitter();
 
     public displayName: string = "";
+    public imgHref: string = "";
 
     public edits: object[] = [];
     public editsChanged: EventEmitter<boolean> = new EventEmitter();
@@ -73,15 +74,18 @@ export class StorageService {
 
     /**
      * Sets user details after login.
-     * @param displayName
-     * @param id
-     * @param count
+     * @param userDetails
      */
-    public setUserData(displayName: string, id: string, count: string): void {
-        this.displayName = displayName;
-        localStorage.setItem("display_name", displayName);
-        localStorage.setItem("id", id);
-        localStorage.setItem("count", count);
+    public setUserData(userDetails: any): void {
+        console.log(userDetails);
+        this.displayName = userDetails.displayName;
+        this.imgHref = userDetails.img_href;
+        localStorage.setItem("account_created", userDetails.account_created);
+        localStorage.setItem("count", userDetails.count);
+        localStorage.setItem("description", userDetails.description);
+        localStorage.setItem("display_name", userDetails.display_name);
+        localStorage.setItem("id", userDetails.id);
+        localStorage.setItem("img_href", userDetails.img_href);
     }
 
     /**
@@ -173,7 +177,15 @@ export class StorageService {
      * @returns {string|string|null}
      */
     public getDisplayName(): string {
-        return this.displayName || localStorage.getItem("display_name");
+        return localStorage.getItem("display_name");
+    }
+
+    /**
+     * Retrieves imgHref of currently logged user.
+     * @returns {string}
+     */
+    public getImgHref(): string {
+        return localStorage.getItem("img_href");
     }
 
     // /**

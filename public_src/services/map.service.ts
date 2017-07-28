@@ -512,7 +512,12 @@ export class MapService {
             shadowSize: [24, 24],
             shadowUrl
         });
-        return L.marker(latlng, { icon: myIcon, draggable: false });
+        return L.marker(latlng, {
+            icon: myIcon,
+            draggable: false,
+            riseOnHover: true,
+            title: fp.name || ""
+        });
     }
 
     /**

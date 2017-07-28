@@ -1,5 +1,8 @@
 <ul class="nav navbar-nav navbar-right">
-    <li id="logout" *ngIf="isAuthenticated()" (click)="logout()"><a href="#">Logout</a></li>
     <li id="authenticate" *ngIf="!isAuthenticated()" (click)="authenticate()"><a href="#">Login</a></li>
-    <li><a id="display_name" href="#">{{displayName}}</a></li>
+    <ng-container *ngIf="isAuthenticated()">
+        <li><img id="img_href" class="img-thumbnail user_thumbnail_tiny" src="{{imgHref}}" alt="X"></li>
+        <li id="logout" *ngIf="isAuthenticated()" (click)="logout()"><a href="#">Logout</a></li>
+        <li><a id="display_name" href="#">{{displayName}}</a></li>
+    </ng-container>
 </ul>
