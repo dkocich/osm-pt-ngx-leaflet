@@ -23,7 +23,8 @@
                 </td>
                 <td *ngIf="editingMode">
                     <button class="btn btn-sm btn-danger glyphicon glyphicon-minus"
-                            aria-hidden="true" (click)="createChange('remove tag', tag.key)"></button>
+                            aria-hidden="true" tooltip="Remove tag" container="body"
+                            (click)="createChange('remove tag', tag.key)"></button>
                 </td>
             </tr>
             <tr *ngIf="editingMode">
@@ -39,7 +40,8 @@
                 </td>
                 <td>
                     <button class="btn btn-sm btn-default glyphicon glyphicon-plus" aria-hidden="true"
-                            (click)="createChange('add tag')" [disabled]="isUnchanged()"></button>
+                            (click)="createChange('add tag')" [disabled]="isUnchanged()"
+                            tooltip="Create new tag" container="body"></button>
                 </td>
             </tr>
             </tbody>

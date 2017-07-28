@@ -3,7 +3,7 @@
     <div class="text-center">
         <h4 class="text-danger"
             *ngIf="listOfRelations.length === 0">There are no loaded routes (zoom map).</h4>
-        <button class="btn btn-warning" *ngIf="filteredView" (click)="cancelFilter()">Cancel filter</button>
+        <button class="btn btn-warning" *ngIf="filteredView" (click)="cancelFilter()" tooltip="Cancel filter showing only node's related routes">Cancel filter</button>
     </div>
 
     <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="medium">
@@ -16,7 +16,8 @@
 
     <div *ngIf="listOfRelations.length > 0" class="text-center e=medium">
         <div>
-            <button type="button" class="btn btn-default" (click)="downloadMaster()" [disabled]="isRequesting">
+            <button type="button" class="btn btn-default" (click)="downloadMaster()" [disabled]="isRequesting"
+                    tooltip="Download master relations for currently available routes" container="body">
                 <span><i *ngIf="isRequesting" class="fa fa-spinner fa-spin"></i></span>Download master relations
             </button>
         </div>

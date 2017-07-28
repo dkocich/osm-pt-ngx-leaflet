@@ -1,10 +1,10 @@
 <button id="download-data" class="btn btn-default on-map" [class.btn-primary]="downloading"
-        title="Download data from Overpass API" (click)="showDownloadModal()">
+        tooltip="Download data from Overpass API" container="body" (click)="showDownloadModal()">
     <i class="fa fa-download"></i>
 </button>
 
-<button id="upload-data" class="btn btn-default on-map" [class.btn-primary]="downloading"
-        title="Upload changes to OSM" (click)="showUploadModal()">
+<button *ngIf="isAuthenticated()" id="upload-data" class="btn btn-default on-map" [class.btn-primary]="downloading"
+        tooltip="Upload changes to OSM" container="body" (click)="showUploadModal()">
     <i class="fa fa-upload"></i>
 </button>
 
@@ -36,8 +36,10 @@
                     <span class="tag label label-info" *ngFor="let entry of favoriteQueries" (click)="setQuery($event)">{{entry.short}}</span>&nbsp;
                 </div>
                 <div class="form-group">
-                    <button type="button" class="btn btn-danger pull-left" (click)="queryShort=''; queryRaw='';">Clear</button>
-                    <button type="button" class="btn btn-success pull-right" (click)="requestData(queryRaw)">Continue</button>
+                    <button type="button" class="btn btn-danger pull-left" (click)="queryShort=''; queryRaw='';"
+                            tooltip="Clear query window" container="body">Clear</button>
+                    <button type="button" class="btn btn-success pull-right" (click)="requestData(queryRaw)"
+                            tooltip="Download data with current query and continue" container="body">Continue</button>
                 </div>
             </div>
         </div>

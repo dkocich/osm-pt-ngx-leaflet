@@ -1,18 +1,18 @@
 <button id="toggle-download" class="btn btn-default on-map" [class.btn-primary]="downloading"
-        title="Toggle downloading of transport data" (click)="toggleDownloading()"
+        tooltip="Toggle downloading of transport data" container="body" (click)="toggleDownloading()"
         (mouseenter)="showOptions()" btnCheckbox>
     <i class="fa fa-repeat"></i>
 </button>
 
 <button id="toggle-filter" class="btn btn-default on-map" [class.btn-primary]="filtering"
-        title="Toggle view of routes in map" (click)="toggleLinesFilter()" btnCheckbox>
+        tooltip="Toggle view of routes in map" container="body" (click)="toggleLinesFilter()" btnCheckbox>
     <i class="fa fa-filter"></i>
 </button>
 
 <transporter></transporter>
 
 <button id="clear-highlight" class="btn btn-danger on-map" *ngIf="highlightIsActive()"
-        title="Clear current highlight" (click)="clearHighlight()">
+        tooltip="Clear current highlight" container="body" (click)="clearHighlight()">
     <i class="fa fa-times"></i>
 </button>
 
@@ -23,8 +23,8 @@
 </div>
 
 <div id="selection" *ngIf="currentElement">
-    <h3 title="Zoom to current element" class="explore" (click)="zoomTo(currentElement)">Current selection</h3>
+    <h3 tooltip="Zoom to current element" container="body" class="explore" (click)="zoomTo(currentElement)">Current selection</h3>
     {{currentElement.tags.name || currentElement.tags.public_transport || ""}} (id: {{currentElement.id || ""}}, type: {{currentElement.type || ""}})
-    <span title="Show more information" class="explore" (click)="showInfo(currentElement)">
+    <span tooltip="Show more information" container="body" class="explore" (click)="showInfo(currentElement)">
         <i class="fa fa-question-circle" aria-hidden="true"></i></span>
 </div>

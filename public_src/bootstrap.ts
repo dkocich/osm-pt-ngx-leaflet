@@ -24,7 +24,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { BusyModule } from "angular2-busy";
 import { DragulaModule } from "ng2-dragula";
-import { AccordionModule, CarouselModule, ModalModule } from "ngx-bootstrap";
+import { AccordionModule, CarouselModule, ModalModule, TooltipModule } from "ngx-bootstrap";
 
 import { AppComponent } from "./components/app/app.component";
 import { AuthComponent } from "./components/auth/auth.component";
@@ -78,7 +78,7 @@ export class RavenErrorHandler implements ErrorHandler {
     ],
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
         ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot(),
-        BusyModule, BrowserAnimationsModule, DragulaModule],
+        BusyModule, BrowserAnimationsModule, DragulaModule, TooltipModule.forRoot()],
     providers: [
         MapService,
         GeocodingService,
