@@ -334,10 +334,8 @@ export class OverpassService {
         }
         const changedElements = [];
         const changedElementsArr = Array.from(idsChanged.keys());
-        for (const element of this.storageService.localJsonStorage.elements) {
-            if (changedElementsArr.indexOf(element.id) > -1) {
-                changedElements.push(element);
-            }
+        for (const changedElementId of changedElementsArr) {
+            changedElements.push(this.storageService.elementsMap.get(changedElementId));
         }
 
         console.log("LOG (overpass) Changed documents: ", changedElements);

@@ -11,8 +11,8 @@ export class StorageService {
     public elementsMap = new Map();
     public markersMap = new Map();
 
-    public localJsonStorage: any;
-    public localGeojsonStorage: object;
+    public localJsonStorage: any = new Map();
+    public localGeojsonStorage: any = new Map();
     public listOfStops: IPtStop[] = [];
     public listOfRelations: object[] = [];
     public listOfAreas: object[] = [];

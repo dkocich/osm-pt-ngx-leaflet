@@ -108,37 +108,30 @@ export class EditingService {
         switch (editObj.type) {
             case "add tag":
                 console.log("LOG (editing s.) Should add this tag: ", editObj);
-                this.storageService.localJsonStorage.elements.forEach( (elem) => {
-                    if (elem.id === editObj.id) {
-                        elem.tags[editObj.change.key] = editObj.change.value;
-                        console.log("LOG (editing s.) Added element: ", elem);
-                    }
-                });
+                const atElem = this.storageService.elementsMap.get(editObj.id);
+                atElem.tags[editObj.change.key] = editObj.change.value;
+                this.storageService.elementsMap.set(editObj.id, atElem);
+                console.log("LOG (editing s.) Added element: ", atElem);
                 break;
             case "remove tag":
                 console.log("LOG (editing s.) Should remove this tag: ", editObj);
-                this.storageService.localJsonStorage.elements.forEach( (elem) => {
-                    if (elem.id === editObj.id) {
-                        delete elem.tags[editObj.change.key];
-                        console.log("LOG (editing s.) Removed element: ", elem);
-                    }
-                });
+                const rtElem = this.storageService.elementsMap.get(editObj.id);
+                delete rtElem.tags[editObj.change.key];
+                this.storageService.elementsMap.set(editObj.id, rtElem);
+                console.log("LOG (editing s.) Removed element: ", rtElem);
                 break;
             case "change tag":
                 console.log("LOG (editing s.) I should make this change: ", editObj);
-                this.storageService.localJsonStorage.elements.forEach( (elem) => {
-                    if (elem.id === editObj.id) {
-                        delete elem.tags[editObj.change.from.key];
-                        elem.tags[editObj.change.to.key] = editObj.change.to.value;
-                        console.log("LOG (editing s.) Changed element: ", elem);
-                    }
-                });
+                const chtElem = this.storageService.elementsMap.get(editObj.id);
+                delete chtElem.tags[editObj.change.from.key];
+                chtElem.tags[editObj.change.to.key] = editObj.change.to.value;
+                this.storageService.elementsMap.set(editObj.id, chtElem);
                 break;
             case "change members":
                 console.log("LOG: I should change members", editObj);
-                let currObj = this.storageService.elementsMap.get(editObj.id);
-                currObj.members = editObj.change.to;
-                this.storageService.elementsMap.set(editObj.id, currObj);
+                const chmElem = this.storageService.elementsMap.get(editObj.id);
+                chmElem.members = editObj.change.to;
+                this.storageService.elementsMap.set(editObj.id, chmElem);
                 break;
             case "add element":
                 console.log("LOG: I should add element", editObj);
@@ -419,40 +412,34 @@ export class EditingService {
         switch (edit.type) {
             case "add tag":
                 console.log("LOG (editing s.) Should add tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (elem) => {
-                    if (elem.id === edit.id) {
-                        elem.tags[edit.change.key] = edit.change.value;
-                        console.log("LOG (editing s.) Added again", elem);
-                        this.processingService.refreshTagView(elem);
-                    }
-                });
+                const atElem = this.storageService.elementsMap.get(edit.id);
+                atElem.tags[edit.change.key] = edit.change.value;
+                console.log("LOG (editing s.) Added again", atElem);
+                this.processingService.refreshTagView(atElem);
+                this.storageService.elementsMap.set(edit.id, atElem);
                 break;
             case "remove tag":
                 console.log("LOG (editing s.) Should remove tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (elem) => {
-                    if (elem.id === edit.id) {
-                        delete elem.tags[edit.change.key];
-                        console.log("LOG (editing s.) Removed again", elem);
-                        this.processingService.refreshTagView(elem);
-                    }
-                });
+                const rtElem = this.storageService.elementsMap.get(edit.id);
+                delete rtElem.tags[edit.change.key];
+                console.log("LOG (editing s.) Removed again", rtElem);
+                this.processingService.refreshTagView(rtElem);
+                this.storageService.elementsMap.set(edit.id, rtElem);
                 break;
             case "change tag":
                 console.log("LOG (editing s.) Should reapply this changed tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (elem) => {
-                    if (elem.id === edit.id) {
-                        delete element.tags[edit.change.from.key];
-                        elem.tags[edit.change.to.key] = edit.change.to.value;
-                        console.log("LOG (editing s.) Changed again", elem);
-                        this.processingService.refreshTagView(elem);
-                    }
-                });
+                const chtElem = this.storageService.elementsMap.get(edit.id);
+                delete chtElem.tags[edit.change.from.key];
+                chtElem.tags[edit.change.to.key] = edit.change.to.value;
+                console.log("LOG (editing s.) Changed again", chtElem);
+                this.processingService.refreshTagView(chtElem);
+                this.storageService.elementsMap.set(edit.id, chtElem);
                 break;
             case "change members":
                 console.log("LOG (editing s.) Should reapply this changed members", edit);
-                let currObj = this.storageService.elementsMap.get(edit.id);
-                currObj.members = edit.change.to;
-                this.storageService.elementsMap.set(edit.id, currObj);
+                let chmElem = this.storageService.elementsMap.get(edit.id);
+                chmElem.members = edit.change.to;
+                this.storageService.elementsMap.set(edit.id, chmElem);
                 this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(edit.id));
                 this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id));
                 break;
@@ -464,13 +451,13 @@ export class EditingService {
                 break;
             case "modify element":
                 console.log("LOG: Should reapply element modification", edit);
-                const modElem = this.storageService.elementsMap.get(edit.id);
-                modElem.lat = edit.change.to.lat;
-                modElem.lon = edit.change.to.lon;
+                const mElem = this.storageService.elementsMap.get(edit.id);
+                mElem.lat = edit.change.to.lat;
+                mElem.lon = edit.change.to.lon;
 
                 const marker = this.storageService.markersMap.get(edit.id);
-                marker.setLatLng({ lat: modElem.lat, lng: modElem.lon });
-                this.storageService.elementsMap.set(edit.id, modElem);
+                marker.setLatLng({ lat: mElem.lat, lng: mElem.lon });
+                this.storageService.elementsMap.set(edit.id, mElem);
                 break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
@@ -488,41 +475,35 @@ export class EditingService {
         switch (edit.type) {
             case "add tag":
                 console.log("LOG (editing s.) Should remove this added tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (elem) => {
-                    if (elem.id === edit.id) {
-                        delete elem.tags[edit.change.key];
-                        console.log("LOG (editing s.) Removed again", elem);
-                        this.processingService.refreshTagView(elem);
-                    }
-                });
+                const atElem = this.storageService.elementsMap.get(edit.id);
+                delete atElem.tags[edit.change.key];
+                console.log("LOG (editing s.) Removed again", atElem);
+                this.processingService.refreshTagView(atElem);
+                this.storageService.elementsMap.set(edit.id, atElem);
                 break;
             case "remove tag":
                 console.log("LOG (editing s.) Should add this removed tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (elem) => {
-                    if (elem.id === edit.id) {
-                        elem.tags[edit.change.key] = edit.change.value;
-                        console.log("LOG (editing s.) Added again", elem);
-                        this.processingService.refreshTagView(elem);
-                    }
-                });
+                const rtElem = this.storageService.elementsMap.get(edit.id);
+                rtElem.tags[edit.change.key] = edit.change.value;
+                console.log("LOG (editing s.) Added again", rtElem);
+                this.processingService.refreshTagView(rtElem);
+                this.storageService.elementsMap.set(edit.id, rtElem);
                 break;
             case "change tag":
                 console.log("LOG (editing s.) Should undo this changed tag: ", edit);
-                this.storageService.localJsonStorage.elements.forEach( (elem) => {
-                    if (elem.id === edit.id) {
-                        delete elem.tags[edit.change.to.key];
-                        elem.tags[edit.change.from.key] = edit.change.from.value;
-                        console.log("LOG (editing s.) Changed again", elem);
-                        this.processingService.refreshTagView(elem);
-                    }
-                });
+                const chtElem = this.storageService.elementsMap.get(edit.id);
+                delete chtElem.tags[edit.change.to.key];
+                chtElem.tags[edit.change.from.key] = edit.change.from.value;
+                console.log("LOG (editing s.) Changed again", chtElem);
+                this.processingService.refreshTagView(chtElem);
+                this.storageService.elementsMap.set(edit.id, chtElem);
                 break;
             case "change members":
                 console.log("LOG (editing s.) Should undo this changed members", edit);
-                let currObj = this.storageService.elementsMap.get(edit.id);
-                delete currObj.members;
-                currObj.members = edit.change.from;
-                this.storageService.elementsMap.set(edit.id, currObj);
+                let chmElem = this.storageService.elementsMap.get(edit.id);
+                delete chmElem.members;
+                chmElem.members = edit.change.from;
+                this.storageService.elementsMap.set(edit.id, chmElem);
                 // this.processingService.refreshSidebarView("stop");
                 this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(edit.id));
                 this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id));
@@ -534,13 +515,13 @@ export class EditingService {
                 break;
             case "modify element":
                 console.log("LOG: Should undo element modification", edit);
-                const modElem = this.storageService.elementsMap.get(edit.id);
-                modElem.lat = edit.change.from.lat;
-                modElem.lon = edit.change.from.lon;
+                const mElem = this.storageService.elementsMap.get(edit.id);
+                mElem.lat = edit.change.from.lat;
+                mElem.lon = edit.change.from.lon;
 
                 const marker = this.storageService.markersMap.get(edit.id);
-                marker.setLatLng({ lat: modElem.lat, lng: modElem.lon });
-                this.storageService.elementsMap.set(edit.id, modElem);
+                marker.setLatLng({ lat: mElem.lat, lng: mElem.lon });
+                this.storageService.elementsMap.set(edit.id, mElem);
                 break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
