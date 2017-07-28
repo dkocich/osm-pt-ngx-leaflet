@@ -71,8 +71,8 @@ export class ProcessingService {
      * Filters data in the sidebar depending on current view's bounding box.
      */
     public filterDataInBounds(): void {
-        if (!this.storageService.localJsonStorage) {
-            return;
+        if (!this.storageService.localJsonStorage || this.storageService.listOfStops.length > 1000) {
+            return console.log("LOG (processing s.) filtering of stops in map bounds was stopped (too much data - limit 1000 nodes).");
         }
         this.mapService.bounds = this.mapService.map.getBounds();
         for (const stop of this.storageService.listOfStops) {

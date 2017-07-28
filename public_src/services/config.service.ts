@@ -16,5 +16,5 @@ export class ConfigService {
 
     public cfgFilterLines: boolean = true;
     public minDownloadZoom = 15;
-    public minDownloadDistance = 600;
+    public minDownloadDistance = 1500;
 }

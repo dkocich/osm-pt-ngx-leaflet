@@ -472,11 +472,11 @@ export class MapService {
         const fp = feature.properties;
         if ("public_transport" in fp ) { // && fp["railway"] === undefined
             if (fp["public_transport"] === "platform") {
-                iconUrl = "images/transport/platform.svg";
+                iconUrl = "images/transport/platform.png";
             } else if (fp["public_transport"] === "stop_position") {
                 iconUrl = "images/transport/bus.png";
             } else if (fp["public_transport"] === "station") {
-                iconUrl = "images/transport/station.svg";
+                iconUrl = "images/transport/station.png";
             }
         } else if ("highway" in fp) {
             if (fp["highway"] === "bus_stop") {

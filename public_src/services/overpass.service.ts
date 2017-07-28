@@ -263,7 +263,7 @@ export class OverpassService {
      * @returns {string}
      */
     private replaceBboxString(requestBody: string): string {
-        const b = this.mapService.map.getBounds();
+        const b = this.mapService.map.getCenter().toBounds(3000);
         const s = b.getSouth().toString();
         const w = b.getWest().toString();
         const n = b.getNorth().toString();
