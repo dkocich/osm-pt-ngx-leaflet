@@ -11,9 +11,18 @@
 
 <transporter></transporter>
 
+<div id="radio-highlight" *ngIf="highlightIsActive() && currentElement.type === 'relation'">
+    <div class="btn-group">
+        <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()"
+               tooltip="Highlight connectivity between route's stops" container="body" btnRadio="Stops">Stops</label>
+        <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()"
+               tooltip="Highlight connectivity between route's platforms" container="body" btnRadio="Platforms">Platforms</label>
+    </div>
+</div>
+
 <button id="clear-highlight" class="btn btn-danger on-map" *ngIf="highlightIsActive()"
         tooltip="Clear current highlight" container="body" (click)="clearHighlight()">
-    <i class="fa fa-times"></i>
+    <i class="fa fa-times" aria-hidden="true"></i>
 </button>
 
 <editor></editor>

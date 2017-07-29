@@ -288,14 +288,15 @@ export class ProcessingService {
         });
 
         // check if relation and all its members are downloaded -> get missing
-        if (!this.storageService.elementsDownloaded.has(rel.id) &&
-            rel["members"].length > 0 && missingElements.length > 0) {
+        if (!this.storageService.elementsDownloaded.has(rel.id)
+            && rel["members"].length > 0 && missingElements.length > 0) {
+            console.log("LOG (processing s.) Relation is not completely downloaded. Missing: " + missingElements.join(", "));
             this.membersToDownload.emit({ "rel": rel, "missingElements": missingElements });
-            // return alert("FIXME: Relation is not (completely) downloaded! Missing: " + missingElements.join(", "));
-        } else if (this.storageService.elementsDownloaded.has(rel.id)) {
+        } else if (this.storageService.elementsDownloaded.has(rel.id) || missingElements.length === 0) {
             this.downloadedMissingMembers(rel, true);
         } else {
-            return alert("FIXME: Some other problem with relation: " + JSON.stringify(rel));
+            return alert("FIXME: Some other problem with relation - downloaded " + this.storageService.elementsDownloaded.has(rel.id) +
+                " , # of missing elements " + missingElements.length + " , # of members " + rel["members"].length + JSON.stringify(rel));
         }
     }
 
