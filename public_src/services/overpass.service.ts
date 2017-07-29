@@ -263,7 +263,7 @@ export class OverpassService {
      * @returns {string}
      */
     private replaceBboxString(requestBody: string): string {
-        const b = this.mapService.map.getBounds();
+        const b = this.mapService.map.getCenter().toBounds(3000);
         const s = b.getSouth().toString();
         const w = b.getWest().toString();
         const n = b.getNorth().toString();
@@ -334,10 +334,8 @@ export class OverpassService {
         }
         const changedElements = [];
         const changedElementsArr = Array.from(idsChanged.keys());
-        for (const element of this.storageService.localJsonStorage.elements) {
-            if (changedElementsArr.indexOf(element.id) > -1) {
-                changedElements.push(element);
-            }
+        for (const changedElementId of changedElementsArr) {
+            changedElements.push(this.storageService.elementsMap.get(changedElementId));
         }
 
         console.log("LOG (overpass) Changed documents: ", changedElements);

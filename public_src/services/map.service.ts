@@ -67,6 +67,7 @@ export class MapService {
     // public popupBtnClick: EventEmitter<any> = new EventEmitter();
     public markerClick: EventEmitter<any> = new EventEmitter();
     public markerEdit: EventEmitter<object> = new EventEmitter();
+    public highlightType: string = "Stops";
     private ptLayer: any;
     private highlightFill: any = undefined;
     private highlight: any = undefined;
@@ -310,6 +311,14 @@ export class MapService {
             this.map.removeLayer(this.highlight);
             this.highlight = undefined;
         }
+        if (this.highlightFill !== undefined) {
+            this.map.removeLayer(this.highlightFill);
+            this.highlightFill = undefined;
+        }
+        if (this.highlightStroke !== undefined) {
+            this.map.removeLayer(this.highlightStroke);
+            this.highlightStroke = undefined;
+        }
     }
 
     /**
@@ -318,11 +327,9 @@ export class MapService {
      * @returns {{lat: number, lng: number}}
      */
     public findCoordinates(refId): LatLngExpression {
-        for (const stop of this.storageService.listOfStops) {
-            if (stop.id === refId) {
-                return { lat: stop.lat, lng: stop.lon };
-            }
-        }
+        const element = this.storageService.elementsMap.get(refId);
+        console.log(element);
+        return { lat: element.lat, lng: element.lon };
     }
 
     /**
@@ -389,15 +396,10 @@ export class MapService {
      * @returns {boolean}
      */
     public showRoute(rel: any): boolean {
-        const latlngs = Array();
         for (const member of rel.members) {
             if (member.type === "node" && ["stop", "stop_entry_only", "stop_exit_only"]
                     .indexOf(member.role) > -1) {
                 this.storageService.stopsForRoute.push(member.ref);
-                const latlng: LatLngExpression = this.findCoordinates(member.ref);
-                if (latlng) {
-                    latlngs.push(latlng);
-                }
             }
             else if (member.type === "node" && ["platform", "platform_entry_only", "platform_exit_only"]
                     .indexOf(member.role) > -1) {
@@ -408,14 +410,31 @@ export class MapService {
             }
         }
 
+        let memberRefs;
+        switch (this.highlightType) {
+            case "Stops":
+                memberRefs = this.storageService.stopsForRoute;
+                break;
+            case "Platforms":
+                memberRefs = this.storageService.platformsForRoute;
+                break;
+        }
+
+        const latlngs = Array();
+        for (const ref of memberRefs ) {
+            const latlng: LatLngExpression = this.findCoordinates(ref);
+            if (latlng) {
+                latlngs.push(latlng);
+            }
+        }
+
         if (latlngs.length > 0) {
             this.highlightStroke = L.polyline(latlngs, HIGHLIGHT_STROKE).bindTooltip(rel.tags.name);
             this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL).bindTooltip(rel.tags.name);
             this.highlight = L.layerGroup([this.highlightStroke, this.highlightFill])
                 .addTo(this.map);
             return true;
-        }
-        else {
+        } else {
             alert("Problem occurred while drawing line (it has zero length - no added stops?)." +
                 "\n\n" + JSON.stringify(rel));
             return false;
@@ -427,7 +446,7 @@ export class MapService {
      * @returns {any}
      */
     public highlightIsActive(): boolean {
-        return this.highlightFill || this.highlightStroke || this.markerFrom;
+        return this.highlightFill || this.highlightStroke || this.markerFrom || this.markerTo;
     }
 
     public drawTooltipFromTo(rel): void {
@@ -472,11 +491,11 @@ export class MapService {
         const fp = feature.properties;
         if ("public_transport" in fp ) { // && fp["railway"] === undefined
             if (fp["public_transport"] === "platform") {
-                iconUrl = "images/transport/platform.svg";
+                iconUrl = "images/transport/platform.png";
             } else if (fp["public_transport"] === "stop_position") {
                 iconUrl = "images/transport/bus.png";
             } else if (fp["public_transport"] === "station") {
-                iconUrl = "images/transport/station.svg";
+                iconUrl = "images/transport/station.png";
             }
         } else if ("highway" in fp) {
             if (fp["highway"] === "bus_stop") {

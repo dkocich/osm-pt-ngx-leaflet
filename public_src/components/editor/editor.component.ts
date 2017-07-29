@@ -1,5 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 
+import { AuthService } from "../../services/auth.service";
 import { EditingService } from "../../services/editing.service";
 import { MapService } from "../../services/map.service";
 import { StorageService } from "../../services/storage.service";
@@ -23,7 +24,7 @@ export class EditorComponent {
     private creatingElementOfType: string = "";
 
     constructor(private mapService: MapService, private storageService: StorageService,
-                private editingService: EditingService) {
+                private editingService: EditingService, private authService: AuthService) {
     }
 
     ngOnInit() {
@@ -49,6 +50,10 @@ export class EditorComponent {
             this.storageService.setLocalStorageItem("edits", []);
         }
         console.log("LOG (editor) Current edits are: ", this.storageService.edits);
+    }
+
+    private isAuthenticated(): void {
+        return this.authService.oauth.authenticated();
     }
 
     /**

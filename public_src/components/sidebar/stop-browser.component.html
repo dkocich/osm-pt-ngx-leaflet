@@ -4,10 +4,11 @@
         <h4 class="text-danger"
             *ngIf="listOfStops.length === 0">There are no loaded stops (zoom map).</h4>
         <ng-container *ngIf="filteredView">
-            <button class="btn btn-warning" (click)="cancelFilter()">Cancel filter</button>
+            <button class="btn btn-warning" (click)="cancelFilter()" tooltip="Cancel filter showing only route's related nodes" container="body">Cancel filter</button>
         </ng-container>
         <ng-container *ngIf="editingMode">
-            <button class="btn btn-warning" (click)="reorderMembers(currentElement)">Reorder members</button>
+            <button class="btn btn-warning" (click)="reorderMembers(currentElement)"
+                    tooltip="Reorder members to have stops and platforms first" container="body">Reorder members</button>
         </ng-container>
     </div>
 
@@ -18,7 +19,7 @@
                 <td><b>#</b></td>
                 <td><b>Role</b></td>
                 <td><b>Name/Id</b></td>
-                <td title="route_ref"><b>Route ref.</b></td>
+                <td tooltip="route_ref" container="body"><b>Route ref.</b></td>
             </tr>
             </thead>
             <tbody *ngIf="!editingMode">
@@ -53,8 +54,8 @@
             <thead>
             <tr>
                 <td><b>Name/Id</b></td>
-                <td title="public_transport"><b>PT</b></td>
-                <td title="route_ref"><b>Route ref.</b></td>
+                <td tooltip="public_transport" container="body"><b>PT</b></td>
+                <td tooltip="route_ref" container="body"><b>Route ref.</b></td>
             </tr>
             </thead>
             <tbody>

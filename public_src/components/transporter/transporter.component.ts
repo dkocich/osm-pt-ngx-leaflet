@@ -1,5 +1,6 @@
 import { Component, ViewChild } from "@angular/core";
 
+import { AuthService } from "../../services/auth.service";
 import { MapService } from "../../services/map.service";
 import { OverpassService } from "../../services/overpass.service";
 import { StorageService } from "../../services/storage.service";
@@ -42,9 +43,8 @@ export class TransporterComponent {
     private comment: string = "";
 
     private source: string = "";
-    constructor(private mapService: MapService,
-                private overpassService: OverpassService,
-                private storageService: StorageService) {
+    constructor(private mapService: MapService, private overpassService: OverpassService,
+                private storageService: StorageService, private authService: AuthService) {
     }
 
     ngOnInit() {
@@ -78,6 +78,10 @@ export class TransporterComponent {
 
     public hideUploadModal(): void {
         this.uploadModal.hide();
+    }
+
+    private isAuthenticated(): void {
+        return this.authService.oauth.authenticated();
     }
 
     private requestData(requestBody): void {

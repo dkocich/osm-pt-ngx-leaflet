@@ -22,6 +22,7 @@ import { IOsmEntity } from "../../core/osmEntity.interface";
 })
 export class ToolbarComponent {
     public downloading: boolean;
+    public htRadioModel: string = "Stops";
     @ViewChild(TransporterComponent) public transporterComponent: TransporterComponent;
     @ViewChild(EditorComponent) public editorComponent: EditorComponent;
     private filtering: boolean;
@@ -58,6 +59,14 @@ export class ToolbarComponent {
         this.mapService.map.on("zoomend moveend", () => {
             this.initDownloader();
         });
+    }
+
+    private changeHighlight() {
+        console.log(this.htRadioModel);
+        if (this.highlightIsActive() && this.htRadioModel !== this.mapService.highlightType) {
+            this.mapService.highlightType = this.htRadioModel;
+            this.processingService.exploreRelation(this.storageService.elementsMap.get(this.currentElement.id));
+        }
     }
 
     private initDownloader(): void {

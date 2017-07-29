@@ -71,8 +71,8 @@ export class ProcessingService {
      * Filters data in the sidebar depending on current view's bounding box.
      */
     public filterDataInBounds(): void {
-        if (!this.storageService.localJsonStorage) {
-            return;
+        if (!this.storageService.localJsonStorage || this.storageService.listOfStops.length > 1000) {
+            return console.log("LOG (processing s.) filtering of stops in map bounds was stopped (too much data - limit 1000 nodes).");
         }
         this.mapService.bounds = this.mapService.map.getBounds();
         for (const stop of this.storageService.listOfStops) {
@@ -89,14 +89,26 @@ export class ProcessingService {
     }
 
     /**
+     * Generates new unique ID used to store API responses.
+     */
+    private getResponseId(): number {
+        let id = 1;
+        while (this.storageService.localJsonStorage.has(id)) {
+            id++;
+        }
+        return id;
+    }
+
+    /**
      *
      * @param response
      */
     public processResponse(response: object): void {
+        const responseId = this.getResponseId();
         const transformedGeojson = this.mapService.osmtogeojson(response);
-        this.storageService.localJsonStorage = response;
-        this.storageService.localGeojsonStorage = transformedGeojson;
-        this.createLists();
+        this.storageService.localJsonStorage.set(responseId, response);
+        this.storageService.localGeojsonStorage.set(responseId, transformedGeojson);
+        this.createLists(responseId);
         this.mapService.renderTransformedGeojsonData(transformedGeojson);
         this.loadingService.hide();
     }
@@ -166,22 +178,24 @@ export class ProcessingService {
 
     /**
      * Creates initial list of stops/relations.
+     * @param id
      */
-    public createLists(): void {
-        this.storageService.localJsonStorage.elements.forEach( (element) => {
+    public createLists(id: number): void {
+        const response = this.storageService.localJsonStorage.get(id);
+        response.elements.forEach( (element) => {
             if (!this.storageService.elementsMap.has(element.id)) {
                 this.storageService.elementsMap.set(element.id, element);
 
                 switch (element.type) {
                     case "node":
-                        if (element.tags && (element.tags.bus === "yes" || element.tags.public_transport)) {
+                        if (element.tags && element.tags.public_transport) {
                             this.storageService.listOfStops.push(element);
                         }
                         break;
                     case "relation":
                         if (element.tags.public_transport === "stop_area") {
                             this.storageService.listOfAreas.push(element);
-                        } else {
+                        } else if (element.tags.public_transport) {
                             this.storageService.listOfRelations.push(element);
                             break;
                         }
@@ -274,14 +288,15 @@ export class ProcessingService {
         });
 
         // check if relation and all its members are downloaded -> get missing
-        if (!this.storageService.elementsDownloaded.has(rel.id) &&
-            rel["members"].length > 0 && missingElements.length > 0) {
+        if (!this.storageService.elementsDownloaded.has(rel.id)
+            && rel["members"].length > 0 && missingElements.length > 0) {
+            console.log("LOG (processing s.) Relation is not completely downloaded. Missing: " + missingElements.join(", "));
             this.membersToDownload.emit({ "rel": rel, "missingElements": missingElements });
-            // return alert("FIXME: Relation is not (completely) downloaded! Missing: " + missingElements.join(", "));
-        } else if (this.storageService.elementsDownloaded.has(rel.id)) {
+        } else if (this.storageService.elementsDownloaded.has(rel.id) || missingElements.length === 0) {
             this.downloadedMissingMembers(rel, true);
         } else {
-            return alert("FIXME: Some other problem with relation: " + JSON.stringify(rel));
+            return alert("FIXME: Some other problem with relation - downloaded " + this.storageService.elementsDownloaded.has(rel.id) +
+                " , # of missing elements " + missingElements.length + " , # of members " + rel["members"].length + JSON.stringify(rel));
         }
     }
 
