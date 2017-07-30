@@ -124,6 +124,22 @@ export class TagBrowserComponent {
         this.tagKey = value;
     }
 
+    private toggleType(key) {
+        let change;
+        if (Object.keys(this.currentElement.tags).indexOf(key) === -1) {
+            this.currentElement.tags[key] = "yes";
+            change = { "key": key, "value": "yes" };
+            this.editingService.addChange(this.currentElement, "add tag", change);
+        } else if (this.currentElement.tags[key] === "yes") {
+            change = { "key": key, "value": this.currentElement.tags[key] };
+            delete this.currentElement.tags[key];
+            delete this.storageService.currentElement["tags"][key];
+            this.editingService.addChange(this.currentElement, "remove tag", change);
+        } else {
+            return alert("FIXME: some problem in toggle" + JSON.stringify(this.currentElement));
+        }
+    }
+
     private updateValue(value: string): void {
         this.tagValue = value;
     }
