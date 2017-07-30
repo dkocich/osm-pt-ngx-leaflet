@@ -22,6 +22,18 @@ export class TagBrowserComponent {
     private currentElement: IOsmEntity;
     private editingMode: boolean;
 
+    private expectedKeys = [
+        "ascent", "bench", "building", "bus", "colour", "covered", "descent", "description",
+        "distance", "highway", "layer", "level", "name", "network", "operator", "public_transport",
+        "public_transport:version", "railway", "ref", "roundtrip", "route_ref", "shelter",
+        "surface", "symbol", "tactile_paving", "type", "uic_name", "uic_ref"
+    ];
+    private expectedValues = ["aerialway", "backward", "bus", "bus_stop", "coach", "ferry",
+        "forward", "gate", "limited", "monorail", "no", "platform", "public_transport", "route",
+        "route_master", "share_taxi", "station", "stop", "stop_area", "stop_position", "subway",
+        "taxi", "train", "tram", "trolleybus", "yes"
+    ];
+
     constructor(private processingService: ProcessingService,
                 private storageService: StorageService,
                 private editingService: EditingService,

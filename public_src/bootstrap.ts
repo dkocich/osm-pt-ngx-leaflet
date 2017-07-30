@@ -25,7 +25,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { BusyModule } from "angular2-busy";
 import { DragulaModule } from "ng2-dragula";
 import {
-    AccordionModule, ButtonsModule, CarouselModule, ModalModule, TooltipModule
+    AccordionModule, ButtonsModule, CarouselModule, ModalModule, TooltipModule, TypeaheadModule
 } from "ngx-bootstrap";
 
 import { AppComponent } from "./components/app/app.component";
@@ -81,7 +81,7 @@ export class RavenErrorHandler implements ErrorHandler {
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
         ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot(),
         BusyModule, BrowserAnimationsModule, DragulaModule, TooltipModule.forRoot(),
-        ButtonsModule.forRoot()],
+        ButtonsModule.forRoot(), TypeaheadModule.forRoot() ],
     providers: [
         MapService,
         GeocodingService,
