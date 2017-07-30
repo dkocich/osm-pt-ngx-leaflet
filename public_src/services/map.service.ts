@@ -127,7 +127,7 @@ export class MapService {
                 attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
                 OpenStreetMap</a>, Tiles courtesy of <a href='https://openptmap.org/'
                 target='_blank'>OpenStreetMap Team</a>`,
-                maxNativeZoom: 19, maxZoom: 22
+                maxNativeZoom: 19, maxZoom: 17
             }),
             OSM_transport: L.tileLayer("http://{s}.tile2.opencyclemap.org/" +
                 "transport/{z}/{x}/{y}.png", {
