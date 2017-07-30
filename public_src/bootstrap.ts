@@ -21,7 +21,6 @@ import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { BusyModule } from "angular2-busy";
 import { DragulaModule } from "ng2-dragula";
 import {
@@ -79,7 +78,7 @@ export class RavenErrorHandler implements ErrorHandler {
         KeysPipe
     ],
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
-        ModalModule.forRoot(), CarouselModule.forRoot(), NgbModule.forRoot(),
+        ModalModule.forRoot(), CarouselModule.forRoot(),
         BusyModule, BrowserAnimationsModule, DragulaModule, TooltipModule.forRoot(),
         ButtonsModule.forRoot(), TypeaheadModule.forRoot() ],
     providers: [
