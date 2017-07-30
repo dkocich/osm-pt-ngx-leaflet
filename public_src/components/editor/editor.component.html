@@ -16,7 +16,7 @@
 
 <div *ngIf="editing">
     <button id="stop-btn" type="button" class="btn btn-default on-map" [class.btn-primary]="creatingElementOfType === 'stop'"
-            tooltip="Create a new stop" container="body" (click)="createElement('stop')">
+            tooltip="Create a new stop" container="body" (click)="createElement('stop')" disabled>
         Stop
     </button>
     <button id="platform-btn" type="button" class="btn btn-default on-map" [class.btn-primary]="creatingElementOfType === 'platform'"

@@ -19,7 +19,7 @@
                 <td>
                     <ng-container *ngIf="!editingMode">{{tag.value}}</ng-container>
                     <input type="text" *ngIf="editingMode" value="{{tag.value}}" data-type="value"
-                           (blur)="createChange('change tag', tag.key, $event)">
+                           (blur)="createChange('change tag', tag.key, $event)" >
                 </td>
                 <td *ngIf="editingMode">
                     <button class="btn btn-sm btn-danger glyphicon glyphicon-minus"
@@ -31,12 +31,14 @@
                 <td>
                     <input #k class="form-control" id="inputkey" type="text" [ngModel]="tagKey"
                            (ngModelChange)="keyChange($event)" (keyup.enter)="updateKey(k.value)"
-                           (blur)="updateKey(k.value)" placeholder="Add new tag" minlength="1" required>
+                           (blur)="updateKey(k.value)" placeholder="Add new tag" minlength="1"
+                           [typeahead]="expectedKeys" required>
                 </td>
                 <td>
                     <input #v class="form-control" id="inputvalue" type="text" [ngModel]="tagValue"
                            (ngModelChange)="valueChange($event)" (keyup.enter)="updateValue(v.value)"
-                           (blur)="updateValue(v.value)" placeholder="Add new value" minlength="1" required>
+                           (blur)="updateValue(v.value)" placeholder="Add new value" minlength="1"
+                           [typeahead]="expectedValues" required>
                 </td>
                 <td>
                     <button class="btn btn-sm btn-default glyphicon glyphicon-plus" aria-hidden="true"
