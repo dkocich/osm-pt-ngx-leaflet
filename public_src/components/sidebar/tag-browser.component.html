@@ -2,7 +2,8 @@
     <h4 class="text-center text-danger" *ngIf="!currentElement">Please select a feature to browse tags.</h4>
 
     <div *ngIf="currentElement" class="medium">
-        <div class="text-center" *ngIf="editingMode && currentElement.tags.public_transport === 'platform'">
+        <div class="text-center" *ngIf="editingMode && (currentElement.tags.type === 'route_master' ||
+             ['platform', 'stop_position', 'station'].indexOf(currentElement.tags.public_transport) > -1)">
             <button class="btn btn-default" [class.btn-primary]="currentElement.tags.train === 'yes'"
                     tooltip="Train" container="body" (click)="toggleType('train')" btnCheckbox>
                 <i class="fa fa-train"> T</i>
