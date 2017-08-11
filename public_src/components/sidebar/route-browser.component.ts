@@ -34,7 +34,7 @@ export class RouteBrowserComponent {
                 private editingService: EditingService) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.processingService.showRelationsForStop$.subscribe(
             (data) => {
                 this.filteredView = data;
@@ -64,7 +64,7 @@ export class RouteBrowserComponent {
         );
     }
 
-    private toggleMembersEdit() {
+    private toggleMembersEdit(): void {
         this.membersEditing = !this.membersEditing;
         this.mapService.membersEditing = this.membersEditing;
         if (this.membersEditing) {
@@ -79,11 +79,11 @@ export class RouteBrowserComponent {
         return this.idsHaveMaster.has(relId);
     }
 
-    private isDownloaded(relId) {
+    private isDownloaded(relId: number): boolean {
         return this.storageService.elementsDownloaded.has(relId);
     }
 
-    private masterWasChecked(relId) {
+    private masterWasChecked(relId: number): boolean {
         return this.storageService.queriedMasters.has(relId);
     }
 
@@ -91,21 +91,21 @@ export class RouteBrowserComponent {
         this.processingService.activateFilteredRouteView(false);
     }
 
-    private exploreRelation($event, rel: any): void {
+    private exploreRelation($event: any, rel: any): void {
         this.processingService.exploreRelation(this.storageService.elementsMap.get(rel.id), true);
     }
 
-    private exploreMaster($event, rel: any): void {
+    private exploreMaster($event: any, rel: any): void {
         this.processingService.exploreMaster(this.storageService.elementsMap.get(rel.id));
     }
 
-    private downloadMaster() {
+    private downloadMaster(): void {
         this.isRequesting = true;
         console.log("LOG (route-browser) Manually downloading masters");
         this.overpassService.getRouteMasters(1);
     }
 
-    private createRoute() {
+    private createRoute(): void {
         this.editingService.createRoute();
     }
 }

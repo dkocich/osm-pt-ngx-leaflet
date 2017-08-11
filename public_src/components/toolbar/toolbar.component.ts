@@ -46,7 +46,7 @@ export class ToolbarComponent {
         this.storageService.stats.subscribe((data) => this.stats = data);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.mapService.disableMouseEvent("toggle-download");
         this.mapService.disableMouseEvent("toggle-filter");
         this.mapService.disableMouseEvent("toggle-edit");
@@ -55,13 +55,13 @@ export class ToolbarComponent {
         this.mapService.disableMouseEvent("edits-count");
     }
 
-    public Initialize() {
+    public Initialize(): void {
         this.mapService.map.on("zoomend moveend", () => {
             this.initDownloader();
         });
     }
 
-    private changeHighlight() {
+    private changeHighlight(): void {
         console.log(this.htRadioModel);
         if (this.highlightIsActive() && this.htRadioModel !== this.mapService.highlightType) {
             this.mapService.highlightType = this.htRadioModel;
@@ -104,11 +104,11 @@ export class ToolbarComponent {
      *
      * @param selection
      */
-    private showInfo(selection: object) {
+    private showInfo(selection: object): void {
         alert(JSON.stringify(selection, null, "\t"));
     }
 
-    private zoomTo(selection: IOsmEntity) {
+    private zoomTo(selection: IOsmEntity): void {
         this.processingService.zoomToElement(selection);
     }
 
@@ -124,11 +124,11 @@ export class ToolbarComponent {
         this.filtering = !this.filtering;
     }
 
-    private highlightIsActive() {
+    private highlightIsActive(): boolean {
         return this.mapService.highlightIsActive();
     }
 
-    private clearHighlight() {
+    private clearHighlight(): void {
         return this.mapService.clearHighlight();
     }
 }

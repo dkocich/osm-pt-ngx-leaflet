@@ -154,7 +154,7 @@ export class MapService {
     /**
      * Clears layer with downloaded data.
      */
-    public clearLayer() {
+    public clearLayer(): void {
         if (this.ptLayer) {
             this.map.removeLayer(this.ptLayer);
             delete this.ptLayer;
@@ -165,7 +165,7 @@ export class MapService {
      * Renders GeoJson data on the map.
      * @param transformedGeojson
      */
-    public renderTransformedGeojsonData(transformedGeojson): void {
+    public renderTransformedGeojsonData(transformedGeojson: any): void {
         this.ptLayer = L.geoJSON(transformedGeojson, {
             filter: (feature) => {
                 // filter away already rendered elements
@@ -199,7 +199,7 @@ export class MapService {
      * @param feature
      * @param layer
      */
-    public enableDrag(feature, layer) {
+    public enableDrag(feature: any, layer: any): any {
         layer.on("click", (e) => {
             if (!this.membersEditing) {
             this.handleMarkerClick(feature);
@@ -269,7 +269,7 @@ export class MapService {
      * @param requestBody
      * @param options
      */
-    public renderData(requestBody, options): void {
+    public renderData(requestBody: any, options: any): void {
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
             .map((res) => res.json())
             .subscribe((result) => {
@@ -321,7 +321,7 @@ export class MapService {
      * @param refId
      * @returns {{lat: number, lng: number}}
      */
-    public findCoordinates(refId): LatLngExpression {
+    public findCoordinates(refId: number): LatLngExpression {
         const element = this.storageService.elementsMap.get(refId);
         return { lat: element.lat, lng: element.lon };
     }
@@ -330,7 +330,7 @@ export class MapService {
      * Highlights stop marker with a circle.
      * @param stop
      */
-    public showStop(stop: IPtStop) {
+    public showStop(stop: IPtStop): void {
         this.markerFrom = L.circleMarker( { lat: stop.lat, lng: stop.lon }, FROM_TO_LABEL);
         this.highlight = L.layerGroup([this.markerFrom]);
     }
@@ -387,7 +387,7 @@ export class MapService {
     /**
      * Clears circles highlighting relation's current members.
      */
-    public clearCircleHighlight() {
+    public clearCircleHighlight(): void {
         if (this.membersHighlightLayer && this.map.hasLayer(this.membersHighlightLayer)) {
             console.log("LOG: delete existing highlight");
             this.map.removeLayer(this.membersHighlightLayer);
@@ -459,11 +459,15 @@ export class MapService {
         return this.highlightFill || this.highlightStroke || this.markerFrom || this.markerTo;
     }
 
-    public drawTooltipFromTo(rel): void {
+    /**
+     * Draws tooltip with name of from/to stops.
+     * @param rel
+     */
+    public drawTooltipFromTo(rel: any): void {
         const latlngFrom: LatLngExpression = this.findCoordinates(
-            this.storageService.stopsForRoute[0]);
+            this.storageService.stopsForRoute[0]["id"]);
         const latlngTo: LatLngExpression = this.findCoordinates(
-            this.storageService.stopsForRoute[this.storageService.stopsForRoute.length - 1]);
+            this.storageService.stopsForRoute[this.storageService.stopsForRoute.length - 1]["id"]);
 
         const from = rel.tags.from || "#FROM";
         const to = rel.tags.to || "#TO";
@@ -495,7 +499,7 @@ export class MapService {
      * @param latlng
      * @returns {any}
      */
-    private stylePoint(feature, latlng): any {
+    private stylePoint(feature: any, latlng: any): any {
         let iconUrl = "images/marker-icon.png";
         let shadowUrl = "";
         const fp = feature.properties;
@@ -554,7 +558,7 @@ export class MapService {
      * @param feature
      * @returns {{color: string, weight: number, opacity: number}}
      */
-    private styleFeature(feature): object {
+    private styleFeature(feature: any): object {
         switch (feature.properties.route) {
             case "bus":
                 return REL_BUS_STYLE;

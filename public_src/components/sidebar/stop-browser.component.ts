@@ -7,6 +7,8 @@ import { StorageService } from "../../services/storage.service";
 import { DragulaService } from "ng2-dragula";
 
 import { IOsmEntity } from "../../core/osmEntity.interface";
+import { IPtRelation } from "../../core/ptRelation.interface";
+import { IPtStop } from "../../core/ptStop.interface";
 
 @Component({
     providers: [],
@@ -34,7 +36,7 @@ export class StopBrowserComponent {
         });
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.processingService.showStopsForRoute$.subscribe(
             (data) => {
                 this.filteredView = data;
@@ -62,11 +64,11 @@ export class StopBrowserComponent {
         );
     }
 
-    private reorderMembers(rel) {
+    private reorderMembers(rel: IPtRelation): void {
         this.editingService.reorderMembers(rel);
     }
 
-    private createChange() {
+    private createChange(): void {
         const type = "change members";
         let elementsWithoutRole = this.currentElement["members"].filter( (member) => {
             return member["role"] === "";
@@ -78,18 +80,18 @@ export class StopBrowserComponent {
         this.editingService.addChange(this.currentElement, type, change);
     }
 
-    private onDrop(args) {
+    private onDrop(args: any): void {
         if (this.currentElement.type !== "relation") {
             return alert("FIXME: wrong type of current element - select relation one more time please.");
         }
         this.createChange();
     }
 
-    private cancelFilter() {
+    private cancelFilter(): void {
         this.processingService.activateFilteredStopView(false);
     }
 
-    private exploreStop($event, stop) {
+    private exploreStop($event: any, stop: IPtStop): void {
         this.processingService.exploreStop(stop);
     }
 }

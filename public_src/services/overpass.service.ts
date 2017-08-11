@@ -81,7 +81,7 @@ export class OverpassService {
                     return res.json();
                 } else {
                     console.log("LOG (overpass s.) Stops response error", res.status, res.text);
-                    return setTimeout(function() {
+                    return setTimeout(function(): void {
                         console.log("LOG (overpass) Request error - new request?");
                         this.requestNewOverpassData();
                     }.bind(this), 5000);
@@ -99,7 +99,7 @@ export class OverpassService {
      * Downloads route_master relations for currently added route relations.
      * @minNumOfRelations: number
      */
-    public getRouteMasters(minNumOfRelations?: number) {
+    public getRouteMasters(minNumOfRelations?: number): void {
         if (!minNumOfRelations) {
             minNumOfRelations = 10;
         }
@@ -146,7 +146,7 @@ export class OverpassService {
         this.mapService.renderData(requestBody, options);
     }
 
-    public uploadData(metadata: object) {
+    public uploadData(metadata: object): void {
         this.changeset = this.createChangeset(metadata);
         this.putChangeset(this.changeset);
     }
@@ -155,7 +155,7 @@ export class OverpassService {
      * Creates new changeset on the API and returns its ID in the callback.
      * Put /api/0.6/changeset/create
      */
-    public putChangeset(changeset): void {
+    public putChangeset(changeset: any): void {
         this.authService.oauth.xhr({
             content: "<osm><changeset></changeset></osm>", // changeset,
             method: "PUT",
@@ -168,7 +168,7 @@ export class OverpassService {
      * Downloads all data for currently selected node.
      * @param featureId
      */
-    private getNodeData(featureId) {
+    private getNodeData(featureId: number): void {
         let requestBody = `
             [out:json][timeout:25][bbox:{{bbox}}];
             (
@@ -200,7 +200,7 @@ export class OverpassService {
      * @param rel
      * @param missingElements
      */
-    private getRelationData(rel: any, missingElements: number[]) {
+    private getRelationData(rel: any, missingElements: number[]): void {
         if (missingElements.length === 0) {
             return alert("This relation has no stops: \n" + JSON.stringify(rel));
         }
@@ -276,7 +276,7 @@ export class OverpassService {
      * @param contentType
      * @returns {RequestOptions}
      */
-    private setRequestOptions(contentType): RequestOptions {
+    private setRequestOptions(contentType: string): RequestOptions {
         const headers = new Headers();
         headers.append("Content-Type", contentType);
         return new RequestOptions({ headers });
@@ -303,7 +303,7 @@ export class OverpassService {
      * Adds changeset ID as an attribute to the request.
      * @param changeset_id
      */
-    private addChangesetId(changeset_id): void {
+    private addChangesetId(changeset_id: any): void {
         this.changeset_id = changeset_id;
         const parser = new DOMParser();
         const doc = parser.parseFromString(this.changeset, "application/xml");
@@ -317,7 +317,7 @@ export class OverpassService {
      * @param err
      * @param changeset_id
      */
-    private createdChangeset(err, changeset_id) {
+    private createdChangeset(err: any, changeset_id: any): void {
         if (err) {
             return alert("Error while creating new changeset " + err);
         }
@@ -395,13 +395,13 @@ export class OverpassService {
      * Tries to close changeset after it is uploaded.
      * @param err
      */
-    private uploadedChangeset(err) {
+    private uploadedChangeset(err: any): void {
         if (err) {
             return alert("Error after data uploading. Changeset is not closed." + err);
         }
         // Upload was successful, safe to call the callback.
         // Add delay to allow for postgres replication #1646 #2678
-        window.setTimeout(function() {
+        window.setTimeout(function(): void {
             console.log("LOG (overpass) Timeout 2500");
             // callback(null, this.changeset);
             // Still attempt to close changeset, but ignore response because iD/issues/2667

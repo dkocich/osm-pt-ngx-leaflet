@@ -49,7 +49,7 @@ export class StorageService {
     /**
      * Logs basic data statistics.
      */
-    public logStats() {
+    public logStats(): void {
         console.log("LOG (storage)",
             "Total # of nodes: ", this.listOfStops.length,
             "Total # of relations: ", this.listOfRelations.length,
@@ -92,7 +92,7 @@ export class StorageService {
     /**
      * Synchronizes localStorage edits content with current memory object array.
      */
-    public syncEdits() {
+    public syncEdits(): void {
         localStorage.setItem("edits", JSON.stringify(this.edits));
         this.editsChanged.emit(true);
     }

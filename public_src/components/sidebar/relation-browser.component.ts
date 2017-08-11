@@ -19,7 +19,7 @@ export class RelationBrowserComponent {
                 private processingService: ProcessingService) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.processingService.refreshSidebarViews$.subscribe(
             (data) => {
                 if (data === "relation") {
@@ -30,11 +30,11 @@ export class RelationBrowserComponent {
         );
     }
 
-    private isDownloaded(relId) {
-        this.storageService.elementsDownloaded.has(relId);
+    private isDownloaded(relId: number): boolean {
+        return this.storageService.elementsDownloaded.has(relId);
     }
 
-    private exploreRelation($event, rel: any): void {
+    private exploreRelation($event: any, rel: any): void {
         this.processingService.exploreRelation(rel, true, false, true);
     }
 }

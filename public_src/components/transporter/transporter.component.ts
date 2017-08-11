@@ -47,7 +47,7 @@ export class TransporterComponent {
                 private storageService: StorageService, private authService: AuthService) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.mapService.disableMouseEvent("download-data");
         this.mapService.disableMouseEvent("upload-data");
         this.storageService.editsChanged.subscribe(
@@ -84,7 +84,7 @@ export class TransporterComponent {
         return this.authService.oauth.authenticated();
     }
 
-    private requestData(requestBody): void {
+    private requestData(requestBody: string): void {
         this.overpassService.requestOverpassData(requestBody);
         this.hideDownloadModal();
     }
@@ -93,7 +93,7 @@ export class TransporterComponent {
         this.overpassService.uploadData({ "comment": this.comment, "source": this.source });
     }
 
-    private setQuery(event): void {
+    private setQuery(event: any): void {
         this.queryShort = event.target.textContent;
         const filtered = this.favoriteQueries.filter( (iter) => {
             return iter.short === event.target.textContent;

@@ -5,6 +5,7 @@ import { ProcessingService } from "./processing.service";
 import { StorageService } from "./storage.service";
 
 import { IPtStop } from "../core/ptStop.interface";
+import { IPtRelation } from "../core/ptRelation.interface";
 import { IPtRelationNew } from "../core/ptRelationNew.interface";
 
 @Injectable()
@@ -197,7 +198,7 @@ export class EditingService {
      * Handles adding of different PT elements and fills attributes automatically.
      * @param creatingElementOfType
      */
-    public createElement (creatingElementOfType: string, event): void {
+    public createElement (creatingElementOfType: string, event: any): void {
         let newId: number = this.findNewId();
         const marker = this.initializeNewMarker(creatingElementOfType, event, newId);
         this.createNewMarkerEvents(marker);
@@ -239,7 +240,7 @@ export class EditingService {
     /**
      * Creates completely new route with basic object structure.
      */
-    public createRoute() {
+    public createRoute(): void {
         const newId = this.findNewId();
         const newRoute: IPtRelationNew = {
             id: newId,
@@ -272,14 +273,14 @@ export class EditingService {
      * Handles process of node's membership toogle.
      * @param featureId
      */
-    private handleMarkerMembershipToggleClick(featureId) {
+    private handleMarkerMembershipToggleClick(featureId: number): void {
         this.redrawMembersHighlight(featureId);
     }
 
     /**
      * @param featureId
      */
-    public redrawMembersHighlight(featureId?: number) {
+    public redrawMembersHighlight(featureId?: number): void {
         const rel = JSON.parse(JSON.stringify(this.storageService.elementsMap.get(
             this.storageService.currentElement.id))); // stringified to not influence new route edit
         if (!rel || rel.type !== "relation") {
@@ -379,7 +380,7 @@ export class EditingService {
      * @param marker
      * @param event
      */
-    public repositionElement(marker, event) {
+    public repositionElement(marker: any, event: any): void {
         const opt = event.target.options;
         const newPosition = event.target.getLatLng();
         let change = {
@@ -408,7 +409,7 @@ export class EditingService {
      * Binds events to created markers.
      * @param marker
      */
-    private createNewMarkerEvents(marker): void {
+    private createNewMarkerEvents(marker: any): void {
         marker.on("dragend", (event) => {
             this.repositionElement(marker, event);
         });
@@ -425,7 +426,7 @@ export class EditingService {
      * @param {number} newId
      * @returns {any}
      */
-    private initializeNewMarker(creatingElementOfType: string, event, newId: number): any {
+    private initializeNewMarker(creatingElementOfType: string, event: any, newId: number): any {
         let iconUrl;
         switch (creatingElementOfType) {
             case "stop":
@@ -464,7 +465,7 @@ export class EditingService {
      * Handles switching between edits (undoing/applying changes, map move)
      * @param direction - "forward" or "backward"
      */
-    public step(direction: string) {
+    public step(direction: string): void {
         // TODO
         if (direction === "forward") {
             const edit = this.storageService.edits[this.currentEditStep - 1];
@@ -478,9 +479,10 @@ export class EditingService {
     }
 
     /**
+     * Reorders members of a relation (stop types, platform types and other).
      * @rel
      */
-    public reorderMembers(rel) {
+    public reorderMembers(rel: IPtRelation): void {
         if (!rel.members) {
             return alert(JSON.stringify(rel) + "FIXME please select relation");
         }
@@ -514,7 +516,7 @@ export class EditingService {
      * @param editObj
      * @returns {boolean}
      */
-    private shouldCombineChanges(editObj) {
+    private shouldCombineChanges(editObj: any): boolean {
         const last = this.storageService.edits[this.storageService.edits.length - 1];
         switch (editObj.type) {
             case "change tags":
@@ -530,7 +532,7 @@ export class EditingService {
      * Checks if last two changes are on the same tag and combines them in edit. history together.
      * @param editObj
      */
-    private combineChanges(editObj) {
+    private combineChanges(editObj: any): void {
         console.log("LOG (editing s.) Combining changes");
         const last = this.storageService.edits[this.storageService.edits.length - 1];
         switch (editObj.type) {
@@ -731,7 +733,7 @@ export class EditingService {
      * Deletes all unnecesary attributes from member object in a relation.
      * @param editObj
      */
-    private simplifyMembers(editObj) {
+    private simplifyMembers(editObj: any): void {
         for (const member of editObj.change.to) {
             for (const key of Object.keys(member)) {
                 if (["type", "ref", "role"].indexOf(key) === -1) {
@@ -746,7 +748,7 @@ export class EditingService {
      * @param editObj
      * @returns {boolean}
      */
-    private changeIsEqual(editObj) {
+    private changeIsEqual(editObj: any): boolean {
         console.log(JSON.stringify(editObj.change.from).length, JSON.stringify(editObj.change.to).length);
         return JSON.stringify(editObj.change.from) === JSON.stringify(editObj.change.to);
     }
