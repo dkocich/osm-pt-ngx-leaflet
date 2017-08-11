@@ -59,7 +59,13 @@
             </thead>
             <tbody>
                 <tr *ngFor="let stop of listOfStops" id="{{stop.id}}" class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
-                    <td>{{stop.tags.name || stop.id}}</td>
+                    <td>
+                        <i *ngIf="isDownloaded(stop.id)" class="fa fa-check-square-o" aria-hidden="true"
+                        tooltip="Routes related to this stop were checked and downloaded" container="body"></i>
+                        <i *ngIf="!isDownloaded(stop.id)" class="fa fa-question-circle" aria-hidden="true"
+                        tooltip="Routes related to this stop weren't checked" container="body"></i>
+                        {{stop.tags.name || stop.id}}
+                    </td>
                     <td>{{stop.tags.public_transport}}</td>
                     <td>{{stop.tags.route_ref}}</td>
                 </tr>
