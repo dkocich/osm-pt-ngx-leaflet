@@ -25,7 +25,7 @@ export class TagBrowserComponent {
     private expectedKeys = [
         "ascent", "bench", "building", "bus", "colour", "covered", "descent", "description",
         "distance", "highway", "layer", "level", "name", "network", "operator", "public_transport",
-        "public_transport:version", "railway", "ref", "roundtrip", "route_ref", "shelter",
+        "public_transport:version", "railway", "ref", "roundtrip", "route", "route_ref", "shelter",
         "surface", "symbol", "tactile_paving", "type", "uic_name", "uic_ref"
     ];
     private expectedValues = ["aerialway", "backward", "bus", "bus_stop", "coach", "ferry",
@@ -46,6 +46,9 @@ export class TagBrowserComponent {
                 if (data === "tag") {
                     console.log("LOG (tag-browser) Current selected element changed - ", data);
                     this.currentElement = this.storageService.currentElement;
+                } else if (data === "delete tag") {
+                    this.currentElement = undefined;
+                    delete this.currentElement;
                 }
             }
         );

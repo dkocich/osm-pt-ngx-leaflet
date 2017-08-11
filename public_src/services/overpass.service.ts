@@ -232,7 +232,7 @@ export class OverpassService {
                 // continue with the rest of "exploreRelation" function
                 console.log("LOG (overpass s.) Continue with downloaded missing members", rel);
                 this.storageService.elementsDownloaded.add(rel.id);
-                this.processingService.downloadedMissingMembers(rel, true);
+                this.processingService.downloadedMissingMembers(rel, true, true);
             });
     }
 

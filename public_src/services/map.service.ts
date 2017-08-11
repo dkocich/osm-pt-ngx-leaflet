@@ -6,11 +6,8 @@ import { LoadingService } from "./loading.service";
 import { StorageService } from "./storage.service";
 
 import { Map } from "leaflet";
-import domUtil = L.DomUtil;
-import latLng = L.latLng;
 import LatLng = L.LatLng;
 import LatLngExpression = L.LatLngExpression;
-import LatLngLiteral = L.LatLngLiteral;
 
 import { IPtStop } from "../core/ptStop.interface";
 
@@ -68,6 +65,9 @@ export class MapService {
     public markerClick: EventEmitter<any> = new EventEmitter();
     public markerEdit: EventEmitter<object> = new EventEmitter();
     public highlightType: string = "Stops";
+    public membersEditing: boolean;
+    public markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
+    public membersHighlightLayer: any = undefined;
     private ptLayer: any;
     private highlightFill: any = undefined;
     private highlight: any = undefined;
@@ -181,7 +181,6 @@ export class MapService {
             onEachFeature: (feature, layer) => {
                 // prevent rendering elements twice later
                 this.storageService.elementsRendered.add(feature.id);
-                this.enableClick(feature, layer);
                 this.enableDrag(feature, layer);
             },
             pointToLayer: (feature, latlng) => {
@@ -200,20 +199,16 @@ export class MapService {
      * @param feature
      * @param layer
      */
-    public enableClick(feature, layer): void {
-        layer.on("click", (event) => {
-            this.handleMarkerClick(feature);
-        });
-    }
-
-    /**
-     *
-     * @param feature
-     * @param layer
-     */
     public enableDrag(feature, layer) {
         layer.on("click", (e) => {
-            if (this.editingMode) {
+            if (!this.membersEditing) {
+            this.handleMarkerClick(feature);
+            }
+        });
+        layer.on("click", (e) => {
+            if (this.membersEditing) {
+                this.handleMembershipToggle(feature);
+            } else if (this.editingMode) {
                 const marker = e.target;
                 if (!marker.dragging._draggable) {
                     marker.dragging.enable();
@@ -328,7 +323,6 @@ export class MapService {
      */
     public findCoordinates(refId): LatLngExpression {
         const element = this.storageService.elementsMap.get(refId);
-        console.log(element);
         return { lat: element.lat, lng: element.lon };
     }
 
@@ -391,6 +385,17 @@ export class MapService {
     }
 
     /**
+     * Clears circles highlighting relation's current members.
+     */
+    public clearCircleHighlight() {
+        if (this.membersHighlightLayer && this.map.hasLayer(this.membersHighlightLayer)) {
+            console.log("LOG: delete existing highlight");
+            this.map.removeLayer(this.membersHighlightLayer);
+            this.membersHighlightLayer = undefined;
+        }
+    }
+
+    /**
      * Builds and creates relation highlight.
      * @param rel
      * @returns {boolean}
@@ -428,15 +433,20 @@ export class MapService {
             }
         }
 
-        if (latlngs.length > 0) {
+        // at least two nodes to form a polyline and not point
+        if (latlngs.length > 1) {
             this.highlightStroke = L.polyline(latlngs, HIGHLIGHT_STROKE).bindTooltip(rel.tags.name);
             this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL).bindTooltip(rel.tags.name);
             this.highlight = L.layerGroup([this.highlightStroke, this.highlightFill])
                 .addTo(this.map);
             return true;
         } else {
-            alert("Problem occurred while drawing line (it has zero length - no added stops?)." +
-                "\n\n" + JSON.stringify(rel));
+            if (rel.members.length <= 1) {
+                console.log("LOG (map s.) This is new relation -> do not highlight route");
+            } else {
+                alert("Problem occurred while drawing line (it has zero length - no added stops?)." +
+                    "\n\n" + JSON.stringify(rel));
+            }
             return false;
         }
     }
@@ -558,15 +568,35 @@ export class MapService {
     }
 
     /**
+     *
+     * @param feature
+     * @returns {number}
+     */
+    private getFeatureIdFromMarker(feature: any): number {
+        const featureTypeId = feature.id.split("/");
+        const featureType = featureTypeId[0];
+        const featureId = Number(featureTypeId[1]);
+        return featureId;
+    }
+
+    /**
      * Emits event when users clicks map marker.
      * @param feature
      */
     private handleMarkerClick(feature: any): void {
-        const featureTypeId = feature.id.split("/");
-        const featureType = featureTypeId[0];
-        const featureId = featureTypeId[1];
+        const featureId: number = this.getFeatureIdFromMarker(feature);
         this.markerClick.emit(featureId);
         // explores leaflet element
         // this.popupBtnClick.emit([featureType, featureId]);
+    }
+
+    /**
+     *
+     * @param feature
+     */
+    private handleMembershipToggle(feature: any): void {
+        const featureId: number = this.getFeatureIdFromMarker(feature);
+        const marker: object = feature.target; // FIXME DELETE?
+        this.markerMembershipToggleClick.emit({ featureId });
     }
 }

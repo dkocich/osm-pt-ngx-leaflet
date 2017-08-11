@@ -121,13 +121,15 @@ export class ProcessingService {
         for (const element of response.elements) {
             if (!this.storageService.elementsMap.has(element.id)) {
                 this.storageService.elementsMap.set(element.id, element);
-
+                if (!element.tags) {
+                    continue;
+                }
                 switch (element.type) {
                     case "node":
                         // only nodes are fully downloaded
                         this.storageService.elementsDownloaded.add(element.id);
 
-                        if (element.tags && (element.tags.bus === "yes" || element.tags.public_transport)) {
+                        if (element.tags.bus === "yes" || element.tags.public_transport) {
                             this.storageService.listOfStops.push(element);
                         }
                         break;
@@ -151,11 +153,10 @@ export class ProcessingService {
     public processMastersResponse(response: object) {
         response["elements"].forEach( (element) => {
             if (!this.storageService.elementsMap.has(element.id)) {
-                console.log("LOG (processing s.) New element added:",
-                    element.tags.public_transport === "route_master", element);
+                console.log("LOG (processing s.) New element added:", element);
                 this.storageService.elementsMap.set(element.id, element);
                 this.storageService.elementsDownloaded.add(element.id);
-                if (element.tags.public_transport === "route_master") {
+                if (element.tags.route_master) {
                     this.storageService.listOfMasters.push(element);
                 } else {
                     console.log("LOG (processing s.) WARNING: new elements? " , element);
@@ -188,6 +189,7 @@ export class ProcessingService {
 
                 switch (element.type) {
                     case "node":
+                        // this.storageService.elementsDownloaded.add(element.id);
                         if (element.tags && element.tags.public_transport) {
                             this.storageService.listOfStops.push(element);
                         }
@@ -254,8 +256,12 @@ export class ProcessingService {
      * @param element
      */
     public refreshTagView(element: IOsmEntity): void  {
-        this.storageService.currentElementsChange.emit(JSON.parse(JSON.stringify(element)));
-        this.refreshSidebarView("tag");
+        if (element) {
+            this.storageService.currentElementsChange.emit(JSON.parse(JSON.stringify(element)));
+            this.refreshSidebarView("tag");
+        } else {
+            this.refreshSidebarView("delete tag");
+        }
     }
 
     /**
@@ -263,7 +269,7 @@ export class ProcessingService {
      * @param rel
      */
     public refreshRelationView(rel: IPtRelation) {
-        this.storageService.listOfVariants = [];
+        this.storageService.listOfVariants.length = 0;
         for (const member of rel.members) {
             const routeVariant = this.getElementById(member.ref);
             this.storageService.listOfVariants.push(routeVariant);
@@ -275,37 +281,54 @@ export class ProcessingService {
      * Explores relation by downloading its members and highlighting stops position with a line.
      * @param rel
      * @param refreshTagView?
+     * @param refreshMasterView?
+     * @param zoomToElement?
      */
-    public exploreRelation(rel: any, refreshTagView?: boolean): void  {
+    public exploreRelation(rel: any, refreshTagView?: boolean, refreshMasterView?: boolean, zoomToElement?: boolean): void  {
+        this.mapService.clearCircleHighlight();
         const missingElements = [];
         const allowedRefs = ["stop", "stop_exit_only", "stop_entry_only",
             "platform", "platform_exit_only", "platform_entry_only"];
-        rel["members"].forEach( (member) => {
-           if (!this.storageService.elementsMap.has(member.ref) &&
-               ["node"].indexOf(member.type) > -1 && allowedRefs.indexOf(member.role) > -1 ) {
-               missingElements.push(member.ref);
-           }
-        });
-
+        // skip for new (created) relations
+        if (rel.id > 0) {
+            rel["members"].forEach( (member) => {
+               if (!this.storageService.elementsMap.has(member.ref) &&
+                   ["node"].indexOf(member.type) > -1 && allowedRefs.indexOf(member.role) > -1 ) {
+                   missingElements.push(member.ref);
+               }
+            });
+        }
         // check if relation and all its members are downloaded -> get missing
         if (!this.storageService.elementsDownloaded.has(rel.id)
             && rel["members"].length > 0 && missingElements.length > 0) {
             console.log("LOG (processing s.) Relation is not completely downloaded. Missing: " + missingElements.join(", "));
             this.membersToDownload.emit({ "rel": rel, "missingElements": missingElements });
-        } else if (this.storageService.elementsDownloaded.has(rel.id) || missingElements.length === 0) {
-            this.downloadedMissingMembers(rel, true);
+        } else if (this.storageService.elementsDownloaded.has(rel.id) || (missingElements.length === 0 && rel.id > 0) ||
+            (rel.id < 0 && rel["members"].length > 0)) {
+            console.log("podminka plati", rel.id, rel["members"].length);
+            this.downloadedMissingMembers(rel, true, zoomToElement);
+        } else if (rel.id < 0) {
+            this.refreshTagView(rel);
         } else {
             return alert("FIXME: Some other problem with relation - downloaded " + this.storageService.elementsDownloaded.has(rel.id) +
                 " , # of missing elements " + missingElements.length + " , # of members " + rel["members"].length + JSON.stringify(rel));
+        }
+        if (refreshMasterView) {
+            // delete rel.members; // FIXME ??? - TOO MANY RELATIONS?
+            this.refreshRelationView(rel);
+        }
+        if (refreshTagView) {
+            this.refreshTagView(rel);
         }
     }
 
     /**
      * Runs rest of the route's higlighting process after the missing members are downloaded.
      * @param rel
+     * @param zoomToElement
      * @param refreshTagView
      */
-    public downloadedMissingMembers(rel: any, refreshTagView?: boolean): void {
+    public downloadedMissingMembers(rel: any, zoomToElement: boolean, refreshTagView: boolean): void {
         if (this.mapService.highlightIsActive()) {
             this.mapService.clearHighlight();
         }
@@ -313,7 +336,10 @@ export class ProcessingService {
         if (this.mapService.showRoute(rel)) {
             this.mapService.drawTooltipFromTo(rel);
             this.filterStopsByRelation(rel);
-            this.mapService.map.fitBounds(this.mapService.highlightStroke.getBounds());
+            if (zoomToElement) {
+                console.log("LOG (processing s.) fitBounds", this.mapService.highlightStroke.length);
+                this.mapService.map.fitBounds(this.mapService.highlightStroke.getBounds());
+            }
         }
         if (refreshTagView) {
             this.refreshTagView(rel);
@@ -335,7 +361,8 @@ export class ProcessingService {
         if (!this.storageService.elementsMap.has(rel.members[0].ref)) {
             return alert("FIXME: first master's variant is not fully downloaded.");
         }
-        this.exploreRelation(this.getElementById(rel.members[0].ref), false);
+        // explore first variant and focus tag/rel. browsers on selected master rel.
+        this.exploreRelation(this.getElementById(rel.members[0].ref), false, false, false);
         // this.mapService.showRelatedRoutes(routeVariants);
         this.refreshTagView(rel);
         this.refreshRelationView(rel);
@@ -380,6 +407,9 @@ export class ProcessingService {
      * @param rel
      */
     public filterStopsByRelation(rel: IPtRelation): void {
+        if (rel === undefined) {
+            return alert("FIXME: relation is undefined");
+        }
         this.storageService.listOfStopsForRoute.length = 0;
         rel.members.forEach((mem) => {
             if (this.storageService.elementsMap.has(mem.ref)) {

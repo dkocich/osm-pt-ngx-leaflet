@@ -30,7 +30,11 @@ export class RelationBrowserComponent {
         );
     }
 
+    private isDownloaded(relId) {
+        this.storageService.elementsDownloaded.has(relId);
+    }
+
     private exploreRelation($event, rel: any): void {
-        this.processingService.exploreRelation(rel);
+        this.processingService.exploreRelation(rel, true, false, true);
     }
 }

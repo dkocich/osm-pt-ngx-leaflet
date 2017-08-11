@@ -5,6 +5,7 @@ import { ProcessingService } from "./processing.service";
 import { StorageService } from "./storage.service";
 
 import { IPtStop } from "../core/ptStop.interface";
+import { IPtRelationNew } from "../core/ptRelationNew.interface";
 
 @Injectable()
 export class EditingService {
@@ -58,6 +59,15 @@ export class EditingService {
                 });
             }
         );
+
+        this.mapService.markerMembershipToggleClick.subscribe(
+            /**
+             * @param data - contains { featureId: number } of clicked map marker
+             */
+            (data) => {
+                this.handleMarkerMembershipToggleClick(data.featureId);
+            }
+        );
     }
 
     /**
@@ -98,7 +108,7 @@ export class EditingService {
             this.simplifyMembers(editObj);
         }
 
-        if (["change tag", "change members"].indexOf(type) > -1 &&
+        if (["change tag", "change members", "toggle members"].indexOf(type) > -1 &&
             this.storageService.edits.length && this.shouldCombineChanges(editObj)) {
             this.combineChanges(editObj);
         } else {
@@ -128,38 +138,56 @@ export class EditingService {
                 this.storageService.elementsMap.set(editObj.id, chtElem);
                 break;
             case "change members":
-                console.log("LOG: I should change members", editObj);
+                console.log("LOG (editing s.) I should change members", editObj);
                 const chmElem = this.storageService.elementsMap.get(editObj.id);
                 chmElem.members = editObj.change.to;
                 this.storageService.elementsMap.set(editObj.id, chmElem);
                 break;
             case "add element":
-                console.log("LOG: I should add element", editObj);
+                console.log("LOG (editing s.) I should add element", editObj);
                 if (!this.storageService.elementsMap.get(editObj.id)) {
                     this.storageService.elementsMap.set(editObj.id, editObj.change.to);
                 } else {
-                    alert("FIXME: this new id already exist " +
+                    alert("FIXME: this new NODE's ID already exists " +
                         JSON.stringify(this.storageService.elementsMap.get(editObj.id)));
                 }
                 this.processingService.refreshTagView(this.storageService.elementsMap.get(editObj.id));
                 break;
             case "modify element":
-                console.log("LOG: I should modify element", editObj);
+                console.log("LOG (editing s.) I should modify element", editObj);
                 const modObj = this.storageService.elementsMap.get(editObj.id);
                 modObj.lat = editObj.change.to.lat;
                 modObj.lon = editObj.change.to.lon;
                 this.storageService.elementsMap.set(editObj.id, modObj);
+                break;
+            case "add route":
+                console.log("LOG (editing s.) I should add route", editObj);
+                if (!this.storageService.elementsMap.get(editObj.id)) {
+                    this.storageService.elementsMap.set(editObj.id, editObj.change.to);
+                    this.storageService.listOfRelations.push(editObj.change.to); // unshift
+                } else {
+                    alert("FIXME: this new ROUTE's ID already exists " +
+                        JSON.stringify(this.storageService.elementsMap.get(editObj.id)));
+                }
+                this.processingService.refreshTagView(this.storageService.elementsMap.get(editObj.id));
+                break;
+            case "toggle members":
+                console.log("LOG (editing s.) Should change members for this created route", editObj);
+                this.storageService.elementsMap.set(element.id, element); // save modified relation
                 break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(editObj));
         }
         if (["add tag", "remove tag", "change tag"].indexOf(type) > -1 ) {
             this.processingService.refreshTagView(element);
-        } else if (type === "change members") {
+        } else if (["change members"].indexOf(type) > -1 ) {
             this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(editObj.id));
-            this.processingService.exploreRelation(this.storageService.elementsMap.get(editObj.id));
-        } else if (type === "modify element") {
-            // TODO?
+            this.processingService.exploreRelation(this.storageService.elementsMap.get(editObj.id), false, false, false);
+        } else if (["toggle members"].indexOf(type) > -1 ) {
+            this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(editObj.id));
+        }
+        if (["add element", "add route"].indexOf(type) > -1 ) {
+            this.storageService.logStats();
         }
         this.storageService.syncEdits();
         this.updateCounter();
@@ -167,7 +195,7 @@ export class EditingService {
 
     /**
      * Handles adding of different PT elements and fills attributes automatically.
-     * @param type
+     * @param creatingElementOfType
      */
     public createElement (creatingElementOfType: string, event): void {
         let newId: number = this.findNewId();
@@ -206,6 +234,144 @@ export class EditingService {
         }
         let change = { from: undefined, to: newElement };
         this.addChange(newElement, "add element", change);
+    }
+
+    /**
+     * Creates completely new route with basic object structure.
+     */
+    public createRoute() {
+        const newId = this.findNewId();
+        const newRoute: IPtRelationNew = {
+            id: newId,
+            timestamp: new Date().toISOString().split(".")[0] + "Z",
+            version: 1,
+            changeset: -999,
+            uid: Number(localStorage.getItem("id")),
+            user: localStorage.getItem("display_name"),
+            type: "relation",
+            members: [ ],
+            tags: {
+                type: "route",
+                route: "bus",
+                ref: 0,
+                network: "",
+                operator: "",
+                name: "",
+                from: "",
+                to: "",
+                wheelchair: "",
+                colour: "",
+                "public_transport:version": 2
+            }
+        };
+        let change = { from: undefined, to: newRoute };
+        this.addChange(newRoute, "add route", change);
+    }
+
+    /**
+     * Handles process of node's membership toogle.
+     * @param featureId
+     */
+    private handleMarkerMembershipToggleClick(featureId) {
+        this.redrawMembersHighlight(featureId);
+    }
+
+    /**
+     * @param featureId
+     */
+    public redrawMembersHighlight(featureId?: number) {
+        const rel = JSON.parse(JSON.stringify(this.storageService.elementsMap.get(
+            this.storageService.currentElement.id))); // stringified to not influence new route edit
+        if (!rel || rel.type !== "relation") {
+            return alert("Relation was not found " + JSON.stringify(this.storageService.currentElement));
+        }
+        if (!featureId && rel.members.length === 0) {
+            return console.log("LOG: no members and nothing to highlight - ending"); // FIXME console.log
+        } else {
+            this.mapService.clearCircleHighlight();
+            const feature = this.storageService.elementsMap.get(featureId);
+            let change = { from: JSON.parse(JSON.stringify(rel)), to: undefined }; // stringified to not influece toggle edits
+
+            let shouldPush: boolean;
+            let memberIds = [];
+            // push if selected node is not in members; delete if selected node is in members
+            rel.members.forEach( (member, index) => {
+               if (member.type === "node") {
+                   if (member.ref === featureId) {
+                       memberIds.push(member.ref);
+                       delete rel.members[index];
+                       rel.members = rel.members.filter( (m) => {
+                           return m !== undefined;
+                       });
+                   }
+               }
+            });
+
+            // when ID is not in members -> add it to members and continue to highlight
+            if (memberIds.indexOf(featureId) === -1) {
+                shouldPush = true;
+            }
+
+            if (shouldPush || rel.members.length === 0) { // node should be added if there are no members before
+                let probableRole: string = "";
+                switch (feature.tags.public_transport) {
+                    case "platform":
+                    case "station":
+                        probableRole = "platform";
+                        break;
+                    case "stop_position":
+                        probableRole = "stop";
+                        break;
+                    default:
+                        alert("FIXME: suspicious role - " + feature.tags.public_transport);
+                        probableRole = "stop";
+                }
+                const memberToToggle = {
+                    type: "node",
+                    ref: featureId,
+                    role: probableRole
+                };
+                rel.members.push(memberToToggle);
+            }
+
+            // highlight all members (with/without selected node)
+            console.log("LOG (mapservice s.) This relation with members l.", rel, rel.members.length);
+            // get all members to highlight
+            if (rel["members"].length > 0) {
+                this.storageService.elementsToHighlight.clear();
+                for (let member of rel.members) {
+                    if (member.type === "node") { //  && member.ref !== featureId
+                        this.storageService.elementsToHighlight.add(member.ref);
+                    }
+                }
+            }
+
+            change.to = rel;
+            if (JSON.stringify(change.from) === JSON.stringify(change.to)) {
+                console.log("FIXME: relations (before, after) are identical!");
+            }
+            this.addChange(rel, "toggle members", change);
+
+            console.log("LOG (editing s.) Array highlight", Array.from(this.storageService.elementsToHighlight.values()));
+            const clickedNode: IPtStop = this.storageService.elementsMap.get(featureId);
+
+            // create array of circles to highlight and add to map
+            let membersHighlight = [];
+            for (let id of Array.from(this.storageService.elementsToHighlight.values())) {
+                const node = this.storageService.elementsMap.get(id);
+                console.log("LOG (editing s.) Creating circle for node:", node);
+                let circle = L.circleMarker([node.lat, node.lon], {
+                    radius: 15,
+                    color: "#00ffff",
+                    opacity: 0.75
+                });
+                console.log("LOG (editing s.) Created circle:", circle);
+                membersHighlight.push(circle);
+            }
+            console.log("LOG (editing s.) Show all circles array membersHighlight:", membersHighlight);
+            this.mapService.membersHighlightLayer = L.layerGroup(membersHighlight);
+            this.mapService.membersHighlightLayer.addTo(this.mapService.map);
+        }
     }
 
     /**
@@ -345,7 +511,7 @@ export class EditingService {
 
     /**
      * Checks if the last edit was made on the same tag like the new change.
-     * @param change
+     * @param editObj
      * @returns {boolean}
      */
     private shouldCombineChanges(editObj) {
@@ -354,7 +520,9 @@ export class EditingService {
             case "change tags":
                 return last["change"].to.key === editObj.change.from.key && last["change"].to.value === editObj.change.from.value;
             case "change members":
-                return last["id"] === editObj.id;
+                return last["id"] === editObj.id && last["type"] === "change members";
+            case "toggle members":
+                return last["id"] === editObj.id && last["type"] === "toggle members";
         }
     }
 
@@ -372,6 +540,7 @@ export class EditingService {
                 this.storageService.edits[this.storageService.edits.length - 1] = last;
                 break;
             case "change members":
+            case "toggle members":
                 last["change"].to = editObj.change.to;
                 break;
         }
@@ -441,7 +610,7 @@ export class EditingService {
                 chmElem.members = edit.change.to;
                 this.storageService.elementsMap.set(edit.id, chmElem);
                 this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(edit.id));
-                this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id));
+                this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id), false, false, false);
                 break;
             case "add element":
                 console.log("LOG (editing s.) Should recreate this created element", edit);
@@ -450,7 +619,7 @@ export class EditingService {
                 this.processingService.refreshTagView(this.storageService.elementsMap.get(edit.id));
                 break;
             case "modify element":
-                console.log("LOG: Should reapply element modification", edit);
+                console.log("LOG (editing s.) Should reapply element modification", edit);
                 const mElem = this.storageService.elementsMap.get(edit.id);
                 mElem.lat = edit.change.to.lat;
                 mElem.lon = edit.change.to.lon;
@@ -459,11 +628,25 @@ export class EditingService {
                 marker.setLatLng({ lat: mElem.lat, lng: mElem.lon });
                 this.storageService.elementsMap.set(edit.id, mElem);
                 break;
+            case "add route":
+                console.log("LOG (editing s.) Should recreate this created route", edit);
+                this.storageService.elementsMap.set(edit.id, edit.change.to);
+                this.storageService.listOfRelations.push(edit.change.to);
+                this.processingService.refreshTagView(this.storageService.elementsMap.get(edit.id));
+                break;
+            case "toggle members":
+                console.log("LOG (editing s.) Should redo this membership change", edit);
+                this.storageService.elementsMap.set(edit.id, edit.change.to);
+                this.processingService.filterStopsByRelation(edit.change.to);
+                this.processingService.exploreRelation(edit.change.to, false, false, false);
+                break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
         }
         const element = this.processingService.getElementById(edit["id"]);
-        this.processingService.zoomToElement(element);
+        if (edit.type !== "add route") {
+            this.processingService.zoomToElement(element);
+        }
     }
 
     /**
@@ -506,7 +689,7 @@ export class EditingService {
                 this.storageService.elementsMap.set(edit.id, chmElem);
                 // this.processingService.refreshSidebarView("stop");
                 this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(edit.id));
-                this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id));
+                this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id), false, false, true);
                 break;
             case "add element":
                 console.log("LOG (editing s.) Should undo this created element", edit);
@@ -514,7 +697,7 @@ export class EditingService {
                 this.processingService.refreshTagView(this.storageService.elementsMap.get(edit.id));
                 break;
             case "modify element":
-                console.log("LOG: Should undo element modification", edit);
+                console.log("LOG (editing s.) Should undo element modification", edit);
                 const mElem = this.storageService.elementsMap.get(edit.id);
                 mElem.lat = edit.change.from.lat;
                 mElem.lon = edit.change.from.lon;
@@ -523,13 +706,31 @@ export class EditingService {
                 marker.setLatLng({ lat: mElem.lat, lng: mElem.lon });
                 this.storageService.elementsMap.set(edit.id, mElem);
                 break;
+            case "add route":
+                console.log("LOG (editing s.) Should undo this created route", edit);
+                this.storageService.elementsMap.set(edit.id, edit.change.to);
+                this.storageService.listOfRelations.length = this.storageService.listOfRelations.length - 1;
+                this.processingService.refreshTagView(undefined);
+                break;
+            case "toggle members":
+                console.log("LOG (editing s.) Should undo this membership change", edit);
+                this.storageService.elementsMap.set(edit.id, edit.change.from);
+                this.processingService.filterStopsByRelation(edit.change.from);
+                this.processingService.exploreRelation(edit.change.from, false, false, true);
+                break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
         }
         const element = this.processingService.getElementById(edit["id"]);
-        this.processingService.zoomToElement(element);
+        if (edit.type !== "add route") {
+            this.processingService.zoomToElement(element);
+        }
     }
 
+    /**
+     * Deletes all unnecesary attributes from member object in a relation.
+     * @param editObj
+     */
     private simplifyMembers(editObj) {
         for (const member of editObj.change.to) {
             for (const key of Object.keys(member)) {
@@ -540,6 +741,11 @@ export class EditingService {
         }
     }
 
+    /**
+     * Compares strings of from/to changes in editation object.
+     * @param editObj
+     * @returns {boolean}
+     */
     private changeIsEqual(editObj) {
         console.log(JSON.stringify(editObj.change.from).length, JSON.stringify(editObj.change.to).length);
         return JSON.stringify(editObj.change.from) === JSON.stringify(editObj.change.to);
