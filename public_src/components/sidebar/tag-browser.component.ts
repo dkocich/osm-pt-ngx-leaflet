@@ -40,7 +40,7 @@ export class TagBrowserComponent {
                 private cd: ChangeDetectorRef) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.processingService.refreshSidebarViews$.subscribe(
             (data) => {
                 if (data === "tag") {
@@ -64,11 +64,11 @@ export class TagBrowserComponent {
         );
     }
 
-    private checkUnchanged(change): boolean {
+    private checkUnchanged(change: any): boolean {
         return change.from.key === change.to.key && change.from.value === change.to.value;
     }
 
-    private createChange(type: string, key?: string, event?): void {
+    private createChange(type: string, key?: string, event?: any): void {
         let change: object;
 
         if (type === "change tag") {
@@ -127,7 +127,7 @@ export class TagBrowserComponent {
         this.tagKey = value;
     }
 
-    private toggleType(key) {
+    private toggleType(key: string): void {
         let change;
         if (Object.keys(this.currentElement.tags).indexOf(key) === -1) {
             this.currentElement.tags[key] = "yes";
@@ -147,15 +147,15 @@ export class TagBrowserComponent {
         this.tagValue = value;
     }
 
-    private isUnchanged() {
+    private isUnchanged(): boolean {
         return !this.tagKey || !this.tagValue;
     }
 
-    private keyChange($event) {
+    private keyChange($event: any): void {
         console.log("LOG (tag-browser)", $event);
     }
 
-    private valueChange($event) {
+    private valueChange($event: any): void {
         console.log("LOG (tag-browser)", $event);
     }
 }

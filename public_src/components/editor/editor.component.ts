@@ -27,7 +27,7 @@ export class EditorComponent {
                 private editingService: EditingService, private authService: AuthService) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.editingService.currentTotalSteps.subscribe(
             (data) => {
                 // console.log("LOG (editor) subscribed to counter ", data);
@@ -43,7 +43,7 @@ export class EditorComponent {
         });
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         if (this.storageService.getLocalStorageItem("edits")) {
             this.editModal.show();
         } else {

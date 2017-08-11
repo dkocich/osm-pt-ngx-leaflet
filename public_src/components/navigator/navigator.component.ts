@@ -21,7 +21,7 @@ export class NavigatorComponent {
         this.address = "";
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.mapService.disableMouseEvent("goto");
         this.mapService.disableMouseEvent("place-input");
         this.map = this.mapService.map;

@@ -22,7 +22,7 @@ export class AuthComponent {
         this.imgHref = this.storageService.getImgHref();
     }
 
-    private getDisplayName() {
+    private getDisplayName(): string {
         return this.storageService.getDisplayName();
     }
 
@@ -30,7 +30,7 @@ export class AuthComponent {
         this.authService.oauth.authenticate(this.gotAuthenticatedCallback.bind(this));
     }
 
-    private gotAuthenticatedCallback(err, response): void {
+    private gotAuthenticatedCallback(err: any, response: any): void {
         this.showDetails();
     }
 
@@ -40,7 +40,7 @@ export class AuthComponent {
         this.storageService.clearLocalStorage();
     }
 
-    private done(err, res): any {
+    private done(err: any, res: any): any {
         if (err) {
             document.getElementById("user").innerHTML = "error! try clearing your browser cache";
             document.getElementById("user").style.display = "block";
@@ -75,7 +75,7 @@ export class AuthComponent {
         }, this.gotDetailsCallback.bind(this));
     }
 
-    private gotDetailsCallback(err, xmlResponse): void {
+    private gotDetailsCallback(err: any, xmlResponse: any): void {
         this.done(err, xmlResponse);
     }
 }

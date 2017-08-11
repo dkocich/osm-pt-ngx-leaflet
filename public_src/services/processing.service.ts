@@ -117,7 +117,7 @@ export class ProcessingService {
      *
      * @param response
      */
-    public processNodeResponse(response) {
+    public processNodeResponse(response: any): void {
         for (const element of response.elements) {
             if (!this.storageService.elementsMap.has(element.id)) {
                 this.storageService.elementsMap.set(element.id, element);
@@ -150,7 +150,7 @@ export class ProcessingService {
      *
      * @param response
      */
-    public processMastersResponse(response: object) {
+    public processMastersResponse(response: object): void {
         response["elements"].forEach( (element) => {
             if (!this.storageService.elementsMap.has(element.id)) {
                 console.log("LOG (processing s.) New element added:", element);
@@ -210,7 +210,7 @@ export class ProcessingService {
     /**
      * Highlights downloaded stop areas by rectangles.
      */
-    public drawStopAreas() {
+    public drawStopAreas(): void {
         const boundaries = [];
         for (const area of this.storageService.listOfAreas) {
             const coords = [];
@@ -265,10 +265,10 @@ export class ProcessingService {
     }
 
     /**
-     *
+     * Reinitiates a list of route's variants and refreshes relation browser window.
      * @param rel
      */
-    public refreshRelationView(rel: IPtRelation) {
+    public refreshRelationView(rel: IPtRelation): void {
         this.storageService.listOfVariants.length = 0;
         for (const member of rel.members) {
             const routeVariant = this.getElementById(member.ref);

@@ -27,7 +27,7 @@ export class AppComponent {
                 private loadingService: LoadingService, private processingService: ProcessingService) {
     }
 
-    ngOnInit() {
+    ngOnInit(): any {
         const map = L.map("map", {
             center: L.latLng(49.686, 18.351),
             layers: [this.mapService.baseMaps.CartoDB_light],
