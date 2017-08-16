@@ -3,7 +3,7 @@
     <i class="fa fa-download"></i>
 </button>
 
-<button *ngIf="isAuthenticated()" id="upload-data" class="btn btn-default on-map" [class.btn-primary]="downloading"
+<button *ngIf="isAuthenticated() && hasEdits()" id="upload-data" class="btn btn-default on-map" [class.btn-primary]="downloading"
         tooltip="Upload changes to OSM" container="body" (click)="showUploadModal()">
     <i class="fa fa-upload"></i>
 </button>
@@ -75,7 +75,11 @@
                                [(ngModel)]="source">
                     </div>
                     <div>
+                        <button class="btn btn-default on-map" (click)="verifyUpload()"
+                                tooltip="Verify changeset consistency" container="body"><i class="fa fa-chec">Verify</i>
+                        </button>
                         <button type="button" class="btn btn-success pull-right" (click)="uploadData()"
+                                tooltip="Confirm, upload and close OSM changeset" container="body"
                                 [disabled]="!uploadForm.form.valid && !uploadForm.form.untouched">Confirm upload</button>
                     </div>
                 </form>

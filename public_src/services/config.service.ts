@@ -12,7 +12,7 @@ export class ConfigService {
     static apiTestUrl = "https://master.apis.dev.openstreetmap.org";
     static apiTestConsumerKey = "myPQ4WewlhUBa5zRs00zwHjWV4nEIsrg6SAF9zat";
     static apiTestConsumerSecret = "7hAymlaBzyUqGU0ecbdUqXgYt4w59ru3t3JIM9xp";
-    static appName = p["name"] + " v" + p["version"];
+    static appName = "OSMPTeditor" + " v" + p["version"];
 
     static hereAppId = "wCnyB1NFdlBOGYDZ8wvz";
     static hereAppCode = "n8AtIn2aXHff9D-Dp_S6rA";
