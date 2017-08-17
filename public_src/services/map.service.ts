@@ -360,7 +360,7 @@ export class MapService {
         const latlngs = Array();
         this.storageService.stopsForRoute = [];
         for (const member of rel.members) {
-            if (member.type === "node" && ["stop", "stop_entry_only"].indexOf(member.role) > -1) {
+            if (member.type === "node" && ["stop", "stop_entry_only", "stop_exit_only"].indexOf(member.role) > -1) {
                 this.storageService.stopsForRoute.push(member.ref);
                 const latlng: LatLngExpression = this.findCoordinates(member.ref);
                 if (latlng) {
@@ -412,6 +412,9 @@ export class MapService {
             }
             else if (member.type === "way") {
                 this.storageService.waysForRoute.push(member.ref);
+            }
+            else if (member.type === "relation") {
+                this.storageService.relationsForRoute.push(member.ref);
             }
         }
 
@@ -465,9 +468,9 @@ export class MapService {
      */
     public drawTooltipFromTo(rel: any): void {
         const latlngFrom: LatLngExpression = this.findCoordinates(
-            this.storageService.stopsForRoute[0]["id"]);
+            this.storageService.stopsForRoute[0]); // get first and last ID reference
         const latlngTo: LatLngExpression = this.findCoordinates(
-            this.storageService.stopsForRoute[this.storageService.stopsForRoute.length - 1]["id"]);
+            this.storageService.stopsForRoute[this.storageService.stopsForRoute.length - 1]);
 
         const from = rel.tags.from || "#FROM";
         const to = rel.tags.to || "#TO";

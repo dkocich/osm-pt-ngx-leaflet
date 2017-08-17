@@ -24,10 +24,11 @@ export class StorageService {
     public listOfStopsForRoute: object[] = [];
     public listOfRelationsForStop: object[] = [];
 
-    public stopsForRoute: object[] = [];
-    public platformsForRoute: object[] = [];
-    public waysForRoute: object[] = [];
-    public relationsForRoute: object[] = [];
+    public stopsForRoute: number[] = [];
+    public platformsForRoute: number[] = [];
+    public waysForRoute: number[] = [];
+    public relationsForRoute: number[] = [];
+
     public currentElement: IOsmEntity;
     public currentElementsChange = new EventEmitter();
 
