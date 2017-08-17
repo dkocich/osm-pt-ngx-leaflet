@@ -50,11 +50,9 @@ import { StorageService } from "./services/storage.service";
 
 import { KeysPipe } from "./components/pipes/keys.pipe";
 
-if (!(window.location.href).indexOf("localhost")) {
-    Raven
-        .config("https://6603d76a7ee14d6b8f2cee2680870187@sentry.io/183940")
-        .install();
-}
+Raven
+    .config("https://6603d76a7ee14d6b8f2cee2680870187@sentry.io/183940")
+    .install();
 
 export class RavenErrorHandler implements ErrorHandler {
     public handleError(err: any): void {
