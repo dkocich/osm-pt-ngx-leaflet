@@ -100,4 +100,12 @@ export class TransporterComponent {
         });
         this.queryRaw = decodeURIComponent(filtered[0].raw);
     }
+
+    private hasEdits(): boolean {
+        return this.storageService.edits.length > 0;
+    }
+
+    private verifyUpload(): void {
+        this.overpassService.uploadData({ source: "test upload source", comment: "test upload comment" }, true);
+    }
 }
