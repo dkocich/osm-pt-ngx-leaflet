@@ -18,6 +18,8 @@ export class ConfigService {
     static hereAppCode = "n8AtIn2aXHff9D-Dp_S6rA";
     static mapboxToken = "pk.eyJ1IjoiZGtvY2ljaCIsImEiOiJjajR5ZGc5b3kxbnozMnFwZjI4eWo4N2piIn0.EizwwnWouhfRkJznDpEWCw";
 
+    static bingKey = "As5ICxO1G_6q6G0eCS-rSO_GqX33zkjJFiqfaVFosmt8FCgaabs7bCt7xrhTxxEj";
+
     public cfgFilterLines: boolean = true;
     public minDownloadZoom = 15;
     public minDownloadDistance = 1500;

@@ -9,7 +9,7 @@
     "removeComments": false,
     "noImplicitAny": false,
     "skipLibCheck": true,
-    "lib": ["es2015", "es2017", "dom"],
+    "lib": ["es2015", "es2015.promise", "es2017", "dom"],
     "typeRoots": [ "node_modules/@types" ],
     "types": [
       "node",

@@ -7,6 +7,8 @@ import { StorageService } from "./storage.service";
 
 import * as L from "leaflet";
 
+// import { bing } from "";
+
 import { IPtStop } from "../core/ptStop.interface";
 
 const DEFAULT_ICON = L.icon({
@@ -73,6 +75,9 @@ export class MapService {
     private markerFrom: any = undefined;
     private markerTo: any = undefined;
 
+    private LTileLayerBing: any = require("leaflet-bing-layer");
+
+
     constructor(private http: Http, private storageService: StorageService,
                 private configService: ConfigService, private loadingService: LoadingService) {
 
@@ -80,6 +85,12 @@ export class MapService {
             Empty: L.tileLayer("", {
                 attribution: ""
             }),
+            // Bing: L.tileLayer("https://dev.virtualearth.net/REST/v1/Imagery/Metadata/AerialWithLabels/"
+            //     + this.map.getCenter().lat + "," + this.map.getCenter().lng + "?zl={z}&key="
+            //     + ConfigService.bingKey + "&uriScheme=https", {
+            //     attribution: `TEST`
+            // })
+            Bing_aerial: this.LTileLayerBing.Bing(ConfigService.bingKey, { type: "AerialWithLabels" }),
             CartoDB_dark: L.tileLayer("http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png", {
                 attribution: `&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap
                     </a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>`,
