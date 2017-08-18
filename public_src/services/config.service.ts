@@ -14,6 +14,10 @@ export class ConfigService {
     static apiTestConsumerSecret = "7hAymlaBzyUqGU0ecbdUqXgYt4w59ru3t3JIM9xp";
     static appName = p["name"] + " v" + p["version"];
 
+    static hereAppId = "wCnyB1NFdlBOGYDZ8wvz";
+    static hereAppCode = "n8AtIn2aXHff9D-Dp_S6rA";
+    static mapboxToken = "pk.eyJ1IjoiZGtvY2ljaCIsImEiOiJjajR5ZGc5b3kxbnozMnFwZjI4eWo4N2piIn0.EizwwnWouhfRkJznDpEWCw";
+
     public cfgFilterLines: boolean = true;
     public minDownloadZoom = 15;
     public minDownloadDistance = 1500;
