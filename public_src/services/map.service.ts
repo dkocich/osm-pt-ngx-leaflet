@@ -104,12 +104,45 @@ export class MapService {
                     Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community `,
                 maxNativeZoom: 19, maxZoom: 22
             }),
-            // TODO add authorization
-            MapBox_imagery: L.tileLayer("http://{s}.tiles.mapbox.com/v4/{z}/{x}/{y}.png", {
+            HERE_satelliteDay: L.tileLayer("http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}", {
+                attribution: "Map &copy; 1987-2014 <a href='http://developer.here.com'>HERE</a>",
+                subdomains: "1234",
+                mapID: "newest",
+                app_id: ConfigService.hereAppId,
+                app_code: ConfigService.hereAppCode,
+                base: "aerial",
+                maxNativeZoom: 19,
+                maxZoom: 20,
+                type: "maptile",
+                language: "eng",
+                format: "png8",
+                size: "256"
+            }),
+            HERE_hybridDay: L.tileLayer("http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}", {
+                attribution: "Map &copy; 1987-2014 <a href='http://developer.here.com'>HERE</a>",
+                subdomains: "1234",
+                mapID: "newest",
+                app_id: ConfigService.hereAppId,
+                app_code: ConfigService.hereAppCode,
+                base: "aerial",
+                maxNativeZoom: 19,
+                maxZoom: 20,
+                type: "maptile",
+                language: "eng",
+                format: "png8",
+                size: "256",
+            }),
+            MapBox_imagery: L.tileLayer("http://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=" + ConfigService.mapboxToken, {
                 attribution: `<a href='https://www.mapbox.com/about/maps/'>&copy; Mapbox</a>,
                 <a href='http://www.openstreetmap.org/about/'>&copy; OpenStreetMap</a> and
                 <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10'>Improve this map</a>`,
-                maxNativeZoom: 19, maxZoom: 22
+                maxNativeZoom: 20, maxZoom: 22,
+            }),
+            MapBox_streets: L.tileLayer("http://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=" + ConfigService.mapboxToken, {
+                attribution: `<a href='https://www.mapbox.com/about/maps/'>&copy; Mapbox</a>,
+                <a href='http://www.openstreetmap.org/about/'>&copy; OpenStreetMap</a> and
+                <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10'>Improve this map</a>`,
+                maxNativeZoom: 20, maxZoom: 22,
             }),
             OSM_hot: L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
                 attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
