@@ -31,9 +31,11 @@
     stops: {{stats.s}}, relations: {{stats.r}}, areas: {{stats.a}} masters: {{stats.m}}
 </div>
 
-<div id="selection" *ngIf="currentElement">
-    <h3 tooltip="Zoom to current element" container="body" class="explore" (click)="zoomTo(currentElement)">Current selection</h3>
-    {{currentElement.tags.name || currentElement.tags.public_transport || ""}} (id: {{currentElement.id || ""}}, type: {{currentElement.type || ""}})
+<div id="selection" class="text-center" *ngIf="currentElement">
+    <h5 tooltip="Zoom to current element" container="body" class="explore" (click)="zoomTo(currentElement)">Current selection</h5>
+    <p class="medium">{{currentElement.tags.name || currentElement.tags.public_transport || ""}} (id: {{currentElement.id || ""}}, type: {{currentElement.type || ""}})</p>
+    <span tooltip="Cancel current selection" container="body" class="explore" (click)="cancelSelection()">
+        <i class="fa fa-times" aria-hidden="true"></i> Cancel </span>
     <span tooltip="Show more information" container="body" class="explore" (click)="showInfo(currentElement)">
-        <i class="fa fa-question-circle" aria-hidden="true"></i></span>
+        <i class="fa fa-question-circle" aria-hidden="true"></i> Info </span>
 </div>

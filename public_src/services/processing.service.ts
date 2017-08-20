@@ -255,12 +255,12 @@ export class ProcessingService {
      *
      * @param element
      */
-    public refreshTagView(element: IOsmEntity): void  {
+    public refreshTagView(element: any): void  {
         if (element) {
             this.storageService.currentElementsChange.emit(JSON.parse(JSON.stringify(element)));
             this.refreshSidebarView("tag");
         } else {
-            this.refreshSidebarView("delete tag");
+            this.refreshSidebarView("cancel selection");
         }
     }
 
@@ -450,5 +450,9 @@ export class ProcessingService {
             this.mapService.map.fitBounds(polyline.getBounds());
             console.log("LOG (processing s.) FitBounds to relation geometry");
         }
+    }
+
+    public cancelSelection(): void {
+        this.refreshTagView(undefined);
     }
 }
