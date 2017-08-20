@@ -1,9 +1,9 @@
 <div class="content panel panel-body panel-default">
     <div *ngIf="listOfVariants.length === 0">
         <h4 class="text-center text-danger">Selected relation has no master relation.</h4>
-        <div class="text-center">
+        <div *ngIf="editingMode" class="text-center">
             <button class="btn btn-success" tooltip="Create master for currently selected element/relation"
-                    container="body" disabled>Create master rel.</button>
+                    container="body" (click)="createMaster()" [disabled]="hasMaster(currentElement.id)">Create master rel.</button>
             <button class="btn btn-default" tooltip="Search existing master relation by attributes"
                     container="body" disabled>Find existing master</button>
         </div>
@@ -12,12 +12,17 @@
         This master relation contains {{listOfVariants.length}} route variants.
         <h4>Route master's variants</h4>
         <div *ngFor="let rel of listOfVariants">
-            <div id="{{rel.id}}" class="explore" (dblclick)="exploreRelation($event, rel)">
+            <div id="{{rel.id}}" class="explore" (dblclick)="exploreRelation($event, rel.id)">
                 <ng-container *ngIf="!rel">One incomplete relation (double click to download)...</ng-container>
-                <i *ngIf="rel && isDownloaded(rel.id)" class="fa fa-check-square-o" aria-hidden="true"
-                   tooltip="Route is fully downloaded" container="body"></i>
-                <i *ngIf="rel && !isDownloaded(rel.id)" class="fa fa-square-o" aria-hidden="true"
-                   tooltip="Route is not fully downloaded" container="body"></i>
+                <span *ngIf="rel.id < 0">
+                    <i class="fa fa-plus" tooltip="This relation is created by you" container="body" aria-hidden="true"></i>
+                </span>
+                <span *ngIf="rel.id > 0">
+                    <i *ngIf="rel && isDownloaded(rel.id)" class="fa fa-check-square-o" aria-hidden="true"
+                       tooltip="Route is fully downloaded" container="body"></i>
+                    <i *ngIf="rel && !isDownloaded(rel.id)" class="fa fa-square-o" aria-hidden="true"
+                       tooltip="Route is not fully downloaded" container="body"></i>
+                </span>
                 <span>{{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}</span>
             </div>
         </div>

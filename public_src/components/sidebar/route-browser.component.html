@@ -45,7 +45,13 @@
             <ng-container *ngIf="!hasMaster(rel.id)">
                 <div id="{{rel.id}}">
                     <span class="explore" (dblclick)="exploreRelation($event, rel)">
-                        <i *ngIf="rel.id < 0" class="fa fa-plus" tooltip="This relation is created by you" container="body" aria-hidden="true"></i>
+                        <span *ngIf="rel.id < 0">
+                            <i *ngIf="!hasMaster(rel.id)" class="fa fa-times-circle" aria-hidden="true"
+                               tooltip="Route doesn't have master relation" container="body"></i>
+                            <i *ngIf="hasMaster(rel.id)" class="fa fa-check-circle" aria-hidden="true"
+                               tooltip="Route has master relation" container="body"></i>
+                            <i class="fa fa-plus" tooltip="This relation is created by you" container="body" aria-hidden="true"></i>
+                        </span>
                         <span *ngIf="rel.id > 0">
                             <i *ngIf="isDownloaded(rel.id)" class="fa fa-check-square-o" aria-hidden="true"
                                tooltip="Route is fully downloaded" container="body"></i>

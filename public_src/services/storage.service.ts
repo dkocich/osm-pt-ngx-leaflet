@@ -29,6 +29,8 @@ export class StorageService {
     public waysForRoute: number[] = [];
     public relationsForRoute: number[] = [];
 
+    public idsHaveMaster = new Set();
+
     public currentElement: IOsmEntity;
     public currentElementsChange = new EventEmitter();
 

@@ -443,10 +443,14 @@ export class ProcessingService {
                     }
                 }
             }
-            if (coords.length < 2) {
+            if (element.tags["type"] === "route_master") {
+                // TODO zoom to BBOX of all contained rel's if they have coords...
+                return;
+            }
+            if (coords.length < 2) { // do not zoom to point
                 return alert("FIXME: Not enough coordinates to fitBounds");
             }
-            const polyline = L.polyline(coords);
+            const polyline = L.polyline(coords); // zoom to coords of a relation
             this.mapService.map.fitBounds(polyline.getBounds());
             console.log("LOG (processing s.) FitBounds to relation geometry");
         }
