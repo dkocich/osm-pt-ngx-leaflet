@@ -32,6 +32,8 @@ export class RelationBrowserComponent {
                 } else if (data === "cancel selection") {
                     this.currentElement = undefined;
                     delete this.currentElement;
+                    this.storageService.listOfVariants.length = 0;
+                    this.listOfVariants.length = 0;
                 }
             }
         );
@@ -62,8 +64,11 @@ export class RelationBrowserComponent {
             true, false, true);
     }
 
-    private hasMaster(relId: number): boolean {
-        return this.storageService.idsHaveMaster.has(relId);
+    private hasMaster(): boolean {
+        if (this.currentElement) {
+            return this.storageService.idsHaveMaster.has(this.currentElement.id);
+        }
+        return false;
     }
 
     private createMaster(): void {

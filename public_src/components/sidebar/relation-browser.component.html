@@ -3,7 +3,7 @@
         <h4 class="text-center text-danger">Selected relation has no master relation.</h4>
         <div *ngIf="editingMode" class="text-center">
             <button class="btn btn-success" tooltip="Create master for currently selected element/relation"
-                    container="body" (click)="createMaster()" [disabled]="hasMaster(currentElement.id)">Create master rel.</button>
+                    container="body" (click)="createMaster()" [disabled]="hasMaster()">Create master rel.</button>
             <button class="btn btn-default" tooltip="Search existing master relation by attributes"
                     container="body" disabled>Find existing master</button>
         </div>
