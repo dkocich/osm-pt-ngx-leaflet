@@ -1,4 +1,4 @@
-import {Component, ViewChild } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 
 import { ProcessingService } from "../../services/processing.service";
 import { StorageService } from "../../services/storage.service";
@@ -94,5 +94,17 @@ export class RelationBrowserComponent {
 
     private hideMasterModal(): void {
         this.masterModal.hide();
+    }
+
+    private isAlreadyAdded(relId: number): boolean {
+        let rel = this.storageService.elementsMap.get(relId);
+        let found = rel.members.filter( (member) => {
+            return member.ref === this.currentElement.id;
+        });
+        if (found.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
