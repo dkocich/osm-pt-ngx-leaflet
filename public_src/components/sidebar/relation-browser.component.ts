@@ -1,8 +1,9 @@
-import { Component } from "@angular/core";
+import {Component, ViewChild } from "@angular/core";
 
 import { ProcessingService } from "../../services/processing.service";
 import { StorageService } from "../../services/storage.service";
 import { EditingService } from "../../services/editing.service";
+import { ModalDirective } from "ngx-bootstrap";
 
 @Component({
     providers: [],
@@ -14,9 +15,10 @@ import { EditingService } from "../../services/editing.service";
     template: require<any>("./relation-browser.component.html")
 })
 export class RelationBrowserComponent {
-    private currentElement: any = { type: "not selected" };
+    private currentElement;
     private listOfVariants = this.storageService.listOfVariants;
     private editingMode: boolean;
+    private listOfMasters = this.storageService.listOfMasters;
 
     constructor(private storageService: StorageService,
                 private processingService: ProcessingService,
@@ -27,7 +29,7 @@ export class RelationBrowserComponent {
         this.processingService.refreshSidebarViews$.subscribe(
             (data) => {
                 if (data === "tag") {
-                    console.log("LOG (tag-browser) Current selected element changed - ", data);
+                    console.log("LOG (relation-browser) Current selected element changed - ", data);
                     this.currentElement = this.storageService.currentElement;
                 } else if (data === "cancel selection") {
                     this.currentElement = undefined;
@@ -42,14 +44,14 @@ export class RelationBrowserComponent {
             (data) => {
                 if (data === "relation") {
                     this.listOfVariants = this.storageService.listOfVariants;
-                    console.log("LOG (relation) List of variants " , this.storageService.listOfVariants,
+                    console.log("LOG (relation-browser) List of variants " , this.storageService.listOfVariants,
                         " currentElement", this.storageService.currentElement);
                 }
             }
         );
         this.editingService.editingMode.subscribe(
             (data) => {
-                console.log("LOG (route-browser) Editing mode change in routeBrowser - ", data);
+                console.log("LOG (relation-browser) Editing mode change in routeBrowser - ", data);
                 this.editingMode = data;
             }
         );
@@ -66,16 +68,31 @@ export class RelationBrowserComponent {
 
     private hasMaster(): boolean {
         if (this.currentElement) {
-            return this.storageService.idsHaveMaster.has(this.currentElement.id);
+            return this.storageService.idsHaveMaster.has(this.currentElement.id); // create only one route_master for each element
         }
-        return false;
+        return false; // turned on to create route_masters without members
     }
 
     private createMaster(): void {
-        if (this.currentElement.id) {
+        // FIXME - allow to create route_master of route_masters later
+        if (this.currentElement && this.currentElement.tags.type !== "route_master") {
             this.editingService.createMaster(this.currentElement.id);
         } else {
             this.editingService.createMaster();
         }
+    }
+
+    private changeRouteMasterMembers(routeMasterId: number): void {
+        this.editingService.changeRouteMasterMembers(this.currentElement.id, routeMasterId);
+    }
+
+    @ViewChild("masterModal") public masterModal: ModalDirective;
+    public showMasterModal(): void {
+        this.masterModal.show();
+        // this.mapService.disableMouseEvent("modalDownload");
+    }
+
+    private hideMasterModal(): void {
+        this.masterModal.hide();
     }
 }

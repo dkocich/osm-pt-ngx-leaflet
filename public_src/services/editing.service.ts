@@ -195,8 +195,10 @@ export class EditingService {
         if (["add tag", "remove tag", "change tag"].indexOf(type) > -1 ) {
             this.processingService.refreshTagView(element);
         } else if (["change members"].indexOf(type) > -1 ) {
-            this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(editObj.id));
-            this.processingService.exploreRelation(this.storageService.elementsMap.get(editObj.id), false, false, false);
+            if (element.tags.type === "route") { // to prevent zoom error for route_masters
+                this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(editObj.id));
+                this.processingService.exploreRelation(this.storageService.elementsMap.get(editObj.id), false, false, false);
+            }
         } else if (["toggle members"].indexOf(type) > -1 ) {
             this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(editObj.id));
         }
@@ -313,13 +315,35 @@ export class EditingService {
             newMasterRel.members.push({
                 type: "relation",
                 ref: relId,
-                role: undefined
+                role: ""
             });
             this.storageService.idsHaveMaster.add(relId);
             this.storageService.queriedMasters.add(relId); // FIXME ? Is it rel or master
         }
         let change = { from: undefined, to: newMasterRel };
         this.addChange(newMasterRel, "create master", change);
+    }
+
+    /**
+     * Adds/removes members from route_master relation.
+     * @param {number} routeId
+     * @param {number} masterId
+     */
+    public changeRouteMasterMembers(relId: number, routeMasterId: number): void {
+        console.log("LOOOOOOG test ", typeof relId, relId, typeof routeMasterId, routeMasterId);
+        let routeMaster = this.storageService.elementsMap.get(routeMasterId);
+        let change: any = { from: JSON.parse(JSON.stringify(routeMaster.members)) };
+        let newMember = {
+            type: "relation",
+            ref: relId,
+            role:  ""
+        };
+        const newOrder = routeMaster.members;
+        newOrder.push(newMember);
+        change.to = JSON.parse(JSON.stringify(newOrder));
+        this.storageService.idsHaveMaster.add(relId);
+        this.storageService.queriedMasters.add(relId);
+        this.addChange(routeMaster, "change members", change);
     }
 
     /**
@@ -663,6 +687,12 @@ export class EditingService {
                 console.log("LOG (editing s.) Should reapply this changed members", edit);
                 let chmElem = this.storageService.elementsMap.get(edit.id);
                 chmElem.members = edit.change.to;
+                if (chmElem.tags.type === "route_master") {
+                    this.storageService.idsHaveMaster.add(
+                        chmElem.members[chmElem.members.length - 1].ref);
+                    this.storageService.queriedMasters.add(
+                        chmElem.members[chmElem.members.length - 1].ref);
+                }
                 this.storageService.elementsMap.set(edit.id, chmElem);
                 this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(edit.id));
                 this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id), false, false, false);
@@ -707,7 +737,7 @@ export class EditingService {
                 alert("Current change type was not recognized " + JSON.stringify(edit));
         }
         const element = this.processingService.getElementById(edit["id"]);
-        if (edit.type !== "add route") {
+        if (edit.type !== "add route" || element.tags.type !== "route_master") {
             this.processingService.zoomToElement(element);
         }
     }
@@ -747,6 +777,12 @@ export class EditingService {
             case "change members":
                 console.log("LOG (editing s.) Should undo this changed members", edit);
                 let chmElem = this.storageService.elementsMap.get(edit.id);
+                if (chmElem.tags.type === "route_master") {
+                    this.storageService.idsHaveMaster.delete(
+                        chmElem.members[chmElem.members.length - 1].ref);
+                    this.storageService.queriedMasters.delete(
+                        chmElem.members[chmElem.members.length - 1].ref);
+                }
                 delete chmElem.members;
                 chmElem.members = edit.change.from;
                 this.storageService.elementsMap.set(edit.id, chmElem);
