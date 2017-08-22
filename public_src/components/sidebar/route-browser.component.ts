@@ -16,7 +16,7 @@ import { StorageService } from "../../services/storage.service";
     template: require<any>("./route-browser.component.html")
 })
 export class RouteBrowserComponent {
-    private currentElement: any = { type: "not selected" };
+    private currentElement;
     private listOfMasters: object[] = this.storageService.listOfMasters;
     private listOfRelations: object[] = this.storageService.listOfRelations;
     private listOfRelationsForStop: object[] = this.storageService.listOfRelationsForStop;
@@ -45,6 +45,11 @@ export class RouteBrowserComponent {
                 if (data === "route") {
                     this.listOfRelationsForStop = this.storageService.listOfRelationsForStop;
                     this.currentElement = this.storageService.currentElement;
+                } else if (data === "tag") {
+                    this.currentElement = this.storageService.currentElement;
+                } else if (data === "cancel selection") {
+                    this.currentElement = undefined;
+                    delete this.currentElement;
                 }
             }
         );
@@ -108,5 +113,13 @@ export class RouteBrowserComponent {
 
     private createRoute(): void {
         this.editingService.createRoute();
+    }
+
+    private elementShouldBeEditable(): boolean {
+        if (this.currentElement) {
+            return this.currentElement.type === "relation" && this.currentElement.tags.type === "route";
+        } else {
+            return false;
+        }
     }
 }
