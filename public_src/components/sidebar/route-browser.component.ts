@@ -76,7 +76,7 @@ export class RouteBrowserComponent {
     }
 
     private hasMaster(relId: number): boolean {
-        return this.idsHaveMaster.has(relId);
+        return this.storageService.idsHaveMaster.has(relId);
     }
 
     private isDownloaded(relId: number): boolean {
@@ -92,7 +92,8 @@ export class RouteBrowserComponent {
     }
 
     private exploreRelation($event: any, rel: any): void {
-        this.processingService.exploreRelation(this.storageService.elementsMap.get(rel.id), true);
+        this.processingService.exploreRelation(this.storageService.elementsMap.get(rel.id),
+            true, true, true);
     }
 
     private exploreMaster($event: any, rel: any): void {

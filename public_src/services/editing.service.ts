@@ -176,6 +176,19 @@ export class EditingService {
                 console.log("LOG (editing s.) Should change members for this created route", editObj);
                 this.storageService.elementsMap.set(element.id, element); // save modified relation
                 break;
+            case "create master":
+                console.log("LOG (editing s.) I should add route_master", editObj);
+                if (!this.storageService.elementsMap.get(editObj.id)) {
+                    this.storageService.elementsMap.set(editObj.id, editObj.change.to);
+                    this.storageService.listOfMasters.push(editObj.change.to); // unshift
+                } else {
+                    alert("FIXME: this new ROUTE's ID already exists " +
+                        JSON.stringify(this.storageService.elementsMap.get(editObj.id)));
+                }
+                let masterRel = this.storageService.elementsMap.get(editObj.id);
+                this.processingService.refreshTagView(masterRel);
+                this.processingService.refreshRelationView(masterRel);
+                break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(editObj));
         }
@@ -267,6 +280,46 @@ export class EditingService {
         };
         let change = { from: undefined, to: newRoute };
         this.addChange(newRoute, "add route", change);
+    }
+
+    /**
+     * Creates new route_master with or without first route.
+     * @param {number} relId
+     */
+    createMaster(relId?: number): void {
+        const newId = this.findNewId();
+        const newMasterRel = {
+            id: newId,
+            timestamp: new Date().toISOString().split(".")[0] + "Z",
+            version: 1,
+            changeset: -999,
+            uid: Number(localStorage.getItem("id")),
+            user: localStorage.getItem("display_name"),
+            type: "relation",
+            members: [ ],
+            tags: {
+                type: "route_master",
+                route_master: "bus",
+                ref: 0,
+                network: "",
+                operator: "",
+                name: "",
+                wheelchair: "",
+                colour: "",
+                "public_transport:version": 2
+            }
+        };
+        if (relId) {
+            newMasterRel.members.push({
+                type: "relation",
+                ref: relId,
+                role: undefined
+            });
+            this.storageService.idsHaveMaster.add(relId);
+            this.storageService.queriedMasters.add(relId); // FIXME ? Is it rel or master
+        }
+        let change = { from: undefined, to: newMasterRel };
+        this.addChange(newMasterRel, "create master", change);
     }
 
     /**
@@ -642,6 +695,14 @@ export class EditingService {
                 this.processingService.filterStopsByRelation(edit.change.to);
                 this.processingService.exploreRelation(edit.change.to, false, false, false);
                 break;
+            case "create master":
+                console.log("LOG (editing s.) I should add route_master", edit);
+                this.storageService.elementsMap.set(edit.id, edit.change.to);
+                this.storageService.listOfMasters.push(edit.change.to); // unshift
+                let masterRel = this.storageService.elementsMap.get(edit.id);
+                this.processingService.refreshTagView(masterRel);
+                this.processingService.refreshRelationView(masterRel);
+                break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
         }
@@ -689,14 +750,13 @@ export class EditingService {
                 delete chmElem.members;
                 chmElem.members = edit.change.from;
                 this.storageService.elementsMap.set(edit.id, chmElem);
-                // this.processingService.refreshSidebarView("stop");
                 this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(edit.id));
                 this.processingService.exploreRelation(this.storageService.elementsMap.get(edit.id), false, false, true);
                 break;
             case "add element":
                 console.log("LOG (editing s.) Should undo this created element", edit);
                 this.mapService.map.removeLayer(this.storageService.markersMap.get(edit.id));
-                this.processingService.refreshTagView(this.storageService.elementsMap.get(edit.id));
+                this.processingService.refreshTagView(undefined);
                 break;
             case "modify element":
                 console.log("LOG (editing s.) Should undo element modification", edit);
@@ -719,6 +779,11 @@ export class EditingService {
                 this.storageService.elementsMap.set(edit.id, edit.change.from);
                 this.processingService.filterStopsByRelation(edit.change.from);
                 this.processingService.exploreRelation(edit.change.from, false, false, true);
+                break;
+            case "create master":
+                console.log("LOG (editing s.) Should undo this route_master creation", edit);
+                this.storageService.listOfMasters.pop();
+                this.processingService.refreshTagView(undefined);
                 break;
             default:
                 alert("Current change type was not recognized " + JSON.stringify(edit));
