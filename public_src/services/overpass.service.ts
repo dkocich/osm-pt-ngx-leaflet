@@ -70,6 +70,11 @@ export class OverpassService {
      */
     public requestNewOverpassData(): void {
         this.loadingService.show("Loading bus stops...");
+        setTimeout( () => {
+            if (this.loadingService.isLoading()) {
+                this.loadingService.hide(); // close loading window on timeout errors
+            }
+        }, 5000 );
         const requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
         const options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.mapService.previousCenter = [this.mapService.map.getCenter().lat, this.mapService.map.getCenter().lng];
@@ -104,6 +109,11 @@ export class OverpassService {
             minNumOfRelations = 10;
         }
         this.loadingService.show("Loading route master relations...");
+        setTimeout( () => {
+            if (this.loadingService.isLoading()) {
+                this.loadingService.hide(); // close loading window on timeout errors
+            }
+        }, 7500 );
         const idsArr: Array<number> = this.findRouteIdsWithoutMaster();
         if (idsArr.length <= minNumOfRelations) {
             this.loadingService.hide();
@@ -185,6 +195,11 @@ export class OverpassService {
             out meta;`;
         console.log("LOG (overpass s.) Querying nodes", requestBody);
         this.loadingService.show("Loading clicked feature data...");
+        setTimeout( () => {
+            if (this.loadingService.isLoading()) {
+                this.loadingService.hide(); // close loading window on timeout errors
+            }
+        }, 5000 );
         requestBody = this.replaceBboxString(requestBody);
         const options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)

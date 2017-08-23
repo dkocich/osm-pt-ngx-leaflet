@@ -10,7 +10,7 @@
                     tooltip="Create a new empty route" container="body">
                 <i class="fa fa-road" aria-hidden="true"></i> Create route
             </button>
-            <button type="button" class="btn btn-default" [disabled]="!editingMode"
+            <button type="button" class="btn btn-default" [disabled]="!elementShouldBeEditable()"
                     [class.btn-primary]="membersEditing" (click)="toggleMembersEdit()" tooltip="Toggle membership editing" container="body" btnCheckbox>
                 <i class="fa fa-list-ol" aria-hidden="true"></i> Change members
             </button>
@@ -37,7 +37,7 @@
         <ng-container *ngFor="let rel of listOfMasters">
             <div id="{{rel.id}}">
                 <span class="explore" (dblclick)="exploreMaster($event, rel)">
-                    {{rel.tags.route_master || "#ROUTE_MASTER"}} <i>route <b>MASTER</b></i> {{rel.tags.ref || "#REF"}}: {{rel.tags.name || "#NAME"}}
+                    {{rel.tags.route_master || "#ROUTE_MASTER"}} <i>route <b>MASTER</b> ({{ rel.members.length }} members)</i> {{rel.tags.ref || "#REF"}}: {{rel.tags.name || "#NAME"}}
                 </span>
             </div>
         </ng-container>

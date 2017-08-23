@@ -13,9 +13,7 @@ import "dragula/dist/dragula.css";
 import "font-awesome/css/font-awesome.css";
 import "leaflet/dist/leaflet.css";
 
-import Raven = require("raven-js");
-
-import { ErrorHandler, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
@@ -50,16 +48,6 @@ import { StorageService } from "./services/storage.service";
 
 import { KeysPipe } from "./components/pipes/keys.pipe";
 
-Raven
-    .config("https://6603d76a7ee14d6b8f2cee2680870187@sentry.io/183940")
-    .install();
-
-export class RavenErrorHandler implements ErrorHandler {
-    public handleError(err: any): void {
-        Raven.captureException(err.originalError || err);
-    }
-}
-
 @NgModule({
     bootstrap: [AppComponent],
     declarations: [
@@ -89,8 +77,7 @@ export class RavenErrorHandler implements ErrorHandler {
         LoadingService,
         EditingService,
         AuthService,
-        KeysPipe,
-        { provide: ErrorHandler, useClass: RavenErrorHandler }
+        KeysPipe
     ]
 })
 
