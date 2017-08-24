@@ -5,6 +5,8 @@ import { StorageService } from "../../services/storage.service";
 import { EditingService } from "../../services/editing.service";
 import { ModalDirective } from "ngx-bootstrap";
 
+import { IPtRouteMasterNew } from "../../core/ptRouteMasterNew.interface";
+
 @Component({
     providers: [],
     selector: "relation-browser",
@@ -15,7 +17,7 @@ import { ModalDirective } from "ngx-bootstrap";
     template: require<any>("./relation-browser.component.html")
 })
 export class RelationBrowserComponent {
-    private currentElement;
+    private currentElement: IPtRouteMasterNew;
     private listOfVariants = this.storageService.listOfVariants;
     private editingMode: boolean;
     private listOfMasters = this.storageService.listOfMasters;
@@ -30,7 +32,9 @@ export class RelationBrowserComponent {
             (data) => {
                 if (data === "tag") {
                     console.log("LOG (relation-browser) Current selected element changed - ", data);
-                    this.currentElement = this.storageService.currentElement;
+                    if (this.storageService.currentElement.tags.type === "route_master") { // prevent showing members of everything except route_master
+                        this.currentElement = this.storageService.currentElement;
+                    }
                 } else if (data === "cancel selection") {
                     this.currentElement = undefined;
                     delete this.currentElement;

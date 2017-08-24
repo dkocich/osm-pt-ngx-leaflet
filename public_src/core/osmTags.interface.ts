@@ -1,0 +1,31 @@
+export interface IOsmTags {
+    ascent?: string;
+    bench?: string;
+    building?: string;
+    bus?: string;
+    colour?: string;
+    covered?: string;
+    descent?: string;
+    description?: string;
+    distance?: string;
+    highway?: string;
+    layer?: string;
+    level?: string;
+    name?: string;
+    network?: string;
+    operator?: string;
+    public_transport?: string;
+    "public_transport:version"?: string;
+    railway?: string;
+    ref?: string;
+    roundtrip?: string;
+    route?: string;
+    route_ref?: string;
+    shelter?: string;
+    surface?: string;
+    symbol?: string;
+    tactile_paving?: string;
+    type?: string;
+    uic_name?: string;
+    uic_ref?: number;
+}

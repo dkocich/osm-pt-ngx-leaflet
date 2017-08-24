@@ -6,5 +6,5 @@ export interface IOsmEntity {
     changeset: number;
     user: string;
     uid: number;
-    tags: object;
+    tags: any;
 }
