@@ -61,8 +61,8 @@ export class RelationBrowserComponent {
         return this.storageService.elementsDownloaded.has(relId) || relId < 0; // show created
     }
 
-    private exploreRelation($event: any, rel: any): void {
-        this.processingService.exploreRelation(this.storageService.elementsMap.get(rel.id),
+    private exploreRelation($event: any, relId: number): void {
+        this.processingService.exploreRelation(this.storageService.elementsMap.get(relId),
             true, false, true);
     }
 
