@@ -471,8 +471,10 @@ export class MapService {
 
         // at least two nodes to form a polyline and not point
         if (latlngs.length > 1) {
+            let currentHighlightFill = JSON.parse(JSON.stringify(HIGHLIGHT_FILL));
+            currentHighlightFill.color = rel.tags.colour || rel.tags.color || HIGHLIGHT_FILL.color;
             this.highlightStroke = L.polyline(latlngs, HIGHLIGHT_STROKE).bindTooltip(rel.tags.name);
-            this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL).bindTooltip(rel.tags.name);
+            this.highlightFill = L.polyline(latlngs, currentHighlightFill).bindTooltip(rel.tags.name);
             this.highlight = L.layerGroup([this.highlightStroke, this.highlightFill])
                 .addTo(this.map);
             return true;
