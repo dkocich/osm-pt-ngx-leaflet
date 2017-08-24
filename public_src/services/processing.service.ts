@@ -270,9 +270,11 @@ export class ProcessingService {
      */
     public refreshRelationView(rel: IPtRelation): void {
         this.storageService.listOfVariants.length = 0;
-        for (const member of rel.members) {
-            const routeVariant = this.getElementById(member.ref);
-            this.storageService.listOfVariants.push(routeVariant);
+        if (rel.tags.type === "route_master") {
+            for (const member of rel.members) {
+                const routeVariant = this.getElementById(member.ref);
+                this.storageService.listOfVariants.push(routeVariant);
+            }
         }
         this.refreshSidebarView("relation");
     }
@@ -351,6 +353,9 @@ export class ProcessingService {
      * @param rel
      */
     public exploreMaster(rel: any): void {
+        if (rel.members.length === 0) {
+            return alert("Warning: this relation doesn't contain any route variants.");
+        }
         // if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         // let routeVariants: object[] = [];
         // for (let member of rel.members) {
