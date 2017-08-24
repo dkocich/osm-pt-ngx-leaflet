@@ -417,7 +417,7 @@ export class ProcessingService {
         }
         this.storageService.listOfStopsForRoute.length = 0;
         rel.members.forEach((mem) => {
-            if (this.storageService.elementsMap.has(mem.ref)) {
+            if (this.storageService.elementsMap.has(mem.ref) && mem.type === "node") {
                 const stop = this.getElementById(mem.ref);
                 const stopWithMemberAttr = Object.assign(JSON.parse(JSON.stringify(mem)), JSON.parse(JSON.stringify(stop)));
                 this.storageService.listOfStopsForRoute.push(JSON.parse(JSON.stringify(stopWithMemberAttr)));
