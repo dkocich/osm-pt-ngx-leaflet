@@ -11,13 +11,13 @@
                 <i class="fa fa-road" aria-hidden="true"></i> Create route
             </button>
             <button type="button" class="btn btn-default" [disabled]="!elementShouldBeEditable()"
-                    [class.btn-primary]="membersEditing" (click)="toggleMembersEdit()" tooltip="Toggle membership editing" container="body" btnCheckbox>
+                    [class.btn-primary]="membersEditing" (click)="toggleMembersEdit()" tooltip="Enable/disable route's members editing in a map" container="body" btnCheckbox>
                 <i class="fa fa-list-ol" aria-hidden="true"></i> Change members
             </button>
         </span>
         <span *ngIf="listOfRelations.length > 0" class="text-center medium">
             <button type="button" class="btn btn-default" (click)="downloadMaster()" [disabled]="isRequesting"
-                    tooltip="Download master relations for currently available routes" container="body">
+                    tooltip="Check existence and download route_master relations for all currently available routes" container="body">
                 <i *ngIf="isRequesting" class="fa fa-spinner fa-spin"></i>
                 Download master relations
                 (<i class="fa fa-question-circle" aria-hidden="true" tooltip="Route's master relation was not checked" container="body"></i>)
@@ -37,6 +37,7 @@
         <ng-container *ngFor="let rel of listOfMasters">
             <div id="{{rel.id}}">
                 <span class="explore" (dblclick)="exploreMaster($event, rel)">
+                    <i *ngIf="rel.id < 0" class="fa fa-plus" tooltip="This route_master is created by you" container="body" aria-hidden="true"></i>
                     {{rel.tags.route_master || "#ROUTE_MASTER"}} <i>route <b>MASTER</b> ({{ rel.members.length }} members)</i> {{rel.tags.ref || "#REF"}}: {{rel.tags.name || "#NAME"}}
                 </span>
             </div>
@@ -54,13 +55,13 @@
                         </span>
                         <span *ngIf="rel.id > 0">
                             <i *ngIf="isDownloaded(rel.id)" class="fa fa-check-square-o" aria-hidden="true"
-                               tooltip="Route is fully downloaded" container="body"></i>
+                               tooltip="Route is completely downloaded already" container="body"></i>
                             <i *ngIf="!isDownloaded(rel.id)" class="fa fa-square-o" aria-hidden="true"
-                               tooltip="Route is not fully downloaded" container="body"></i>
+                               tooltip="Route isn't completely downloaded yet" container="body"></i>
                             <i *ngIf="!masterWasChecked(rel.id)" class="fa fa-question-circle" aria-hidden="true"
-                               tooltip="Route's master relation was not checked" container="body"></i>
+                               tooltip="Existence of route's route_master relation was not checked yet" container="body"></i>
                             <i *ngIf="masterWasChecked(rel.id)" class="fa fa-times-circle" aria-hidden="true"
-                               tooltip="Route has no master relation" container="body"></i>
+                               tooltip="Route doesn't have any route_master relation" container="body"></i>
                         </span>
                         {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
                     </span>

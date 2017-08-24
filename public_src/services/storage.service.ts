@@ -1,6 +1,5 @@
 import { EventEmitter, Injectable } from "@angular/core";
 
-import { IOsmEntity } from "../core/osmEntity.interface";
 import { IPtStop } from "../core/ptStop.interface";
 
 @Injectable()
@@ -31,7 +30,7 @@ export class StorageService {
 
     public idsHaveMaster = new Set();
 
-    public currentElement: IOsmEntity;
+    public currentElement: any;
     public currentElementsChange = new EventEmitter();
 
     public displayName: string = "";

@@ -269,7 +269,7 @@ export class EditingService {
             tags: {
                 type: "route",
                 route: "bus",
-                ref: 0,
+                ref: "",
                 network: "",
                 operator: "",
                 name: "",
@@ -277,7 +277,7 @@ export class EditingService {
                 to: "",
                 wheelchair: "",
                 colour: "",
-                "public_transport:version": 2
+                "public_transport:version": "2"
             }
         };
         let change = { from: undefined, to: newRoute };
@@ -302,13 +302,13 @@ export class EditingService {
             tags: {
                 type: "route_master",
                 route_master: "bus",
-                ref: 0,
+                ref: "",
                 network: "",
                 operator: "",
                 name: "",
                 wheelchair: "",
                 colour: "",
-                "public_transport:version": 2
+                "public_transport:version": "2"
             }
         };
         if (relId) {
