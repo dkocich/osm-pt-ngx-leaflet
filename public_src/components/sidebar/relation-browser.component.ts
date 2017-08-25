@@ -101,6 +101,9 @@ export class RelationBrowserComponent {
     }
 
     private isAlreadyAdded(relId: number): boolean {
+        if (!this.currentElement) {
+            return;
+        }
         let rel = this.storageService.elementsMap.get(relId);
         let found = rel.members.filter( (member) => {
             return member.ref === this.currentElement.id;
@@ -110,5 +113,9 @@ export class RelationBrowserComponent {
         } else {
             return false;
         }
+    }
+
+    private isSelected(relId: number): boolean {
+        return this.processingService.haveSameIds(relId, this.currentElement.id);
     }
 }

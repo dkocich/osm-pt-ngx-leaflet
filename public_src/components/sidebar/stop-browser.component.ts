@@ -20,7 +20,7 @@ import { IPtStop } from "../../core/ptStop.interface";
 })
 export class StopBrowserComponent {
     public listOfStopsForRoute: object[] = this.storageService.listOfStopsForRoute;
-    private currentElement: any = { type: "not selected" };
+    private currentElement: any;
     private listOfStops: object[] = this.storageService.listOfStops;
     private filteredView: boolean;
     private editingMode: boolean;
@@ -48,6 +48,8 @@ export class StopBrowserComponent {
                     this.listOfStopsForRoute = this.storageService.listOfStopsForRoute;
                     this.currentElement = this.storageService.currentElement;
                     console.log(this.currentElement, this.listOfStopsForRoute);
+                } else if (data === "tag") {
+                    this.currentElement = this.storageService.currentElement;
                 } else if (data === "cancel selection") {
                     this.listOfStopsForRoute = undefined;
                     delete this.listOfStopsForRoute;
@@ -106,5 +108,9 @@ export class StopBrowserComponent {
         } else {
             return false;
         }
+    }
+
+    private isSelected(relId: number): boolean {
+        return this.processingService.haveSameIds(relId, this.currentElement.id);
     }
 }

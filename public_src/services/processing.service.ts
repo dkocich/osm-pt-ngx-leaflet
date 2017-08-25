@@ -464,4 +464,12 @@ export class ProcessingService {
     public cancelSelection(): void {
         this.refreshTagView(undefined);
     }
+
+    public haveSameIds(relId: number, currElementId?: number): boolean {
+        if (currElementId) {
+            return currElementId === relId;
+        } else {
+            return false;
+        }
+    }
 }

@@ -16,7 +16,7 @@
         <div *ngFor="let rel of listOfVariants">
             <ng-container *ngIf="!rel">Incomplete relation (double click to download it by reference ID)...</ng-container>
             <ng-container *ngIf="rel">
-                <div id="{{rel.id}}" class="explore" (dblclick)="exploreRelation($event, rel.id)">
+                <div id="{{rel.id}}" class="explore" (dblclick)="exploreRelation($event, rel.id)" [class.selected]="currentElement && isSelected(rel.id)">
                     <span *ngIf="rel.id < 0">
                         <i class="fa fa-plus" tooltip="This relation is created by you" container="body" aria-hidden="true"></i>
                     </span>

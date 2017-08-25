@@ -1,5 +1,4 @@
 <div class="content panel panel-body panel-default">
-
     <div class="text-center">
         <h4 class="text-danger" *ngIf="listOfRelations.length === 0">There are no loaded routes (zoom map).</h4>
         <span>
@@ -27,7 +26,7 @@
 
     <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="medium">
         <div *ngFor="let rel of listOfRelationsForStop">
-            <span class="explore" (dblclick)="exploreRelation($event, rel)">
+            <span class="explore" (dblclick)="exploreRelation($event, rel)" [class.selected]="currentElement && isSelected(rel.id)">
                 {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
             </span>
         </div>
@@ -36,7 +35,7 @@
     <div *ngIf="listOfRelations.length !== 0 && !filteredView" class="medium">
         <ng-container *ngFor="let rel of listOfMasters">
             <div id="{{rel.id}}">
-                <span class="explore" (dblclick)="exploreMaster($event, rel)">
+                <span class="explore" (dblclick)="exploreMaster($event, rel)" [class.selected]="currentElement && isSelected(rel.id)">
                     <i *ngIf="rel.id < 0" class="fa fa-plus" tooltip="This route_master is created by you" container="body" aria-hidden="true"></i>
                     {{rel.tags.route_master || "#ROUTE_MASTER"}} <i>route <b>MASTER</b> ({{ rel.members.length }} members)</i> {{rel.tags.ref || "#REF"}}: {{rel.tags.name || "#NAME"}}
                 </span>
@@ -45,7 +44,7 @@
         <ng-container *ngFor="let rel of listOfRelations">
             <ng-container *ngIf="!hasMaster(rel.id)">
                 <div id="{{rel.id}}">
-                    <span class="explore" (dblclick)="exploreRelation($event, rel)">
+                    <span class="explore" (dblclick)="exploreRelation($event, rel)" [class.selected]="currentElement && isSelected(rel.id)">
                         <span *ngIf="rel.id < 0">
                             <i *ngIf="!hasMaster(rel.id)" class="fa fa-times-circle" aria-hidden="true"
                                tooltip="Route doesn't have master relation" container="body"></i>
