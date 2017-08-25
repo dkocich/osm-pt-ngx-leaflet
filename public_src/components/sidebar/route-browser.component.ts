@@ -122,4 +122,8 @@ export class RouteBrowserComponent {
             return false;
         }
     }
+
+    private isSelected(relId: number): boolean {
+        return this.processingService.haveSameIds(relId, this.currentElement.id);
+    }
 }

@@ -1,5 +1,5 @@
 <div class="content panel panel-body panel-default">
-
+    {{ currentElement }}
     <div class="text-center">
         <h4 class="text-danger"
             *ngIf="listOfStops.length === 0">There are no loaded stops (zoom map).</h4>
@@ -13,7 +13,7 @@
     </div>
 
     <div *ngIf="filteredView" class="medium">
-        <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
+        <table class="table-responsive table-condensed table-bordered table-hover wide-table">
             <thead>
             <tr>
                 <td><b>#</b></td>
@@ -23,7 +23,7 @@
             </tr>
             </thead>
             <tbody *ngIf="!editingMode">
-            <tr *ngFor="let stop of listOfStopsForRoute; let i = index ;" class="explore" (dblclick)="exploreStop($event, stop)">
+            <tr *ngFor="let stop of listOfStopsForRoute; let i = index ;" class="explore" (dblclick)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
                 <td>{{i + 1}}.</td>
                 <td>{{stop.role}}</td>
                 <td>
@@ -35,7 +35,7 @@
             </tr>
             </tbody>
             <tbody *ngIf="editingMode" [dragula]="'my-box'" [dragulaModel]="listOfStopsForRoute">
-                <tr *ngFor="let stop of listOfStopsForRoute; let i = index ;" class="explore" (dblclick)="exploreStop($event, stop)">
+                <tr *ngFor="let stop of listOfStopsForRoute; let i = index ;" class="explore" (dblclick)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
                     <td>{{i + 1}}.</td>
                     <td><input type="text" value="{{stop.role}}" disabled></td>
                     <td>
@@ -50,7 +50,7 @@
     </div>
 
     <div *ngIf="listOfStops.length !== 0 && !filteredView;" class="medium">
-        <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
+        <table class="table-responsive table-condensed table-bordered table-hover wide-table">
             <thead>
             <tr>
                 <td><b>Name/Id</b></td>
@@ -59,7 +59,7 @@
             </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let stop of listOfStops" id="{{stop.id}}" class="explore" (dblclick)="exploreStop($event, stop)">
+                <tr *ngFor="let stop of listOfStops" id="{{stop.id}}" class="explore" (dblclick)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
                     <td>{{stop.tags.name || stop.id}}</td>
                     <td>{{stop.tags.public_transport}}</td>
                     <td>{{stop.tags.route_ref}}</td>

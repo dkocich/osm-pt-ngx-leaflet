@@ -28,7 +28,7 @@ const HIGHLIGHT_STROKE = {
     weight: 12
 };
 const FROM_TO_LABEL = {
-    color: "#ffaa00",
+    color: "#00FFFF",
     opacity: 0.6,
 };
 const REL_BUS_STYLE = {
@@ -378,9 +378,15 @@ export class MapService {
             for (const rel of filteredRelationsForStop) {
                 this.showRoutes(rel);
             }
-            if (this.highlight) {
-                this.highlight.addTo(this.map);
-            }
+        }
+    }
+
+    /**
+     * Adds highlight layer (contains point highl. and highl. for each related route).
+     */
+    public addExistingHighlight(): void {
+        if (this.highlight) {
+            this.highlight.addTo(this.map);
         }
     }
 

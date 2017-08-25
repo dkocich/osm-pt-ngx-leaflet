@@ -376,16 +376,26 @@ export class ProcessingService {
     /**
      *
      * @param stop
+     * @param {boolean} filterRelations
+     * @param {boolean} refreshTags
+     * @param {boolean} zoomTo
      */
-    public exploreStop(stop: any): void {
+    public exploreStop(stop: any, filterRelations: boolean, refreshTags: boolean, zoomTo: boolean): void {
         if (this.mapService.highlightIsActive()) {
             this.mapService.clearHighlight();
         }
         this.mapService.showStop(stop);
-        const filteredRelationsForStop = this.filterRelationsByStop(stop);
-        this.mapService.showRelatedRoutes(filteredRelationsForStop);
-        this.refreshTagView(stop);
-        this.mapService.map.panTo([stop.lat, stop.lon]);
+        if (filterRelations) {
+            const filteredRelationsForStop = this.filterRelationsByStop(stop);
+            this.mapService.showRelatedRoutes(filteredRelationsForStop);
+        }
+        this.mapService.addExistingHighlight();
+        if (refreshTags) {
+            this.refreshTagView(stop);
+        }
+        if (zoomTo) {
+            this.mapService.map.panTo([stop.lat, stop.lon]);
+        }
     }
 
     /**
@@ -463,5 +473,13 @@ export class ProcessingService {
 
     public cancelSelection(): void {
         this.refreshTagView(undefined);
+    }
+
+    public haveSameIds(relId: number, currElementId?: number): boolean {
+        if (currElementId) {
+            return currElementId === relId;
+        } else {
+            return false;
+        }
     }
 }
