@@ -1,44 +1,30 @@
-osm-pt-ngx-leaflet
-==================
+# osm-pt-ngx-leaflet
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/231206018f6e41d9bddee2b4bb4683dc)](https://www.codacy.com/app/dkocich/osm-pt-ngx-leaflet?utm_source=github.com&utm_medium=referral&utm_content=dkocich/osm-pt-ngx-leaflet&utm_campaign=badger)
 [![Known Vulnerabilities](https://snyk.io/test/github/snyk/goof/badge.svg)](https://snyk.io/test/github/snyk/goof)
-[![Build Status](https://travis-ci.org/haoliangyu/ngx-leaflet-starter.svg?branch=master)](https://github.com/haoliangyu/ngx-leaflet-starter)
+[![Build Status](https://api.travis-ci.org/dkocich/osm-pt-ngx-leaflet.svg?branch=master)](https://travis-ci.org/dkocich/osm-pt-ngx-leaflet)
 
-An online web editor used to edit public transport routes on OpenStreetMap built with Angular, Leaflet and Webpack.
+<a href="https://zenhub.com"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
 
-This project includes basic mapping features:
--   [x] Display base maps from different sources
--   [x] Integrate Font-Awesome
--	[x] Initialize map based on user's IP address location
--	[x] Geocode address and zoom to result location
--	[x] Add/remove markers on the map
--   [x] Use unofficially typed Leaflet plugin
--	[x] Webpack 2
+An online web editor used to edit [public transport routes on OpenStreetMap](https://wiki.openstreetmap.org/wiki/Public_transport) with desktop and mobile devices.
 
-OSM/PT specific features:
--   [ ] handle communication with [Overpass API](https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_API_by_Example) and [OSM API v0.6](https://wiki.openstreetmap.org/wiki/API_v0.6)
--   [ ] transform OSM to GeoJson data with [tyrasd/osmtogeojson](https://github.com/tyrasd/osmtogeojson)
--   [ ] authorize users with osm-auth [osmlab/osm-auth](https://github.com/osmlab/osm-auth)
+## How to start?
 
-Support [Angular 4.1.3](https://angular.io/) and [Leaflet 1.0.3](http://leafletjs.com/) now!
+If you want to submit issue or PR, please study the [Contributing.md](https://github.com/dkocich/osm-pt-ngx-leaflet/blob/master/CONTRIBUTING.md)
 
-How to start?
---------------
-
-This project requires [npm](https://www.npmjs.com/) (or [yarn](https://yarnpkg.com/)).
+This project requires [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/) to run locally and it is built with
+ [Angular](https://angular.io/), [Leaflet](http://leafletjs.com/) and [Webpack](https://webpack.js.org/).
 
 1.	Run `npm install` or `yarn install` to install dependencies.
 2.	Run `npm run build` to build the project.
 3.  Open the app at `public/index.html`
 4.  Run (for local development) `npm run dev` to serve project with `webpack-dev-server` on localhost:8080
 
-Looking for other demos?
--------------------------------
-Thanks to these awesome people [Rodolphe Eveilleau](https://github.com/rdphv), [Wolfgang Becker](https://github.com/vimwb), [Tonia Roddick](https://github.com/troddick) and their projects:
+## Acknowledgment
 
-* [ngx-leaflet-starter](https://github.com/haoliangyu/ngx-leaflet-starter) is an Angular 2 project seed with [Leaflet](http://leafletjs.com/), the most popular Javascript mapping library. This project is forked from it!
+This project was made possible by Google/OSM during the [GSOC 2017](https://summerofcode.withgoogle.com/) for [OpenStreetMap](https://www.openstreetmap.org/) organization.
+ Big Thanks to the project's mentors - [Zverik](https://github.com/zverik) and [Polyglot](https://github.com/PolyglotOpenstreetmap)
+ who were very helpful during the development.
 
-* [ngx-mapboxgl-starter](https://github.com/haoliangyu/ngx-mapboxgl-starter) is an Angular 2 project seed with [MapboxGL](https://www.mapbox.com/mapbox-gl-js/api/), a mapping library designed for [vector tile](https://www.mapbox.com/help/define-vector-tiles/).
-
-* [boundary.now](https://github.com/haoliangyu/boundary.now), a tool to download place boundries from OpenStreetMap, built with Angular2, [Material2](https://github.com/angular/material2) and Leaflet.
+Thanks to [haolingyu](https://github.com/haoliangyu) for his work on [Ngx leaflet](https://github.com/haoliangyu/ngx-leaflet-starter)
+ and [Ngx MapboxGL](https://www.mapbox.com/mapbox-gl-js/api/) example demos.
