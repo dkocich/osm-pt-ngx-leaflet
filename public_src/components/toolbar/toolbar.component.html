@@ -38,4 +38,8 @@
         <i class="fa fa-times" aria-hidden="true"></i> Cancel </span>
     <span tooltip="Show more information" container="body" class="explore" (click)="showInfo(currentElement)">
         <i class="fa fa-question-circle" aria-hidden="true"></i> Info </span>
+    <button type="button" class="btn btn-default" (click)="getLoadAndZoomUrl()" [disabled]="isDisabled()"
+            tooltip="Open current element in JOSM" container="body">
+        <i class="fa fa-download" aria-hidden="true"></i> Open in JOSM
+    </button>
 </div>

@@ -136,4 +136,16 @@ export class ToolbarComponent {
     private clearHighlight(): void {
         return this.mapService.clearHighlight();
     }
+
+    private getLoadAndZoomUrl(): void {
+        window.location.href = "http://127.0.0.1:8111/load_and_zoom?left=" + this.mapService.map.getBounds().getWest() +
+            "&right=" + this.mapService.map.getBounds().getEast() +
+            "&top=" + this.mapService.map.getBounds().getNorth() +
+            "&bottom=" + this.mapService.map.getBounds().getSouth() +
+            "&select=" + this.currentElement.type + this.currentElement.id;
+    }
+
+    private isDisabled(): boolean {
+        return this.currentElement.id < 0;
+    }
 }
