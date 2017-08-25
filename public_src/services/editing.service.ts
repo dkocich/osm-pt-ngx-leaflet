@@ -203,6 +203,9 @@ export class EditingService {
             this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(editObj.id));
         }
         if (["add element", "add route"].indexOf(type) > -1 ) {
+            if (type === "add element") {
+                this.processingService.exploreStop(element, false, false, false);
+            }
             this.storageService.logStats();
         }
         this.storageService.syncEdits();
@@ -737,6 +740,9 @@ export class EditingService {
                 alert("Current change type was not recognized " + JSON.stringify(edit));
         }
         const element = this.processingService.getElementById(edit["id"]);
+        if (edit.type === "add element") {
+            this.processingService.exploreStop(element, false, false, false);
+        }
         if (edit.type !== "add route" || element.tags.type !== "route_master") {
             this.processingService.zoomToElement(element);
         }
@@ -825,6 +831,9 @@ export class EditingService {
                 alert("Current change type was not recognized " + JSON.stringify(edit));
         }
         const element = this.processingService.getElementById(edit["id"]);
+        if (edit.type === "add element") {
+            this.processingService.exploreStop(element, false, false, false);
+        }
         if (edit.type !== "add route") {
             this.processingService.zoomToElement(element);
         }

@@ -99,7 +99,7 @@ export class StopBrowserComponent {
     }
 
     private exploreStop($event: any, stop: IPtStop): void {
-        this.processingService.exploreStop(stop);
+        this.processingService.exploreStop(stop, true, true, true);
     }
 
     private reorderingEnabled(): boolean {
