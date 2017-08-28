@@ -8,7 +8,8 @@
                 <a href="#">
                     <button type="button" class="btn btn-default btn-xs" [(ngModel)]="advancedMode"
                             [class.btn-primary]="advancedMode" btnCheckbox (click)="changeMode()"
-                            tooltip="Enable/disable advanced features of the editor" container="body">
+                            tooltip="Enable/disable advanced features of the editor" container="body"
+                            tooltipPlacement="bottom">
                         Advanced mode
                     </button>
                 </a>
@@ -32,7 +33,7 @@
 
 <div id="sidebar">
     <accordion>
-        <accordion-group #a1 [isOpen]="false" *ngIf="editingMode">
+        <accordion-group #a1 [isOpen]="false" [hidden]="!editingMode">
             <div accordion-heading>
                 Relation browser
                 <i class="pull-right float-xs-right glyphicon"
@@ -40,7 +41,7 @@
             </div>
             <relation-browser></relation-browser>
         </accordion-group>
-        <accordion-group #a2 [isOpen]="true" *ngIf="editingMode">
+        <accordion-group #a2 [isOpen]="true" [hidden]="!editingMode">
             <div accordion-heading>
                 Tag browser
                 <i class="pull-right float-xs-right glyphicon"

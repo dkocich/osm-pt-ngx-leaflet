@@ -19,7 +19,7 @@ import { EditingService } from "../../services/editing.service";
     template: require<any>("./app.component.html")
 })
 export class AppComponent {
-    public advancedMode: boolean;
+    public advancedMode: boolean = Boolean(localStorage.getItem("advancedMode"));
     private editingMode: boolean;
 
     @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
@@ -29,7 +29,6 @@ export class AppComponent {
     constructor(private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService,
                 private editingService: EditingService) {
-        this.advancedMode = JSON.parse(localStorage.getItem("advancedMode".toLowerCase()));
     }
 
     ngOnInit(): any {
