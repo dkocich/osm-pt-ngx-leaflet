@@ -18,6 +18,7 @@ import { ToolbarComponent } from "../toolbar/toolbar.component";
     template: require<any>("./app.component.html")
 })
 export class AppComponent {
+    public advancedMode: boolean;
 
     @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
     @ViewChild(AuthComponent) public authComponent: AuthComponent;
@@ -25,6 +26,7 @@ export class AppComponent {
 
     constructor(private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService) {
+        this.advancedMode = JSON.parse(localStorage.getItem("advancedMode".toLowerCase()));
     }
 
     ngOnInit(): any {
@@ -68,5 +70,9 @@ export class AppComponent {
 
     private getStatus(): string {
         return this.loadingService.getStatus();
+    }
+
+    private changeMode(): void {
+        localStorage.setItem("advancedMode", JSON.stringify(this.advancedMode));
     }
 }
