@@ -8,6 +8,7 @@ import { ProcessingService } from "../../services/processing.service";
 
 import { AuthComponent } from "../auth/auth.component";
 import { ToolbarComponent } from "../toolbar/toolbar.component";
+import { EditingService } from "../../services/editing.service";
 
 @Component({
     providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -19,17 +20,25 @@ import { ToolbarComponent } from "../toolbar/toolbar.component";
 })
 export class AppComponent {
     public advancedMode: boolean;
+    private editingMode: boolean;
 
     @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
     @ViewChild(AuthComponent) public authComponent: AuthComponent;
     @ViewChild("helpModal") public helpModal: ModalDirective;
 
     constructor(private mapService: MapService, private geocoder: GeocodingService,
-                private loadingService: LoadingService, private processingService: ProcessingService) {
+                private loadingService: LoadingService, private processingService: ProcessingService,
+                private editingService: EditingService) {
         this.advancedMode = JSON.parse(localStorage.getItem("advancedMode".toLowerCase()));
     }
 
     ngOnInit(): any {
+        this.editingService.editingMode.subscribe(
+            (data) => {
+                console.log("LOG (relation-browser) Editing mode change in routeBrowser - ", data);
+                this.editingMode = data;
+            }
+        );
         const map = L.map("map", {
             center: L.latLng(49.686, 18.351),
             layers: [this.mapService.baseMaps.CartoDB_light],

@@ -32,7 +32,7 @@
 
 <div id="sidebar">
     <accordion>
-        <accordion-group #a1 [isOpen]="false">
+        <accordion-group #a1 [isOpen]="false" *ngIf="editingMode">
             <div accordion-heading>
                 Relation browser
                 <i class="pull-right float-xs-right glyphicon"
@@ -40,7 +40,7 @@
             </div>
             <relation-browser></relation-browser>
         </accordion-group>
-        <accordion-group #a2 [isOpen]="true">
+        <accordion-group #a2 [isOpen]="true" *ngIf="editingMode">
             <div accordion-heading>
                 Tag browser
                 <i class="pull-right float-xs-right glyphicon"
