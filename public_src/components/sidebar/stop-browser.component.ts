@@ -104,7 +104,7 @@ export class StopBrowserComponent {
 
     private reorderingEnabled(): boolean {
         if (this.currentElement) {
-            return this.currentElement.type === "relation";
+            return this.currentElement.type === "relation" && this.filteredView;
         } else {
             return false;
         }
