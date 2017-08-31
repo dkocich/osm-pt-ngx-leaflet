@@ -190,7 +190,8 @@ export class ProcessingService {
                 switch (element.type) {
                     case "node":
                         // this.storageService.elementsDownloaded.add(element.id);
-                        if (element.tags && element.tags.public_transport) {
+                        if (element.tags && ["platform", "stop_position", "station"]
+                                .indexOf(element.tags.public_transport) > -1) {
                             this.storageService.listOfStops.push(element);
                         }
                         break;
