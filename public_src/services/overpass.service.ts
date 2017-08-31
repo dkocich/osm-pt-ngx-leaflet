@@ -143,7 +143,7 @@ export class OverpassService {
             .subscribe((response) => {
                 this.loadingService.hide();
                 if (!response) {
-                    return alert("FIXME: No response, please try to select other master rel. again.");
+                    return alert("No response from API. Try to select other master relation again please.");
                 }
                 this.markQueriedRelations(idsArr);
                 this.processingService.processMastersResponse(response);
@@ -172,7 +172,7 @@ export class OverpassService {
      */
     public putChangeset(changeset: any, testUpload?: boolean): void {
         if (!this.storageService.edits) {
-            return alert("LOG: create some edits before uploading changes");
+            return alert("Create some edits before trying to upload changes please.");
         }
         if (testUpload) {
             this.createdChangeset(undefined, 1, true);
@@ -212,7 +212,7 @@ export class OverpassService {
             .subscribe((response) => {
                 if (!response) {
                     this.loadingService.hide();
-                    return alert("FIXME: No response, please try to click anything again.");
+                    return alert("No response from API. Try to select element again please.");
                 }
                 console.log("LOG (overpass s.)", response);
                 this.processingService.processNodeResponse(response);
@@ -229,7 +229,8 @@ export class OverpassService {
      */
     private getRelationData(rel: any, missingElements: number[]): void {
         if (missingElements.length === 0) {
-            return alert("This relation has no stops: \n" + JSON.stringify(rel));
+            return alert("This relation has no stops or platforms. Please add them first and repeat your action. \n"
+                + JSON.stringify(rel));
         }
         const requestBody = `
             [out:json][timeout:25];
@@ -247,7 +248,7 @@ export class OverpassService {
             .subscribe((response) => {
                 if (!response) {
                     this.loadingService.hide();
-                    return alert("No response, try again please.");
+                    return alert("No response from API. Try again please.");
                 }
                 this.processingService.processNodeResponse(response);
 
@@ -347,7 +348,7 @@ export class OverpassService {
      */
     private createdChangeset(err: any, changeset_id: any, testUpload?: boolean): void {
         if (err) {
-            return alert("Error while creating new changeset " + err);
+            return alert("Error while creating new changeset. Try again please. " + JSON.stringify(err));
         }
         console.log("LOG (overpass s.) Created new changeset with ID: ", changeset_id);
         this.addChangesetId(changeset_id);
@@ -494,7 +495,7 @@ export class OverpassService {
      */
     private uploadedChangeset(err: any): void {
         if (err) {
-            return alert("Error after data uploading. Changeset is not closed." + err);
+            return alert("Error after data uploading. Changeset is not closed. It should close automatically soon. " + JSON.stringify(err));
         }
         // Upload was successful, safe to call the callback.
         // Add delay to allow for postgres replication #1646 #2678

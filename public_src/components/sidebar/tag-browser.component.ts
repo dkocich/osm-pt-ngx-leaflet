@@ -141,7 +141,7 @@ export class TagBrowserComponent {
             delete this.storageService.currentElement["tags"][key];
             this.editingService.addChange(this.currentElement, "remove tag", change);
         } else {
-            return alert("FIXME: some problem in toggle" + JSON.stringify(this.currentElement));
+            return alert("Problem occured - unknown problem in toggle " + JSON.stringify(this.currentElement));
         }
     }
 

@@ -104,7 +104,7 @@ export class EditingService {
 
         if (type === "change members") {
             if (this.changeIsEqual(editObj)) {
-                return alert("FIXME: problem - change is same as previous edit in the history");
+                return alert("FIXME: Problem has occured - change is same like previous edit in the editing history.");
             }
             this.simplifyMembers(editObj);
         }

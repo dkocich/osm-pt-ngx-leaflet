@@ -89,7 +89,7 @@ export class StopBrowserComponent {
 
     private onDrop(args: any): void {
         if (this.currentElement.type !== "relation") {
-            return alert("FIXME: wrong type of current element - select relation one more time please.");
+            return alert("Current element has incorrent type. Select relation one more time please.");
         }
         this.createChange();
     }
