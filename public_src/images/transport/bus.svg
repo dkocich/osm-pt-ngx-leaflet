@@ -9,13 +9,16 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="15"
-   height="16"
-   viewBox="0 0 15 16"
+   width="20"
+   height="20"
+   viewBox="0 0 20 20"
    id="svg4264"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="32.svg">
+   sodipodi:docname="bus.svg"
+   inkscape:export-filename="/home/davidk/git/osm-pt-leaflet-ngx/public_src/images/transport/bus.png"
+   inkscape:export-xdpi="105.88235"
+   inkscape:export-ydpi="105.88235">
   <defs
      id="defs4266">
     <pattern
@@ -40,9 +43,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="45.254834"
-     inkscape:cx="3.3771185"
-     inkscape:cy="7.9507669"
+     inkscape:zoom="32"
+     inkscape:cx="10.345782"
+     inkscape:cy="7.8285138"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -58,11 +61,11 @@
      inkscape:object-nodes="true"
      inkscape:snap-smooth-nodes="true"
      inkscape:snap-midpoints="true"
-     inkscape:window-width="1680"
-     inkscape:window-height="988"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1">
+     inkscape:window-width="508"
+     inkscape:window-height="375"
+     inkscape:window-x="634"
+     inkscape:window-y="56"
+     inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
        id="grid4137" />
@@ -94,7 +97,7 @@
      inkscape:label="Camada 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-1036.3621)">
+     transform="translate(0,-1032.3621)">
     <path
        inkscape:connector-curvature="0"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -104,32 +107,32 @@
     <path
        inkscape:connector-curvature="0"
        style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 3.9999977,1038.3625 c -1.137708,0 -2,0.8609 -2,2 l 0,7 c 0,0.606 0.511719,1 1,1 l 0,2 2.000001,0 1e-6,-2 5.0000013,0 0,2 2.000001,0 0,-2 c 0.475194,0 1,-0.4419 1,-1 l 0,-7 c 0,-1.1391 -0.862292,-2 -2.000001,-2 z"
+       d="m 4.9090878,1034.3621 c -1.6548475,0 -2.9090901,1.1479 -2.9090901,2.6667 l 0,9.3336 c 0,0.808 0.7443184,1.3334 1.4545451,1.3334 l 0,2.6667 2.9090916,0 1.5e-6,-2.6667 7.2727271,0 0,2.6667 2.909092,0 0,-2.6667 c 0.69119,0 1.454545,-0.5892 1.454545,-1.3334 l 0,-9.3336 c 0,-1.5188 -1.254243,-2.6667 -2.909092,-2.6667 z"
        id="rect4152-0"
        sodipodi:nodetypes="sssccccccccssss" />
     <rect
-       rx="1.0000002"
+       rx="1.5555559"
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4152-9-3"
-       width="9.0000019"
-       height="4.0000224"
+       width="14.000002"
+       height="6.0000396"
        x="2.9999976"
-       y="-1043.3621"
-       ry="1.0000001"
+       y="-1041.3621"
+       ry="1.5000015"
        transform="scale(1,-1)" />
     <ellipse
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path4177-4"
-       cx="3.9999995"
-       cy="-1046.3621"
+       cx="5"
+       cy="-1044.3621"
        rx="1.0000002"
        ry="1.0000035"
        transform="scale(1,-1)" />
     <ellipse
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path4177-6-5"
-       cx="11.000001"
-       cy="-1046.3621"
+       cx="15"
+       cy="-1044.3621"
        rx="1"
        ry="1.0000036"
        transform="scale(1,-1)" />

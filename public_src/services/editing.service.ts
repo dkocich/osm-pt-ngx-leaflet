@@ -520,10 +520,12 @@ export class EditingService {
         }
         const marker = L.marker(event["latlng"], {
             icon: L.icon({
+                iconAnchor: [10, 10],
                 iconUrl
             }),
-            riseOnHover: true,
-            draggable: true
+            draggable: true,
+            opacity: 0.8,
+            riseOnHover: true
         }).bindPopup("New " + creatingElementOfType + " #" + newId, {
             offset: L.point(12, 6)
         });
