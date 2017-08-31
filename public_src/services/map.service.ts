@@ -281,7 +281,7 @@ export class MapService {
             const distance = originalCoords.distanceTo(newCoords);
             if (distance > 100) {
                 marker.setLatLng(originalCoords).update();
-                alert("Current node was dragged more than 100 meters away -> resetting position.");
+                alert("Current node was dragged more than 100 meters away which is not allowed - resetting position.");
                 return;
             }
             // console.log("LOG (map s.) Distance is", distance, "meters", marker);
@@ -488,7 +488,7 @@ export class MapService {
             if (rel.members.length <= 1) {
                 console.log("LOG (map s.) This is new relation -> do not highlight route");
             } else {
-                alert("Problem occurred while drawing line (it has zero length - no added stops?)." +
+                alert("Problem has occurred while drawing line connecting its members (no added stops?). Please add members and try again." +
                     "\n\n" + JSON.stringify(rel));
             }
             return false;

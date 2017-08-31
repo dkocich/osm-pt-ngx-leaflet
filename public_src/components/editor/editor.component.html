@@ -4,11 +4,11 @@
 </button>
 <button *ngIf="editing" id="edits-backward-btn" class="btn btn-default on-map"
         tooltip="Step back" container="body" (click)="stepBackward()" [disabled]="isInactive('backward')">
-    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+    <i class="fa fa-undo" aria-hidden="true"></i>
 </button>
 <button *ngIf="editing" id="edits-forward-btn" class="btn btn-default on-map"
         tooltip="Step forward" container="body" (click)="stepForward()" [disabled]="isInactive('forward')">
-    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    <i class="fa fa-repeat" aria-hidden="true"></i>
 </button>
 <span *ngIf="editing" id="edits-count" class="label label-info on-map">
     <h6>{{currentEditStep }}/{{totalEditSteps }}</h6>
@@ -17,10 +17,12 @@
 <div *ngIf="editing">
     <button id="stop-btn" type="button" class="btn btn-default on-map" [class.btn-primary]="creatingElementOfType === 'stop'"
             tooltip="Create a new stop" container="body" (click)="createElement('stop')" disabled>
+        <img src="/images/transport/bus.png" alt="stop">
         Stop
     </button>
     <button id="platform-btn" type="button" class="btn btn-default on-map" [class.btn-primary]="creatingElementOfType === 'platform'"
             tooltip="Create a new platform" container="body" (click)="createElement('platform')">
+        <img src="/images/transport/platform.png" alt="platform">
         Platform
     </button>
 </div>

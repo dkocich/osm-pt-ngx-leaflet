@@ -49,7 +49,7 @@ export class ProcessingService {
                 const featureId = Number(data);
                 const element = this.getElementById(featureId);
                 if (!element) {
-                    alert("Clicked element was not found?!");
+                    alert("Problem occured - clicked element was not found?! Select different element please.");
                 }
                 console.log("LOG (processing s.) Selected element is ", element);
                 this.refreshTagView(element);
@@ -190,7 +190,8 @@ export class ProcessingService {
                 switch (element.type) {
                     case "node":
                         // this.storageService.elementsDownloaded.add(element.id);
-                        if (element.tags && element.tags.public_transport) {
+                        if (element.tags && ["platform", "stop_position", "station"]
+                                .indexOf(element.tags.public_transport) > -1) {
                             this.storageService.listOfStops.push(element);
                         }
                         break;
@@ -354,7 +355,7 @@ export class ProcessingService {
      */
     public exploreMaster(rel: any): void {
         if (rel.members.length === 0) {
-            return alert("Warning: this relation doesn't contain any route variants.");
+            return alert("Problem occured - this relation doesn't contain any route variants.");
         }
         // if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
         // let routeVariants: object[] = [];
@@ -364,7 +365,7 @@ export class ProcessingService {
         console.log("LOG (processing s.) First master's variant was found: ",
             this.storageService.elementsMap.has(rel.members[0].ref));
         if (!this.storageService.elementsMap.has(rel.members[0].ref)) {
-            return alert("FIXME: first master's variant is not fully downloaded.");
+            return alert("Problem occured - first route_master's variant isn't fully downloaded.");
         }
         // explore first variant and focus tag/rel. browsers on selected master rel.
         this.exploreRelation(this.getElementById(rel.members[0].ref), false, false, false);
@@ -423,7 +424,7 @@ export class ProcessingService {
      */
     public filterStopsByRelation(rel: IPtRelation): void {
         if (rel === undefined) {
-            return alert("FIXME: relation is undefined");
+            return alert("Problem occured - relation is undefined.");
         }
         this.storageService.listOfStopsForRoute.length = 0;
         rel.members.forEach((mem) => {
@@ -444,7 +445,7 @@ export class ProcessingService {
     public zoomToElement(element: IOsmEntity): void {
         if (element.type === "node" ) {
             if (!element["lat"] || !element["lon"]) {
-                return alert("Warning: Element has no coordinates." + JSON.stringify(element));
+                return alert("Problem occured - element has no coordinates." + JSON.stringify(element));
             } else {
                 this.mapService.map.panTo([element["lat"], element["lon"]]);
             }
@@ -463,7 +464,7 @@ export class ProcessingService {
                 return;
             }
             if (coords.length < 2) { // do not zoom to point
-                return alert("FIXME: Not enough coordinates to fitBounds");
+                return alert("Problem occured - not enough coordinates to fit into their boundaries.");
             }
             const polyline = L.polyline(coords); // zoom to coords of a relation
             this.mapService.map.fitBounds(polyline.getBounds());

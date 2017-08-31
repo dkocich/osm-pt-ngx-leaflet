@@ -1,7 +1,8 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header navbar-left">
-            <a class="navbar-brand" href="#" scroll-to="welcome" offset="50"><span>OSM public transport editor</span></a>
+            <a class="navbar-brand" href="#" scroll-to="welcome" offset="50">
+                <span class="text-capitalize">OSM public transport editor</span></a>
         </div>
         <ul class="nav navbar-nav navbar-left">
             <li>
@@ -17,9 +18,18 @@
         </ul>
         <auth></auth>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#" (click)="showHelpModal()">Help</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="https://osm-pt.blogspot.com/">Blog</a></li>
+            <li>
+                <a href="#" (click)="showHelpModal()">
+                    <i class="fa fa-info" aria-hidden="true"></i> Help</a>
+            </li>
+            <li>
+                <a href="https://github.com/dkocich/osm-pt-ngx-leaflet" target="_blank">
+                <i class="fa fa-github" aria-hidden="true"></i> About</a>
+            </li>
+            <li>
+                <a href="https://osm-pt.blogspot.com/" target="_blank">
+                <i class="fa fa-book"></i> Blog</a>
+            </li>
         </ul>
     </div>
 </nav>
@@ -34,32 +44,32 @@
 <div id="sidebar">
     <accordion>
         <accordion-group #a1 [isOpen]="false" [hidden]="!editingMode">
-            <div accordion-heading>
-                Relation browser
+            <div accordion-heading class="text-center text-uppercase">
+                <i class="fa fa-sitemap" aria-hidden="true"></i> Relation browser
                 <i class="pull-right float-xs-right glyphicon"
                    [ngClass]="{'glyphicon-chevron-down': a1?.isOpen, 'glyphicon-chevron-right': !a1?.isOpen}"></i>
             </div>
             <relation-browser></relation-browser>
         </accordion-group>
         <accordion-group #a2 [isOpen]="true" [hidden]="!editingMode">
-            <div accordion-heading>
-                Tag browser
+            <div accordion-heading class="text-center text-uppercase">
+                <i class="fa fa-tags" aria-hidden="true"></i> Tag browser
                 <i class="pull-right float-xs-right glyphicon"
                    [ngClass]="{'glyphicon-chevron-down': a2?.isOpen, 'glyphicon-chevron-right': !a2?.isOpen}"></i>
             </div>
             <tag-browser></tag-browser>
         </accordion-group>
         <accordion-group #a3 [isOpen]="true">
-            <div accordion-heading>
-                Route browser
+            <div accordion-heading class="text-center text-uppercase">
+                <i class="fa fa-road" aria-hidden="true"></i> Route browser
                 <i class="pull-right float-xs-right glyphicon"
                    [ngClass]="{'glyphicon-chevron-down': a3?.isOpen, 'glyphicon-chevron-right': !a3?.isOpen}"></i>
             </div>
             <route-browser></route-browser>
         </accordion-group>
         <accordion-group #a4 [isOpen]="true">
-            <div accordion-heading>
-                Stop/platform data browser
+            <div accordion-heading class="text-center text-uppercase">
+                <i class="fa fa-map-marker" aria-hidden="true"></i> Stop/platform data browser
                 <i class="pull-right float-xs-right glyphicon"
                    [ngClass]="{'glyphicon-chevron-down': a4?.isOpen, 'glyphicon-chevron-right': !a4?.isOpen}"></i>
             </div>
