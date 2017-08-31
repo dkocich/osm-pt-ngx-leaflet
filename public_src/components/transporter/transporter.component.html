@@ -1,11 +1,11 @@
 <button id="download-data" class="btn btn-default on-map" [class.btn-primary]="downloading"
         tooltip="Download data from Overpass API" container="body" (click)="showDownloadModal()">
-    <i class="fa fa-download"></i>
+    <i class="fa fa-download" aria-hidden="true"></i>
 </button>
 
 <button *ngIf="isAuthenticated() && hasEdits()" id="upload-data" class="btn btn-default on-map" [class.btn-primary]="downloading"
-        tooltip="Upload changes to OSM" container="body" (click)="showUploadModal()">
-    <i class="fa fa-upload"></i>
+        tooltip="Save changes to OSM" container="body" (click)="showUploadModal()">
+    <i class="fa fa-upload" aria-hidden="true"></i> Save
 </button>
 
 <div id="modalDownload" class="modal fade" bsModal #downloadModal="bs-modal" [config]="{backdrop: 'static'}"
@@ -76,11 +76,13 @@
                     </div>
                     <div>
                         <button class="btn btn-default on-map" (click)="verifyUpload()"
-                                tooltip="Verify changeset consistency" container="body"><i class="fa fa-chec">Verify</i>
+                                tooltip="Verify changeset consistency" container="body">
+                            <i class="fa fa-check" aria-hidden="true"></i> Verify
                         </button>
                         <button type="button" class="btn btn-success pull-right" (click)="uploadData()"
                                 tooltip="Confirm, upload and close OSM changeset" container="body"
-                                [disabled]="!uploadForm.form.valid && !uploadForm.form.untouched">Confirm upload</button>
+                                [disabled]="!uploadForm.form.valid && !uploadForm.form.untouched">
+                            <i class="fa fa-upload" aria-hidden="true"></i> Confirm upload</button>
                     </div>
                 </form>
             </div>
