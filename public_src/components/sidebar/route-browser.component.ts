@@ -126,4 +126,23 @@ export class RouteBrowserComponent {
     private isSelected(relId: number): boolean {
         return this.processingService.haveSameIds(relId, this.currentElement.id);
     }
+
+    private visibleInMap(relId: any): boolean {
+        const rel = this.storageService.elementsMap.get(relId);
+        if (rel.members.length === 0) {
+            return true; // empty routes are always visible
+        }
+        for (const member of rel.members) {
+            if (["platform", "stop_position"].indexOf(member.role) > -1) {
+                if (this.storageService.elementsMap.has(member.ref)) {
+                    const element = this.storageService.elementsMap.get(member.ref);
+                    if (this.mapService.map.getBounds().contains({
+                            lat: element .lat, lng: element .lon })) {
+                        return true; // return true while at least first node is visible
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }
