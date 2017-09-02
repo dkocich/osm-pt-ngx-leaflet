@@ -583,7 +583,7 @@ export class MapService {
             }
         }
         const myIcon = L.icon({
-            iconAnchor: [7, 7],
+            iconAnchor: [10, 10],
             iconUrl,
             shadowAnchor: [22, 94],
             shadowSize: [24, 24],
@@ -592,8 +592,9 @@ export class MapService {
         return L.marker(latlng, {
             icon: myIcon,
             draggable: false,
+            opacity: 0.8,
             riseOnHover: true,
-            title: fp.name || ""
+            title: fp.name || fp.id || ""
         });
     }
 
