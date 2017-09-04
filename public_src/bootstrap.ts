@@ -12,13 +12,15 @@ import "bootstrap/dist/css/bootstrap.css";
 import "dragula/dist/dragula.css";
 import "font-awesome/css/font-awesome.css";
 import "leaflet/dist/leaflet.css";
+import "angular2-toaster/toaster.css";
 
-import { NgModule } from "@angular/core";
+import { NgModule, Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ToasterModule, ToasterService } from "angular2-toaster";
 import { BusyModule } from "angular2-busy";
 import { DragulaModule } from "ng2-dragula";
 import {
@@ -66,7 +68,7 @@ import { KeysPipe } from "./components/pipes/keys.pipe";
     imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
         ModalModule.forRoot(), CarouselModule.forRoot(),
         BusyModule, BrowserAnimationsModule, DragulaModule, TooltipModule.forRoot(),
-        ButtonsModule.forRoot(), TypeaheadModule.forRoot() ],
+        ButtonsModule.forRoot(), TypeaheadModule.forRoot(), ToasterModule ],
     providers: [
         MapService,
         GeocodingService,
