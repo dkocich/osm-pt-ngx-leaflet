@@ -1,4 +1,4 @@
-import { Component, isDevMode, ViewChild } from "@angular/core";
+import { Component, isDevMode, NgZone, ViewChild } from "@angular/core";
 import { CarouselConfig, ModalDirective } from "ngx-bootstrap";
 
 import { GeocodingService } from "../../services/geocoding.service";
@@ -21,6 +21,7 @@ import { EditingService } from "../../services/editing.service";
 export class AppComponent {
     public advancedMode: boolean = Boolean(localStorage.getItem("advancedMode"));
     private editingMode: boolean;
+    public element: HTMLElement;
 
     @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
     @ViewChild(AuthComponent) public authComponent: AuthComponent;
@@ -28,7 +29,7 @@ export class AppComponent {
 
     constructor(private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService,
-                private editingService: EditingService) {
+                private editingService: EditingService, private zone: NgZone) {
         if (isDevMode()) {
             console.log("WARNING: Ang. development mode is ", isDevMode());
         }
@@ -59,12 +60,42 @@ export class AppComponent {
         this.mapService.map.on("zoomend moveend", () => {
             this.processingService.filterDataInBounds();
         });
+        this.mapService.map.on("movestart", () => {
+            this.zone.runOutsideAngular(() => {
+                window.document.addEventListener("mousemove", this.mouseMove.bind(this));
+            });
+        });
+
         this.geocoder.getCurrentLocation()
             .subscribe(
                 (location) => map.panTo([location.latitude, location.longitude]),
                 (err) => console.error(err)
             );
         this.toolbarComponent.Initialize();
+    }
+
+    public mouseDown(event: any): void {
+        this.element = event.target;
+        this.zone.runOutsideAngular(() => {
+            window.document.addEventListener("mousemove", this.mouseMove.bind(this));
+        });
+    }
+
+    public mouseMove(event: any): void {
+        event.preventDefault();
+        // this.element.setAttribute("x", event.clientX + this.clientX + "px");
+        // this.element.setAttribute("y", event.clientX + this.clientY + "px");
+    }
+
+    mouseUp(event: any): void {
+        // Run this code inside Angular's Zone and perform change detection
+        this.zone.run(() => {
+            console.log("MouseUp zone run");
+            // this.updateBox(this.currentId, event.clientX + this.offsetX, event.clientY + this.offsetY);
+            // this.currentId = null;
+        });
+
+        window.document.removeEventListener("mousemove", this.mouseMove);
     }
 
     private showHelpModal(): void {

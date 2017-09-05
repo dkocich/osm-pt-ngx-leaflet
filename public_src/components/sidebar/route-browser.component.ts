@@ -145,4 +145,8 @@ export class RouteBrowserComponent {
         }
         return false;
     }
+
+    private check(relId: number): void {
+        console.log(relId);
+    }
 }

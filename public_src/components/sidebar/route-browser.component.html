@@ -43,7 +43,7 @@
         </ng-container>
         <ng-container *ngFor="let rel of listOfRelations">
             <ng-container *ngIf="!hasMaster(rel.id)">
-                <div id="{{rel.id}}" *ngIf="visibleInMap(rel.id)">
+                <div id="{{rel.id}}" *ngIf="visibleInMap(rel.id)" *ngIf="check(rel.id)">
                     <span class="explore" (click)="exploreRelation($event, rel)" [class.selected]="currentElement && isSelected(rel.id)">
                         <span *ngIf="rel.id < 0">
                             <i *ngIf="!hasMaster(rel.id)" class="fa fa-times-circle" aria-hidden="true"
