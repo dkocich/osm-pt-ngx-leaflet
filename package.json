@@ -48,7 +48,7 @@
     "@types/leaflet": "1.0.67",
     "@types/xmlbuilder": "0.0.30",
     "angular2-busy": "2.0.4",
-    "angular2-toaster": "^4.0.1",
+    "angular2-toaster": "4.0.1",
     "bootstrap": "3.3.7",
     "cssnano": "^3.10.0",
     "express": "4.15.3",

@@ -9,6 +9,7 @@ import { ProcessingService } from "../../services/processing.service";
 import { AuthComponent } from "../auth/auth.component";
 import { ToolbarComponent } from "../toolbar/toolbar.component";
 import { EditingService } from "../../services/editing.service";
+import {ToasterConfig, ToasterService} from "angular2-toaster";
 
 @Component({
     providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -20,6 +21,7 @@ import { EditingService } from "../../services/editing.service";
 })
 export class AppComponent {
     public advancedMode: boolean = Boolean(localStorage.getItem("advancedMode"));
+    public toasterService: ToasterService;
     private editingMode: boolean;
 
     @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
@@ -28,7 +30,22 @@ export class AppComponent {
 
     constructor(private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService,
-                private editingService: EditingService) {
+                private editingService: EditingService, toasterService: ToasterService) {
+        this.toasterService = toasterService;
+    }
+
+    public toasterconfig: ToasterConfig =
+        new ToasterConfig({
+            animation: "fade",
+            limit: 5,
+            mouseoverTimerStop: false,
+            positionClass: "toast-bottom-left",
+            showCloseButton: true,
+            tapToDismiss: false,
+            timeout: 0
+        });
+    public popToast(): void {
+        this.toasterService.pop("success", "Args Title", "Args Body");
     }
 
     ngOnInit(): any {

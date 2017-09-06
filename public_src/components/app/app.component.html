@@ -16,6 +16,9 @@
                 </a>
             </li>
         </ul>
+
+        <button (click)="popToast()">pop toast</button>
+
         <auth></auth>
         <ul class="nav navbar-nav navbar-right">
             <li>
@@ -33,6 +36,8 @@
         </ul>
     </div>
 </nav>
+
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
 
 <div id="map">
     <div [ngBusy]="{busy: isLoading(), message: getStatus(), backdrop: false, delay: 500, minDuration: 500}"
