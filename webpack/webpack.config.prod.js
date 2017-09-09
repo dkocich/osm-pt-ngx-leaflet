@@ -8,6 +8,7 @@ const ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin");
 const WebpackCleanupPlugin = require("webpack-cleanup-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const srcDir = "public_src";
 const outputDir = "../public";
@@ -43,9 +44,12 @@ module.exports = {
         noParse: [ path.join(__dirname, "node_modules", "angular2", "bundles") ]
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: false,
-            mangle: true
+        new UglifyJsPlugin({
+            comments: false,
+            ecma: 5,
+            ie8: false,
+            mangle: false,
+            sourceMap: true
         }),
         new ExtractTextPlugin("[name].[contenthash].css"),
         new HtmlWebpackPlugin({

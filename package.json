@@ -13,7 +13,7 @@
   "keywords": [
     "angular",
     "leaflet",
-    "starter"
+    "openstreetmap"
   ],
   "author": "David Kocich <dkocich@gmail.com>",
   "license": "MIT",
@@ -21,19 +21,17 @@
     "url": "https://github.com/dkocich/osm-pt-ngx-leaflet/issues"
   },
   "scripts": {
-    "build": "webpack --config webpack/webpack.config.prod.js --colors",
     "build-dev": "webpack --config webpack/webpack.config.dev.js --progress --colors",
-    "deploy": "NODE_ENV=production webpack -p --config webpack/webpack.config.prod.js --colors",
-    "dev": "NODE_ENV=development webpack-dev-server --config webpack/webpack.config.dev.js  --content-base public/ --progress --colors",
+    "build-prod": "webpack -p --config webpack/webpack.config.prod.js --colors",
+    "dev": "webpack-dev-server --config webpack/webpack.config.dev.js  --content-base public/ --progress --colors",
     "lint": "tslint -c tslint.json public_src/**/*.ts",
-    "postinstall": "NODE_ENV=production webpack -p --config webpack/webpack.config.dev.js --progress --colors",
+    "postinstall": "npm run build-prod",
+    "prepublish": "snyk protect",
     "start": "webpack-dev-server --content-base public/",
     "test": "snyk test && NODE_ENV=development karma start",
-    "watch": "webpack --config webpack/webpack.config.dev.js --watch",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "watch": "webpack --config webpack/webpack.config.dev.js --watch"
   },
-  "homepage": "https://github.com/haoliangyu/ngx-leaflet-starter#readme",
+  "homepage": "https://github.com/dkocich/osm-pt-ngx-leaflet#readme",
   "dependencies": {
     "@angular/animations": "4.3.2",
     "@angular/common": "4.3.2",
@@ -96,6 +94,7 @@
     "tslint-loader": "3.5.3",
     "tsutils": "2.8.0",
     "typescript": "2.4.2",
+    "uglifyjs-webpack-plugin": "0.4.6",
     "url-loader": "0.5.9",
     "webpack": "2.7.0",
     "webpack-cleanup-plugin": "0.5.1",

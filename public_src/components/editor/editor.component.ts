@@ -110,11 +110,7 @@ export class EditorComponent {
      * @param type
      */
     private createElement(type: string): void {
-        if (this.creatingElementOfType === type) {
-            this.creatingElementOfType = "";
-        } else {
-            this.creatingElementOfType = type;
-        }
+        this.creatingElementOfType = this.creatingElementOfType === type ? "" : type;
     }
 
     /**

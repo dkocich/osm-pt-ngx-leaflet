@@ -18,11 +18,7 @@ export class LoadingService {
 
     public show(message?: string): void {
         this._isLoading = true;
-        if (message) {
-            this._statusMessage = message;
-        } else {
-            this._statusMessage = "Loading...";
-        }
+        this._statusMessage = message || "Loading...";
     }
 
     public hide(): void {
