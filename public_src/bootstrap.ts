@@ -13,7 +13,7 @@ import "dragula/dist/dragula.css";
 import "font-awesome/css/font-awesome.css";
 import "leaflet/dist/leaflet.css";
 
-import { NgModule } from "@angular/core";
+import { enableProdMode, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
@@ -83,4 +83,7 @@ import { KeysPipe } from "./components/pipes/keys.pipe";
 
 export class AppModule {}
 
+if (window.location.hostname !== "localhost") {
+    enableProdMode(); // run angular development mode outside testing environment
+}
 platformBrowserDynamic().bootstrapModule(AppModule);

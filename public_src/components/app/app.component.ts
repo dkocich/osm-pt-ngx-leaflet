@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, isDevMode, ViewChild } from "@angular/core";
 import { CarouselConfig, ModalDirective } from "ngx-bootstrap";
 
 import { GeocodingService } from "../../services/geocoding.service";
@@ -29,6 +29,9 @@ export class AppComponent {
     constructor(private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService,
                 private editingService: EditingService) {
+        if (isDevMode()) {
+            console.log("WARNING: Ang. development mode is ", isDevMode());
+        }
     }
 
     ngOnInit(): any {
