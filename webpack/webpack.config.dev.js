@@ -61,6 +61,9 @@ module.exports = {
         }, {
             from: "public_src/land_single.html",
             to: ""
+        }, {
+            from: "public_src/manifest.json",
+            to: ""
         }])
     ]
 };
