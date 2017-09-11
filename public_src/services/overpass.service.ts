@@ -11,7 +11,7 @@ import { StorageService } from './storage.service';
 import { WarnService } from './warn.service';
 
 import { create } from 'xmlbuilder';
-import { LatLng } from 'leaflet';
+import { EditingService } from './editing.service';
 
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { IAreaRef } from '../core/areaRef.interface';
@@ -27,87 +27,90 @@ export class OverpassService {
   private changeset_id: string;
   private areaReference: IAreaRef;
 
-  constructor(
-    private authSrv: AuthService,
-    private dbSrv: DbService,
-    private errorHighlightSrv: ErrorHighlightService,
-    private httpClient: HttpClient,
-    private mapSrv: MapService,
-    private ngRedux: NgRedux<IAppState>,
-    private processSrv: ProcessService,
-    private storageSrv: StorageService,
-    private warnSrv: WarnService,
-  ) {
+  constructor(private http: Http, private mapService: MapService,
+              private storageService: StorageService,
+              private processingService: ProcessingService,
+              private loadingService: LoadingService,
+              private authService: AuthService,
+              private editingService: EditingService) {
     /**
      * @param data - string containing ID of clicked marker
      */
-    this.mapSrv.markerClick.subscribe((data) => {
-      // let goodConnectionMode = ngRedux.getState()['app']['goodConnectMode'];
-      const featureId = Number(data);
+    this.mapService.markerClick.subscribe(
+      (data) => {
+        const featureId = Number(data);
 
-      if (this.storageSrv.elementsMap.has(featureId)) {
-        this.processSrv.exploreStop(
-          this.storageSrv.elementsMap.get(featureId),
-          false,
-          false,
-          false,
-        );
-      }
-
-      /*Checks if node was downloaded earlier and all it's data was added to IDB */
-      if (this.storageSrv.completelyDownloadedPlatformsIDB.has(featureId)) {
-        /*Gets the data from IDB and processes it (updates listOfStops etc.)*/
-        console.log('LOG (overpass s.) Platform with id : ' + featureId + ' in IDB');
-        this.getPlatformDataIDB(featureId);
-
-      } else if (this.storageSrv.completelyDownloadedStopsIDB.has(featureId)) {
-        /*Gets the data from IDB and processes it (updates listOfStops etc.)*/
-        console.log('LOG (overpass s.) Stop with id : ' + featureId + ' in IDB');
-        this.getStopDataIDB(featureId);
-      }
-      else {
-        if (!this.storageSrv.elementsDownloaded.has(featureId) && featureId > 0) {
-          console.log('LOG (overpass s.) Stop/Platform with id : ' + featureId + ' was not in IDB, hence overpass ' +
-            'query is made.');
-          this.getNodeDataOverpass(featureId, true);
-          this.storageSrv.elementsDownloaded.add(featureId);
+        if (this.storageSrv.elementsMap.has(featureId)) {
+          this.processSrv.exploreStop(
+            this.storageSrv.elementsMap.get(featureId),
+            false,
+            false,
+            false,
+          );
         }
-      }
 
-      // if (!goodConnectionMode) {
-      //   for (let i = 0; i < 5; i++) {
-      //     let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
-      //     if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
-      //       !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
-      //       // gets the data from overpass query and adds to IDB
-      //       console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in slow connection mode');
-      //       this.getNodeDataOverpass(randomKey, false);
-      //     }
-      //   }
-      // }
-      // else {
-      //   for (let i = 0; i < 25; i++) {
-      //     let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
-      //     if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
-      //       !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
-      //       // gets the data from overpass query and adds to IDB
-      //       console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in fast connection mode');
-      //       this.getNodeDataOverpass(randomKey, false);
-      //     }
-      //   }
-      // }
-    });
+        /*Checks if node was downloaded earlier and all it's data was added to IDB */
+        if (this.storageSrv.completelyDownloadedPlatformsIDB.has(featureId)) {
+          /*Gets the data from IDB and processes it (updates listOfStops etc.)*/
+          console.log('LOG (overpass s.) Platform with id : ' + featureId + ' in IDB');
+          this.getPlatformDataIDB(featureId);
+
+        } else if (this.storageSrv.completelyDownloadedStopsIDB.has(featureId)) {
+          /*Gets the data from IDB and processes it (updates listOfStops etc.)*/
+          console.log('LOG (overpass s.) Stop with id : ' + featureId + ' in IDB');
+          this.getStopDataIDB(featureId);
+        }
+        else {
+          if (!this.storageSrv.elementsDownloaded.has(featureId) && featureId > 0) {
+            console.log('LOG (overpass s.) Stop/Platform with id : ' + featureId + ' was not in IDB, hence overpass ' +
+              'query is made.');
+            this.getNodeDataOverpass(featureId, true);
+            this.storageSrv.elementsDownloaded.add(featureId);
+          }
+        }
+
+        // if (!goodConnectionMode) {
+        //   for (let i = 0; i < 5; i++) {
+        //     let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
+        //     if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
+        //       !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
+        //       // gets the data from overpass query and adds to IDB
+        //       console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in slow connection mode');
+        //       this.getNodeDataOverpass(randomKey, false);
+        //     }
+        //   }
+        // }
+        // else {
+        //   for (let i = 0; i < 25; i++) {
+        //     let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
+        //     if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
+        //       !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
+        //       // gets the data from overpass query and adds to IDB
+        //       console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in fast connection mode');
+        //       this.getNodeDataOverpass(randomKey, false);
+        //     }
+        //   }
+        // }
+      });
 
     /**
      * Handles downloading of missing relation members (nodes, ways).
      * @param data - object with rel and array containing IDs to download (member.ref)
      * {"rel": rel, "missingElements": missingElements}
      */
-    this.processSrv.membersToDownload.subscribe((data) => {
-      const rel = data['rel'];
-      const missingElements = data['missingElements'];
-      this.getRelationData(rel, missingElements);
-    });
+    this.processingService.membersToDownload.subscribe(
+      (data) => {
+        const rel = data['rel'];
+        const missingElements = data['missingElements'];
+        this.getRelationData(rel, missingElements);
+      },
+    );
+
+    this.processingService.osmObjectsToDownload.subscribe(
+      (data) => {
+        this.getData(data.idsToRestore);
+      },
+    );
   }
 
   /**
@@ -155,7 +158,7 @@ export class OverpassService {
       // do not query masters if all relations are already known
       return;
     }
-    const routesQueriedInIDB:       number[] = [];
+    const routesQueriedInIDB: number[] = [];
     const routesNotQueriedNotInIDB: number[] = [];
 
     idsArr.forEach((id) => {
@@ -328,7 +331,8 @@ export class OverpassService {
             // Only add to elements map and not update listOfStops etc. when process is equal to false
             for (const element of res['elements']) {
               if (!this.storageSrv.elementsMap.has(element.id)) {
-                this.storageSrv.elementsMap.set(element.id, element); }
+                this.storageSrv.elementsMap.set(element.id, element);
+              }
             }
           }
           if (res['elements'][0]) {
@@ -347,6 +351,38 @@ export class OverpassService {
         });
   }
 
+  private getData(idsToRestore: [[number, string]]): void {
+    if (!idsToRestore.length) {
+      return;
+    }
+    let requestBody = `
+            [out:json][timeout:25];
+            ( `;
+
+    // adds all elements by its type as "node(id:)" and "relation(id:)"
+    idsToRestore.forEach((arrElement, index) => {
+      requestBody += `${arrElement[1]}(id:${arrElement[0]})`;
+      if (index === arrElement.length - 1) {
+        requestBody += '); (._;); out meta;';
+        console.log(requestBody);
+      }
+    });
+    const options = this.setRequestOptions('application/X-www-form-urlencoded');
+    this.loadingService.show('Trying to restore edited data...');
+    this.http.post('https://overpass-api.de/api/interpreter', requestBody, options)
+      .map((res) => res.json())
+      .subscribe((response) => {
+        if (!response) {
+          this.loadingService.hide();
+          return alert('No response from API. Try again please.');
+        }
+        this.processingService.processNodeResponse(response);
+        const transformedGeojson = this.mapService.osmtogeojson(response);
+        this.mapService.renderTransformedGeojsonData(transformedGeojson);
+        this.editingService.restoreChanges();
+      });
+  }
+
   /**
    * Downloads all missing data for currently explored relation.
    * @param rel
@@ -354,10 +390,8 @@ export class OverpassService {
    */
   private getRelationData(rel: any, missingElements: number[]): void {
     if (missingElements.length === 0) {
-      return alert(
-        'This relation has no stops or platforms. Please add them first and repeat your action. \n' +
-        JSON.stringify(rel),
-      );
+      return alert('This relation has no stops or platforms. Please add them first and repeat your action. \n'
+        + JSON.stringify(rel));
     }
     const requestBody = `
             [out:json][timeout:25];
@@ -670,7 +704,7 @@ export class OverpassService {
     // Upload was successful, safe to call the callback.
     // Add delay to allow for postgres replication #1646 #2678
     window.setTimeout(
-      function(): void {
+      function (): void {
         console.log('LOG (overpass s.) Timeout 2500');
         // callback(null, this.changeset);
         // Still attempt to close changeset, but ignore response because iD/issues/2667
@@ -688,10 +722,12 @@ export class OverpassService {
       2500,
     );
   }
+
   public getRandomKey(collection: any): any {
     let keys = Array.from(collection.keys());
     return keys[Math.floor(Math.random() * keys.length)];
   }
+
   public getStopDataIDB(stopId: number): any {
     this.dbSrv.getRoutesForStop(stopId).then((relations: IPtRelation[]) => {
       if (relations.length === 0) {
@@ -723,6 +759,7 @@ export class OverpassService {
       throw new Error(JSON.stringify(err));
     });
   }
+
   public getPlatformDataIDB(platformId: number): any {
     this.dbSrv.getRoutesForPlatform(platformId).then((relations: IPtRelation[]) => {
       if (relations.length === 0) {

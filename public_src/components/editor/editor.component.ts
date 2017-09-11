@@ -78,10 +78,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
   /**
    * Deletes current edits create in the localStorage.
    */
-  public deleteEdits(): void {
+  private deleteEdits(): void {
     localStorage.removeItem('edits');
-    alert(this.storageSrv.edits);
-    alert('LOG: LocalStorage changed to ' + localStorage.getItem('edits'));
     this.editModal.hide();
   }
 
