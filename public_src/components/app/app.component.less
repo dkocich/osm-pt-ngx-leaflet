@@ -1,23 +1,46 @@
 @import '../../styles/main.less';
 
 body {
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
 }
 
 #map {
-    position:absolute;
-    top:50px;
-    bottom:0;
-    width:65%;
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    width: 65%;
+}
+
+@media (min-width: 768px) {
+    #map {
+        top: 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    #map {
+        top: 0;
+    }
 }
 
 #sidebar {
-    position:absolute;
-    top:50px;
-    bottom:0;
-    right:0;
-    width:35%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 35%;
     overflow-x: hidden;
     overflow-y: scroll;
+}
+
+@media (min-width: 768px) {
+    #sidebar {
+        top: 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        top: 0;
+    }
 }
