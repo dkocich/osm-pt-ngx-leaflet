@@ -147,26 +147,26 @@ export class MapService {
             OSM_hot: L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
                 attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
                 OpenStreetMap</a>, Tiles courtesy of <a href='https://hot.openstreetmap.org/'
-                target='_blank'>Humanitarian OpenStreetMap Team</a>`,
+                target='_blank' rel='noopener'>Humanitarian OpenStreetMap Team</a>`,
                 maxNativeZoom: 19, maxZoom: 22
             }),
             OSM_standard: L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
                 OpenStreetMap</a>, Tiles courtesy of <a href='https://openstreetmap.org/'
-                target='_blank'>OpenStreetMap Team</a>`,
+                target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
                 maxNativeZoom: 19, maxZoom: 22
             }),
             OSM_PT: L.tileLayer("http://www.openptmap.org/tiles/{z}/{x}/{y}.png", {
                 attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
                 OpenStreetMap</a>, Tiles courtesy of <a href='https://openptmap.org/'
-                target='_blank'>OpenStreetMap Team</a>`,
+                target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
                 maxNativeZoom: 19, maxZoom: 17
             }),
             OSM_transport: L.tileLayer("http://{s}.tile2.opencyclemap.org/" +
                 "transport/{z}/{x}/{y}.png", {
                 attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
                 OpenStreetMap</a>, Tiles courtesy of <a href='https://opencyclemap.org/'
-                target='_blank'>OpenStreetMap Team</a>`,
+                target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
                 maxNativeZoom: 19, maxZoom: 22
             })
         };
