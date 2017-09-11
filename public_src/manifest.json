@@ -1,0 +1,45 @@
+{
+  "app": {
+    "urls": [
+      "http://osm-pt.herokuapp.com"
+    ],
+    "launch": {
+      "web_url": "http://osm-pt.herokuapp.com"
+    }
+  },
+  "applications": {
+    "gecko": {
+      "id": "addon@example.com",
+      "strict_min_version": "42.0"
+    }
+  },
+  "background_color": "#347ab7",
+  "display": "standalone",
+  "default_locale": "en",
+  "description": "An OSM public transport editor based on Leaflet and Angular JS framework.",
+  "icons": [{
+    "src": "images/favicon-32x32.png",
+    "type": "image/png",
+    "sizes": "32x32"
+  }, {
+    "src": "images/favicon-96x96.png",
+    "type": "image/png",
+    "sizes": "96x96"
+  }, {
+    "src": "images/android-chrome-192x192.png",
+    "type": "image/png",
+    "sizes": "192x192"
+  }, {
+    "src": "images/favicon-194x194.png",
+    "type": "image/png",
+    "sizes": "194x194"
+  }],
+  "manifest_version": 2,
+  "name": "OSM PT Editor",
+  "orientation": "landscape",
+  "permissions": ["webNavigation"],
+  "short_name": "OSMPTEditor",
+  "start_url": "./index.html?utm_source=homescreen",
+  "theme_color": "#f3f3f3",
+  "version": "0.0.1"
+}
