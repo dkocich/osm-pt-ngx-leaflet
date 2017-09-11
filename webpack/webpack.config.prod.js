@@ -44,6 +44,11 @@ module.exports = {
         noParse: [ path.join(__dirname, "node_modules", "angular2", "bundles") ]
     },
     plugins: [
+        new webpack.DefinePlugin({
+            "process.env": {
+                "NODE_ENV": JSON.stringify("production")
+            }
+        }),
         new UglifyJsPlugin({
             comments: false,
             ecma: 5,
