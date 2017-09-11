@@ -61,8 +61,6 @@ export class EditorComponent {
      */
     private deleteEdits(): void {
         localStorage.removeItem("edits");
-        alert(this.storageService.edits);
-        alert("LOG: LocalStorage changed to " + localStorage.getItem("edits"));
         this.editModal.hide();
     }
 
