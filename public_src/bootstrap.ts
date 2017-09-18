@@ -20,6 +20,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BusyModule } from "angular2-busy";
+import { HotkeyModule } from "angular2-hotkeys";
 import { DragulaModule } from "ng2-dragula";
 import {
     AccordionModule, ButtonsModule, CarouselModule, ModalModule, TooltipModule, TypeaheadModule
@@ -52,32 +53,42 @@ import { KeysPipe } from "./components/pipes/keys.pipe";
     bootstrap: [AppComponent],
     declarations: [
         AppComponent,
+        AuthComponent,
+        EditorComponent,
+        KeysPipe,
         NavigatorComponent,
-        ToolbarComponent,
         RelationBrowserComponent,
-        TagBrowserComponent,
         RouteBrowserComponent,
         StopBrowserComponent,
+        TagBrowserComponent,
+        ToolbarComponent,
         TransporterComponent,
-        EditorComponent,
-        AuthComponent,
-        KeysPipe
     ],
-    imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
-        ModalModule.forRoot(), CarouselModule.forRoot(),
-        BusyModule, BrowserAnimationsModule, DragulaModule, TooltipModule.forRoot(),
-        ButtonsModule.forRoot(), TypeaheadModule.forRoot() ],
+    imports: [
+        AccordionModule.forRoot(),
+        BrowserModule,
+        BusyModule, BrowserAnimationsModule,
+        ButtonsModule.forRoot(),
+        CarouselModule.forRoot(),
+        DragulaModule,
+        FormsModule,
+        HotkeyModule.forRoot(),
+        HttpModule,
+        ModalModule.forRoot(),
+        TooltipModule.forRoot(),
+        TypeaheadModule.forRoot()
+    ],
     providers: [
-        MapService,
-        GeocodingService,
-        OverpassService,
-        StorageService,
-        ProcessingService,
-        ConfigService,
-        LoadingService,
-        EditingService,
         AuthService,
-        KeysPipe
+        ConfigService,
+        EditingService,
+        GeocodingService,
+        KeysPipe,
+        LoadingService,
+        MapService,
+        OverpassService,
+        ProcessingService,
+        StorageService,
     ]
 })
 

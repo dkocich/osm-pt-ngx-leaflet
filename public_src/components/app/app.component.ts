@@ -1,5 +1,6 @@
 import { Component, isDevMode, ViewChild } from "@angular/core";
 import { CarouselConfig, ModalDirective } from "ngx-bootstrap";
+import { HotkeysService, Hotkey } from "angular2-hotkeys";
 
 import { GeocodingService } from "../../services/geocoding.service";
 import { LoadingService } from "../../services/loading.service";
@@ -28,10 +29,14 @@ export class AppComponent {
 
     constructor(private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService,
-                private editingService: EditingService) {
+                private editingService: EditingService, private _hotkeysService: HotkeysService) {
         if (isDevMode()) {
             console.log("WARNING: Ang. development mode is ", isDevMode());
         }
+        this._hotkeysService.add(new Hotkey("shift+g", (event: KeyboardEvent): boolean => {
+            console.log("Typed hotkey");
+            return false; // Prevent bubbling
+        }));
     }
 
     ngOnInit(): any {

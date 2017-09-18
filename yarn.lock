@@ -161,6 +161,10 @@
   dependencies:
     "@types/geojson" "*"
 
+"@types/mousetrap@^1.5.32":
+  version "1.5.34"
+  resolved "https://registry.yarnpkg.com/@types/mousetrap/-/mousetrap-1.5.34.tgz#22b338d9c4bcdfd8f81c30684aefeb04a4727168"
+
 "@types/node@8.0.17":
   version "8.0.17"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.17.tgz#677bc8c118cfb76013febb62ede1f31d2c7222a1"
@@ -248,6 +252,13 @@ amdefine@>=0.0.4:
 angular2-busy@2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/angular2-busy/-/angular2-busy-2.0.4.tgz#82e4b1fbbcaf97bcfac09d237489cfe9e8c4b9f3"
+
+angular2-hotkeys@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/angular2-hotkeys/-/angular2-hotkeys-2.0.3.tgz#1ecd6e26bd0f3d8e44093709418c592439ddfe0c"
+  dependencies:
+    "@types/mousetrap" "^1.5.32"
+    mousetrap "^1.6.0"
 
 ansi-escapes@^1.1.0, ansi-escapes@^1.3.0:
   version "1.4.0"
@@ -3471,6 +3482,10 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
 moment@2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
+
+mousetrap@^1.6.0:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/mousetrap/-/mousetrap-1.6.1.tgz#2a085f5c751294c75e7e81f6ec2545b29cbf42d9"
 
 ms@0.7.1:
   version "0.7.1"

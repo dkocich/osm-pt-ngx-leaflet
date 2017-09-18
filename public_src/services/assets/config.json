@@ -1,0 +1,7 @@
+{
+  "hotkeys": {
+    "1": [ "EditorComponent.createElement('stop')" ],
+    "2": [ "EditorComponent.createElement('platform')" ],
+    "ctrl+z": [ "EditorComponent.StepBackward()" ]
+  }
+}
