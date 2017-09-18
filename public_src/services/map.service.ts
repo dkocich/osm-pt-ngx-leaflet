@@ -285,8 +285,9 @@ export class MapService {
                 return;
             }
             // console.log("LOG (map s.) Distance is", distance, "meters", marker);
-            const change = { from: { "lat": lat, "lng": lng },
-                "to": { "lat": newCoords["lat"], "lng": newCoords["lng"] }
+            const change = {
+                from: { "lat": lat, "lng": lng },
+                to: { "lat": newCoords["lat"], "lng": newCoords["lng"] }
             };
             // console.log("LOG (map s.) Marker change is ", change);
             // TODO markers geometry editing and history undo/redo
@@ -624,8 +625,7 @@ export class MapService {
     private getFeatureIdFromMarker(feature: any): number {
         const featureTypeId = feature.id.split("/");
         const featureType = featureTypeId[0];
-        const featureId = Number(featureTypeId[1]);
-        return featureId;
+        return Number(featureTypeId[1]); // featureId
     }
 
     /**

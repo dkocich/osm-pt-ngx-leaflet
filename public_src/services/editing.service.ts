@@ -214,7 +214,8 @@ export class EditingService {
 
     /**
      * Handles adding of different PT elements and fills attributes automatically.
-     * @param creatingElementOfType
+     * @param {string} creatingElementOfType
+     * @param {any} event
      */
     public createElement (creatingElementOfType: string, event: any): void {
         let newId: number = this.findNewId();
@@ -329,8 +330,8 @@ export class EditingService {
 
     /**
      * Adds/removes members from route_master relation.
-     * @param {number} routeId
-     * @param {number} masterId
+     * @param {number} relId
+     * @param {number} routeMasterId
      */
     public changeRouteMasterMembers(relId: number, routeMasterId: number): void {
         console.log("LOOOOOOG test ", typeof relId, relId, typeof routeMasterId, routeMasterId);

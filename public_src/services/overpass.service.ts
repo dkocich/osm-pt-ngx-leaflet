@@ -83,7 +83,7 @@ export class OverpassService {
         const requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
         const options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.mapService.previousCenter = [this.mapService.map.getCenter().lat, this.mapService.map.getCenter().lng];
-        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+        this.http.post(ConfigService.overpassUrl, requestBody, options)
             .map((res) => {
                 this.loadingService.hide();
                 console.log("LOG (overpass s.)", res);
@@ -138,7 +138,7 @@ export class OverpassService {
         console.log("LOG (overpass s.) Querying rel.'s route masters with query:", requestBody);
         requestBody = this.replaceBboxString(requestBody);
         const options = this.setRequestOptions("application/X-www-form-urlencoded");
-        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+        this.http.post(ConfigService.overpassUrl, requestBody, options)
             .map((res) => res.json())
             .subscribe((response) => {
                 this.loadingService.hide();
@@ -207,7 +207,7 @@ export class OverpassService {
         }, 5000 );
         requestBody = this.replaceBboxString(requestBody);
         const options = this.setRequestOptions("application/X-www-form-urlencoded");
-        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+        this.http.post(ConfigService.overpassUrl, requestBody, options)
             .map((res) => res.json())
             .subscribe((response) => {
                 if (!response) {
@@ -243,7 +243,7 @@ export class OverpassService {
         // FIXME loading can't be closed sometimes?
         // this.loadingService.show("Loading relation's missing members...");
         const options = this.setRequestOptions("application/X-www-form-urlencoded");
-        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+        this.http.post(ConfigService.overpassUrl, requestBody, options)
             .map((res) => res.json())
             .subscribe((response) => {
                 if (!response) {
@@ -388,9 +388,9 @@ export class OverpassService {
                     if (["members", "tags", "type", "timestamp", "uid", "user"].indexOf(key) === -1) {
                         // adds - id="123", uid="123", etc.
                         if (["version"].indexOf(key) > -1) {
-                            tagsObj[key] = el[key]; // API should increment version later
+                            tagsObj["version"] = el[key]; // API should increment version later
                         } else if (["changeset"].indexOf(key) > -1) {
-                            tagsObj[key] = this.changeset_id;
+                            tagsObj["changeset"] = this.changeset_id;
                         } else {
                             tagsObj[key] = el[key];
                         }
@@ -440,9 +440,9 @@ export class OverpassService {
                     if (["members", "tags", "type", "timestamp", "uid", "user"].indexOf(key) === -1) {
                         // adds - id="123", uid="123", etc.
                         if (["version"].indexOf(key) > -1) {
-                            tagsObj[key] = el[key]; // API should increment version later
+                            tagsObj["version"] = el[key]; // API should increment version later
                         } else if (["changeset"].indexOf(key) > -1) {
-                            tagsObj[key] = this.changeset_id;
+                            tagsObj["changeset"] = this.changeset_id;
                         } else {
                             tagsObj[key] = el[key];
                         }
