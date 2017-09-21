@@ -474,6 +474,7 @@ export class ProcessingService {
 
     public cancelSelection(): void {
         this.refreshTagView(undefined);
+        this.mapService.clearHighlight();
     }
 
     public haveSameIds(relId: number, currElementId?: number): boolean {

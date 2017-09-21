@@ -110,7 +110,13 @@ export class ToolbarComponent {
     }
 
     private cancelSelection(): void {
+        delete this.currentElement;
+        this.currentElement = undefined;
         this.processingService.cancelSelection();
+    }
+
+    private isRelation(): boolean {
+        return this.currentElement && this.currentElement.type === "relation";
     }
 
     private zoomTo(selection: IOsmEntity): void {
