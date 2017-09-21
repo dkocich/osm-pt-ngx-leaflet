@@ -71,6 +71,10 @@ export class StopBrowserComponent {
         );
     }
 
+    private isDownloaded(nodeId: number) {
+        return this.storageService.elementsDownloaded.has(nodeId);
+    }
+
     private reorderMembers(rel: IPtRelation): void {
         this.editingService.reorderMembers(rel);
     }
