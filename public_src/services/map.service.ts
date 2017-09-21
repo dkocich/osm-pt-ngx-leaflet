@@ -1,3 +1,6 @@
+import "leaflet";
+import "leaflet.vectorgrid";
+
 import { EventEmitter, Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 
@@ -56,6 +59,7 @@ const OTHER_STYLE = {
 export class MapService {
     public map: Map;
     public baseMaps: any;
+    public overlayMaps: any;
     public previousCenter: [number, number] = [0.0, 0.0];
     public osmtogeojson: any = require("osmtogeojson");
     public bounds;
@@ -170,6 +174,23 @@ export class MapService {
                 maxNativeZoom: 19, maxZoom: 22
             })
         };
+
+        // TOOD
+        // https://github.com/Leaflet/Leaflet.VectorGrid#styling
+        // http://leafletjs.com/examples/layers-control/
+        // https://github.com/SpatialServer/Leaflet.MapboxVectorTile/issues/69
+        // https://www.mapillary.com/developer/tiles-documentation/#mapbox-gl-js
+        this.overlayMaps = {
+            mapillaryLayer: L.vectorGrid.protobuf(
+                "https://d25uarhxywzl1j.cloudfront.net/v0.1/{z}/{x}/{y}.mvt", {
+                    vectorTileLayerStyles: {
+                        color: "#00ff00"
+                    },
+                    interactive: true,
+
+                })
+        };
+        // "https://d2munx5tg0hw47.cloudfront.net/tiles/{z}/{x}/{y}.mapbox"
     }
 
     /**
