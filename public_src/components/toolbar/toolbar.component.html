@@ -11,7 +11,7 @@
 
 <transporter></transporter>
 
-<div id="radio-highlight" *ngIf="highlightIsActive() && currentElement.type === 'relation'">
+<div id="radio-highlight" *ngIf="highlightIsActive() && isRelation()">
     <div class="btn-group">
         <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()"
                tooltip="Highlight connectivity between route's stops" container="body" btnRadio="Stops">Stops</label>
