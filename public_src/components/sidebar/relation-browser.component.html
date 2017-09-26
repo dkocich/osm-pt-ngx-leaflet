@@ -1,5 +1,5 @@
-<div class="content panel panel-body panel-default">
-    <div *ngIf="listOfVariants.length === 0">
+<div class="panel-group">
+    <div *ngIf="listOfVariants.length === 0" class="panel panel-heading panel-default text-center">
         <h4 class="text-center text-danger">Selected relation has no master relation.</h4>
         <div *ngIf="editingMode" class="text-center">
             <button class="btn btn-success" tooltip="Create master for currently selected element/relation"
@@ -10,11 +10,11 @@
                 <i class="fa fa-search" aria-hidden="true"></i> Find existing master</button>
         </div>
     </div>
-    <div *ngIf="listOfVariants.length > 0">
+    <div *ngIf="listOfVariants.length > 0" class="content panel panel-body panel-default">
         This master relation contains {{listOfVariants.length}} route variants.
         <h4>Route master's variants</h4>
         <div *ngFor="let rel of listOfVariants">
-            <ng-container *ngIf="!rel">Incomplete relation (double click to download it by reference ID)...</ng-container>
+            <ng-container *ngIf="!rel">Incomplete relation (click to download it by reference ID)...</ng-container>
             <ng-container *ngIf="rel">
                 <div id="{{rel.id}}" class="explore" (click)="exploreRelation($event, rel.id)" [class.selected]="currentElement && isSelected(rel.id)">
                     <span *ngIf="rel.id < 0">

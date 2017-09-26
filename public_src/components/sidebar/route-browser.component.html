@@ -1,5 +1,5 @@
-<div class="content panel panel-body panel-default">
-    <div class="text-center">
+<div class="panel-group">
+    <div class="panel panel-heading panel-default text-center">
         <h4 class="text-danger" *ngIf="listOfRelations.length === 0">There are no loaded routes (zoom map and select a feature).</h4>
         <span>
             <button class="btn btn-warning" *ngIf="filteredView" (click)="cancelFilter()" tooltip="Cancel filter showing only node's related routes">Cancel filter</button>
@@ -24,16 +24,19 @@
         </span>
     </div>
 
-    <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="medium">
-        <div *ngFor="let rel of listOfRelationsForStop">
-            <span class="explore" (click)="exploreRelation($event, rel)" (mouseover)="exploreAvailableRelation($event, rel)"
-                  [class.selected]="currentElement && isSelected(rel.id)">
-                {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
-            </span>
-        </div>
-    </div>
+    <div class="content panel panel-body panel-default"
+         *ngIf="(listOfRelationsForStop.length !== 0 && filteredView) || (listOfRelations.length !== 0 && !filteredView)">
 
-    <div *ngIf="listOfRelations.length !== 0 && !filteredView" class="medium">
+        <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="medium">
+            <div *ngFor="let rel of listOfRelationsForStop">
+                <span class="explore" (click)="exploreRelation($event, rel)" (mouseover)="exploreAvailableRelation($event, rel)"
+                      [class.selected]="currentElement && isSelected(rel.id)">
+                    {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
+                </span>
+            </div>
+        </div>
+
+        <div *ngIf="listOfRelations.length !== 0 && !filteredView" class="medium">
         <ng-container *ngFor="let rel of listOfMasters">
             <div id="{{rel.id}}">
                 <span class="explore" (click)="exploreMaster($event, rel)" [class.selected]="currentElement && isSelected(rel.id)">
@@ -69,6 +72,8 @@
                 </div>
             </ng-container>
         </ng-container>
+    </div>
+
     </div>
 
 </div>
