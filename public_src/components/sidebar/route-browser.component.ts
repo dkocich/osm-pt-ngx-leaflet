@@ -144,22 +144,24 @@ export class RouteBrowserComponent {
         return this.processingService.haveSameIds(relId, this.currentElement.id);
     }
 
-    private visibleInMap(relId: any): boolean {
+    private visibleInMap(relId: any): string {
         const rel = this.storageService.elementsMap.get(relId);
-        if (rel.members.length === 0) {
-            return true; // empty routes are always visible
-        }
+        let nodesCounter = 0;
         for (const member of rel.members) {
-            if (["platform", "stop_position"].indexOf(member.role) > -1) {
+            if (member.type === "node") {
+                nodesCounter++;
                 if (this.storageService.elementsMap.has(member.ref)) {
                     const element = this.storageService.elementsMap.get(member.ref);
                     if (this.mapService.map.getBounds().contains({
                             lat: element .lat, lng: element .lon })) {
-                        return true; // return true while at least first node is visible
+                        return "visible"; // return true while at least first node is visible
                     }
                 }
             }
         }
-        return false;
+        if (rel.members.length === 0 || nodesCounter === 0) {
+            return "warning"; // empty routes or without nodes (lat/lon) are always visible
+        }
+        return "hidden";
     }
 }
