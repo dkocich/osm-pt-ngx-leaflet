@@ -96,9 +96,26 @@ export class RouteBrowserComponent {
         this.processingService.activateFilteredRouteView(false);
     }
 
+    /**
+     * Explores relations on click (together with the request to API)
+     * @param $event
+     * @param rel
+     */
     private exploreRelation($event: any, rel: any): void {
         this.processingService.exploreRelation(this.storageService.elementsMap.get(rel.id),
             true, true, true);
+    }
+
+    /**
+     * Explores already available relations on hover (without delay and additional requests)
+     * @param $event
+     * @param rel
+     */
+    private exploreAvailableRelation($event: any, rel: any): void {
+        if (this.storageService.elementsDownloaded.has(rel.id)) {
+            this.processingService.exploreRelation(this.storageService.elementsMap.get(rel.id),
+                true, true, true);
+        }
     }
 
     private exploreMaster($event: any, rel: any): void {

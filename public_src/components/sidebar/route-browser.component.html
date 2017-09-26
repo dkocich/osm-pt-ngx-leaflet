@@ -26,7 +26,8 @@
 
     <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="medium">
         <div *ngFor="let rel of listOfRelationsForStop">
-            <span class="explore" (click)="exploreRelation($event, rel)" [class.selected]="currentElement && isSelected(rel.id)">
+            <span class="explore" (click)="exploreRelation($event, rel)" (mouseover)="exploreAvailableRelation($event, rel)"
+                  [class.selected]="currentElement && isSelected(rel.id)">
                 {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
             </span>
         </div>
@@ -44,7 +45,8 @@
         <ng-container *ngFor="let rel of listOfRelations">
             <ng-container *ngIf="!hasMaster(rel.id)">
                 <div id="{{rel.id}}" *ngIf="visibleInMap(rel.id)">
-                    <span class="explore" (click)="exploreRelation($event, rel)" [class.selected]="currentElement && isSelected(rel.id)">
+                    <span class="explore" (click)="exploreRelation($event, rel)" (mouseover)="exploreAvailableRelation($event, rel)"
+                          [class.selected]="currentElement && isSelected(rel.id)">
                         <span *ngIf="rel.id < 0">
                             <i *ngIf="!hasMaster(rel.id)" class="fa fa-times-circle" aria-hidden="true"
                                tooltip="Route doesn't have master relation" container="body"></i>
