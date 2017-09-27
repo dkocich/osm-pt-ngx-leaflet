@@ -11,6 +11,7 @@ import { ProcessingService } from "../../services/processing.service";
 import { AuthComponent } from "../auth/auth.component";
 import { ToolbarComponent } from "../toolbar/toolbar.component";
 import { EditingService } from "../../services/editing.service";
+import { StorageService } from "../../services/storage.service";
 
 @Component({
     providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -30,7 +31,7 @@ export class AppComponent {
 
     constructor(private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService,
-                private editingService: EditingService) {
+                private editingService: EditingService, private storageService: StorageService) {
         if (isDevMode()) {
             console.log("WARNING: Ang. development mode is ", isDevMode());
         }
@@ -72,6 +73,23 @@ export class AppComponent {
                 );
         }
         this.toolbarComponent.Initialize();
+
+        this.processingService.loadSavedDataFromLocalStorage(); // try to restore any cached data
+        setInterval(() => {
+            if (Number(localStorage.getItem("dataLastSize")) >= this.storageService.elementsMap.size) {
+               return; // should not run data backup if count did not change
+            }
+            localStorage.setItem("dataLastSize", JSON.stringify(this.storageService.elementsMap.size));
+            let dataObject = [];
+            for (const key of Array.from(this.storageService.elementsMap.keys())) {
+                dataObject.push({
+                    downloaded: this.storageService.elementsDownloaded.has(key),
+                    element: this.storageService.elementsMap.get(key),
+                    timestamp: Date.now()
+                });
+            }
+            localStorage.setItem("dataString", JSON.stringify(dataObject));
+        }, 5000);
     }
 
     private showHelpModal(): void {

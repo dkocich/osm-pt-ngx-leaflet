@@ -126,23 +126,9 @@ export class ProcessingService {
                 if (!element.tags) {
                     continue;
                 }
-                switch (element.type) {
-                    case "node":
-                        // only nodes are fully downloaded
-                        this.storageService.elementsDownloaded.add(element.id);
-
-                        if (element.tags.bus === "yes" || element.tags.public_transport) {
-                            this.storageService.listOfStops.push(element);
-                        }
-                        break;
-                    case "relation":
-                        if (element.tags.public_transport === "stop_area") {
-                            this.storageService.listOfAreas.push(element);
-                        } else {
-                            this.storageService.listOfRelations.push(element);
-                            break;
-                        }
-                }
+                // only nodes are fully downloaded
+                this.storageService.elementsDownloaded.add(element.id);
+                this.addElementToList(element);
             }
         }
         this.storageService.logStats();
@@ -196,26 +182,66 @@ export class ProcessingService {
         response.elements.forEach((element) => {
             if (!this.storageService.elementsMap.has(element.id)) {
                 this.storageService.elementsMap.set(element.id, element);
-
-                switch (element.type) {
-                    case "node":
-                        // this.storageService.elementsDownloaded.add(element.id);
-                        if (element.tags && ["platform", "stop_position", "station"]
-                                .indexOf(element.tags.public_transport) > -1) {
-                            this.storageService.listOfStops.push(element);
-                        }
-                        break;
-                    case "relation":
-                        if (element.tags.public_transport === "stop_area") {
-                            this.storageService.listOfAreas.push(element);
-                        } else if (element.tags.public_transport) {
-                            this.storageService.listOfRelations.push(element);
-                            break;
-                        }
-                }
+                this.addElementToList(element);
             }
         });
         this.storageService.logStats();
+    }
+
+    /**
+     * Adds one element to appropriate list (stops, relations, areas, etc.)
+     * @param element
+     */
+    public addElementToList(element: any): void {
+        switch (element.type) {
+            case "node":
+                if (element.tags && ["platform", "stop_position", "station"]
+                        .indexOf(element.tags.public_transport) > -1) {
+                    this.storageService.listOfStops.push(element);
+                }
+                break;
+            case "relation":
+                if (element.tags.public_transport === "stop_area") {
+                    this.storageService.listOfAreas.push(element);
+                } else {
+                    this.storageService.listOfRelations.push(element);
+                    break;
+                }
+        }
+    }
+
+    /**
+     *
+     */
+    public loadSavedDataFromLocalStorage(): void {
+        if (!localStorage.getItem("dataString")) {
+            return alert("alert no data were saved, cancel");
+        }
+        console.log("LOADING SAVED DATA");
+        const savedObject = JSON.parse(localStorage.getItem("dataString"));
+        console.log(typeof savedObject, savedObject.length);
+        for (const entry of savedObject) {
+            if ((new Date().getTime() - new Date(entry.timestamp).getTime()) < 7200000) {
+                this.storageService.elementsMap.set(entry.element.id, entry.element);
+                if (!entry.element.tags) {
+                    continue;
+                }
+                if (entry.element.type === "node" && entry.downloaded) {
+                    this.storageService.elementsDownloaded.add(entry.element.id);
+                }
+                this.addElementToList(JSON.parse(JSON.stringify(entry.element)));
+            }
+        }
+        let validObjects = [];
+        for (const key of Array.from(this.storageService.elementsMap.keys())) {
+            validObjects.push(this.storageService.elementsMap.get(key));
+        }
+        const transformedGeojson = this.mapService.osmtogeojson({
+            elements: validObjects,
+            generator: "transformable data structure",
+            version: 0.6
+        });
+        this.mapService.renderTransformedGeojsonData(transformedGeojson);
     }
 
     /**
