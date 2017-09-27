@@ -9,6 +9,7 @@ import { ProcessingService } from "../../services/processing.service";
 import { AuthComponent } from "../auth/auth.component";
 import { ToolbarComponent } from "../toolbar/toolbar.component";
 import { EditingService } from "../../services/editing.service";
+import { StorageService } from "../../services/storage.service";
 
 @Component({
     providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -28,7 +29,7 @@ export class AppComponent {
 
     constructor(private mapService: MapService, private geocoder: GeocodingService,
                 private loadingService: LoadingService, private processingService: ProcessingService,
-                private editingService: EditingService) {
+                private editingService: EditingService, private storageService: StorageService) {
         if (isDevMode()) {
             console.log("WARNING: Ang. development mode is ", isDevMode());
         }
@@ -65,6 +66,29 @@ export class AppComponent {
                 (err) => console.error(err)
             );
         this.toolbarComponent.Initialize();
+
+        this.storageService.loadSavedData();
+
+        setInterval( () => {
+
+            console.log("... size now is ", this.storageService.elementsMap.size);
+
+            if (Number(localStorage.getItem("dataLastSize")) >= this.storageService.elementsMap.size) {
+               return;
+            }
+
+            console.log("RUNNING DATA BACKUP TO LOCALSTORAGE");
+            localStorage.setItem("dataLastSize", JSON.stringify(this.storageService.elementsMap.size));
+            let dataObject = [];
+            for (const [key, element] of Array.from(this.storageService.elementsMap.entries()) ) {
+               // console.log(key, object, [key, object]);
+               dataObject.push({ key, element, t: Date.now() });
+            }
+            let dataString = JSON.stringify(dataObject);
+            localStorage.setItem("dataString", JSON.stringify(dataString));
+            console.log("BACKED UP DATA");
+
+        }, 5000);
     }
 
     private showHelpModal(): void {

@@ -48,6 +48,39 @@ export class StorageService {
         );
     }
 
+    public loadSavedData(): void {
+        console.log("LOADING SAVED DATA");
+        const savedObject = [JSON.parse(localStorage.getItem("dataString"))];
+        for (const element of savedObject) {
+            console.log(element, new Date().getTime(), new Date(element.timestamp).getTime(),
+                new Date().getTime() - new Date(element.timestamp).getTime() < 3600000);
+            if (new Date().getTime() - new Date(element.timestamp).getTime() < 3600000) {
+                console.log("adding el");
+                this.elementsMap.set(element.key, element.object);
+                if (!element.tags) {
+                    continue;
+                }
+                switch (element.type) {
+                    case "node":
+                        // only nodes are fully downloaded
+                        this.elementsDownloaded.add(element.id);
+
+                        if (element.tags.bus === "yes" || element.tags.public_transport) {
+                            this.listOfStops.push(element);
+                        }
+                        break;
+                    case "relation":
+                        if (element.tags.public_transport === "stop_area") {
+                            this.listOfAreas.push(element);
+                        } else {
+                            this.listOfRelations.push(element);
+                            break;
+                        }
+                }
+            }
+        }
+    }
+
     /**
      * Logs basic data statistics.
      */
