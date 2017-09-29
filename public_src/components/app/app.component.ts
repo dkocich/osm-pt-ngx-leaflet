@@ -58,12 +58,17 @@ export class AppComponent {
         this.mapService.map = map;
         this.mapService.map.on("zoomend moveend", () => {
             this.processingService.filterDataInBounds();
+            this.processingService.addPositionToUrlHash();
         });
-        this.geocoder.getCurrentLocation()
-            .subscribe(
-                (location) => map.panTo([location.latitude, location.longitude]),
-                (err) => console.error(err)
-            );
+        if (window.location.hash !== "" && this.processingService.hashIsValidPosition()) {
+            this.mapService.zoomToHashedPosition();
+        } else {
+            this.geocoder.getCurrentLocation()
+                .subscribe(
+                    (location) => map.panTo([location.latitude, location.longitude]),
+                    (err) => console.error(err)
+                );
+        }
         this.toolbarComponent.Initialize();
     }
 

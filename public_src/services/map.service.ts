@@ -185,6 +185,14 @@ export class MapService {
     }
 
     /**
+     * Zooms to position encoded in URL hash
+     */
+    public zoomToHashedPosition(): void {
+        const h = window.location.hash.slice(5).split("/").map(Number);
+        this.map.setView( { lat : h[1], lng: h[2] }, h[0]);
+    }
+
+    /**
      * Clears layer with downloaded data.
      */
     public clearLayer(): void {
