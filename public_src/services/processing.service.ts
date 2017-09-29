@@ -147,6 +147,14 @@ export class ProcessingService {
     }
 
     /**
+     * Adds hash to URL hostname similarly like it is used on OSM (/#map=19/49.83933/18.29230)
+     */
+    public addPositionToUrlHash(): void {
+        const center = this.mapService.map.getCenter();
+        window.location.hash = `map=${this.mapService.map.getZoom()}/${center.lat.toFixed(5)}/${center.lng.toFixed(5)}`;
+    }
+
+    /**
      *
      * @param response
      */
@@ -472,6 +480,21 @@ export class ProcessingService {
         }
     }
 
+    /**
+     * Validates URL hash content (lat, lng, zoom)
+     * @returns {boolean}
+     */
+    public hashIsValidPosition(): boolean {
+        const h = window.location.hash.slice(5).split("/").map(Number);
+        h.forEach( (element) => {
+            if (isNaN) {
+                return false;
+            }
+        });
+        return h[0] < this.mapService.map.getMaxZoom()
+            && this.numIsBetween(h[1], -90, 90) && this.numIsBetween(h[2], -180, 180);
+    }
+
     public cancelSelection(): void {
         this.refreshTagView(undefined);
         this.mapService.clearHighlight();
@@ -483,5 +506,9 @@ export class ProcessingService {
         } else {
             return false;
         }
+    }
+
+    public numIsBetween(num: number, min: number, max: number): boolean {
+        return min < num && num < max;
     }
 }
