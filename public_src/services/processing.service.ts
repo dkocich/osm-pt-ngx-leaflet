@@ -87,6 +87,7 @@ export class ProcessingService {
             } else {
                 el.style.display = "none";
             }
+            // el.style.display = el && this.mapService.bounds.contains([stop.lat, stop.lon]) ? "table-row" : "none";
         }
     }
 

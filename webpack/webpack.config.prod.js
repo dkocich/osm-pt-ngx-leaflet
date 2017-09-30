@@ -49,13 +49,13 @@ module.exports = {
                 "NODE_ENV": JSON.stringify("production")
             }
         }),
-        new UglifyJsPlugin({
-            comments: false,
-            ecma: 5,
-            ie8: false,
-            mangle: false,
-            sourceMap: true
-        }),
+        // new UglifyJsPlugin({
+        //     comments: false,
+        //     ecma: 5,
+        //     ie8: false,
+        //     mangle: false,
+        //     sourceMap: true
+        // }),
         new ExtractTextPlugin("[name].[contenthash].css"),
         new HtmlWebpackPlugin({
             template: path.resolve(srcDir, "index.html"),
