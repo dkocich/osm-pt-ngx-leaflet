@@ -62,6 +62,7 @@ export class MapService {
     // public popupBtnClick: EventEmitter<any> = new EventEmitter();
     public markerClick: EventEmitter<any> = new EventEmitter();
     public markerEdit: EventEmitter<object> = new EventEmitter();
+    public highlightTypeEmitter: EventEmitter<object> = new EventEmitter();
     public highlightType: string = "Stops";
     public membersEditing: boolean;
     public markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
@@ -363,7 +364,11 @@ export class MapService {
      */
     public findCoordinates(refId: number): L.LatLngExpression {
         const element = this.storageService.elementsMap.get(refId);
-        return { lat: element.lat, lng: element.lon };
+        if (!element) {
+            alert(refId + "" + JSON.stringify(element));
+        } else {
+            return { lat: element.lat, lng: element.lon };
+        }
     }
 
     /**
@@ -464,6 +469,13 @@ export class MapService {
             }
         }
 
+        // setup highlight type
+        if (this.storageService.stopsForRoute.length === 0 &&
+            this.storageService.platformsForRoute.length !== 0) {
+            this.highlightType = "Platforms";
+        }
+        this.highlightTypeEmitter.emit({ highlightType: this.highlightType });
+
         let memberRefs;
         switch (this.highlightType) {
             case "Stops":
@@ -510,29 +522,55 @@ export class MapService {
         return this.highlightFill || this.highlightStroke || this.markerFrom || this.markerTo;
     }
 
+    private getFirstNode(): L.LatLngExpression {
+        let latlngFrom;
+        switch (this.highlightType) {
+            case "Stops":
+                latlngFrom = this.findCoordinates(
+                    this.storageService.stopsForRoute[0]); // get first and last ID reference
+                return latlngFrom;
+            case "Platforms":
+                latlngFrom = this.findCoordinates(
+                    this.storageService.platformsForRoute[0]); // get first and last ID reference
+                return latlngFrom;
+        }
+    }
+
+    private getLastNode(): L.LatLngExpression {
+        let latlngTo;
+        switch (this.highlightType) {
+            case "Stops":
+                latlngTo = this.findCoordinates(
+                    this.storageService.stopsForRoute[this.storageService.stopsForRoute.length - 1]);
+                return latlngTo;
+            case "Platforms":
+                latlngTo = this.findCoordinates(
+                    this.storageService.platformsForRoute[this.storageService.platformsForRoute.length - 1]);
+                return latlngTo;
+        }
+    }
+
     /**
      * Draws tooltip with name of from/to stops.
      * @param rel
      */
     public drawTooltipFromTo(rel: any): void {
-        const latlngFrom: L.LatLngExpression = this.findCoordinates(
-            this.storageService.stopsForRoute[0]); // get first and last ID reference
-        const latlngTo: L.LatLngExpression = this.findCoordinates(
-            this.storageService.stopsForRoute[this.storageService.stopsForRoute.length - 1]);
+        const latlngFrom = this.getFirstNode();
+        const latlngTo = this.getLastNode();
 
-        const from = rel.tags.from || "#FROM";
-        const to = rel.tags.to || "#TO";
-        const route = rel.tags.route || "#ROUTE";
-        const ref = rel.tags.ref || "#REF";
+        const from: string = "Tag from: " + rel.tags.from || "#FROM";
+        const to: string = "Tag to: " + rel.tags.to || "#TO";
+        const route: string = rel.tags.route || "#ROUTE";
+        const ref: string = rel.tags.ref || "#REF";
 
         this.markerTo = L.circleMarker(latlngTo, FROM_TO_LABEL)
-            .bindTooltip("To: " + to + " (" + route + " " + ref + ")", {
+            .bindTooltip(to + " (" + route + " " + ref + ")", {
                 className: "from-to-label",
                 offset: [0, 0],
                 permanent: true
             });
         this.markerFrom = L.circleMarker(latlngFrom, FROM_TO_LABEL)
-            .bindTooltip("From: " + from + " (" + route + " " + ref + ")", {
+            .bindTooltip(from + " (" + route + " " + ref + ")", {
                 className: "from-to-label",
                 offset: [0, 0],
                 permanent: true

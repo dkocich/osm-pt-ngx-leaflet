@@ -13,9 +13,9 @@
 
 <div id="radio-highlight" *ngIf="highlightIsActive() && isRelation()">
     <div class="btn-group">
-        <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()"
+        <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()" [ngClass]="{'text-uppercase': htRadioModel === 'Stops'}"
                tooltip="Highlight connectivity between route's stops" container="body" btnRadio="Stops">Stops</label>
-        <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()"
+        <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()" [ngClass]="{'text-uppercase': htRadioModel === 'Platforms'}"
                tooltip="Highlight connectivity between route's platforms" container="body" btnRadio="Platforms">Platforms</label>
     </div>
 </div>

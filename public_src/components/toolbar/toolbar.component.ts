@@ -22,7 +22,7 @@ import { IOsmEntity } from "../../core/osmEntity.interface";
 })
 export class ToolbarComponent {
     public downloading: boolean;
-    public htRadioModel: string = "Stops";
+    public htRadioModel: string;
     @ViewChild(TransporterComponent) public transporterComponent: TransporterComponent;
     @ViewChild(EditorComponent) public editorComponent: EditorComponent;
     private filtering: boolean;
@@ -45,6 +45,9 @@ export class ToolbarComponent {
             }
         );
         this.storageService.stats.subscribe((data) => this.stats = data);
+        this.mapService.highlightTypeEmitter.subscribe((data) => {
+            this.htRadioModel = data.highlightType;
+        });
     }
 
     ngOnInit(): void {
@@ -63,7 +66,6 @@ export class ToolbarComponent {
     }
 
     private changeHighlight(): void {
-        console.log(this.htRadioModel);
         if (this.highlightIsActive() && this.htRadioModel !== this.mapService.highlightType) {
             this.mapService.highlightType = this.htRadioModel;
             this.processingService.exploreRelation(
