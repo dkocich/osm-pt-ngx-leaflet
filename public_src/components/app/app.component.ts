@@ -1,6 +1,8 @@
 import { Component, isDevMode, ViewChild } from "@angular/core";
 import { CarouselConfig, ModalDirective } from "ngx-bootstrap";
 
+import * as L from "leaflet";
+
 import { GeocodingService } from "../../services/geocoding.service";
 import { LoadingService } from "../../services/loading.service";
 import { MapService } from "../../services/map.service";

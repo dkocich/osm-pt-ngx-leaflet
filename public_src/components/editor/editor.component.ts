@@ -138,7 +138,7 @@ export class EditorComponent {
         this.editingService.editingMode.emit(this.editing);
         this.mapService.editingMode = this.editing;
         if (this.editing) {
-            setTimeout( () => {
+            setTimeout(() => {
                 this.mapService.disableMouseEvent("edits-backward-btn");
                 this.mapService.disableMouseEvent("edits-forward-btn");
                 this.mapService.disableMouseEvent("edits-count");

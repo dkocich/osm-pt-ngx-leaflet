@@ -1,5 +1,7 @@
 import { EventEmitter, Injectable } from "@angular/core";
 
+import * as L from "leaflet";
+
 import { MapService } from "./map.service";
 import { ProcessingService } from "./processing.service";
 import { StorageService } from "./storage.service";
@@ -51,7 +53,7 @@ export class EditingService {
             (data) => {
                 console.log("LOG (editing s.) Editing mode change in editingService- ", data);
                 this.editing = data;
-                this.storageService.markersMap.forEach( (marker) => {
+                this.storageService.markersMap.forEach((marker) => {
                     if (this.editing === false) {
                         marker.dragging.disable();
                     } else if (this.editing === true) {
@@ -192,17 +194,17 @@ export class EditingService {
             default:
                 alert("Current change type was not recognized " + JSON.stringify(editObj));
         }
-        if (["add tag", "remove tag", "change tag"].indexOf(type) > -1 ) {
+        if (["add tag", "remove tag", "change tag"].indexOf(type) > -1) {
             this.processingService.refreshTagView(element);
-        } else if (["change members"].indexOf(type) > -1 ) {
+        } else if (["change members"].indexOf(type) > -1) {
             if (element.tags.type === "route") { // to prevent zoom error for route_masters
                 this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(editObj.id));
                 this.processingService.exploreRelation(this.storageService.elementsMap.get(editObj.id), false, false, false);
             }
-        } else if (["toggle members"].indexOf(type) > -1 ) {
+        } else if (["toggle members"].indexOf(type) > -1) {
             this.processingService.filterStopsByRelation(this.storageService.elementsMap.get(editObj.id));
         }
-        if (["add element", "add route"].indexOf(type) > -1 ) {
+        if (["add element", "add route"].indexOf(type) > -1) {
             if (type === "add element") {
                 this.processingService.exploreStop(element, false, false, false);
             }
@@ -377,12 +379,12 @@ export class EditingService {
             let shouldPush: boolean;
             let memberIds = [];
             // push if selected node is not in members; delete if selected node is in members
-            rel.members.forEach( (member, index) => {
+            rel.members.forEach((member, index) => {
                if (member.type === "node") {
                    if (member.ref === featureId) {
                        memberIds.push(member.ref);
                        delete rel.members[index];
-                       rel.members = rel.members.filter( (m) => {
+                       rel.members = rel.members.filter((m) => {
                            return m !== undefined;
                        });
                    }
@@ -571,17 +573,17 @@ export class EditingService {
         }
 
         const newOrder = [];
-        rel["members"].forEach( (mem) => {
+        rel["members"].forEach((mem) => {
             if (["stop", "stop_exit_only", "stop_entry_only"].indexOf(mem["role"]) > -1) {
                 newOrder.push(mem);
             }
         });
-        rel["members"].forEach( (mem) => {
+        rel["members"].forEach((mem) => {
             if (["platform", "platform_exit_only", "platform_entry_only"].indexOf(mem["role"]) > -1) {
                 newOrder.push(mem);
             }
         });
-        rel["members"].forEach( (mem) => {
+        rel["members"].forEach((mem) => {
             if (["stop", "stop_exit_only", "stop_entry_only", "platform", "platform_exit_only",
                     "platform_entry_only"].indexOf(mem["role"]) === -1) {
                 newOrder.push(mem);

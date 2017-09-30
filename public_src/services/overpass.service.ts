@@ -75,11 +75,11 @@ export class OverpassService {
      */
     public requestNewOverpassData(): void {
         this.loadingService.show("Loading bus stops...");
-        setTimeout( () => {
+        setTimeout(() => {
             if (this.loadingService.isLoading()) {
                 this.loadingService.hide(); // close loading window on timeout errors
             }
-        }, 5000 );
+        }, 5000);
         const requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
         const options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.mapService.previousCenter = [this.mapService.map.getCenter().lat, this.mapService.map.getCenter().lng];
@@ -114,16 +114,16 @@ export class OverpassService {
             minNumOfRelations = 10;
         }
         this.loadingService.show("Loading route master relations...");
-        setTimeout( () => {
+        setTimeout(() => {
             if (this.loadingService.isLoading()) {
                 this.loadingService.hide(); // close loading window on timeout errors
             }
-        }, 7500 );
+        }, 7500);
         const idsArr: Array<number> = this.findRouteIdsWithoutMaster();
         if (idsArr.length <= minNumOfRelations) {
             this.loadingService.hide();
             return console.log("LOG (overpass s.) Not enough relations to download - stop");
-        } else if (!idsArr.length ) {
+        } else if (!idsArr.length) {
             // do not query masters if all relations are already known
             this.loadingService.hide();
             return;
@@ -200,11 +200,11 @@ export class OverpassService {
             out meta;`;
         console.log("LOG (overpass s.) Querying nodes", requestBody);
         this.loadingService.show("Loading clicked feature data...");
-        setTimeout( () => {
+        setTimeout(() => {
             if (this.loadingService.isLoading()) {
                 this.loadingService.hide(); // close loading window on timeout errors
             }
-        }, 5000 );
+        }, 5000);
         requestBody = this.replaceBboxString(requestBody);
         const options = this.setRequestOptions("application/X-www-form-urlencoded");
         this.http.post(ConfigService.overpassUrl, requestBody, options)
@@ -269,7 +269,7 @@ export class OverpassService {
      */
     private findRouteIdsWithoutMaster(): Array<number> {
         const idsArr = [];
-        this.storageService.listOfRelations.forEach( (rel) => {
+        this.storageService.listOfRelations.forEach((rel) => {
             if (!this.storageService.queriedMasters.has(rel["id"])) {
                 idsArr.push(rel["id"]);
             }
@@ -282,7 +282,7 @@ export class OverpassService {
      * @param {number[]} idsArr
      */
     private markQueriedRelations(idsArr: number[]): void {
-        idsArr.forEach( (id) => this.storageService.queriedMasters.add(id) );
+        idsArr.forEach((id) => this.storageService.queriedMasters.add(id));
     }
 
     /**
@@ -370,7 +370,7 @@ export class OverpassService {
 
         console.log("LOG (overpass s.) Changed documents: ", changedElements);
 
-        const xml = create("osmChange", { "@version": "0.6", "@generator": ConfigService.appName } );
+        const xml = create("osmChange", { "@version": "0.6", "@generator": ConfigService.appName });
 
         let xmlNodeModify;
         for (const el of changedElements) {
@@ -399,7 +399,7 @@ export class OverpassService {
                 const objectType = xmlNodeModify.ele(el["type"], tagsObj); // adds XML element node|way|relation
                 if (el["type"] === "relation" && el["members"]) {
                     const members = el["members"]; // array of objects
-                    members.forEach( (mem) => {
+                    members.forEach((mem) => {
                         if (mem === members[members.length - 1]) {
                             objectType.ele("member", { "type": mem["type"], "ref": mem["ref"], "role": mem["role"] });
                         } else {
@@ -451,7 +451,7 @@ export class OverpassService {
                 const objectType = xmlNodeCreate.ele(el["type"], tagsObj); // adds XML element node|way|relation
                 if (el["type"] === "relation" && el["members"]) {
                     const members = el["members"]; // array of objects
-                    members.forEach( (mem) => {
+                    members.forEach((mem) => {
                         if (mem === members[members.length - 1]) {
                             objectType.ele("member", { "type": mem["type"], "ref": mem["ref"], "role": mem["role"] });
                         } else {

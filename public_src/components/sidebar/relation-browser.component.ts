@@ -105,7 +105,7 @@ export class RelationBrowserComponent {
             return;
         }
         let rel = this.storageService.elementsMap.get(relId);
-        let found = rel.members.filter( (member) => {
+        let found = rel.members.filter((member) => {
             return member.ref === this.currentElement.id;
         });
         if (found.length > 0) {

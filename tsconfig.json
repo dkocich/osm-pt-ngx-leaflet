@@ -13,7 +13,8 @@
     "typeRoots": [ "node_modules/@types" ],
     "types": [
       "node",
-      "jasmine"
+      "jasmine",
+      "leaflet"
     ]
   },
   "compileOnSave": false,

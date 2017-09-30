@@ -1,6 +1,8 @@
 import { EventEmitter, Injectable } from "@angular/core";
 import { Subject } from "rxjs/Subject";
 
+import * as L from "leaflet";
+
 import { LoadingService } from "./loading.service";
 import { MapService } from "./map.service";
 import { StorageService } from "./storage.service";
@@ -159,7 +161,7 @@ export class ProcessingService {
      * @param response
      */
     public processMastersResponse(response: object): void {
-        response["elements"].forEach( (element) => {
+        response["elements"].forEach((element) => {
             if (!this.storageService.elementsMap.has(element.id)) {
                 console.log("LOG (processing s.) New element added:", element);
                 this.storageService.elementsMap.set(element.id, element);
@@ -176,7 +178,7 @@ export class ProcessingService {
         this.storageService.logStats();
 
         const idsHaveMaster: number[] = [];
-        this.storageService.listOfMasters.forEach( (master) => {
+        this.storageService.listOfMasters.forEach((master) => {
             for (const member of master["members"]) {
                 idsHaveMaster.push(member["ref"]);
             }
@@ -191,7 +193,7 @@ export class ProcessingService {
      */
     public createLists(id: number): void {
         const response = this.storageService.localJsonStorage.get(id);
-        response.elements.forEach( (element) => {
+        response.elements.forEach((element) => {
             if (!this.storageService.elementsMap.has(element.id)) {
                 this.storageService.elementsMap.set(element.id, element);
 
@@ -302,9 +304,9 @@ export class ProcessingService {
             "platform", "platform_exit_only", "platform_entry_only"];
         // skip for new (created) relations
         if (rel.id > 0) {
-            rel["members"].forEach( (member) => {
+            rel["members"].forEach((member) => {
                if (!this.storageService.elementsMap.has(member.ref) &&
-                   ["node"].indexOf(member.type) > -1 && allowedRefs.indexOf(member.role) > -1 ) {
+                   ["node"].indexOf(member.type) > -1 && allowedRefs.indexOf(member.role) > -1) {
                    missingElements.push(member.ref);
                }
             });
@@ -451,7 +453,7 @@ export class ProcessingService {
      * @param element
      */
     public zoomToElement(element: IOsmEntity): void {
-        if (element.type === "node" ) {
+        if (element.type === "node") {
             if (!element["lat"] || !element["lon"]) {
                 return alert("Problem occured - element has no coordinates." + JSON.stringify(element));
             } else {
@@ -486,7 +488,7 @@ export class ProcessingService {
      */
     public hashIsValidPosition(): boolean {
         const h = window.location.hash.slice(5).split("/").map(Number);
-        h.forEach( (element) => {
+        h.forEach((element) => {
             if (isNaN) {
                 return false;
             }

@@ -5,6 +5,8 @@ import { Location } from "../core/location.class";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
 
+import * as L from "leaflet";
+
 @Injectable()
 export class GeocodingService {
     public http: Http;

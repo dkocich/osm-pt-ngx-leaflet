@@ -5,9 +5,7 @@ import { ConfigService } from "./config.service";
 import { LoadingService } from "./loading.service";
 import { StorageService } from "./storage.service";
 
-import { Map } from "leaflet";
-import LatLng = L.LatLng;
-import LatLngExpression = L.LatLngExpression;
+import * as L from "leaflet";
 
 import { IPtStop } from "../core/ptStop.interface";
 
@@ -54,7 +52,7 @@ const OTHER_STYLE = {
 
 @Injectable()
 export class MapService {
-    public map: Map;
+    public map: L.Map;
     public baseMaps: any;
     public previousCenter: [number, number] = [0.0, 0.0];
     public osmtogeojson: any = require("osmtogeojson");
@@ -189,7 +187,7 @@ export class MapService {
      */
     public zoomToHashedPosition(): void {
         const h = window.location.hash.slice(5).split("/").map(Number);
-        this.map.setView( { lat : h[1], lng: h[2] }, h[0]);
+        this.map.setView({ lat : h[1], lng: h[2] }, h[0]);
     }
 
     /**
@@ -284,8 +282,8 @@ export class MapService {
             const featureId = featureTypeId[1];
             const lat = marker.feature.geometry.coordinates[1];
             const lng = marker.feature.geometry.coordinates[0];
-            const originalCoords: LatLng = new LatLng(lat, lng);
-            const newCoords: LatLng = marker["_latlng"]; // .; getLatLng()
+            const originalCoords: L.LatLng = new L.LatLng(lat, lng);
+            const newCoords: L.LatLng = marker["_latlng"]; // .; getLatLng()
             const distance = originalCoords.distanceTo(newCoords);
             if (distance > 100) {
                 marker.setLatLng(originalCoords).update();
@@ -363,7 +361,7 @@ export class MapService {
      * @param refId
      * @returns {{lat: number, lng: number}}
      */
-    public findCoordinates(refId: number): LatLngExpression {
+    public findCoordinates(refId: number): L.LatLngExpression {
         const element = this.storageService.elementsMap.get(refId);
         return { lat: element.lat, lng: element.lon };
     }
@@ -373,7 +371,7 @@ export class MapService {
      * @param stop
      */
     public showStop(stop: IPtStop): void {
-        this.markerFrom = L.circleMarker( { lat: stop.lat, lng: stop.lon }, FROM_TO_LABEL);
+        this.markerFrom = L.circleMarker({ lat: stop.lat, lng: stop.lon }, FROM_TO_LABEL);
         this.highlight = L.layerGroup([this.markerFrom]);
     }
 
@@ -410,7 +408,7 @@ export class MapService {
         for (const member of rel.members) {
             if (member.type === "node" && ["stop", "stop_entry_only", "stop_exit_only"].indexOf(member.role) > -1) {
                 this.storageService.stopsForRoute.push(member.ref);
-                const latlng: LatLngExpression = this.findCoordinates(member.ref);
+                const latlng: L.LatLngExpression = this.findCoordinates(member.ref);
                 if (latlng) {
                     latlngs.push(latlng);
                 }
@@ -477,8 +475,8 @@ export class MapService {
         }
 
         const latlngs = Array();
-        for (const ref of memberRefs ) {
-            const latlng: LatLngExpression = this.findCoordinates(ref);
+        for (const ref of memberRefs) {
+            const latlng: L.LatLngExpression = this.findCoordinates(ref);
             if (latlng) {
                 latlngs.push(latlng);
             }
@@ -517,9 +515,9 @@ export class MapService {
      * @param rel
      */
     public drawTooltipFromTo(rel: any): void {
-        const latlngFrom: LatLngExpression = this.findCoordinates(
+        const latlngFrom: L.LatLngExpression = this.findCoordinates(
             this.storageService.stopsForRoute[0]); // get first and last ID reference
-        const latlngTo: LatLngExpression = this.findCoordinates(
+        const latlngTo: L.LatLngExpression = this.findCoordinates(
             this.storageService.stopsForRoute[this.storageService.stopsForRoute.length - 1]);
 
         const from = rel.tags.from || "#FROM";
@@ -527,13 +525,13 @@ export class MapService {
         const route = rel.tags.route || "#ROUTE";
         const ref = rel.tags.ref || "#REF";
 
-        this.markerTo = L.circleMarker( latlngTo, FROM_TO_LABEL)
+        this.markerTo = L.circleMarker(latlngTo, FROM_TO_LABEL)
             .bindTooltip("To: " + to + " (" + route + " " + ref + ")", {
                 className: "from-to-label",
                 offset: [0, 0],
                 permanent: true
             });
-        this.markerFrom = L.circleMarker( latlngFrom, FROM_TO_LABEL)
+        this.markerFrom = L.circleMarker(latlngFrom, FROM_TO_LABEL)
             .bindTooltip("From: " + from + " (" + route + " " + ref + ")", {
                 className: "from-to-label",
                 offset: [0, 0],
@@ -556,7 +554,7 @@ export class MapService {
         let iconUrl = "images/marker-icon.png";
         let shadowUrl = "";
         const fp = feature.properties;
-        if ("public_transport" in fp ) { // && fp["railway"] === undefined
+        if ("public_transport" in fp) { // && fp["railway"] === undefined
             if (fp["public_transport"] === "platform") {
                 iconUrl = "images/transport/platform.png";
             } else if (fp["public_transport"] === "stop_position") {
@@ -584,10 +582,10 @@ export class MapService {
             }
         }
         if ("public_transport:version" in fp) {
-            if (fp["public_transport:version"] === "1" ) {
+            if (fp["public_transport:version"] === "1") {
                 shadowUrl = "images/nr1-24x24.png";
             }
-            if (fp["public_transport:version"] === "2" ) {
+            if (fp["public_transport:version"] === "2") {
                 iconUrl = "images/nr2-24x24.png";
             }
         }

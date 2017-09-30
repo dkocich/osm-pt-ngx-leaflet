@@ -1,6 +1,3 @@
-/// <reference path="./typings/require.d.ts"/>
-/// <reference path="./typings/leaflet.vectorgrid.d.ts"/>
-
 import "leaflet";
 import "leaflet.vectorgrid";
 import "reflect-metadata";

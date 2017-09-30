@@ -56,7 +56,7 @@ export class RouteBrowserComponent {
         this.processingService.refreshMasters.subscribe(
           (data) => {
               this.isRequesting = false;
-              data["idsHaveMaster"].forEach( (id) => {
+              data["idsHaveMaster"].forEach((id) => {
                   this.idsHaveMaster.add(id);
               });
           }

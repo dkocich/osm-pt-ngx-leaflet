@@ -13,6 +13,7 @@
         ],
         "no-consecutive-blank-lines": [true, 1],
         "curly": true,
+        "import-blacklist": [true, "rxjs"],
         "indent": [
             true,
             "spaces"
@@ -53,6 +54,7 @@
         "no-reference": false,
         "no-shadowed-variable": true,
         "no-string-literal": false,
+        "no-submodule-imports": [true, "rxjs", "@angular/platform-browser", "@angular/core/testing"],
         "no-trailing-whitespace": true,
         "no-var-keyword": true,
         "no-var-requires": false,

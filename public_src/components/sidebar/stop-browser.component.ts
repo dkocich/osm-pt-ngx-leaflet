@@ -71,7 +71,7 @@ export class StopBrowserComponent {
         );
     }
 
-    private isDownloaded(nodeId: number) {
+    private isDownloaded(nodeId: number): boolean {
         return this.storageService.elementsDownloaded.has(nodeId);
     }
 
@@ -81,7 +81,7 @@ export class StopBrowserComponent {
 
     private createChange(): void {
         const type = "change members";
-        let elementsWithoutRole = this.currentElement["members"].filter( (member) => {
+        let elementsWithoutRole = this.currentElement["members"].filter((member) => {
             return member["role"] === "";
         });
         let change = {
