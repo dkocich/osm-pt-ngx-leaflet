@@ -215,20 +215,25 @@ export class ProcessingService {
      */
     public loadSavedDataFromLocalStorage(): void {
         if (!localStorage.getItem("dataString")) {
-            return alert("alert no data were saved, cancel");
+            return;
         }
-        console.log("LOADING SAVED DATA");
         const savedObject = JSON.parse(localStorage.getItem("dataString"));
-        console.log(typeof savedObject, savedObject.length);
         for (const entry of savedObject) {
             if ((new Date().getTime() - new Date(entry.timestamp).getTime()) < 7200000) {
                 this.storageService.elementsMap.set(entry.element.id, entry.element);
                 if (!entry.element.tags) {
                     continue;
                 }
-                if (entry.element.type === "node" && entry.downloaded) {
-                    this.storageService.elementsDownloaded.add(entry.element.id);
-                }
+                // if (entry.elementsDownloaded === true) { // entry.element.type === "node" &&
+                //     this.storageService.elementsDownloaded.add(entry.element.id);
+                // }
+                // if (entry.idsHaveMaster === true) {
+                //     this.storageService.idsHaveMaster.add(entry.element.id);
+                // }
+                // if (entry.queriedMasters === true) {
+                //     this.storageService.queriedMasters.add(entry.element.id);
+                // }
+
                 this.addElementToList(JSON.parse(JSON.stringify(entry.element)));
             }
         }

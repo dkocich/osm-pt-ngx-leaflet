@@ -82,14 +82,26 @@ export class AppComponent {
             localStorage.setItem("dataLastSize", JSON.stringify(this.storageService.elementsMap.size));
             let dataObject = [];
             for (const key of Array.from(this.storageService.elementsMap.keys())) {
-                dataObject.push({
-                    downloaded: this.storageService.elementsDownloaded.has(key),
-                    element: this.storageService.elementsMap.get(key),
-                    timestamp: Date.now()
-                });
+                const element = JSON.parse(JSON.stringify(this.storageService.elementsMap.get(key)));
+                let object = {
+                    elementsDownloaded: this.storageService.elementsDownloaded.has(key),
+                    element,
+                    timestamp: Date.now(),
+                    idsHaveMaster: false,
+                    queriedMasters: false
+                };
+                if (element.type === "relation") {
+                    if (this.storageService.idsHaveMaster.has(key)) {
+                        object.idsHaveMaster = true;
+                    }
+                    if (this.storageService.queriedMasters.has(key)) {
+                        object.queriedMasters = true;
+                    }
+                }
+                dataObject.push(object);
             }
             localStorage.setItem("dataString", JSON.stringify(dataObject));
-        }, 5000);
+        }, 30000);
     }
 
     private showHelpModal(): void {
