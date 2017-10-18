@@ -53,6 +53,7 @@
     "font-awesome": "4.7.0",
     "leaflet": "1.1.0",
     "leaflet-bing-layer": "3.2.0",
+    "leaflet-plugins": "^3.0.1",
     "leaflet.vectorgrid": "1.2.0",
     "ng2-dragula": "1.5.0",
     "ngx-bootstrap": "1.8.1",

@@ -6,8 +6,10 @@ import { LoadingService } from "./loading.service";
 import { StorageService } from "./storage.service";
 
 import * as L from "leaflet";
-
-// import { bing } from "";
+// import bingTileLayer from "leaflet-bing-layer";
+// import * from "leaflet-plugins/layer/tile";
+// import * as test from "../../node_modules/leaflet-plugins/layer/tile";
+// import * as bing from "../../node_modules/leaflet-plugins/layer/tile/bing";
 
 import { IPtStop } from "../core/ptStop.interface";
 
@@ -74,12 +76,16 @@ export class MapService {
     private highlight: any = undefined;
     private markerFrom: any = undefined;
     private markerTo: any = undefined;
+    public bl = require("../../node_modules/leaflet-plugins/layer/tile");
 
-    private LTileLayerBing: any = require("leaflet-bing-layer");
-
+    // public bingTileLayer = require("leaflet-bing-layer");
+    // public BL = require("leaflet-plugins");
+    // private LTileLayerBing: any = require("leaflet-bing-layer");
 
     constructor(private http: Http, private storageService: StorageService,
                 private configService: ConfigService, private loadingService: LoadingService) {
+
+        console.log(this.bl);
 
         this.baseMaps = {
             Empty: L.tileLayer("", {
@@ -89,8 +95,9 @@ export class MapService {
             //     + this.map.getCenter().lat + "," + this.map.getCenter().lng + "?zl={z}&key="
             //     + ConfigService.bingKey + "&uriScheme=https", {
             //     attribution: `TEST`
-            // })
-            Bing_aerial: this.LTileLayerBing.Bing(ConfigService.bingKey, { type: "AerialWithLabels" }),
+            // }),
+            // Bing_aerial: this.LTileLayerBing.Bing(ConfigService.bingKey, { type: "AerialWithLabels" }),
+            // Bing_aerial: L.BingLayer(ConfigService.bingKey, {type: "Aerial"}),
             CartoDB_dark: L.tileLayer("http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png", {
                 attribution: `&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap
                     </a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>`,

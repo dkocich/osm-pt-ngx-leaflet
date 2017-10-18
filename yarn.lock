@@ -1826,13 +1826,13 @@ error-ex@^1.2.0:
   dependencies:
     is-arrayish "^0.2.1"
 
+es6-promise@4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.1.1.tgz#8811e90915d9a0dba36274f0b242dbda78f9c92a"
+
 es6-promise@^3.0.2, es6-promise@^3.1.2:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.3.1.tgz#a08cdde84ccdbf34d027a1451bc91d4bcd28a613"
-
-es6-promise@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.1.1.tgz#8811e90915d9a0dba36274f0b242dbda78f9c92a"
 
 es6-templates@^0.2.2:
   version "0.2.3"
@@ -3264,7 +3264,7 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-leaflet-bing-layer@^3.2.0:
+leaflet-bing-layer@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/leaflet-bing-layer/-/leaflet-bing-layer-3.2.0.tgz#832f5305bffb943c1c96f08129b3358a9bef786f"
   dependencies:
@@ -3272,6 +3272,10 @@ leaflet-bing-layer@^3.2.0:
     browserify-shim "^3.8.11"
     fetch-jsonp "^1.0.0"
     leaflet "^1.0.0-beta.2"
+
+leaflet-plugins@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/leaflet-plugins/-/leaflet-plugins-3.0.1.tgz#aa0c29e3cf71de33784efaa02de177a246dd53b1"
 
 leaflet.vectorgrid@1.2.0:
   version "1.2.0"
