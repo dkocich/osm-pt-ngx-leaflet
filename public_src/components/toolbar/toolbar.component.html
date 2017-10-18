@@ -27,12 +27,11 @@
 
 <editor></editor>
 
-<div id="stats">
+<div id="stats" class="hidden-xs">
     stops: {{stats.s}}, relations: {{stats.r}}, areas: {{stats.a}} masters: {{stats.m}}
 </div>
 
 <div id="selection" class="text-center" *ngIf="currentElement">
-    <h5 tooltip="Zoom to current element" container="body" class="explore" (click)="zoomTo(currentElement)">Current selection</h5>
     <p class="medium">{{currentElement.tags.name || currentElement.tags.public_transport || ""}} (id: {{currentElement.id || ""}}, type: {{currentElement.type || ""}})</p>
     <button type="button" class="btn btn-default explore" container="body"
             tooltip="Cancel current selection" (click)="cancelSelection()">
@@ -42,8 +41,12 @@
             tooltip="Show more information" (click)="showInfo(currentElement)">
         <i class="fa fa-question-circle" aria-hidden="true"></i> Info
     </button>
-    <button type="button" class="btn btn-default" (click)="getLoadAndZoomUrl()" [disabled]="isDisabled()"
+    <button type="button" class="btn btn-default visible-md visible-lg" (click)="getLoadAndZoomUrl()" [disabled]="isDisabled()"
             tooltip="Open current element in JOSM" container="body">
         <i class="fa fa-download" aria-hidden="true"></i> Open in JOSM
+    </button>
+    <button type="button" class="btn btn-default" (click)="zoomTo(currentElement)" [disabled]="isDisabled()"
+            tooltip="Zoom to current element" container="body">
+        <i class="fa fa-search" aria-hidden="true"></i> Show
     </button>
 </div>
