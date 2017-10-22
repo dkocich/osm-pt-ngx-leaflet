@@ -33,20 +33,20 @@
 
 <div id="selection" class="text-center" *ngIf="currentElement">
     <p class="medium">{{currentElement.tags.name || currentElement.tags.public_transport || ""}} (id: {{currentElement.id || ""}}, type: {{currentElement.type || ""}})</p>
-    <button type="button" class="btn btn-default explore" container="body"
+    <button type="button" class="btn btn-default col-md-6" container="body"
             tooltip="Cancel current selection" (click)="cancelSelection()">
         <i class="fa fa-times" aria-hidden="true"></i> Cancel
     </button>
-    <button type="button" class="btn btn-default explore" container="body"
+    <button type="button" class="btn btn-default col-md-6" container="body"
             tooltip="Show more information" (click)="showInfo(currentElement)">
         <i class="fa fa-question-circle" aria-hidden="true"></i> Info
     </button>
-    <button type="button" class="btn btn-default visible-md visible-lg" (click)="getLoadAndZoomUrl()" [disabled]="isDisabled()"
-            tooltip="Open current element in JOSM" container="body">
-        <i class="fa fa-download" aria-hidden="true"></i> Open in JOSM
-    </button>
-    <button type="button" class="btn btn-default" (click)="zoomTo(currentElement)" [disabled]="isDisabled()"
+    <button type="button" class="btn btn-default col-md-6" (click)="zoomTo(currentElement)" [disabled]="isDisabled()"
             tooltip="Zoom to current element" container="body">
         <i class="fa fa-search" aria-hidden="true"></i> Show
+    </button>
+    <button type="button" class="btn btn-default col-md-6 visible-md visible-lg" (click)="getLoadAndZoomUrl()" [disabled]="isDisabled()"
+            tooltip="Open current element in JOSM" container="body">
+        <i class="fa fa-download" aria-hidden="true"></i> Open in JOSM
     </button>
 </div>
