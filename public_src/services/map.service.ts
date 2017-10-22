@@ -365,7 +365,7 @@ export class MapService {
     public findCoordinates(refId: number): L.LatLngExpression {
         const element = this.storageService.elementsMap.get(refId);
         if (!element) {
-            alert(refId + "" + JSON.stringify(element));
+            console.log("Warning - elem. not found ", refId, JSON.stringify(element));
         } else {
             return { lat: element.lat, lng: element.lon };
         }
