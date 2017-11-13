@@ -41,7 +41,7 @@
     "@angular/core": "5.0.0",
     "@angular/forms": "5.0.0",
     "@angular/http": "5.0.0",
-    "@angular/platform-browser": "5.0.0",
+    "@angular/platform-browser": "5.0.1",
     "@angular/platform-browser-dynamic": "5.0.0",
     "@types/es6-shim": "0.31.35",
     "@types/geojson": "1.0.6",
