@@ -36,7 +36,7 @@
   "homepage": "https://github.com/dkocich/osm-pt-ngx-leaflet#readme",
   "dependencies": {
     "@angular/animations": "5.0.0",
-    "@angular/common": "5.0.0",
+    "@angular/common": "5.0.1",
     "@angular/compiler": "5.0.0",
     "@angular/core": "5.0.0",
     "@angular/forms": "5.0.0",
