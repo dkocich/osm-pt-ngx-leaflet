@@ -27,13 +27,14 @@
     "build-prod": "webpack -p --config webpack/webpack.config.prod.js --colors",
     "create-analyzer": "webpack --config webpack/webpack.config.analyzer.js --colors",
     "create-visualizer": "webpack --config webpack/webpack.config.visualizer.js --colors",
-    "dev": "webpack-dev-server --config webpack/webpack.config.dev.js  --content-base public/ --progress --colors",
     "lint": "tslint -c tslint.json public_src/**/*.ts",
     "postinstall": "npm run build-prod",
     "prepublish": "snyk protect",
     "start": "webpack-dev-server --content-base public/",
     "test": "snyk test && NODE_ENV=development karma start",
-    "watch": "webpack --config webpack/webpack.config.dev.js --watch"
+    "watch": "webpack --config webpack/webpack.config.dev.js --watch",
+    "wds-dev": "webpack-dev-server --config webpack/webpack.config.dev.js  --content-base public/ --progress --colors",
+    "wds-prod": "webpack-dev-server --config webpack/webpack.config.prod.js  --content-base public/ --progress --colors"
   },
   "homepage": "https://github.com/dkocich/osm-pt-ngx-leaflet#readme",
   "dependencies": {
