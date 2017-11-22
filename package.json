@@ -61,7 +61,7 @@
     "raven-js": "3.19.1",
     "reflect-metadata": "0.1.10",
     "rxjs": "5.5.2",
-    "snyk": "1.47.0",
+    "snyk": "1.49.2",
     "xmlbuilder": "9.0.4",
     "zone.js": "0.8.18"
   },
