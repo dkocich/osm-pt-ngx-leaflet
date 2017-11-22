@@ -25,6 +25,8 @@
   "scripts": {
     "build-dev": "webpack --config webpack/webpack.config.dev.js --progress --colors",
     "build-prod": "webpack -p --config webpack/webpack.config.prod.js --colors",
+    "create-analyzer": "webpack --config webpack/webpack.config.analyzer.js --colors",
+    "create-visualizer": "webpack --config webpack/webpack.config.visualizer.js --colors",
     "dev": "webpack-dev-server --config webpack/webpack.config.dev.js  --content-base public/ --progress --colors",
     "lint": "tslint -c tslint.json public_src/**/*.ts",
     "postinstall": "npm run build-prod",
@@ -62,6 +64,8 @@
     "reflect-metadata": "0.1.10",
     "rxjs": "5.5.2",
     "snyk": "1.49.5",
+    "webpack-bundle-analyzer": "2.9.1",
+    "webpack-visualizer-plugin": "^0.1.11",
     "xmlbuilder": "9.0.4",
     "zone.js": "0.8.18"
   },
