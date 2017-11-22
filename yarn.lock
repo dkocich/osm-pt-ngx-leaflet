@@ -184,9 +184,9 @@
   version "2.8.2"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.8.2.tgz#6ae4d8740c0da5d5a627df725b4eed71b8e36668"
 
-"@types/leaflet@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.2.0.tgz#5f15f5012b24d30507f3c4dc3271c88acbe4be49"
+"@types/leaflet@1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.2.2.tgz#3530cd68c3a97fc395cd77b0f5afcb77b3423b2c"
   dependencies:
     "@types/geojson" "*"
 

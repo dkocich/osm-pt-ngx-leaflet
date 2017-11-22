@@ -45,7 +45,7 @@
     "@angular/platform-browser-dynamic": "5.0.0",
     "@types/es6-shim": "0.31.35",
     "@types/geojson": "1.0.6",
-    "@types/leaflet": "1.2.0",
+    "@types/leaflet": "1.2.2",
     "@types/xmlbuilder": "0.0.31",
     "angular2-busy": "2.0.4",
     "bootstrap": "3.3.7",
