@@ -49,13 +49,6 @@ module.exports = {
                 "NODE_ENV": JSON.stringify("production")
             }
         }),
-        // new UglifyJsPlugin({
-        //     comments: false,
-        //     ecma: 5,
-        //     ie8: false,
-        //     mangle: false,
-        //     sourceMap: true
-        // }),
         new ExtractTextPlugin("[name].[contenthash].css"),
         new HtmlWebpackPlugin({
             template: path.resolve(srcDir, "index.html"),
@@ -68,6 +61,23 @@ module.exports = {
           exclude: ["index.html", "data/airports.geojson"]
         }),
         new OptimizeJsPlugin(),
+        // new UglifyJsPlugin({
+        //     cache: false,
+        //     parallel: false,
+        //     sourceMap: true,
+        //     extractComments: false,
+        //     uglifyOptions: {
+        //         ecma: 5,
+        //         compress: true,
+        //         mangle: true,
+        //         ie8: false,
+        //         warnings: false,
+        //         output: {
+        //             comments: false,
+        //             beautify: false
+        //         }
+        //     }
+        // }),
         new OptimizeCssAssetsPlugin({
             assetNameRegExp: /\.css$/g,
             cssProcessor: require("cssnano"),
