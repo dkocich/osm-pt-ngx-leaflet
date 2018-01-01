@@ -16,11 +16,12 @@
         "import-blacklist": [true, "rxjs"],
         "indent": [
             true,
-            "spaces"
+            "spaces",
+            2
         ],
         "forin": true,
         "max-classes-per-file": [false, 1],
-        "max-line-length": false,
+        "max-line-length": 120,
         "member-access": false,
         "member-ordering": [
             false,

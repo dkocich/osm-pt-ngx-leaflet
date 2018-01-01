@@ -9,14 +9,14 @@
  */
 
 export interface IPtRelationTags {
-    colour: string;
-    from: string;
-    to: string;
-    name: string;
-    "public_transport:version": string;
-    type: string;
-    route: string;
-    route_ref: string;
-    operator: string;
-    ref: string;
+  colour: string;
+  from: string;
+  to: string;
+  name: string;
+  "public_transport:version": string;
+  type: string;
+  route: string;
+  route_ref: string;
+  operator: string;
+  ref: string;
 }

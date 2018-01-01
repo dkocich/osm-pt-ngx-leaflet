@@ -40,7 +40,7 @@ import { IOsmTags } from "./osmTags.interface";
  *  }
  */
 export interface IPtRelation extends IOsmEntity {
-    type: "relation";
-    members: IPtMember[];
-    tags: IOsmTags;
+  type: "relation";
+  members: IPtMember[];
+  tags: IOsmTags;
 }

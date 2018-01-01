@@ -19,12 +19,12 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BusyModule } from "angular2-busy";
 import { DragulaModule } from "ng2-dragula";
 import {
-    AccordionModule,
-    ButtonsModule,
-    CarouselModule,
-    ModalModule,
-    TooltipModule,
-    TypeaheadModule
+  AccordionModule,
+  ButtonsModule,
+  CarouselModule,
+  ModalModule,
+  TooltipModule,
+  TypeaheadModule
 } from "ngx-bootstrap";
 
 import { AppComponent } from "./components/app/app.component";
@@ -51,55 +51,52 @@ import { StorageService } from "./services/storage.service";
 import { KeysPipe } from "./components/pipes/keys.pipe";
 
 @NgModule({
-    bootstrap: [
-        AppComponent
-    ],
-    declarations: [
-        AppComponent,
-        AuthComponent,
-        EditorComponent,
-        NavigatorComponent,
-        RelationBrowserComponent,
-        RouteBrowserComponent,
-        StopBrowserComponent,
-        TagBrowserComponent,
-        ToolbarComponent,
-        TransporterComponent,
+  bootstrap: [AppComponent],
+  declarations: [
+    AppComponent,
+    AuthComponent,
+    EditorComponent,
+    NavigatorComponent,
+    RelationBrowserComponent,
+    RouteBrowserComponent,
+    StopBrowserComponent,
+    TagBrowserComponent,
+    ToolbarComponent,
+    TransporterComponent,
 
-        KeysPipe
-    ],
-    imports: [
-        AccordionModule.forRoot(),
-        BrowserAnimationsModule,
-        BrowserModule,
-        BusyModule,
-        ButtonsModule.forRoot(),
-        CarouselModule.forRoot(),
-        DragulaModule,
-        FormsModule,
-        HttpModule,
-        ModalModule.forRoot(),
-        TooltipModule.forRoot(),
-        TypeaheadModule.forRoot()
-    ],
-    providers: [
-        AuthService,
-        ConfigService,
-        EditingService,
-        GeocodingService,
-        LoadingService,
-        MapService,
-        OverpassService,
-        ProcessingService,
-        StorageService,
+    KeysPipe
+  ],
+  imports: [
+    AccordionModule.forRoot(),
+    BrowserAnimationsModule,
+    BrowserModule,
+    BusyModule,
+    ButtonsModule.forRoot(),
+    CarouselModule.forRoot(),
+    DragulaModule,
+    FormsModule,
+    HttpModule,
+    ModalModule.forRoot(),
+    TooltipModule.forRoot(),
+    TypeaheadModule.forRoot()
+  ],
+  providers: [
+    AuthService,
+    ConfigService,
+    EditingService,
+    GeocodingService,
+    LoadingService,
+    MapService,
+    OverpassService,
+    ProcessingService,
+    StorageService,
 
-        KeysPipe
-    ]
+    KeysPipe
+  ]
 })
-
 export class AppModule {}
 
 if (window.location.hostname !== "localhost") {
-    enableProdMode(); // run angular development mode outside testing environment
+  enableProdMode(); // run angular development mode outside testing environment
 }
 platformBrowserDynamic().bootstrapModule(AppModule);

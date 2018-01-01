@@ -1,5 +1,5 @@
 export interface IPtMember {
-    type: string;
-    ref: number;
-    role: string;
+  type: string;
+  ref: number;
+  role: string;
 }
