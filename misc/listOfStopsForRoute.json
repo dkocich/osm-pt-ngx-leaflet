@@ -1,0 +1,2433 @@
+[
+  {
+    "type": "node",
+    "ref": 2328217289,
+    "role": "platform",
+    "id": 2328217289,
+    "lat": 49.6612982,
+    "lon": 18.3555565,
+    "timestamp": "2017-04-20T01:22:55Z",
+    "version": 2,
+    "changeset": 47956115,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "name": "Frýdek-Místek, Místek, Letná",
+      "public_transport": "platform"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2328217832,
+    "role": "stop",
+    "id": 2328217832,
+    "lat": 49.6613408,
+    "lon": 18.3555733,
+    "timestamp": "2013-06-01T16:04:22Z",
+    "version": 1,
+    "changeset": 16379560,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 3909759839,
+    "role": "stop",
+    "id": 3909759839,
+    "lat": 49.6689691,
+    "lon": 18.3480289,
+    "timestamp": "2015-12-25T22:12:51Z",
+    "version": 1,
+    "changeset": 36166996,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2096820242,
+    "role": "platform",
+    "id": 2096820242,
+    "lat": 49.6719268,
+    "lon": 18.3444199,
+    "timestamp": "2017-04-20T01:22:49Z",
+    "version": 3,
+    "changeset": 47956115,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bus": "yes",
+      "name": "Frýdek-Místek, Místek, Frýdlantská",
+      "public_transport": "platform"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2152434286,
+    "role": "stop",
+    "id": 2152434286,
+    "lat": 49.6719024,
+    "lon": 18.3443583,
+    "timestamp": "2013-02-12T20:24:33Z",
+    "version": 1,
+    "changeset": 15010878,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2097601896,
+    "role": "platform",
+    "id": 2097601896,
+    "lat": 49.6759223,
+    "lon": 18.3449034,
+    "timestamp": "2017-04-20T01:22:49Z",
+    "version": 3,
+    "changeset": 47956115,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bench": "yes",
+      "name": "Frýdek-Místek, Místek, Politických obětí",
+      "public_transport": "platform",
+      "shelter": "yes",
+      "tactile_paving": "no"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2097601897,
+    "role": "stop",
+    "id": 2097601897,
+    "lat": 49.6758904,
+    "lon": 18.3448746,
+    "timestamp": "2013-02-14T20:32:59Z",
+    "version": 2,
+    "changeset": 15033599,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2245311078,
+    "role": "platform",
+    "id": 2245311078,
+    "lat": 49.6778391,
+    "lon": 18.3542394,
+    "timestamp": "2017-04-20T01:22:55Z",
+    "version": 2,
+    "changeset": 47956115,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bench": "no",
+      "bus": "yes",
+      "description": "výstupní",
+      "description:en": "output only",
+      "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+      "public_transport": "platform"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2245311160,
+    "role": "stop",
+    "id": 2245311160,
+    "lat": 49.6778496,
+    "lon": 18.3542688,
+    "timestamp": "2017-07-10T20:19:32Z",
+    "version": 2,
+    "changeset": 50186124,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bus": "yes",
+      "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2245311079,
+    "role": "platform",
+    "id": 2245311079,
+    "lat": 49.6783222,
+    "lon": 18.3547766,
+    "timestamp": "2017-07-10T20:19:32Z",
+    "version": 3,
+    "changeset": 50186124,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bench": "no",
+      "bus": "yes",
+      "description": "směr Frýdek",
+      "description:en": "Frydek direction",
+      "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+      "public_transport": "platform"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2245311340,
+    "role": "stop",
+    "id": 2245311340,
+    "lat": 49.6782781,
+    "lon": 18.3548301,
+    "timestamp": "2017-07-10T20:19:32Z",
+    "version": 2,
+    "changeset": 50186124,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bus": "yes",
+      "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2238922252,
+    "role": "platform",
+    "id": 2238922252,
+    "lat": 49.6820416,
+    "lon": 18.355523,
+    "timestamp": "2017-04-20T01:22:54Z",
+    "version": 2,
+    "changeset": 47956115,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bus": "yes",
+      "name": "Frýdek-Místek, Frýdek, Nový byt",
+      "public_transport": "platform"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2238922721,
+    "role": "stop",
+    "id": 2238922721,
+    "lat": 49.6820347,
+    "lon": 18.355497,
+    "timestamp": "2013-03-30T19:02:07Z",
+    "version": 1,
+    "changeset": 15555039,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2162278061,
+    "role": "platform",
+    "id": 2162278061,
+    "lat": 49.6851795,
+    "lon": 18.3523716,
+    "timestamp": "2017-04-20T01:22:52Z",
+    "version": 3,
+    "changeset": 47956115,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bench": "yes",
+      "bus": "yes",
+      "name": "Frýdek-Místek, Frýdek, Magistrát",
+      "public_transport": "platform"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2162278065,
+    "role": "stop",
+    "id": 2162278065,
+    "lat": 49.6851468,
+    "lon": 18.3523098,
+    "timestamp": "2013-03-08T22:41:26Z",
+    "version": 2,
+    "changeset": 15296296,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2184049075,
+    "role": "platform",
+    "id": 2184049075,
+    "lat": 49.6892431,
+    "lon": 18.3567401,
+    "timestamp": "2017-04-20T01:22:53Z",
+    "version": 5,
+    "changeset": 47956115,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bench": "yes",
+      "bus": "yes",
+      "covered": "no",
+      "name": "Frýdek-Místek, Frýdek, U Nemocnice",
+      "public_transport": "platform",
+      "shelter": "yes"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2184049155,
+    "role": "stop",
+    "id": 2184049155,
+    "lat": 49.6892636,
+    "lon": 18.3567307,
+    "timestamp": "2013-03-11T19:57:07Z",
+    "version": 3,
+    "changeset": 15332302,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2184049065,
+    "role": "platform",
+    "id": 2184049065,
+    "lat": 49.689638,
+    "lon": 18.3542334,
+    "timestamp": "2017-04-20T01:22:53Z",
+    "version": 3,
+    "changeset": 47956115,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bench": "no",
+      "bus": "yes",
+      "covered": "no",
+      "name": "Frýdek-Místek, Frýdek, Lékárna",
+      "public_transport": "platform",
+      "shelter": "no"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2184049235,
+    "role": "stop",
+    "id": 2184049235,
+    "lat": 49.6895996,
+    "lon": 18.3542046,
+    "timestamp": "2013-03-06T06:31:17Z",
+    "version": 2,
+    "changeset": 15266525,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2184049070,
+    "role": "platform",
+    "id": 2184049070,
+    "lat": 49.6913393,
+    "lon": 18.3480462,
+    "timestamp": "2017-04-20T01:22:53Z",
+    "version": 3,
+    "changeset": 47956115,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bench": "no",
+      "bus": "yes",
+      "covered": "no",
+      "name": "Frýdek-Místek, Frýdek, Rozc. u školy",
+      "public_transport": "platform",
+      "shelter": "no"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2184049332,
+    "role": "stop",
+    "id": 2184049332,
+    "lat": 49.6913038,
+    "lon": 18.3480274,
+    "timestamp": "2013-03-06T20:56:10Z",
+    "version": 2,
+    "changeset": 15275643,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2174602852,
+    "role": "platform",
+    "id": 2174602852,
+    "lat": 49.6925488,
+    "lon": 18.3422454,
+    "timestamp": "2017-04-20T01:22:53Z",
+    "version": 3,
+    "changeset": 47956115,
+    "user": "dkocich",
+    "uid": 1784758,
+    "tags": {
+      "bench": "yes",
+      "bus": "yes",
+      "name": "Frýdek-Místek, Frýdek, Sídliště",
+      "public_transport": "platform"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 2174602906,
+    "role": "stop",
+    "id": 2174602906,
+    "lat": 49.6925324,
+    "lon": 18.3421911,
+    "timestamp": "2013-03-08T21:32:16Z",
+    "version": 2,
+    "changeset": 15295547,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 4677106421,
+    "role": "stop",
+    "id": 4677106421,
+    "lat": 49.6980491,
+    "lon": 18.3383722,
+    "timestamp": "2017-02-09T19:24:07Z",
+    "version": 1,
+    "changeset": 45955374,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "highway": "bus_stop",
+      "name": "Frýdek-Místek, Frýdek, rozc.k Válc.pl.",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "node",
+    "ref": 4211098485,
+    "role": "stop",
+    "id": 4211098485,
+    "lat": 49.7022874,
+    "lon": 18.3338079,
+    "timestamp": "2017-02-09T19:24:12Z",
+    "version": 2,
+    "changeset": 45955374,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "tags": {
+      "bus": "yes",
+      "highway": "bus_stop",
+      "name": "Frýdek-Místek, Lískovec, Fabík točna",
+      "public_transport": "stop_position"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592980,
+    "role": "",
+    "id": 485592980,
+    "timestamp": "2017-04-08T22:37:07Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2328217832,
+      322504865
+    ],
+    "tags": {
+      "highway": "service",
+      "oneway": "yes",
+      "source": "cuzk:km;survey"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 224160189,
+    "role": "",
+    "id": 224160189,
+    "timestamp": "2017-05-15T16:08:07Z",
+    "version": 4,
+    "changeset": 48705538,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      322504868,
+      3768122027,
+      322504865
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Čelakovského"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 493717400,
+    "role": "",
+    "id": 493717400,
+    "timestamp": "2017-05-15T16:08:05Z",
+    "version": 1,
+    "changeset": 48705538,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      302630879,
+      322504868
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Čelakovského"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 28091479,
+    "role": "",
+    "id": 28091479,
+    "timestamp": "2017-05-15T22:23:14Z",
+    "version": 8,
+    "changeset": 48714598,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      302630879,
+      302630880,
+      308491962,
+      302630883,
+      302630884,
+      302630885,
+      2327924667,
+      302630886
+    ],
+    "tags": {
+      "highway": "trunk",
+      "lanes": "2",
+      "maxspeed": "50",
+      "name": "Frýdlantská",
+      "oneway": "yes",
+      "ref": "56",
+      "source:maxspeed": "implicit"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 493775786,
+    "role": "",
+    "id": 493775786,
+    "timestamp": "2017-05-15T22:23:06Z",
+    "version": 1,
+    "changeset": 48714598,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      302630886,
+      302630889,
+      302630890,
+      302630891,
+      302630892,
+      302630893,
+      302630896,
+      292183879
+    ],
+    "tags": {
+      "highway": "trunk",
+      "lanes": "2",
+      "maxspeed": "50",
+      "name": "Frýdlantská",
+      "oneway": "yes",
+      "ref": "56",
+      "source:maxspeed": "implicit"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592983,
+    "role": "",
+    "id": 485592983,
+    "timestamp": "2017-04-08T22:37:07Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      292183879,
+      2104910701,
+      292183878,
+      2104910705,
+      302628902,
+      2104910711,
+      291618167
+    ],
+    "tags": {
+      "highway": "trunk",
+      "junction": "roundabout",
+      "ref": "56"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592988,
+    "role": "",
+    "id": 485592988,
+    "timestamp": "2017-04-08T22:37:08Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      3909759830,
+      308484840,
+      2094497709,
+      627331233,
+      291618188,
+      4128394081,
+      307858175,
+      291618189,
+      627331239,
+      3909759812,
+      291618167
+    ],
+    "tags": {
+      "hgv": "destination",
+      "highway": "tertiary",
+      "maxspeed": "50",
+      "name": "Frýdlantská"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 486759533,
+    "role": "",
+    "id": 486759533,
+    "timestamp": "2017-04-14T10:56:48Z",
+    "version": 1,
+    "changeset": 47776320,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      3909759830,
+      3909759831,
+      3909759839
+    ],
+    "tags": {
+      "highway": "service",
+      "oneway": "yes",
+      "service": "driveway"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 387730714,
+    "role": "",
+    "id": 387730714,
+    "timestamp": "2017-04-14T10:56:52Z",
+    "version": 2,
+    "changeset": 47776320,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      3909759839,
+      291618187
+    ],
+    "tags": {
+      "highway": "service",
+      "oneway": "yes",
+      "service": "driveway"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592985,
+    "role": "",
+    "id": 485592985,
+    "timestamp": "2017-04-08T22:37:08Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      3909759842,
+      291618187
+    ],
+    "tags": {
+      "hgv": "destination",
+      "highway": "tertiary",
+      "maxspeed": "50",
+      "name": "Frýdlantská"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592986,
+    "role": "",
+    "id": 485592986,
+    "timestamp": "2017-04-08T22:37:08Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2161461997,
+      2103314769,
+      307850451,
+      627331229,
+      3909759842
+    ],
+    "tags": {
+      "hgv": "destination",
+      "highway": "tertiary",
+      "maxspeed": "50",
+      "name": "Frýdlantská"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592987,
+    "role": "",
+    "id": 485592987,
+    "timestamp": "2017-04-08T22:37:08Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2161462013,
+      627331195,
+      2161461997
+    ],
+    "tags": {
+      "hgv": "destination",
+      "highway": "tertiary",
+      "maxspeed": "50",
+      "name": "Frýdlantská"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 200513129,
+    "role": "",
+    "id": 200513129,
+    "timestamp": "2017-04-09T00:40:25Z",
+    "version": 10,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2104889127,
+      2161462013
+    ],
+    "tags": {
+      "hgv": "destination",
+      "highway": "tertiary",
+      "maxspeed": "50",
+      "name": "Frýdlantská"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592989,
+    "role": "",
+    "id": 485592989,
+    "timestamp": "2017-05-12T14:53:38Z",
+    "version": 2,
+    "changeset": 48626587,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2104889127,
+      4538659271,
+      2104889135,
+      4538659270,
+      2104889140,
+      4538659269,
+      4538659283,
+      2104889145,
+      4538659282
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "junction": "roundabout",
+      "lanes": "1",
+      "maxspeed": "50",
+      "name": "Frýdlantská",
+      "surface": "asphalt"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 493036649,
+    "role": "",
+    "id": 493036649,
+    "timestamp": "2017-05-12T14:53:35Z",
+    "version": 1,
+    "changeset": 48626587,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      4538659282,
+      292186941,
+      4538659281,
+      4538659268,
+      4538659280,
+      2104889155,
+      4538659279,
+      4538659267,
+      2104889153
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "junction": "roundabout",
+      "lanes": "1",
+      "maxspeed": "50",
+      "name": "Frýdlantská",
+      "surface": "asphalt"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592990,
+    "role": "",
+    "id": 485592990,
+    "timestamp": "2017-04-08T22:37:08Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2152434231,
+      2104889153
+    ],
+    "tags": {
+      "hgv": "destination",
+      "highway": "tertiary",
+      "maxspeed": "50",
+      "name": "Frýdlantská"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592978,
+    "role": "",
+    "id": 485592978,
+    "timestamp": "2017-04-08T22:37:07Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2152434235,
+      2152434231
+    ],
+    "tags": {
+      "hgv": "destination",
+      "highway": "tertiary",
+      "maxspeed": "50",
+      "name": "Frýdlantská"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 205264427,
+    "role": "",
+    "id": 205264427,
+    "timestamp": "2017-05-15T16:08:07Z",
+    "version": 2,
+    "changeset": 48705538,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2152434235,
+      2152434266,
+      2152434286
+    ],
+    "tags": {
+      "highway": "service",
+      "oneway": "yes",
+      "service": "driveway",
+      "source": "cuzk:km;bing"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 493717397,
+    "role": "",
+    "id": 493717397,
+    "timestamp": "2017-05-15T16:08:05Z",
+    "version": 1,
+    "changeset": 48705538,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2152434286,
+      2152434289,
+      2152434298
+    ],
+    "tags": {
+      "highway": "service",
+      "oneway": "yes",
+      "service": "driveway",
+      "source": "cuzk:km;bing"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 26591309,
+    "role": "",
+    "id": 26591309,
+    "timestamp": "2017-04-09T00:40:23Z",
+    "version": 27,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2304094185,
+      627331204,
+      307850423,
+      291618185,
+      4538659231,
+      291618186,
+      627331207,
+      2152434298
+    ],
+    "tags": {
+      "hgv": "destination",
+      "highway": "tertiary",
+      "maxspeed": "50",
+      "name": "Frýdlantská"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 221384459,
+    "role": "",
+    "id": 221384459,
+    "timestamp": "2015-01-18T15:06:47Z",
+    "version": 4,
+    "changeset": 28232526,
+    "user": "Roulin205",
+    "uid": 1663896,
+    "nodes": [
+      2304094185,
+      2304094190,
+      2304094193,
+      2304094194,
+      2304094197,
+      2304094199
+    ],
+    "tags": {
+      "agricultural": "no",
+      "bicycle": "no",
+      "carriage": "no",
+      "foot": "no",
+      "highway": "primary_link",
+      "horse": "no",
+      "lanes": "1",
+      "maxspeed": "50",
+      "oneway": "yes",
+      "ref": "48"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 221384457,
+    "role": "",
+    "id": 221384457,
+    "timestamp": "2017-04-09T00:40:25Z",
+    "version": 19,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2304094199,
+      4513882314,
+      4513882319,
+      291476267,
+      4513882318,
+      4513882317,
+      261979459,
+      4361984178
+    ],
+    "tags": {
+      "highway": "primary",
+      "int_ref": "E 462",
+      "lanes": "2",
+      "maxspeed": "70",
+      "name": "Hlavní třída",
+      "oneway": "yes",
+      "priority_road": "designated",
+      "ref": "48"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 438453123,
+    "role": "",
+    "id": 438453123,
+    "timestamp": "2017-04-09T00:40:25Z",
+    "version": 2,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      4361984178,
+      4361984179,
+      4361984180,
+      4361984181
+    ],
+    "tags": {
+      "agricultural": "no",
+      "bicycle": "no",
+      "carriage": "no",
+      "foot": "no",
+      "highway": "primary_link",
+      "horse": "no",
+      "lanes": "1",
+      "name": "Hlavní třída",
+      "oneway": "yes",
+      "ref": "48"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 199766614,
+    "role": "",
+    "id": 199766614,
+    "timestamp": "2017-04-09T00:40:24Z",
+    "version": 5,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      4361984181,
+      2097273942
+    ],
+    "tags": {
+      "highway": "residential",
+      "lanes": "1",
+      "name": "Politických obětí",
+      "oneway": "yes"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 493036651,
+    "role": "",
+    "id": 493036651,
+    "timestamp": "2017-05-12T14:53:35Z",
+    "version": 1,
+    "changeset": 48626587,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2097273942,
+      2097597596
+    ],
+    "tags": {
+      "highway": "service",
+      "lanes": "1",
+      "oneway": "yes"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 199766607,
+    "role": "",
+    "id": 199766607,
+    "timestamp": "2017-05-12T14:53:37Z",
+    "version": 4,
+    "changeset": 48626587,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2097597596,
+      2097597584,
+      2097597574,
+      2097597556,
+      2097597542,
+      2097597540,
+      2097597537,
+      2097597538,
+      2097597539,
+      2097597536,
+      2154981930,
+      2097597530
+    ],
+    "tags": {
+      "highway": "service",
+      "lanes": "1",
+      "oneway": "yes"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 410992996,
+    "role": "",
+    "id": 410992996,
+    "timestamp": "2017-04-09T00:40:25Z",
+    "version": 2,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2097597530,
+      2097597535,
+      307036301,
+      2154981983,
+      2154981991,
+      2154982010,
+      2097601897,
+      2154982032,
+      2095620533
+    ],
+    "tags": {
+      "hgv": "destination",
+      "highway": "residential",
+      "name": "Politických obětí"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 199766617,
+    "role": "",
+    "id": 199766617,
+    "timestamp": "2017-04-09T00:40:24Z",
+    "version": 5,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2095620533,
+      2097273949,
+      2097597628,
+      2097597630
+    ],
+    "tags": {
+      "hgv": "destination",
+      "highway": "residential",
+      "lanes": "1",
+      "name": "Politických obětí",
+      "oneway": "yes"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 454905081,
+    "role": "",
+    "id": 454905081,
+    "timestamp": "2017-04-09T00:40:26Z",
+    "version": 2,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2097597630,
+      291476264,
+      291476194,
+      4513899971,
+      75105261,
+      4513899970,
+      75088831,
+      4513899969,
+      75091178,
+      75069778,
+      447566998
+    ],
+    "tags": {
+      "highway": "primary",
+      "int_ref": "E 462",
+      "lanes": "2",
+      "maxspeed": "70",
+      "name": "Hlavní třída",
+      "oneway": "yes",
+      "priority_road": "designated",
+      "ref": "48"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 38059303,
+    "role": "",
+    "id": 38059303,
+    "timestamp": "2016-11-21T16:53:45Z",
+    "version": 16,
+    "changeset": 43850511,
+    "user": "Roulin205",
+    "uid": 1663896,
+    "nodes": [
+      447566998,
+      447566661
+    ],
+    "tags": {
+      "bridge": "yes",
+      "highway": "primary",
+      "int_ref": "E 462",
+      "lanes": "2",
+      "layer": "1",
+      "maxspeed": "70",
+      "oneway": "yes",
+      "parking:lane:both": "no_stopping",
+      "priority_road": "designated",
+      "ref": "48"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 438453116,
+    "role": "",
+    "id": 438453116,
+    "timestamp": "2016-08-22T19:20:33Z",
+    "version": 1,
+    "changeset": 41622077,
+    "user": "Roulin205",
+    "uid": 1663896,
+    "nodes": [
+      447566661,
+      4361984182
+    ],
+    "tags": {
+      "agricultural": "no",
+      "bicycle": "no",
+      "carriage": "no",
+      "foot": "no",
+      "highway": "primary_link",
+      "horse": "no",
+      "lanes": "1",
+      "layer": "1",
+      "oneway": "yes",
+      "parking:lane:both": "no_stopping",
+      "ref": "48"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 38054341,
+    "role": "",
+    "id": 38054341,
+    "timestamp": "2017-04-21T21:33:17Z",
+    "version": 15,
+    "changeset": 48016791,
+    "user": "Baryduke",
+    "uid": 1737909,
+    "nodes": [
+      4361984182,
+      4361984183,
+      4361984184,
+      4808448944,
+      4808448933,
+      4808448943,
+      4808448934,
+      4361984185,
+      4808448936,
+      4808448935,
+      4808448937,
+      4808448941,
+      447510416,
+      4808448942,
+      4808448939,
+      4808448938,
+      4808448940,
+      447510421,
+      4808448950,
+      4808448948,
+      4808448949,
+      447510425,
+      4808448951,
+      4808448947,
+      4808448945,
+      4808448946,
+      447510429,
+      3905527798
+    ],
+    "tags": {
+      "agricultural": "no",
+      "bicycle": "no",
+      "bridge": "yes",
+      "carriage": "no",
+      "foot": "no",
+      "highway": "primary_link",
+      "horse": "no",
+      "lanes": "1",
+      "layer": "1",
+      "oneway": "yes",
+      "parking:lane:both": "no_stopping",
+      "ref": "48"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 387234755,
+    "role": "",
+    "id": 387234755,
+    "timestamp": "2015-12-22T22:10:50Z",
+    "version": 1,
+    "changeset": 36115082,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "nodes": [
+      3905527798,
+      447514859
+    ],
+    "tags": {
+      "agricultural": "no",
+      "bicycle": "no",
+      "carriage": "no",
+      "foot": "no",
+      "highway": "primary_link",
+      "horse": "no",
+      "lanes": "1",
+      "oneway": "yes",
+      "ref": "48"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 38054435,
+    "role": "",
+    "id": 38054435,
+    "timestamp": "2016-04-06T20:21:49Z",
+    "version": 6,
+    "changeset": 38362614,
+    "user": "Roulin205",
+    "uid": 1663896,
+    "nodes": [
+      447514859,
+      447514880,
+      447514885
+    ],
+    "tags": {
+      "agricultural": "no",
+      "bicycle": "no",
+      "carriage": "no",
+      "foot": "no",
+      "highway": "primary_link",
+      "horse": "no",
+      "lanes": "1",
+      "oneway": "yes",
+      "ref": "48"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 408435413,
+    "role": "",
+    "id": 408435413,
+    "timestamp": "2016-04-06T20:21:48Z",
+    "version": 1,
+    "changeset": 38362614,
+    "user": "Roulin205",
+    "uid": 1663896,
+    "nodes": [
+      447514885,
+      447510564
+    ],
+    "tags": {
+      "agricultural": "no",
+      "bicycle": "no",
+      "carriage": "no",
+      "foot": "no",
+      "highway": "primary_link",
+      "horse": "no",
+      "lanes": "1",
+      "oneway": "yes",
+      "ref": "48"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 38054344,
+    "role": "",
+    "id": 38054344,
+    "timestamp": "2017-04-09T00:40:23Z",
+    "version": 7,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      447510564,
+      447510468
+    ],
+    "tags": {
+      "agricultural": "no",
+      "bicycle": "no",
+      "carriage": "no",
+      "foot": "no",
+      "highway": "primary_link",
+      "horse": "no",
+      "lanes": "1",
+      "oneway": "yes",
+      "ref": "48"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592993,
+    "role": "",
+    "id": 485592993,
+    "timestamp": "2017-04-21T21:33:19Z",
+    "version": 2,
+    "changeset": 48016791,
+    "user": "Baryduke",
+    "uid": 1737909,
+    "nodes": [
+      447510468,
+      4808449039,
+      447519463,
+      4808449042,
+      4808449038,
+      4808449041,
+      447519467,
+      4808449043,
+      4808449040,
+      447519471,
+      4808449046,
+      4808449044,
+      447519480,
+      4808449045,
+      447535125,
+      2622475412
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Na Příkopě"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 38054838,
+    "role": "",
+    "id": 38054838,
+    "timestamp": "2017-04-09T00:40:24Z",
+    "version": 5,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2622475412,
+      447535156
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Na Příkopě",
+      "vehicle:conditional": "no @ (2016 Jul 11-2016 Jul 16)"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 38054839,
+    "role": "",
+    "id": 38054839,
+    "timestamp": "2017-04-21T21:33:19Z",
+    "version": 12,
+    "changeset": 48016791,
+    "user": "Baryduke",
+    "uid": 1737909,
+    "nodes": [
+      447535156,
+      4808449032,
+      447535215,
+      4808449028,
+      4808449027,
+      4808449029,
+      447535219,
+      4808449031,
+      4808449030,
+      447535226,
+      4808449035,
+      447535232,
+      4808449034,
+      4808449033,
+      4808449037,
+      4556227421,
+      4808449036,
+      4556227418,
+      447535241,
+      4556227420,
+      2301003928,
+      447535247
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Na Příkopě"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 361838410,
+    "role": "",
+    "id": 361838410,
+    "timestamp": "2017-04-09T00:40:25Z",
+    "version": 2,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      447535247,
+      278831400,
+      447750411
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Nádražní",
+      "vehicle:conditional": "no @ (2015 Jul 25-2015 Aug 8)"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 361838411,
+    "role": "",
+    "id": 361838411,
+    "timestamp": "2017-04-09T00:40:25Z",
+    "version": 3,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      447750411,
+      4556227427,
+      447535253,
+      2245311516,
+      4556227426,
+      447535263
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Nádražní"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 144018661,
+    "role": "",
+    "id": 144018661,
+    "timestamp": "2017-04-09T00:40:24Z",
+    "version": 5,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      447535263,
+      447542662,
+      4556227422,
+      2245311344
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Nádražní"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 215115805,
+    "role": "",
+    "id": 215115805,
+    "timestamp": "2013-04-02T20:18:07Z",
+    "version": 1,
+    "changeset": 15586506,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "nodes": [
+      2245311344,
+      2245311302,
+      2245311160,
+      2245311128,
+      447535284
+    ],
+    "tags": {
+      "highway": "service",
+      "oneway": "yes"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 38054841,
+    "role": "",
+    "id": 38054841,
+    "timestamp": "2013-05-16T21:42:11Z",
+    "version": 6,
+    "changeset": 16159569,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "nodes": [
+      447535284,
+      2245311116,
+      447535306,
+      447736978,
+      447535312,
+      447535321,
+      447737198,
+      447535329,
+      447538876,
+      2245311368,
+      447535339,
+      447535351,
+      447535365,
+      2245311374,
+      2245311340,
+      447535376,
+      2245311308,
+      2306947532,
+      447535277
+    ],
+    "tags": {
+      "highway": "service",
+      "oneway": "yes",
+      "psv": "yes",
+      "vehicle": "delivery"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592994,
+    "role": "",
+    "id": 485592994,
+    "timestamp": "2017-04-08T22:37:09Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2245311344,
+      447542640,
+      2245311275,
+      447535277
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Nádražní"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 144018661,
+    "role": "",
+    "id": 144018661,
+    "timestamp": "2017-04-09T00:40:24Z",
+    "version": 5,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      447535263,
+      447542662,
+      4556227422,
+      2245311344
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Nádražní"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 38068239,
+    "role": "",
+    "id": 38068239,
+    "timestamp": "2017-05-15T22:23:14Z",
+    "version": 6,
+    "changeset": 48714598,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      447535263,
+      2245311499,
+      2301003863,
+      2245311565,
+      2301003899,
+      2245311606,
+      447750101
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Nádražní"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 493775798,
+    "role": "",
+    "id": 493775798,
+    "timestamp": "2017-05-15T22:23:07Z",
+    "version": 1,
+    "changeset": 48714598,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      447750101,
+      2238922263
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Nádražní"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 214328627,
+    "role": "",
+    "id": 214328627,
+    "timestamp": "2013-03-30T19:02:08Z",
+    "version": 1,
+    "changeset": 15555039,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "nodes": [
+      2238922263,
+      2238922275,
+      75002647
+    ],
+    "tags": {
+      "highway": "residential",
+      "name": "Nádražní",
+      "oneway": "yes"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592972,
+    "role": "",
+    "id": 485592972,
+    "timestamp": "2017-04-08T22:37:06Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      75002647,
+      75046720
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "junction": "roundabout",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592971,
+    "role": "",
+    "id": 485592971,
+    "timestamp": "2017-04-08T22:37:06Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      75046720,
+      75040948,
+      75038133,
+      75032816,
+      75081716
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "junction": "roundabout",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592970,
+    "role": "",
+    "id": 485592970,
+    "timestamp": "2017-04-08T22:37:06Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      75081716,
+      75073205,
+      75066425,
+      75057590,
+      75105549
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "junction": "roundabout",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592969,
+    "role": "",
+    "id": 485592969,
+    "timestamp": "2017-04-08T22:37:06Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      75105549,
+      75100002
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "junction": "roundabout",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 214328631,
+    "role": "",
+    "id": 214328631,
+    "timestamp": "2017-05-22T17:33:44Z",
+    "version": 5,
+    "changeset": 48895044,
+    "user": "michalfabik",
+    "uid": 3501362,
+    "nodes": [
+      75100002,
+      2238922374,
+      2238922376,
+      2238922388
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "name": "tř. T. G. Masaryka",
+      "oneway": "yes",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592995,
+    "role": "",
+    "id": 485592995,
+    "timestamp": "2017-05-22T17:33:47Z",
+    "version": 3,
+    "changeset": 48895044,
+    "user": "michalfabik",
+    "uid": 3501362,
+    "nodes": [
+      2238922407,
+      2238922388
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "name": "tř. T. G. Masaryka",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592996,
+    "role": "",
+    "id": 485592996,
+    "timestamp": "2017-05-22T17:33:47Z",
+    "version": 3,
+    "changeset": 48895044,
+    "user": "michalfabik",
+    "uid": 3501362,
+    "nodes": [
+      2238922493,
+      2238922407
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "name": "tř. T. G. Masaryka",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592968,
+    "role": "",
+    "id": 485592968,
+    "timestamp": "2017-05-22T17:33:46Z",
+    "version": 3,
+    "changeset": 48895044,
+    "user": "michalfabik",
+    "uid": 3501362,
+    "nodes": [
+      2238922591,
+      447750114,
+      2238922498,
+      2238922493
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "name": "tř. T. G. Masaryka",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 214328695,
+    "role": "",
+    "id": 214328695,
+    "timestamp": "2013-03-30T19:02:12Z",
+    "version": 1,
+    "changeset": 15555039,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "nodes": [
+      2238922591,
+      2238922661,
+      2238922721,
+      2238922730
+    ],
+    "tags": {
+      "highway": "service",
+      "oneway": "yes"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 166280720,
+    "role": "",
+    "id": 166280720,
+    "timestamp": "2017-05-22T17:33:44Z",
+    "version": 7,
+    "changeset": 48895044,
+    "user": "michalfabik",
+    "uid": 3501362,
+    "nodes": [
+      1777390935,
+      2238922813,
+      2238922730
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "name": "tř. T. G. Masaryka",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 166981681,
+    "role": "",
+    "id": 166981681,
+    "timestamp": "2017-05-22T17:33:44Z",
+    "version": 5,
+    "changeset": 48895044,
+    "user": "michalfabik",
+    "uid": 3501362,
+    "nodes": [
+      291479573,
+      1777390935
+    ],
+    "tags": {
+      "bridge": "yes",
+      "highway": "tertiary",
+      "layer": "1",
+      "maxweight": "7.5",
+      "name": "tř. T. G. Masaryka",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 387234771,
+    "role": "",
+    "id": 387234771,
+    "timestamp": "2017-05-22T17:33:45Z",
+    "version": 3,
+    "changeset": 48895044,
+    "user": "michalfabik",
+    "uid": 3501362,
+    "nodes": [
+      3905527829,
+      291479573
+    ],
+    "tags": {
+      "bridge": "yes",
+      "highway": "tertiary",
+      "layer": "1",
+      "maxweight": "7.5",
+      "name": "tř. T. G. Masaryka",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 256600034,
+    "role": "",
+    "id": 256600034,
+    "timestamp": "2017-05-22T17:33:44Z",
+    "version": 6,
+    "changeset": 48895044,
+    "user": "michalfabik",
+    "uid": 3501362,
+    "nodes": [
+      75078814,
+      302584244,
+      3905527829
+    ],
+    "tags": {
+      "bridge": "yes",
+      "highway": "tertiary",
+      "layer": "1",
+      "maxweight": "7.5",
+      "name": "tř. T. G. Masaryka",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 27560147,
+    "role": "",
+    "id": 27560147,
+    "timestamp": "2017-05-22T17:33:42Z",
+    "version": 14,
+    "changeset": 48895044,
+    "user": "michalfabik",
+    "uid": 3501362,
+    "nodes": [
+      291479566,
+      302584239,
+      75078814
+    ],
+    "tags": {
+      "bridge": "yes",
+      "highway": "tertiary",
+      "layer": "1",
+      "maxweight": "7.5",
+      "name": "tř. T. G. Masaryka",
+      "ref": "477"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 23721515,
+    "role": "",
+    "id": 23721515,
+    "timestamp": "2017-05-22T17:33:42Z",
+    "version": 24,
+    "changeset": 48895044,
+    "user": "michalfabik",
+    "uid": 3501362,
+    "nodes": [
+      336627229,
+      2162278065,
+      469815174,
+      2126915198,
+      2158145696,
+      469813991,
+      2205854434,
+      469814069,
+      2126915132,
+      2126915125,
+      75011327,
+      291479566
+    ],
+    "tags": {
+      "highway": "tertiary",
+      "maxweight": "7.5",
+      "name": "tř. T. G. Masaryka"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 30499581,
+    "role": "",
+    "id": 30499581,
+    "timestamp": "2012-06-05T19:59:07Z",
+    "version": 4,
+    "changeset": 11809784,
+    "user": "Datin",
+    "uid": 115815,
+    "nodes": [
+      336627229,
+      336627258,
+      336627265,
+      1777373096,
+      469818069,
+      336627279,
+      1060897562,
+      336627284,
+      75039543
+    ],
+    "tags": {
+      "highway": "secondary_link",
+      "oneway": "yes"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592997,
+    "role": "",
+    "id": 485592997,
+    "timestamp": "2017-04-08T22:37:09Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      75039543,
+      2203897418,
+      75020789,
+      341177832,
+      75016106,
+      75022366,
+      2184049104,
+      75015593,
+      2184049112
+    ],
+    "tags": {
+      "highway": "secondary",
+      "lanes": "4",
+      "name": "Bruzovská",
+      "ref": "473"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 208087942,
+    "role": "",
+    "id": 208087942,
+    "timestamp": "2013-03-03T17:23:45Z",
+    "version": 1,
+    "changeset": 15236492,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "nodes": [
+      2184049112,
+      2184049122,
+      2184049155,
+      2184049162,
+      2184049207
+    ],
+    "tags": {
+      "highway": "service",
+      "oneway": "yes",
+      "service": "driveway",
+      "source": "cuzk:km;bing"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592965,
+    "role": "",
+    "id": 485592965,
+    "timestamp": "2017-04-08T22:37:06Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      2184049207,
+      2184049245
+    ],
+    "tags": {
+      "highway": "secondary",
+      "lanes": "4",
+      "name": "Bruzovská",
+      "ref": "473"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 30801512,
+    "role": "",
+    "id": 30801512,
+    "timestamp": "2013-11-20T13:28:01Z",
+    "version": 16,
+    "changeset": 19013546,
+    "user": "Bohdan Kotouček",
+    "uid": 343107,
+    "nodes": [
+      75105406,
+      2182185701,
+      341161476,
+      341161450,
+      341161478,
+      2182185549,
+      341161479,
+      2182185352,
+      341161481,
+      341161482,
+      341161484,
+      341161486,
+      341161487,
+      341161489,
+      341177805,
+      2184049209,
+      2184049235,
+      341177731,
+      341177889,
+      2188963053,
+      341177733,
+      341161402,
+      603311712,
+      341966969,
+      603311711,
+      2190045019,
+      2190045024,
+      2184049308,
+      2190045041,
+      2190045055,
+      2190045056,
+      2184049326,
+      2190045078,
+      341177734,
+      2190045157,
+      2190045163,
+      2184049332,
+      2190045247,
+      2190045250,
+      2190045298,
+      2190045308,
+      2190045383,
+      2190045393,
+      341177738,
+      1928856275,
+      341177739,
+      341177741,
+      341177743,
+      603329363,
+      603329351,
+      341177744,
+      2164600509,
+      75010345
+    ],
+    "tags": {
+      "hgv": "destination",
+      "highway": "residential",
+      "name": "El. Krásnohorské"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 486759535,
+    "role": "",
+    "id": 486759535,
+    "timestamp": "2017-04-14T10:56:49Z",
+    "version": 1,
+    "changeset": 47776320,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      75093277,
+      603331609,
+      2174602952,
+      2174602949,
+      2174602943,
+      75020154,
+      2174602940,
+      2174602928,
+      2174602925,
+      2174602917,
+      603331603,
+      2174602909,
+      2174602906,
+      2174602883,
+      2174602880,
+      75002134,
+      2174602871,
+      603331646,
+      75010345
+    ],
+    "tags": {
+      "highway": "secondary",
+      "name": "Lískovecká",
+      "ref": "477",
+      "source": "cuzk:km;uhul:ortofoto;HELP SERVICE - REMOTE SENSING spol. s r.o. http://www.bnhelp.cz"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 136109481,
+    "role": "",
+    "id": 136109481,
+    "timestamp": "2017-04-14T10:56:51Z",
+    "version": 14,
+    "changeset": 47776320,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      75078155,
+      1928856287,
+      2166971521,
+      603337656,
+      4677106420,
+      4677106421,
+      75053442,
+      2171103839,
+      75060524,
+      2171103796,
+      75094932,
+      75101172,
+      2171103667,
+      75084560,
+      1928856279,
+      75093277
+    ],
+    "tags": {
+      "highway": "secondary",
+      "name": "Lískovecká",
+      "ref": "477",
+      "source": "cuzk:km;uhul:ortofoto;HELP SERVICE - REMOTE SENSING spol. s r.o. http://www.bnhelp.cz"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 473637012,
+    "role": "",
+    "id": 473637012,
+    "timestamp": "2017-02-09T19:24:10Z",
+    "version": 1,
+    "changeset": 45955374,
+    "user": "Marián Kyral",
+    "uid": 1182568,
+    "nodes": [
+      1497162132,
+      75070027,
+      4677106456,
+      75078155
+    ],
+    "tags": {
+      "highway": "secondary",
+      "maxspeed:backward": "70",
+      "name": "Valcířská",
+      "ref": "477",
+      "source": "cuzk:km;uhul:ortofoto;HELP SERVICE - REMOTE SENSING spol. s r.o. http://www.bnhelp.cz"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 473637013,
+    "role": "",
+    "id": 473637013,
+    "timestamp": "2017-04-09T00:40:26Z",
+    "version": 2,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      4211098589,
+      4677107490,
+      1497162132
+    ],
+    "tags": {
+      "highway": "secondary",
+      "maxspeed:forward": "70",
+      "name": "Valcířská",
+      "ref": "477",
+      "source": "cuzk:km;uhul:ortofoto;HELP SERVICE - REMOTE SENSING spol. s r.o. http://www.bnhelp.cz"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592999,
+    "role": "",
+    "id": 485592999,
+    "timestamp": "2017-04-08T22:37:09Z",
+    "version": 1,
+    "changeset": 47580688,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      4677106483,
+      4211098589
+    ],
+    "tags": {
+      "highway": "secondary",
+      "maxspeed:forward": "70",
+      "name": "Valcířská",
+      "ref": "477",
+      "source": "cuzk:km;uhul:ortofoto;HELP SERVICE - REMOTE SENSING spol. s r.o. http://www.bnhelp.cz"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 421331938,
+    "role": "",
+    "id": 421331938,
+    "timestamp": "2017-04-09T00:40:25Z",
+    "version": 3,
+    "changeset": 47581938,
+    "user": "dkocich",
+    "uid": 1784758,
+    "nodes": [
+      4211098626,
+      4677106485,
+      4677106484,
+      4211098618
+    ],
+    "tags": {
+      "highway": "service"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 485592998,
+    "role": "",
+    "id": 485592998,
+    "timestamp": "2017-05-06T21:36:49Z",
+    "version": 3,
+    "changeset": 48462389,
+    "user": "Nemo02",
+    "uid": 1250206,
+    "nodes": [
+      4211098618,
+      4211098485
+    ],
+    "tags": {
+      "highway": "service",
+      "oneway": "yes",
+      "service": "driveway"
+    }
+  },
+  {
+    "type": "way",
+    "ref": 491826746,
+    "role": "",
+    "id": 491826746,
+    "timestamp": "2017-05-06T21:36:41Z",
+    "version": 1,
+    "changeset": 48462389,
+    "user": "Nemo02",
+    "uid": 1250206,
+    "nodes": [
+      4211098626,
+      4677106483
+    ],
+    "tags": {
+      "highway": "secondary",
+      "name": "Valcířská",
+      "ref": "477",
+      "source": "cuzk:km;uhul:ortofoto;HELP SERVICE - REMOTE SENSING spol. s r.o. http://www.bnhelp.cz"
+    }
+  }
+]

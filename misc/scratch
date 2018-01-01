@@ -1,0 +1,77 @@
+
+// if (edits) {
+//
+//     // //dont create another edit step if I still edit tags of same element
+//     // if (edits.length > 1) {
+//     //     if (this.verifyDuplicateChange(element)) {
+//     //         let previousChangedVersion = this.getLastChange(element);
+//     //
+//     //         // create new version
+//     //         // changeObj.original = previousChangedVersion;
+//     //
+//     //         this.pushChange(changeObj, true);
+//     //     } else {
+//     //         this.pushChange(changeObj, false);
+//     //     }
+//     // }
+//
+//     // previous version
+//     // search all available edits and find most recent change
+//     originalVersion = this.searchEditsHistory(element.id) ||
+//         this.processingService.findElementById(element.id);
+//
+//     console.log("edits existuji, originalni verze je ", originalVersion);
+//
+// } else if (!edits) {
+//     // original version
+//     originalVersion = this.processingService.findElementById(element.id);
+// }
+//
+// if (!originalVersion) {
+//     alert("nenalezena origianlni verze elementu");
+// }
+
+// /**
+//  * Verifies if current change is for the same OSM object as previous change.
+//  * @param element
+//  * @returns {boolean}
+//  */
+// private verifyDuplicateChange(element: OsmEntity): boolean {
+//     let edits = this.storageService.edits;
+//     return edits[edits.length - 1]["id"] === element["id"];
+// }
+
+// /**
+//  * @param element - OsmEntity
+//  */
+// private getLastChange(element: OsmEntity): object {
+//     return this.storageService.edits[this.storageService.edits.length - 1]["change"];
+// }
+
+// /**
+//  * Pushes change to the object[] history of edits and to browser's localStorage.
+//  * @param change
+//  * @param overwriteLast
+//  */
+// private pushChange(change: object, overwriteLast?: boolean): void {
+//     if (overwriteLast) {
+//         this.storageService.overwriteLastLocalStorageEdit("edits", change);
+//     } else {
+//         this.storageService.edits.push(change);
+//         this.storageService.pushToLocalStorageItem("edits", change);
+//     }
+// }
+
+// /**
+//  * Searches last available change of an element in the history of edits.
+//  * @param elementId - Number representing OSM id.
+//  * @returns {object}
+//  */
+// private searchEditsHistory(elementId: number): object {
+//     for (let edit of this.storageService.edits) {
+//         if (edit["change"]["id"] === elementId) {
+//             console.log("found element edit in history");
+//             return edit["change"];
+//         }
+//     }
+// }

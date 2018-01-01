@@ -1,0 +1,2815 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API",
+  "osm3s": {
+    "timestamp_osm_base": "2017-10-01T10:38:02Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+    {
+      "type": "node",
+      "id": 291495283,
+      "lat": 49.6774163,
+      "lon": 18.3540406,
+      "timestamp": "2014-12-30T12:37:08Z",
+      "version": 9,
+      "changeset": 27798675,
+      "user": "Mar4s",
+      "uid": 461574,
+      "tags": {
+        "alt_name:de": "Friedek-Mistek",
+        "name": "Frýdek-Místek",
+        "name:de": "Friedeck-Mistek",
+        "network": "cz:ODIS",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "railway:ref": "333443",
+        "train": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 303104561,
+      "lat": 49.6784696,
+      "lon": 18.3355862,
+      "timestamp": "2017-04-20T01:22:48Z",
+      "version": 6,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 307852410,
+      "lat": 49.6711696,
+      "lon": 18.3532286,
+      "timestamp": "2017-05-15T22:23:12Z",
+      "version": 3,
+      "changeset": 48714598,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Místek,Riviéra kotelna",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 447535365,
+      "lat": 49.6784085,
+      "lon": 18.3551746,
+      "timestamp": "2017-07-10T20:19:32Z",
+      "version": 3,
+      "changeset": 50186124,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 447767772,
+      "lat": 49.6769377,
+      "lon": 18.3665044,
+      "timestamp": "2017-04-20T01:22:48Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, U Gustlíčka",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 604368883,
+      "lat": 49.6782977,
+      "lon": 18.3372316,
+      "timestamp": "2017-04-20T01:22:48Z",
+      "version": 9,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position",
+        "route_ref": "1;2"
+      }
+    },
+    {
+      "type": "node",
+      "id": 604468041,
+      "lat": 49.6754167,
+      "lon": 18.3394367,
+      "timestamp": "2013-02-15T07:35:09Z",
+      "version": 3,
+      "changeset": 15036788,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 604468155,
+      "lat": 49.6825841,
+      "lon": 18.3385877,
+      "timestamp": "2013-03-20T18:52:55Z",
+      "version": 4,
+      "changeset": 15435265,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 607329407,
+      "lat": 49.6777078,
+      "lon": 18.3416789,
+      "timestamp": "2017-04-20T01:22:48Z",
+      "version": 5,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Místek, poliklinika",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 610454072,
+      "lat": 49.6777059,
+      "lon": 18.3414268,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 4,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Místek, poliklinika",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 612595318,
+      "lat": 49.6781895,
+      "lon": 18.3321231,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 5,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, 17. listopadu",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 977633466,
+      "lat": 49.6785107,
+      "lon": 18.3511132,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "public_transport": "station"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1143795688,
+      "lat": 49.6873109,
+      "lon": 18.349621,
+      "timestamp": "2013-03-08T22:41:26Z",
+      "version": 4,
+      "changeset": 15296296,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1143803554,
+      "lat": 49.678231,
+      "lon": 18.3545608,
+      "timestamp": "2017-07-10T20:19:32Z",
+      "version": 4,
+      "changeset": 50186124,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "description": "směr Místek",
+        "description:en": "Mistek direction",
+        "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+        "public_transport": "platform",
+        "route_ref": "1;5"
+      }
+    },
+    {
+      "type": "node",
+      "id": 1819094839,
+      "lat": 49.6681984,
+      "lon": 18.340498,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Frýdek-Místek, Místek, Pod Puklí",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2095620348,
+      "lat": 49.6691518,
+      "lon": 18.3553555,
+      "timestamp": "2017-05-15T22:23:12Z",
+      "version": 3,
+      "changeset": 48714598,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Místek,Riviéra blok 27",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096551582,
+      "lat": 49.6684546,
+      "lon": 18.3437338,
+      "timestamp": "2013-02-12T20:24:39Z",
+      "version": 2,
+      "changeset": 15010878,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bench": "yes",
+        "highway": "bus_stop",
+        "name": "Frýdek-Místek, Místek, Beskydská",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096551586,
+      "lat": 49.6687405,
+      "lon": 18.3432998,
+      "timestamp": "2013-02-12T20:24:39Z",
+      "version": 2,
+      "changeset": 15010878,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bench": "yes",
+        "highway": "bus_stop",
+        "name": "Frýdek-Místek, Místek, Beskydská",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820238,
+      "lat": 49.6715053,
+      "lon": 18.3499692,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Frýdek-Místek, Místek, Domov seniorů",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820239,
+      "lat": 49.6715944,
+      "lon": 18.3499842,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Frýdek-Místek, Místek, Domov seniorů",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820240,
+      "lat": 49.6717247,
+      "lon": 18.3443075,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 4,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Frýdlantská",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820242,
+      "lat": 49.6719268,
+      "lon": 18.3444199,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Frýdlantská",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820245,
+      "lat": 49.6688595,
+      "lon": 18.3553024,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Frýdek-Místek, Místek, Riviera Blok 27",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820248,
+      "lat": 49.669218,
+      "lon": 18.3554051,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Frýdek-Místek, Místek, Riviera Blok 27",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820249,
+      "lat": 49.6710413,
+      "lon": 18.3534421,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Frýdek-Místek, Místek, Riviera kotelna",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820250,
+      "lat": 49.6713433,
+      "lon": 18.3526847,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Frýdek-Místek, Místek, Riviera kotelna",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820251,
+      "lat": 49.6660956,
+      "lon": 18.3528053,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Frýdek-Místek, Místek, Riviera vodárna",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820252,
+      "lat": 49.6662319,
+      "lon": 18.3531911,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Frýdek-Místek, Místek, Riviera vodárna",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820260,
+      "lat": 49.6661873,
+      "lon": 18.3530283,
+      "timestamp": "2017-05-15T22:23:12Z",
+      "version": 2,
+      "changeset": 48714598,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Místek,Riviéra vodárna",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2096820484,
+      "lat": 49.6715604,
+      "lon": 18.3499717,
+      "timestamp": "2017-05-15T22:23:12Z",
+      "version": 3,
+      "changeset": 48714598,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Místek,Domov seniorů",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2097601896,
+      "lat": 49.6759223,
+      "lon": 18.3449034,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "name": "Frýdek-Místek, Místek, Politických obětí",
+        "public_transport": "platform",
+        "shelter": "yes",
+        "tactile_paving": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2097601897,
+      "lat": 49.6758904,
+      "lon": 18.3448746,
+      "timestamp": "2013-02-14T20:32:59Z",
+      "version": 2,
+      "changeset": 15033599,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2097888805,
+      "lat": 49.6785786,
+      "lon": 18.3508675,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 4,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2097888827,
+      "lat": 49.6787231,
+      "lon": 18.3507514,
+      "timestamp": "2017-04-20T01:22:49Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2098248383,
+      "lat": 49.6783379,
+      "lon": 18.3511188,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2098248386,
+      "lat": 49.6783821,
+      "lon": 18.3515,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2098248388,
+      "lat": 49.6784308,
+      "lon": 18.3510218,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2098248419,
+      "lat": 49.6786546,
+      "lon": 18.3512862,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2098248420,
+      "lat": 49.67868,
+      "lon": 18.3509853,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2098248429,
+      "lat": 49.6787623,
+      "lon": 18.3511252,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2098248433,
+      "lat": 49.6787937,
+      "lon": 18.3508521,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2098248437,
+      "lat": 49.678852,
+      "lon": 18.3510593,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2098248439,
+      "lat": 49.6788831,
+      "lon": 18.3507992,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2102223151,
+      "lat": 49.6747894,
+      "lon": 18.34456,
+      "timestamp": "2013-02-19T06:56:04Z",
+      "version": 2,
+      "changeset": 15085630,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2118146157,
+      "lat": 49.6684559,
+      "lon": 18.3399626,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "name": "Frýdek-Místek, Místek, Pod Puklí",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2118146171,
+      "lat": 49.6661133,
+      "lon": 18.3336387,
+      "timestamp": "2013-01-18T18:54:19Z",
+      "version": 1,
+      "changeset": 14699736,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Místek, Palkovická",
+        "operator": "ČSAD Frýdek-Místek",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2118146292,
+      "lat": 49.6662372,
+      "lon": 18.333774,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2118593763,
+      "lat": 49.6724199,
+      "lon": 18.3312707,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 4,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2125612117,
+      "lat": 49.6875871,
+      "lon": 18.3481239,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 4,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Revoluční",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2125612119,
+      "lat": 49.6876262,
+      "lon": 18.3479333,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 4,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Revoluční",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2152434093,
+      "lat": 49.6682329,
+      "lon": 18.3405772,
+      "timestamp": "2017-04-03T16:08:24Z",
+      "version": 2,
+      "changeset": 47417326,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2152434134,
+      "lat": 49.6684375,
+      "lon": 18.3399494,
+      "timestamp": "2013-02-12T20:24:32Z",
+      "version": 1,
+      "changeset": 15010878,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2152434156,
+      "lat": 49.6684838,
+      "lon": 18.3437499,
+      "timestamp": "2013-02-12T20:24:32Z",
+      "version": 1,
+      "changeset": 15010878,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2152434187,
+      "lat": 49.6687091,
+      "lon": 18.3433036,
+      "timestamp": "2013-02-12T20:24:32Z",
+      "version": 1,
+      "changeset": 15010878,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2152434249,
+      "lat": 49.6717332,
+      "lon": 18.3443555,
+      "timestamp": "2013-02-12T20:24:33Z",
+      "version": 1,
+      "changeset": 15010878,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2152434286,
+      "lat": 49.6719024,
+      "lon": 18.3443583,
+      "timestamp": "2013-02-12T20:24:33Z",
+      "version": 1,
+      "changeset": 15010878,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2155640025,
+      "lat": 49.6748943,
+      "lon": 18.3401584,
+      "timestamp": "2017-04-20T01:22:50Z",
+      "version": 4,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Ostravská",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2155640029,
+      "lat": 49.6754077,
+      "lon": 18.3393241,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 4,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Ostravská",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2155640034,
+      "lat": 49.6773764,
+      "lon": 18.3418935,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Místek, poliklinika",
+        "public_transport": "platform",
+        "route_ref": "1",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2155640039,
+      "lat": 49.6748642,
+      "lon": 18.340123,
+      "timestamp": "2013-02-15T07:35:06Z",
+      "version": 1,
+      "changeset": 15036788,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2155640049,
+      "lat": 49.6774008,
+      "lon": 18.3417093,
+      "timestamp": "2013-03-04T16:58:31Z",
+      "version": 2,
+      "changeset": 15248722,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2155640061,
+      "lat": 49.677667,
+      "lon": 18.3413576,
+      "timestamp": "2013-02-15T07:35:06Z",
+      "version": 1,
+      "changeset": 15036788,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position",
+        "route_ref": "1"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2155640065,
+      "lat": 49.6776715,
+      "lon": 18.341674,
+      "timestamp": "2013-03-04T17:07:54Z",
+      "version": 2,
+      "changeset": 15248811,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159530346,
+      "lat": 49.6781999,
+      "lon": 18.3350776,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, 8. ZŠ",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159530354,
+      "lat": 49.678433,
+      "lon": 18.335621,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, 8. ZŠ",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159530356,
+      "lat": 49.6782803,
+      "lon": 18.3373468,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Anenská",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159530357,
+      "lat": 49.6783479,
+      "lon": 18.3370471,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Anenská",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159530358,
+      "lat": 49.6784549,
+      "lon": 18.3372069,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Anenská",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159530359,
+      "lat": 49.678624,
+      "lon": 18.337071,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Anenská",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159530360,
+      "lat": 49.6773766,
+      "lon": 18.3417013,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, poliklinika",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159530366,
+      "lat": 49.6774026,
+      "lon": 18.3418955,
+      "timestamp": "2013-03-04T16:58:31Z",
+      "version": 2,
+      "changeset": 15248722,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position",
+        "route_ref": "1"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159530402,
+      "lat": 49.6781615,
+      "lon": 18.3351211,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159558788,
+      "lat": 49.6733482,
+      "lon": 18.3390119,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 4,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Gymnázium",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159558789,
+      "lat": 49.6734183,
+      "lon": 18.3392491,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 4,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Gymnázium",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159558790,
+      "lat": 49.6732023,
+      "lon": 18.3344267,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, ČSA věžové domy",
+        "public_transport": "platform",
+        "shelter": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159558791,
+      "lat": 49.6735755,
+      "lon": 18.333785,
+      "timestamp": "2017-04-20T01:22:51Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, ČSA věžové domy",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159558797,
+      "lat": 49.6732337,
+      "lon": 18.3344616,
+      "timestamp": "2017-05-01T16:59:36Z",
+      "version": 3,
+      "changeset": 48312728,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159558804,
+      "lat": 49.6733114,
+      "lon": 18.3390516,
+      "timestamp": "2013-03-20T18:41:14Z",
+      "version": 2,
+      "changeset": 15435138,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159558810,
+      "lat": 49.6734468,
+      "lon": 18.3391976,
+      "timestamp": "2013-03-20T18:41:14Z",
+      "version": 2,
+      "changeset": 15435138,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2159558820,
+      "lat": 49.6735534,
+      "lon": 18.3337555,
+      "timestamp": "2017-05-01T16:59:37Z",
+      "version": 3,
+      "changeset": 48312728,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2161461976,
+      "lat": 49.6709097,
+      "lon": 18.3452586,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Frýdlantská",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2161462001,
+      "lat": 49.6709275,
+      "lon": 18.3453001,
+      "timestamp": "2013-02-18T18:58:43Z",
+      "version": 1,
+      "changeset": 15080793,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162250067,
+      "lat": 49.678279,
+      "lon": 18.331959,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, 17. listopadu",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162250069,
+      "lat": 49.6748169,
+      "lon": 18.3445034,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Politických obětí",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162250160,
+      "lat": 49.6782296,
+      "lon": 18.3320452,
+      "timestamp": "2013-03-20T18:52:55Z",
+      "version": 2,
+      "changeset": 15435265,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162250173,
+      "lat": 49.6819651,
+      "lon": 18.3376129,
+      "timestamp": "2013-03-20T18:52:55Z",
+      "version": 2,
+      "changeset": 15435265,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162270734,
+      "lat": 49.6873409,
+      "lon": 18.3496457,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Revoluční",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162270735,
+      "lat": 49.6875657,
+      "lon": 18.3491233,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Revoluční",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162270736,
+      "lat": 49.6876624,
+      "lon": 18.3477706,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Revoluční",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162270737,
+      "lat": 49.6856564,
+      "lon": 18.3469112,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Zámecké náměstí",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162270738,
+      "lat": 49.6856567,
+      "lon": 18.3469664,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162270766,
+      "lat": 49.6875465,
+      "lon": 18.3490993,
+      "timestamp": "2013-03-08T22:41:26Z",
+      "version": 3,
+      "changeset": 15296296,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162270770,
+      "lat": 49.6876029,
+      "lon": 18.3481343,
+      "timestamp": "2013-03-08T22:41:26Z",
+      "version": 3,
+      "changeset": 15296296,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162270775,
+      "lat": 49.6876479,
+      "lon": 18.3479383,
+      "timestamp": "2013-03-08T22:41:26Z",
+      "version": 3,
+      "changeset": 15296296,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162270778,
+      "lat": 49.6876853,
+      "lon": 18.3477754,
+      "timestamp": "2013-03-08T20:10:57Z",
+      "version": 2,
+      "changeset": 15294565,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162278060,
+      "lat": 49.6850933,
+      "lon": 18.3522139,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Magistrát",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162278061,
+      "lat": 49.6851795,
+      "lon": 18.3523716,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Magistrát",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2162278065,
+      "lat": 49.6851468,
+      "lon": 18.3523098,
+      "timestamp": "2013-03-08T22:41:26Z",
+      "version": 2,
+      "changeset": 15296296,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2164600199,
+      "lat": 49.6905427,
+      "lon": 18.3433613,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 5,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Lískovecká",
+        "public_transport": "platform",
+        "shelter": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2164600395,
+      "lat": 49.6912207,
+      "lon": 18.3431612,
+      "timestamp": "2017-04-20T01:22:52Z",
+      "version": 4,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Lískovecká",
+        "public_transport": "platform",
+        "shelter": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2166083337,
+      "lat": 49.6905617,
+      "lon": 18.3433906,
+      "timestamp": "2013-03-08T21:32:16Z",
+      "version": 2,
+      "changeset": 15295547,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2166083351,
+      "lat": 49.6912078,
+      "lon": 18.3431373,
+      "timestamp": "2013-03-08T21:32:16Z",
+      "version": 2,
+      "changeset": 15295547,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2174602852,
+      "lat": 49.6925488,
+      "lon": 18.3422454,
+      "timestamp": "2017-04-20T01:22:53Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Sídliště",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2174602853,
+      "lat": 49.6928648,
+      "lon": 18.3418998,
+      "timestamp": "2017-04-20T01:22:53Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Sídliště",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2174602906,
+      "lat": 49.6925324,
+      "lon": 18.3421911,
+      "timestamp": "2013-03-08T21:32:16Z",
+      "version": 2,
+      "changeset": 15295547,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2174602925,
+      "lat": 49.6928768,
+      "lon": 18.3419643,
+      "timestamp": "2013-03-08T21:32:16Z",
+      "version": 2,
+      "changeset": 15295547,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2182185332,
+      "lat": 49.6894926,
+      "lon": 18.3567971,
+      "timestamp": "2017-04-20T01:22:53Z",
+      "version": 5,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "covered": "no",
+        "name": "Frýdek-Místek, Frýdek, U Nemocnice",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2184049064,
+      "lat": 49.6894252,
+      "lon": 18.3545253,
+      "timestamp": "2017-04-20T01:22:53Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "covered": "no",
+        "name": "Frýdek-Místek, Frýdek, Lékárna",
+        "public_transport": "platform",
+        "shelter": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2184049065,
+      "lat": 49.689638,
+      "lon": 18.3542334,
+      "timestamp": "2017-04-20T01:22:53Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "covered": "no",
+        "name": "Frýdek-Místek, Frýdek, Lékárna",
+        "public_transport": "platform",
+        "shelter": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2184049066,
+      "lat": 49.6905945,
+      "lon": 18.3506456,
+      "timestamp": "2017-04-20T01:22:53Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "covered": "no",
+        "name": "Frýdek-Místek, Frýdek, Rozc. u školy",
+        "public_transport": "platform",
+        "shelter": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2184049070,
+      "lat": 49.6913393,
+      "lon": 18.3480462,
+      "timestamp": "2017-04-20T01:22:53Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "covered": "no",
+        "name": "Frýdek-Místek, Frýdek, Rozc. u školy",
+        "public_transport": "platform",
+        "shelter": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2184049075,
+      "lat": 49.6892431,
+      "lon": 18.3567401,
+      "timestamp": "2017-04-20T01:22:53Z",
+      "version": 5,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "covered": "no",
+        "name": "Frýdek-Místek, Frýdek, U Nemocnice",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2184049155,
+      "lat": 49.6892636,
+      "lon": 18.3567307,
+      "timestamp": "2013-03-11T19:57:07Z",
+      "version": 3,
+      "changeset": 15332302,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2184049209,
+      "lat": 49.6894678,
+      "lon": 18.35456,
+      "timestamp": "2013-03-06T06:31:17Z",
+      "version": 2,
+      "changeset": 15266525,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2184049214,
+      "lat": 49.6894726,
+      "lon": 18.3568276,
+      "timestamp": "2013-03-04T16:58:31Z",
+      "version": 2,
+      "changeset": 15248722,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2184049235,
+      "lat": 49.6895996,
+      "lon": 18.3542046,
+      "timestamp": "2013-03-06T06:31:17Z",
+      "version": 2,
+      "changeset": 15266525,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2184049308,
+      "lat": 49.6906382,
+      "lon": 18.3506637,
+      "timestamp": "2013-03-06T20:56:10Z",
+      "version": 2,
+      "changeset": 15275643,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2184049332,
+      "lat": 49.6913038,
+      "lon": 18.3480274,
+      "timestamp": "2013-03-06T20:56:10Z",
+      "version": 2,
+      "changeset": 15275643,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2194518502,
+      "lat": 49.6900908,
+      "lon": 18.365171,
+      "timestamp": "2017-04-20T01:22:53Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Na Vyhlídce",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2194518509,
+      "lat": 49.6903446,
+      "lon": 18.365256,
+      "timestamp": "2017-04-20T01:22:53Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Na Vyhlídce",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2194518521,
+      "lat": 49.6870611,
+      "lon": 18.3676231,
+      "timestamp": "2017-04-20T01:22:54Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Povodí Odry",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2194518526,
+      "lat": 49.6873292,
+      "lon": 18.3679304,
+      "timestamp": "2017-04-20T01:22:54Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Povodí Odry",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2194518838,
+      "lat": 49.687046,
+      "lon": 18.3676723,
+      "timestamp": "2013-03-10T16:43:44Z",
+      "version": 1,
+      "changeset": 15317540,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2194518862,
+      "lat": 49.6873336,
+      "lon": 18.3678863,
+      "timestamp": "2013-03-10T16:43:44Z",
+      "version": 1,
+      "changeset": 15317540,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2194519014,
+      "lat": 49.6900965,
+      "lon": 18.3652203,
+      "timestamp": "2013-03-10T16:43:46Z",
+      "version": 1,
+      "changeset": 15317540,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2194519037,
+      "lat": 49.6903339,
+      "lon": 18.365199,
+      "timestamp": "2013-03-10T16:43:46Z",
+      "version": 1,
+      "changeset": 15317540,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2238922250,
+      "lat": 49.6811343,
+      "lon": 18.3558336,
+      "timestamp": "2017-04-20T01:22:54Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Nový byt",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2238922252,
+      "lat": 49.6820416,
+      "lon": 18.355523,
+      "timestamp": "2017-04-20T01:22:54Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Nový byt",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2238922436,
+      "lat": 49.6811406,
+      "lon": 18.3558812,
+      "timestamp": "2013-03-30T19:02:04Z",
+      "version": 1,
+      "changeset": 15555039,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2238922721,
+      "lat": 49.6820347,
+      "lon": 18.355497,
+      "timestamp": "2013-03-30T19:02:07Z",
+      "version": 1,
+      "changeset": 15555039,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311049,
+      "lat": 49.6784937,
+      "lon": 18.357906,
+      "timestamp": "2017-04-20T01:22:54Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Na Veselé",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311057,
+      "lat": 49.6786,
+      "lon": 18.3577328,
+      "timestamp": "2017-04-20T01:22:54Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Na Veselé",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311062,
+      "lat": 49.6790468,
+      "lon": 18.3570787,
+      "timestamp": "2017-04-20T01:22:55Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Na Veselé",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311072,
+      "lat": 49.679334,
+      "lon": 18.3566209,
+      "timestamp": "2017-04-20T01:22:55Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Na Veselé",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311076,
+      "lat": 49.6795356,
+      "lon": 18.3562996,
+      "timestamp": "2017-04-20T01:22:55Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Na Veselé",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311077,
+      "lat": 49.6796198,
+      "lon": 18.3569843,
+      "timestamp": "2017-04-20T01:22:55Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Na Veselé",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311078,
+      "lat": 49.6778391,
+      "lon": 18.3542394,
+      "timestamp": "2017-04-20T01:22:55Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "description": "výstupní",
+        "description:en": "output only",
+        "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311079,
+      "lat": 49.6783222,
+      "lon": 18.3547766,
+      "timestamp": "2017-07-10T20:19:32Z",
+      "version": 3,
+      "changeset": 50186124,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "description": "směr Frýdek",
+        "description:en": "Frydek direction",
+        "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311080,
+      "lat": 49.6784521,
+      "lon": 18.3551045,
+      "timestamp": "2017-07-10T20:19:32Z",
+      "version": 3,
+      "changeset": 50186124,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "bus": "yes",
+        "description": "směr Slezská",
+        "description:en": "Slezska direction",
+        "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+        "public_transport": "platform",
+        "route_ref": "2;3;6;8"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311160,
+      "lat": 49.6778496,
+      "lon": 18.3542688,
+      "timestamp": "2017-07-10T20:19:32Z",
+      "version": 2,
+      "changeset": 50186124,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311308,
+      "lat": 49.6781858,
+      "lon": 18.3546036,
+      "timestamp": "2017-07-10T20:19:32Z",
+      "version": 2,
+      "changeset": 50186124,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311340,
+      "lat": 49.6782781,
+      "lon": 18.3548301,
+      "timestamp": "2017-07-10T20:19:32Z",
+      "version": 2,
+      "changeset": 50186124,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Železniční stanice",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311412,
+      "lat": 49.678513,
+      "lon": 18.3579269,
+      "timestamp": "2013-04-02T20:17:47Z",
+      "version": 1,
+      "changeset": 15586506,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311431,
+      "lat": 49.6786192,
+      "lon": 18.3577571,
+      "timestamp": "2013-04-02T20:17:48Z",
+      "version": 1,
+      "changeset": 15586506,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311515,
+      "lat": 49.6790677,
+      "lon": 18.3570935,
+      "timestamp": "2013-04-02T20:17:51Z",
+      "version": 1,
+      "changeset": 15586506,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311544,
+      "lat": 49.6793623,
+      "lon": 18.3566653,
+      "timestamp": "2013-04-02T20:17:52Z",
+      "version": 1,
+      "changeset": 15586506,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311572,
+      "lat": 49.6795628,
+      "lon": 18.3563343,
+      "timestamp": "2013-04-02T20:17:53Z",
+      "version": 1,
+      "changeset": 15586506,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2245311575,
+      "lat": 49.6796055,
+      "lon": 18.3569281,
+      "timestamp": "2013-04-02T20:17:53Z",
+      "version": 1,
+      "changeset": 15586506,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2258542545,
+      "lat": 49.6767945,
+      "lon": 18.3665285,
+      "timestamp": "2017-04-20T01:22:55Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, U Gustlíčka",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2258542551,
+      "lat": 49.6768108,
+      "lon": 18.3665415,
+      "timestamp": "2017-04-20T01:22:55Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2258542565,
+      "lat": 49.6769213,
+      "lon": 18.3664935,
+      "timestamp": "2013-04-08T18:32:34Z",
+      "version": 1,
+      "changeset": 15657967,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2452260701,
+      "lat": 49.6789126,
+      "lon": 18.3679026,
+      "timestamp": "2017-04-20T01:22:55Z",
+      "version": 3,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek, Dobrovského",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2639888011,
+      "lat": 49.6685433,
+      "lon": 18.3651287,
+      "timestamp": "2017-04-20T01:22:56Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Staré Město, střed",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2639888012,
+      "lat": 49.6688366,
+      "lon": 18.3651483,
+      "timestamp": "2017-04-20T01:22:56Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Staré Město, střed",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2639888200,
+      "lat": 49.6685387,
+      "lon": 18.3651809,
+      "timestamp": "2014-01-27T17:44:34Z",
+      "version": 1,
+      "changeset": 20233103,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2639888244,
+      "lat": 49.6688385,
+      "lon": 18.3650962,
+      "timestamp": "2014-01-27T17:44:35Z",
+      "version": 1,
+      "changeset": 20233103,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2736861711,
+      "lat": 49.677448,
+      "lon": 18.3541356,
+      "timestamp": "2014-12-30T12:37:08Z",
+      "version": 3,
+      "changeset": 27798675,
+      "user": "Mar4s",
+      "uid": 461574,
+      "tags": {
+        "alt_name:de": "Friedek-Mistek",
+        "name": "Frýdek-Místek",
+        "name:de": "Friedeck-Mistek",
+        "network": "cz:ODIS",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "railway:ref": "333443",
+        "train": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 2736861719,
+      "lat": 49.677819,
+      "lon": 18.3538574,
+      "timestamp": "2014-12-30T12:37:08Z",
+      "version": 3,
+      "changeset": 27798675,
+      "user": "Mar4s",
+      "uid": 461574,
+      "tags": {
+        "alt_name:de": "Friedek-Mistek",
+        "name": "Frýdek-Místek",
+        "name:de": "Friedeck-Mistek",
+        "network": "cz:ODIS",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "railway:ref": "333443",
+        "train": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 3041860147,
+      "lat": 49.6789139,
+      "lon": 18.3679526,
+      "timestamp": "2014-08-25T17:45:47Z",
+      "version": 1,
+      "changeset": 25009511,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 3041860170,
+      "lat": 49.6791977,
+      "lon": 18.3682496,
+      "timestamp": "2014-08-25T17:45:47Z",
+      "version": 1,
+      "changeset": 25009511,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 3909759834,
+      "lat": 49.668908,
+      "lon": 18.3479117,
+      "timestamp": "2017-07-14T18:03:58Z",
+      "version": 4,
+      "changeset": 50290469,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "highway": "bus_stop",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 3909759839,
+      "lat": 49.6689691,
+      "lon": 18.3480289,
+      "timestamp": "2017-07-14T18:03:58Z",
+      "version": 2,
+      "changeset": 50290469,
+      "user": "Marián Kyral",
+      "uid": 1182568,
+      "tags": {
+        "bus": "yes",
+        "highway": "bus_stop",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4473449095,
+      "lat": 49.6868688,
+      "lon": 18.3398811,
+      "timestamp": "2017-08-17T19:49:45Z",
+      "version": 2,
+      "changeset": 51214994,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4589796947,
+      "lat": 49.6707694,
+      "lon": 18.3290003,
+      "timestamp": "2017-04-20T01:22:56Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4589796959,
+      "lat": 49.6710554,
+      "lon": 18.3314385,
+      "timestamp": "2017-04-20T01:22:56Z",
+      "version": 2,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4804843318,
+      "lat": 49.6707384,
+      "lon": 18.3290072,
+      "timestamp": "2017-04-20T01:22:44Z",
+      "version": 1,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Příborská",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4804843319,
+      "lat": 49.6710708,
+      "lon": 18.3314373,
+      "timestamp": "2017-04-20T01:22:44Z",
+      "version": 1,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bin": "yes",
+        "bus": "yes",
+        "name": "Frýdek-Místek, Místek, Příborská",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4804843320,
+      "lat": 49.6785498,
+      "lon": 18.3512342,
+      "timestamp": "2017-04-20T01:22:44Z",
+      "version": 1,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "name": "Frýdek-Místek, Frýdek,aut.nádr.",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 4804844122,
+      "lat": 49.6724183,
+      "lon": 18.3312949,
+      "timestamp": "2017-04-20T01:22:44Z",
+      "version": 1,
+      "changeset": 47956115,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bin": "yes",
+        "bus": "yes",
+        "covered": "yes",
+        "name": "Frýdek-Místek, Místek, TESCO",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 5041761621,
+      "lat": 49.6909378,
+      "lon": 18.3324944,
+      "timestamp": "2017-08-17T19:49:44Z",
+      "version": 1,
+      "changeset": 51214994,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "yes",
+        "bin": "yes",
+        "covered": "yes",
+        "name": "Frýdek-Místek, Frýdek, Válc.pl.aut.st.",
+        "public_transport": "platform",
+        "shelter": "yes"
+      }
+    },
+    {
+      "type": "node",
+      "id": 5041761622,
+      "lat": 49.6871926,
+      "lon": 18.3386228,
+      "timestamp": "2017-08-17T19:49:44Z",
+      "version": 1,
+      "changeset": 51214994,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "name": "Frýdek-Místek, Frýdek, ul.Míru",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 5041761623,
+      "lat": 49.6871795,
+      "lon": 18.338616,
+      "timestamp": "2017-08-17T19:49:44Z",
+      "version": 1,
+      "changeset": 51214994,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bus": "yes",
+        "public_transport": "stop_position"
+      }
+    },
+    {
+      "type": "node",
+      "id": 5041761625,
+      "lat": 49.6868289,
+      "lon": 18.3397789,
+      "timestamp": "2017-08-17T19:49:45Z",
+      "version": 1,
+      "changeset": 51214994,
+      "user": "dkocich",
+      "uid": 1784758,
+      "tags": {
+        "bench": "no",
+        "name": "Frýdek-Místek, Frýdek, ul.Míru",
+        "public_transport": "platform",
+        "shelter": "no"
+      }
+    }
+  ]
+}
