@@ -28,9 +28,13 @@ export class AppComponent {
     @ViewChild(AuthComponent) public authComponent: AuthComponent;
     @ViewChild("helpModal") public helpModal: ModalDirective;
 
-    constructor(private mapService: MapService, private geocoder: GeocodingService,
-                private loadingService: LoadingService, private processingService: ProcessingService,
-                private editingService: EditingService) {
+    constructor(
+        private editingService: EditingService,
+        private geocoder: GeocodingService,
+        private loadingService: LoadingService,
+        private mapService: MapService,
+        private processingService: ProcessingService
+    ) {
         if (isDevMode()) {
             console.log("WARNING: Ang. development mode is ", isDevMode());
         }

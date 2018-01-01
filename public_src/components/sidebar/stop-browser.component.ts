@@ -25,11 +25,13 @@ export class StopBrowserComponent {
     private filteredView: boolean;
     private editingMode: boolean;
 
-    constructor(private storageService: StorageService,
-                private processingService: ProcessingService,
-                private mapService: MapService,
-                private editingService: EditingService,
-                private dragulaService: DragulaService) {
+    constructor(
+        private dragulaService: DragulaService,
+        private editingService: EditingService,
+        private mapService: MapService,
+        private processingService: ProcessingService,
+        private storageService: StorageService
+    ) {
         dragulaService.drop.subscribe((value) => {
             this.onDrop(value.slice(1));
         });

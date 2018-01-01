@@ -43,8 +43,13 @@ export class TransporterComponent {
     private comment: string = "";
 
     private source: string = "";
-    constructor(private mapService: MapService, private overpassService: OverpassService,
-                private storageService: StorageService, private authService: AuthService) {
+    constructor(
+        private authService: AuthService,
+        private mapService: MapService,
+        private overpassService: OverpassService,
+        private storageService: StorageService
+    ) {
+        //
     }
 
     ngOnInit(): void {

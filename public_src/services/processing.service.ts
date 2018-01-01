@@ -24,9 +24,11 @@ export class ProcessingService {
     public membersToDownload: EventEmitter<object> = new EventEmitter();
     public refreshMasters: EventEmitter<object> = new EventEmitter();
 
-    constructor(private storageService: StorageService,
-                private mapService: MapService,
-                private loadingService: LoadingService) {
+    constructor(
+        private loadingService: LoadingService,
+        private mapService: MapService,
+        private storageService: StorageService
+    ) {
 
         // this.mapService.popupBtnClick.subscribe(
         //     (data) => {

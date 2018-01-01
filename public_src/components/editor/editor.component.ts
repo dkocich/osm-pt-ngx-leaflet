@@ -23,8 +23,13 @@ export class EditorComponent {
     private editing: boolean = false;
     private creatingElementOfType: string = "";
 
-    constructor(private mapService: MapService, private storageService: StorageService,
-                private editingService: EditingService, private authService: AuthService) {
+    constructor(
+        private authService: AuthService,
+        private editingService: EditingService,
+        private mapService: MapService,
+        private storageService: StorageService
+    ) {
+        //
     }
 
     ngOnInit(): void {

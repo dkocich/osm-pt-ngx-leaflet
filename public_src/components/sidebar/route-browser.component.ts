@@ -27,11 +27,14 @@ export class RouteBrowserComponent {
     private editingMode: boolean;
     private membersEditing: boolean = false;
 
-    constructor(private storageService: StorageService,
-                private processingService: ProcessingService,
-                private mapService: MapService,
-                private overpassService: OverpassService,
-                private editingService: EditingService) {
+    constructor(
+        private editingService: EditingService,
+        private mapService: MapService,
+        private overpassService: OverpassService,
+        private processingService: ProcessingService,
+        private storageService: StorageService
+    ) {
+        //
     }
 
     ngOnInit(): void {

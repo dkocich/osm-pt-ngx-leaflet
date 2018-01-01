@@ -19,9 +19,11 @@ export class EditingService {
     public elementChanges: any = [];
     private editing: boolean;
 
-    constructor(private storageService: StorageService,
-                private processingService: ProcessingService,
-                private mapService: MapService) {
+    constructor(
+        private mapService: MapService,
+        private processingService: ProcessingService,
+        private storageService: StorageService
+    ) {
 
         // local events
         this.currentTotalSteps.subscribe(

@@ -17,7 +17,10 @@ export class NavigatorComponent {
 
     private map: Map;
 
-    constructor(private geocoder: GeocodingService, private mapService: MapService) {
+    constructor(
+        private geocoder: GeocodingService,
+        private mapService: MapService
+    ) {
         this.address = "";
     }
 

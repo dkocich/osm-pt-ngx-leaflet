@@ -31,11 +31,14 @@ export class OverpassService {
     public changeset;
     private changeset_id: string;
 
-    constructor(private http: Http, private mapService: MapService,
-                private storageService: StorageService,
-                private processingService: ProcessingService,
-                private loadingService: LoadingService,
-                private authService: AuthService) {
+    constructor(
+        private authService: AuthService,
+        private http: Http,
+        private loadingService: LoadingService,
+        private processingService: ProcessingService,
+        private storageService: StorageService,
+        private mapService: MapService
+    ) {
         /**
          * @param data - string containing ID of clicked marker
          */

@@ -17,7 +17,10 @@ export class AuthComponent {
     private displayName: string;
     private imgHref: string;
 
-    constructor(private storageService: StorageService, private authService: AuthService) {
+    constructor(
+        private authService: AuthService,
+        private storageService: StorageService
+    ) {
         this.displayName = this.getDisplayName();
         this.imgHref = this.storageService.getImgHref();
     }

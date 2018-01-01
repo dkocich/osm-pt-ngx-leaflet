@@ -22,9 +22,12 @@ export class RelationBrowserComponent {
     private editingMode: boolean;
     private listOfMasters = this.storageService.listOfMasters;
 
-    constructor(private storageService: StorageService,
-                private processingService: ProcessingService,
-                private editingService: EditingService) {
+    constructor(
+        private editingService: EditingService,
+        private processingService: ProcessingService,
+        private storageService: StorageService
+    ) {
+        //
     }
 
     ngOnInit(): void {

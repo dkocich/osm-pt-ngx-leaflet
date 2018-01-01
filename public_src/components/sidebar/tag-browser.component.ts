@@ -34,10 +34,13 @@ export class TagBrowserComponent {
         "taxi", "train", "tram", "trolleybus", "yes"
     ];
 
-    constructor(private processingService: ProcessingService,
-                private storageService: StorageService,
-                private editingService: EditingService,
-                private cd: ChangeDetectorRef) {
+    constructor(
+        private cd: ChangeDetectorRef,
+        private editingService: EditingService,
+        private processingService: ProcessingService,
+        private storageService: StorageService
+    ) {
+        //
     }
 
     ngOnInit(): void {

@@ -19,7 +19,12 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BusyModule } from "angular2-busy";
 import { DragulaModule } from "ng2-dragula";
 import {
-    AccordionModule, ButtonsModule, CarouselModule, ModalModule, TooltipModule, TypeaheadModule
+    AccordionModule,
+    ButtonsModule,
+    CarouselModule,
+    ModalModule,
+    TooltipModule,
+    TypeaheadModule
 } from "ngx-bootstrap";
 
 import { AppComponent } from "./components/app/app.component";
@@ -46,34 +51,48 @@ import { StorageService } from "./services/storage.service";
 import { KeysPipe } from "./components/pipes/keys.pipe";
 
 @NgModule({
-    bootstrap: [AppComponent],
+    bootstrap: [
+        AppComponent
+    ],
     declarations: [
         AppComponent,
+        AuthComponent,
+        EditorComponent,
         NavigatorComponent,
-        ToolbarComponent,
         RelationBrowserComponent,
-        TagBrowserComponent,
         RouteBrowserComponent,
         StopBrowserComponent,
+        TagBrowserComponent,
+        ToolbarComponent,
         TransporterComponent,
-        EditorComponent,
-        AuthComponent,
+
         KeysPipe
     ],
-    imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
-        ModalModule.forRoot(), CarouselModule.forRoot(),
-        BusyModule, BrowserAnimationsModule, DragulaModule, TooltipModule.forRoot(),
-        ButtonsModule.forRoot(), TypeaheadModule.forRoot() ],
+    imports: [
+        AccordionModule.forRoot(),
+        BrowserAnimationsModule,
+        BrowserModule,
+        BusyModule,
+        ButtonsModule.forRoot(),
+        CarouselModule.forRoot(),
+        DragulaModule,
+        FormsModule,
+        HttpModule,
+        ModalModule.forRoot(),
+        TooltipModule.forRoot(),
+        TypeaheadModule.forRoot()
+    ],
     providers: [
-        MapService,
-        GeocodingService,
-        OverpassService,
-        StorageService,
-        ProcessingService,
-        ConfigService,
-        LoadingService,
-        EditingService,
         AuthService,
+        ConfigService,
+        EditingService,
+        GeocodingService,
+        LoadingService,
+        MapService,
+        OverpassService,
+        ProcessingService,
+        StorageService,
+
         KeysPipe
     ]
 })

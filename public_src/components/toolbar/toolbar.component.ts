@@ -30,9 +30,13 @@ export class ToolbarComponent {
     private currentElement: IOsmEntity;
     private stats = { s: 0, r: 0, a: 0, m: 0 };
 
-    constructor(private mapService: MapService, private overpassService: OverpassService,
-                private configService: ConfigService, private storageService: StorageService,
-                private processingService: ProcessingService) {
+    constructor(
+        private configService: ConfigService,
+        private mapService: MapService,
+        private overpassService: OverpassService,
+        private processingService: ProcessingService,
+        private storageService: StorageService
+    ) {
         this.downloading = true;
         this.filtering = this.configService.cfgFilterLines;
         this.processingService.refreshSidebarViews$.subscribe(

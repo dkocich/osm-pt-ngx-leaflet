@@ -73,8 +73,12 @@ export class MapService {
     private markerFrom: any = undefined;
     private markerTo: any = undefined;
 
-    constructor(private http: Http, private storageService: StorageService,
-                private configService: ConfigService, private loadingService: LoadingService) {
+    constructor(
+        private configService: ConfigService,
+        private http: Http,
+        private loadingService: LoadingService,
+        private storageService: StorageService
+    ) {
 
         this.baseMaps = {
             Empty: L.tileLayer("", {
