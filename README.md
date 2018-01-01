@@ -21,6 +21,10 @@ This project requires [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.co
 3.  Open the app at `public/index.html`
 4.  Run (for local development) `npm run dev` to serve project with `webpack-dev-server` on localhost:8080
 
+## Communication
+
+Contact me on Slack [osm-pt.slack.com](https://osm-pt.slack.com/).
+
 ## Acknowledgment
 
 This project was made possible by Google/OSM during the [GSOC 2017](https://summerofcode.withgoogle.com/) for [OpenStreetMap](https://www.openstreetmap.org/) organization.
