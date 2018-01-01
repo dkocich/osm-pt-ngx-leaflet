@@ -25,7 +25,7 @@
                 </tr>
                 </thead>
                 <tbody *ngIf="!editingMode">
-                <tr *ngFor="let stop of listOfStopsForRoute; let i = index ;" class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
+                <tr *ngFor="let stop of listOfStopsForRoute; trackBy: trackByFn; let i = index;" class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
                     <td>{{i + 1}}.</td>
                     <td>{{stop.role}}</td>
                     <td>
@@ -37,7 +37,7 @@
                 </tr>
                 </tbody>
                 <tbody *ngIf="editingMode" [dragula]="'my-box'" [dragulaModel]="listOfStopsForRoute">
-                    <tr *ngFor="let stop of listOfStopsForRoute; let i = index ;" class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
+                    <tr *ngFor="let stop of listOfStopsForRoute; trackBy: trackByFn; let i = index ;" class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
                         <td>{{i + 1}}.</td>
                         <td><input type="text" value="{{stop.role}}" disabled></td>
                         <td>
@@ -61,7 +61,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let stop of listOfStops" id="{{stop.id}}" class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
+                    <tr *ngFor="let stop of listOfStops; trackBy: trackByFn" id="{{stop.id}}" class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
                         <td>
                             <i *ngIf="isDownloaded(stop.id)" class="fa fa-check-square-o" aria-hidden="true"
                             tooltip="Routes related to this stop were checked and downloaded" container="body"></i>

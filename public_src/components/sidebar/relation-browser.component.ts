@@ -118,4 +118,15 @@ export class RelationBrowserComponent {
     private isSelected(relId: number): boolean {
         return this.processingService.haveSameIds(relId, this.currentElement.id);
     }
+
+    /**
+     * NgFor track function which helps to re-render rows faster.
+     *
+     * @param index
+     * @param item
+     * @returns {number}
+     */
+    private trackByFn(index: number, item: any): number {
+        return item.id;
+    }
 }

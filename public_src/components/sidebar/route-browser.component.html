@@ -28,7 +28,7 @@
          *ngIf="(listOfRelationsForStop.length !== 0 && filteredView) || (listOfRelations.length !== 0 && !filteredView)">
 
         <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="medium">
-            <div *ngFor="let rel of listOfRelationsForStop">
+            <div *ngFor="let rel of listOfRelationsForStop; trackBy: trackByFn;">
                 <span class="explore" (click)="exploreRelation($event, rel)" (mouseover)="exploreAvailableRelation($event, rel)"
                       [class.selected]="currentElement && isSelected(rel.id)">
                     {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
@@ -37,7 +37,7 @@
         </div>
 
         <div *ngIf="listOfRelations.length !== 0 && !filteredView" class="medium">
-        <ng-container *ngFor="let rel of listOfMasters">
+        <ng-container *ngFor="let rel of listOfMasters; trackBy: trackByFn;">
             <div id="{{rel.id}}">
                 <span class="explore" (click)="exploreMaster($event, rel)" [class.selected]="currentElement && isSelected(rel.id)">
                     <i *ngIf="rel.id < 0" class="fa fa-plus" tooltip="This route_master is created by you" container="body" aria-hidden="true"></i>
@@ -45,7 +45,7 @@
                 </span>
             </div>
         </ng-container>
-        <ng-container *ngFor="let rel of listOfRelations">
+        <ng-container *ngFor="let rel of listOfRelations; trackBy: trackByFn;">
             <ng-container *ngIf="!hasMaster(rel.id)">
                 <div id="{{rel.id}}" *ngIf="visibleInMap(rel.id)==='visible' || visibleInMap(rel.id)==='warning'">
                     <span class="explore" (click)="exploreRelation($event, rel)" (mouseover)="exploreAvailableRelation($event, rel)"
