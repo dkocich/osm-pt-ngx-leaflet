@@ -1,14 +1,14 @@
 import { Injectable } from "@angular/core";
-import { ConfigService } from "./config.service";
+import { ConfService } from "./conf.service";
 
 @Injectable()
 export class AuthService {
   private osmAuth: any = require("osm-auth");
   public oauth: any = this.osmAuth({
-    oauth_consumer_key: ConfigService.apiConsumerKey,
-    oauth_secret: ConfigService.apiConsumerSecret,
+    oauth_consumer_key: ConfService.apiConsumerKey,
+    oauth_secret: ConfService.apiConsumerSecret,
     singlepage: false,
-    url: ConfigService.baseOsmUrl
+    url: ConfService.baseOsmUrl
   });
 
   constructor() {

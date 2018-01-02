@@ -8,7 +8,7 @@ import "rxjs/add/operator/mergeMap";
 import * as L from "leaflet";
 
 @Injectable()
-export class GeocodingService {
+export class GeocodeService {
   public http: Http;
 
   constructor(http: Http) {

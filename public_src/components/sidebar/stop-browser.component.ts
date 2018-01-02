@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 
-import { EditingService } from "../../services/editing.service";
+import { EditService } from "../../services/edit.service";
 import { MapService } from "../../services/map.service";
-import { ProcessingService } from "../../services/processing.service";
+import { ProcessService } from "../../services/process.service";
 import { StorageService } from "../../services/storage.service";
 import { DragulaService } from "ng2-dragula";
 
@@ -19,36 +19,36 @@ import { IPtStop } from "../../core/ptStop.interface";
   template: require<any>("./stop-browser.component.html")
 })
 export class StopBrowserComponent {
-  public listOfStopsForRoute: object[] = this.storageService.listOfStopsForRoute;
+  public listOfStopsForRoute: object[] = this.storageSrv.listOfStopsForRoute;
   private currentElement: any;
-  private listOfStops: object[] = this.storageService.listOfStops;
+  private listOfStops: object[] = this.storageSrv.listOfStops;
   private filteredView: boolean;
   private editingMode: boolean;
 
   constructor(
-    private dragulaService: DragulaService,
-    private editingService: EditingService,
-    private mapService: MapService,
-    private processingService: ProcessingService,
-    private storageService: StorageService
+    private dragulaSrv: DragulaService,
+    private editSrv: EditService,
+    private mapSrv: MapService,
+    private processSrv: ProcessService,
+    private storageSrv: StorageService
   ) {
-    dragulaService.drop.subscribe((value) => {
+    dragulaSrv.drop.subscribe((value) => {
       this.onDrop(value.slice(1));
     });
   }
 
   ngOnInit(): void {
-    this.processingService.showStopsForRoute$.subscribe((data) => {
+    this.processSrv.showStopsForRoute$.subscribe((data) => {
       this.filteredView = data;
     });
 
-    this.processingService.refreshSidebarViews$.subscribe((data) => {
+    this.processSrv.refreshSidebarViews$.subscribe((data) => {
       if (data === "stop") {
-        this.listOfStopsForRoute = this.storageService.listOfStopsForRoute;
-        this.currentElement = this.storageService.currentElement;
+        this.listOfStopsForRoute = this.storageSrv.listOfStopsForRoute;
+        this.currentElement = this.storageSrv.currentElement;
         console.log(this.currentElement, this.listOfStopsForRoute);
       } else if (data === "tag") {
-        this.currentElement = this.storageService.currentElement;
+        this.currentElement = this.storageSrv.currentElement;
       } else if (data === "cancel selection") {
         this.listOfStopsForRoute = undefined;
         delete this.listOfStopsForRoute;
@@ -58,7 +58,7 @@ export class StopBrowserComponent {
       }
     });
 
-    this.editingService.editingMode.subscribe((data) => {
+    this.editSrv.editingMode.subscribe((data) => {
         console.log(
           "LOG (stop-browser) Editing mode change in stopBrowser - ",
           data
@@ -69,11 +69,11 @@ export class StopBrowserComponent {
   }
 
   private isDownloaded(nodeId: number): boolean {
-    return this.storageService.elementsDownloaded.has(nodeId);
+    return this.storageSrv.elementsDownloaded.has(nodeId);
   }
 
   private reorderMembers(rel: IPtRelation): void {
-    this.editingService.reorderMembers(rel);
+    this.editSrv.reorderMembers(rel);
   }
 
   private createChange(): void {
@@ -87,7 +87,7 @@ export class StopBrowserComponent {
         JSON.stringify([...this.listOfStopsForRoute, ...elementsWithoutRole])
       )
     };
-    this.editingService.addChange(this.currentElement, type, change);
+    this.editSrv.addChange(this.currentElement, type, change);
   }
 
   private onDrop(args: any): void {
@@ -98,11 +98,11 @@ export class StopBrowserComponent {
   }
 
   private cancelFilter(): void {
-    this.processingService.activateFilteredStopView(false);
+    this.processSrv.activateFilteredStopView(false);
   }
 
   private exploreStop($event: any, stop: IPtStop): void {
-    this.processingService.exploreStop(stop, true, true, true);
+    this.processSrv.exploreStop(stop, true, true, true);
   }
 
   private reorderingEnabled(): boolean {
@@ -114,7 +114,7 @@ export class StopBrowserComponent {
   }
 
   private isSelected(relId: number): boolean {
-    return this.processingService.haveSameIds(relId, this.currentElement.id);
+    return this.processSrv.haveSameIds(relId, this.currentElement.id);
   }
 
   /**

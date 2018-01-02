@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 import { AuthService } from "../../services/auth.service";
-import { ConfigService } from "../../services/config.service";
+import { ConfService } from "../../services/conf.service";
 import { StorageService } from "../../services/storage.service";
 
 @Component({
@@ -15,19 +15,19 @@ export class AuthComponent {
   private imgHref: string;
 
   constructor(
-    private authService: AuthService,
-    private storageService: StorageService
+    private authSrv: AuthService,
+    private storageSrv: StorageService
   ) {
     this.displayName = this.getDisplayName();
-    this.imgHref = this.storageService.getImgHref();
+    this.imgHref = this.storageSrv.getImgHref();
   }
 
   private getDisplayName(): string {
-    return this.storageService.getDisplayName();
+    return this.storageSrv.getDisplayName();
   }
 
   private authenticate(): void {
-    this.authService.oauth.authenticate(this.gotAuthenticatedCallback.bind(this));
+    this.authSrv.oauth.authenticate(this.gotAuthenticatedCallback.bind(this));
   }
 
   private gotAuthenticatedCallback(err: any, response: any): void {
@@ -35,9 +35,9 @@ export class AuthComponent {
   }
 
   private logout(): void {
-    this.authService.oauth.logout();
+    this.authSrv.oauth.logout();
     document.getElementById("display_name").innerHTML = "";
-    this.storageService.clearLocalStorage();
+    this.storageSrv.clearLocalStorage();
   }
 
   private done(err: any, res: any): any {
@@ -58,21 +58,21 @@ export class AuthComponent {
       id: u.getAttribute("id"),
       img_href: i.getAttribute("href")
     };
-    this.storageService.setUserData(userDetails);
+    this.storageSrv.setUserData(userDetails);
     // document.getElementById("display_name").innerHTML = userDetails["display_name"];
   }
 
   private isAuthenticated(): void {
-    return this.authService.oauth.authenticated();
+    return this.authSrv.oauth.authenticated();
   }
 
   private showDetails(): void {
-    this.authService.oauth.xhr(
+    this.authSrv.oauth.xhr(
       {
         method: "GET",
         path: "/api/0.6/user/details",
         singlepage: true,
-        url: ConfigService.apiUrl
+        url: ConfService.apiUrl
       },
       this.gotDetailsCallback.bind(this)
     );

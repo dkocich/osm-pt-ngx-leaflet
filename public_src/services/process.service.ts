@@ -3,7 +3,7 @@ import { Subject } from "rxjs/Subject";
 
 import * as L from "leaflet";
 
-import { LoadingService } from "./loading.service";
+import { LoadService } from "./load.service";
 import { MapService } from "./map.service";
 import { StorageService } from "./storage.service";
 
@@ -12,7 +12,7 @@ import { IPtRelation } from "../core/ptRelation.interface";
 import { IPtStop } from "../core/ptStop.interface";
 
 @Injectable()
-export class ProcessingService {
+export class ProcessService {
   // Observable boolean sources
   private showRelationsForStopSource = new Subject<boolean>();
   private showStopsForRouteSource = new Subject<boolean>();
@@ -25,11 +25,11 @@ export class ProcessingService {
   public refreshMasters: EventEmitter<object> = new EventEmitter();
 
   constructor(
-    private loadingService: LoadingService,
-    private mapService: MapService,
-    private storageService: StorageService
+    private loadSrv: LoadService,
+    private mapSrv: MapService,
+    private storageSrv: StorageService
   ) {
-    // this.mapService.popupBtnClick.subscribe(
+    // this.mapSrv.popupBtnClick.subscribe(
     //     (data) => {
     //         let featureType = data[0];
     //         let featureId = Number(data[1]);
@@ -44,7 +44,7 @@ export class ProcessingService {
     //     }
     // );
 
-    this.mapService.markerClick.subscribe(
+    this.mapSrv.markerClick.subscribe(
       /**
        * @param data - string containing ID of clicked marker
        */
@@ -67,8 +67,8 @@ export class ProcessingService {
    * @param featureId
    */
   public getElementById(featureId: number): any {
-    if (this.storageService.elementsMap.has(featureId)) {
-      return this.storageService.elementsMap.get(featureId);
+    if (this.storageSrv.elementsMap.has(featureId)) {
+      return this.storageSrv.elementsMap.get(featureId);
     }
   }
 
@@ -77,21 +77,21 @@ export class ProcessingService {
    */
   public filterDataInBounds(): void {
     if (
-      !this.storageService.localJsonStorage ||
-      this.storageService.listOfStops.length > 1000
+      !this.storageSrv.localJsonStorage ||
+      this.storageSrv.listOfStops.length > 1000
     ) {
       return console.log(
         "LOG (processing s.) filtering of stops in map bounds was stopped (too much data - limit 1000 nodes)."
       );
     }
-    this.mapService.bounds = this.mapService.map.getBounds();
-    for (const stop of this.storageService.listOfStops) {
+    this.mapSrv.bounds = this.mapSrv.map.getBounds();
+    for (const stop of this.storageSrv.listOfStops) {
       const el = document.getElementById(stop.id.toString());
       if (!el) {
         return;
       }
-      el.style.display = el && this.mapService.bounds.contains([stop.lat, stop.lon]) ? "table-row" : "none";
-      // el.style.display = el && this.mapService.bounds.contains([stop.lat, stop.lon]) ? "table-row" : "none";
+      el.style.display = el && this.mapSrv.bounds.contains([stop.lat, stop.lon]) ? "table-row" : "none";
+      // el.style.display = el && this.mapSrv.bounds.contains([stop.lat, stop.lon]) ? "table-row" : "none";
     }
   }
 
@@ -100,7 +100,7 @@ export class ProcessingService {
    */
   private getResponseId(): number {
     let id = 1;
-    while (this.storageService.localJsonStorage.has(id)) {
+    while (this.storageSrv.localJsonStorage.has(id)) {
       id++;
     }
     return id;
@@ -112,12 +112,12 @@ export class ProcessingService {
    */
   public processResponse(response: object): void {
     const responseId = this.getResponseId();
-    const transformedGeojson = this.mapService.osmtogeojson(response);
-    this.storageService.localJsonStorage.set(responseId, response);
-    this.storageService.localGeojsonStorage.set(responseId, transformedGeojson);
+    const transformedGeojson = this.mapSrv.osmtogeojson(response);
+    this.storageSrv.localJsonStorage.set(responseId, response);
+    this.storageSrv.localGeojsonStorage.set(responseId, transformedGeojson);
     this.createLists(responseId);
-    this.mapService.renderTransformedGeojsonData(transformedGeojson);
-    this.loadingService.hide();
+    this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
+    this.loadSrv.hide();
   }
 
   /**
@@ -126,39 +126,39 @@ export class ProcessingService {
    */
   public processNodeResponse(response: any): void {
     for (const element of response.elements) {
-      if (!this.storageService.elementsMap.has(element.id)) {
-        this.storageService.elementsMap.set(element.id, element);
+      if (!this.storageSrv.elementsMap.has(element.id)) {
+        this.storageSrv.elementsMap.set(element.id, element);
         if (!element.tags) {
           continue;
         }
         switch (element.type) {
           case "node":
             // only nodes are fully downloaded
-            this.storageService.elementsDownloaded.add(element.id);
+            this.storageSrv.elementsDownloaded.add(element.id);
 
             if (element.tags.bus === "yes" || element.tags.public_transport) {
-              this.storageService.listOfStops.push(element);
+              this.storageSrv.listOfStops.push(element);
             }
             break;
           case "relation":
             if (element.tags.public_transport === "stop_area") {
-              this.storageService.listOfAreas.push(element);
+              this.storageSrv.listOfAreas.push(element);
             } else {
-              this.storageService.listOfRelations.push(element);
+              this.storageSrv.listOfRelations.push(element);
               break;
             }
         }
       }
     }
-    this.storageService.logStats();
+    this.storageSrv.logStats();
   }
 
   /**
    * Adds hash to URL hostname similarly like it is used on OSM (/#map=19/49.83933/18.29230)
    */
   public addPositionToUrlHash(): void {
-    const center = this.mapService.map.getCenter();
-    window.location.hash = `map=${this.mapService.map.getZoom()}/${center.lat.toFixed(
+    const center = this.mapSrv.map.getCenter();
+    window.location.hash = `map=${this.mapSrv.map.getZoom()}/${center.lat.toFixed(
       5
     )}/${center.lng.toFixed(5)}`;
   }
@@ -169,12 +169,12 @@ export class ProcessingService {
    */
   public processMastersResponse(response: object): void {
     response["elements"].forEach((element) => {
-      if (!this.storageService.elementsMap.has(element.id)) {
+      if (!this.storageSrv.elementsMap.has(element.id)) {
         console.log("LOG (processing s.) New element added:", element);
-        this.storageService.elementsMap.set(element.id, element);
-        this.storageService.elementsDownloaded.add(element.id);
+        this.storageSrv.elementsMap.set(element.id, element);
+        this.storageSrv.elementsDownloaded.add(element.id);
         if (element.tags.route_master) {
-          this.storageService.listOfMasters.push(element);
+          this.storageSrv.listOfMasters.push(element);
         } else {
           console.log("LOG (processing s.) WARNING: new elements? ", element);
         } // do not add other relations because they should be already added
@@ -182,12 +182,12 @@ export class ProcessingService {
     });
     console.log(
       "LOG (processing s.) Total # of master rel. (route_master)",
-      this.storageService.listOfMasters.length
+      this.storageSrv.listOfMasters.length
     );
-    this.storageService.logStats();
+    this.storageSrv.logStats();
 
     const idsHaveMaster: number[] = [];
-    this.storageService.listOfMasters.forEach((master) => {
+    this.storageSrv.listOfMasters.forEach((master) => {
       for (const member of master["members"]) {
         idsHaveMaster.push(member["ref"]);
       }
@@ -201,33 +201,33 @@ export class ProcessingService {
    * @param id
    */
   public createLists(id: number): void {
-    const response = this.storageService.localJsonStorage.get(id);
+    const response = this.storageSrv.localJsonStorage.get(id);
     response.elements.forEach((element) => {
-      if (!this.storageService.elementsMap.has(element.id)) {
-        this.storageService.elementsMap.set(element.id, element);
+      if (!this.storageSrv.elementsMap.has(element.id)) {
+        this.storageSrv.elementsMap.set(element.id, element);
 
         switch (element.type) {
           case "node":
-            // this.storageService.elementsDownloaded.add(element.id);
+            // this.storageSrv.elementsDownloaded.add(element.id);
             if (
               element.tags &&
               ["platform", "stop_position", "station"]
                 .indexOf(element.tags.public_transport) > -1
             ) {
-              this.storageService.listOfStops.push(element);
+              this.storageSrv.listOfStops.push(element);
             }
             break;
           case "relation":
             if (element.tags.public_transport === "stop_area") {
-              this.storageService.listOfAreas.push(element);
+              this.storageSrv.listOfAreas.push(element);
             } else if (element.tags.public_transport) {
-              this.storageService.listOfRelations.push(element);
+              this.storageSrv.listOfRelations.push(element);
               break;
             }
         }
       }
     });
-    this.storageService.logStats();
+    this.storageSrv.logStats();
   }
 
   /**
@@ -235,7 +235,7 @@ export class ProcessingService {
    */
   public drawStopAreas(): void {
     const boundaries = [];
-    for (const area of this.storageService.listOfAreas) {
+    for (const area of this.storageSrv.listOfAreas) {
       const coords = [];
       for (const member of area["members"]) {
         if (member["type"] !== "node") {
@@ -251,7 +251,7 @@ export class ProcessingService {
         weight: 2
       })
         .bindTooltip(area["tags"].name)
-        .addTo(this.mapService.map);
+        .addTo(this.mapSrv.map);
     }
   }
 
@@ -285,7 +285,7 @@ export class ProcessingService {
    */
   public refreshTagView(element: any): void {
     if (element) {
-      this.storageService.currentElementsChange.emit(
+      this.storageSrv.currentElementsChange.emit(
         JSON.parse(JSON.stringify(element))
       );
       this.refreshSidebarView("tag");
@@ -299,11 +299,11 @@ export class ProcessingService {
    * @param rel
    */
   public refreshRelationView(rel: IPtRelation): void {
-    this.storageService.listOfVariants.length = 0;
+    this.storageSrv.listOfVariants.length = 0;
     if (rel.tags.type === "route_master") {
       for (const member of rel.members) {
         const routeVariant = this.getElementById(member.ref);
-        this.storageService.listOfVariants.push(routeVariant);
+        this.storageSrv.listOfVariants.push(routeVariant);
       }
     }
     this.refreshSidebarView("relation");
@@ -322,7 +322,7 @@ export class ProcessingService {
     refreshMasterView?: boolean,
     zoomToElement?: boolean
   ): void {
-    this.mapService.clearCircleHighlight();
+    this.mapSrv.clearCircleHighlight();
     const missingElements = [];
     const allowedRefs = [
       "stop",
@@ -336,7 +336,7 @@ export class ProcessingService {
     if (rel.id > 0) {
       rel["members"].forEach((member) => {
         if (
-          !this.storageService.elementsMap.has(member.ref) &&
+          !this.storageSrv.elementsMap.has(member.ref) &&
           ["node"].indexOf(member.type) > -1 &&
           allowedRefs.indexOf(member.role) > -1
         ) {
@@ -346,7 +346,7 @@ export class ProcessingService {
     }
     // check if relation and all its members are downloaded -> get missing
     if (
-      !this.storageService.elementsDownloaded.has(rel.id) &&
+      !this.storageSrv.elementsDownloaded.has(rel.id) &&
       rel["members"].length > 0 &&
       missingElements.length > 0
     ) {
@@ -359,7 +359,7 @@ export class ProcessingService {
         missingElements
       });
     } else if (
-      this.storageService.elementsDownloaded.has(rel.id) ||
+      this.storageSrv.elementsDownloaded.has(rel.id) ||
       (missingElements.length === 0 && rel.id > 0) ||
       (rel.id < 0 && rel["members"].length > 0)
     ) {
@@ -370,7 +370,7 @@ export class ProcessingService {
     } else {
       return alert(
         "FIXME: Some other problem with relation - downloaded " +
-          this.storageService.elementsDownloaded.has(rel.id) +
+          this.storageSrv.elementsDownloaded.has(rel.id) +
           " , # of missing elements " +
           missingElements.length +
           " , # of members " +
@@ -398,20 +398,20 @@ export class ProcessingService {
     zoomToElement: boolean,
     refreshTagView: boolean
   ): void {
-    if (this.mapService.highlightIsActive()) {
-      this.mapService.clearHighlight();
+    if (this.mapSrv.highlightIsActive()) {
+      this.mapSrv.clearHighlight();
     }
-    this.storageService.clearRouteData();
-    if (this.mapService.showRoute(rel)) {
-      this.mapService.drawTooltipFromTo(rel);
+    this.storageSrv.clearRouteData();
+    if (this.mapSrv.showRoute(rel)) {
+      this.mapSrv.drawTooltipFromTo(rel);
       this.filterStopsByRelation(rel);
       if (zoomToElement) {
         console.log(
           "LOG (processing s.) fitBounds",
-          this.mapService.highlightStroke.length
+          this.mapSrv.highlightStroke.length
         );
-        this.mapService.map.fitBounds(
-          this.mapService.highlightStroke.getBounds()
+        this.mapSrv.map.fitBounds(
+          this.mapSrv.highlightStroke.getBounds()
         );
       }
     }
@@ -430,16 +430,16 @@ export class ProcessingService {
         "Problem occured - this relation doesn't contain any route variants."
       );
     }
-    // if (this.mapService.highlightIsActive()) this.mapService.clearHighlight();
+    // if (this.mapSrv.highlightIsActive()) this.mapSrv.clearHighlight();
     // let routeVariants: object[] = [];
     // for (let member of rel.members) {
     //     routeVariants.push(this.findElementById(member.ref));
     // }
     console.log(
       "LOG (processing s.) First master's variant was found: ",
-      this.storageService.elementsMap.has(rel.members[0].ref)
+      this.storageSrv.elementsMap.has(rel.members[0].ref)
     );
-    if (!this.storageService.elementsMap.has(rel.members[0].ref)) {
+    if (!this.storageSrv.elementsMap.has(rel.members[0].ref)) {
       return alert(
         "Problem occured - first route_master's variant isn't fully downloaded."
       );
@@ -451,7 +451,7 @@ export class ProcessingService {
       false,
       false
     );
-    // this.mapService.showRelatedRoutes(routeVariants);
+    // this.mapSrv.showRelatedRoutes(routeVariants);
     this.refreshTagView(rel);
     this.refreshRelationView(rel);
   }
@@ -469,20 +469,20 @@ export class ProcessingService {
     refreshTags: boolean,
     zoomTo: boolean
   ): void {
-    if (this.mapService.highlightIsActive()) {
-      this.mapService.clearHighlight();
+    if (this.mapSrv.highlightIsActive()) {
+      this.mapSrv.clearHighlight();
     }
-    this.mapService.showStop(stop);
+    this.mapSrv.showStop(stop);
     if (filterRelations) {
       const filteredRelationsForStop = this.filterRelationsByStop(stop);
-      this.mapService.showRelatedRoutes(filteredRelationsForStop);
+      this.mapSrv.showRelatedRoutes(filteredRelationsForStop);
     }
-    this.mapService.addExistingHighlight();
+    this.mapSrv.addExistingHighlight();
     if (refreshTags) {
       this.refreshTagView(stop);
     }
     if (zoomTo) {
-      this.mapService.map.panTo([stop.lat, stop.lon]);
+      this.mapSrv.map.panTo([stop.lat, stop.lon]);
     }
   }
 
@@ -491,18 +491,18 @@ export class ProcessingService {
    * @param stop
    */
   public filterRelationsByStop(stop: IPtStop): object[] {
-    this.storageService.listOfRelationsForStop = [];
+    this.storageSrv.listOfRelationsForStop = [];
 
-    for (const relation of this.storageService.listOfRelations) {
+    for (const relation of this.storageSrv.listOfRelations) {
       for (const member of relation["members"]) {
         if (member["ref"] === stop.id) {
-          this.storageService.listOfRelationsForStop.push(relation);
+          this.storageSrv.listOfRelationsForStop.push(relation);
         }
       }
     }
     this.activateFilteredRouteView(true);
     this.refreshSidebarView("route");
-    return this.storageService.listOfRelationsForStop;
+    return this.storageSrv.listOfRelationsForStop;
   }
 
   /**
@@ -513,15 +513,15 @@ export class ProcessingService {
     if (rel === undefined) {
       return alert("Problem occured - relation is undefined.");
     }
-    this.storageService.listOfStopsForRoute.length = 0;
+    this.storageSrv.listOfStopsForRoute.length = 0;
     rel.members.forEach((mem) => {
-      if (this.storageService.elementsMap.has(mem.ref) && mem.type === "node") {
+      if (this.storageSrv.elementsMap.has(mem.ref) && mem.type === "node") {
         const stop = this.getElementById(mem.ref);
         const stopWithMemberAttr = Object.assign(
           JSON.parse(JSON.stringify(mem)),
           JSON.parse(JSON.stringify(stop))
         );
-        this.storageService.listOfStopsForRoute.push(
+        this.storageSrv.listOfStopsForRoute.push(
           JSON.parse(JSON.stringify(stopWithMemberAttr))
         );
       }
@@ -542,7 +542,7 @@ export class ProcessingService {
             JSON.stringify(element)
         );
       } else {
-        this.mapService.map.panTo([element["lat"], element["lon"]]);
+        this.mapSrv.map.panTo([element["lat"], element["lon"]]);
       }
     } else {
       const coords = [];
@@ -565,7 +565,7 @@ export class ProcessingService {
         );
       }
       const polyline = L.polyline(coords); // zoom to coords of a relation
-      this.mapService.map.fitBounds(polyline.getBounds());
+      this.mapSrv.map.fitBounds(polyline.getBounds());
       console.log("LOG (processing s.) FitBounds to relation geometry");
     }
   }
@@ -585,7 +585,7 @@ export class ProcessingService {
       }
     });
     return (
-      h[0] < this.mapService.map.getMaxZoom() &&
+      h[0] < this.mapSrv.map.getMaxZoom() &&
       this.numIsBetween(h[1], -90, 90) &&
       this.numIsBetween(h[2], -180, 180)
     );
@@ -593,7 +593,7 @@ export class ProcessingService {
 
   public cancelSelection(): void {
     this.refreshTagView(undefined);
-    this.mapService.clearHighlight();
+    this.mapSrv.clearHighlight();
   }
 
   public haveSameIds(relId: number, currElementId?: number): boolean {

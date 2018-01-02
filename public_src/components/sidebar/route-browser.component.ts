@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
 
-import { EditingService } from "../../services/editing.service";
+import { EditService } from "../../services/edit.service";
 import { MapService } from "../../services/map.service";
 import { OverpassService } from "../../services/overpass.service";
-import { ProcessingService } from "../../services/processing.service";
+import { ProcessService } from "../../services/process.service";
 import { StorageService } from "../../services/storage.service";
 
 @Component({
@@ -17,9 +17,9 @@ import { StorageService } from "../../services/storage.service";
 })
 export class RouteBrowserComponent {
   private currentElement;
-  private listOfMasters: object[] = this.storageService.listOfMasters;
-  private listOfRelations: object[] = this.storageService.listOfRelations;
-  private listOfRelationsForStop: object[] = this.storageService.listOfRelationsForStop;
+  private listOfMasters: object[] = this.storageSrv.listOfMasters;
+  private listOfRelations: object[] = this.storageSrv.listOfRelations;
+  private listOfRelationsForStop: object[] = this.storageSrv.listOfRelationsForStop;
 
   private isRequesting: boolean;
   private filteredView: boolean;
@@ -28,37 +28,37 @@ export class RouteBrowserComponent {
   private membersEditing: boolean = false;
 
   constructor(
-    private editingService: EditingService,
-    private mapService: MapService,
-    private overpassService: OverpassService,
-    private processingService: ProcessingService,
-    private storageService: StorageService
+    private editSrv: EditService,
+    private mapSrv: MapService,
+    private overpassSrv: OverpassService,
+    private processSrv: ProcessService,
+    private storageSrv: StorageService
   ) {
     //
   }
 
   ngOnInit(): void {
-    this.processingService.showRelationsForStop$.subscribe((data) => {
+    this.processSrv.showRelationsForStop$.subscribe((data) => {
       this.filteredView = data;
     });
-    this.processingService.refreshSidebarViews$.subscribe((data) => {
+    this.processSrv.refreshSidebarViews$.subscribe((data) => {
       if (data === "route") {
-        this.listOfRelationsForStop = this.storageService.listOfRelationsForStop;
-        this.currentElement = this.storageService.currentElement;
+        this.listOfRelationsForStop = this.storageSrv.listOfRelationsForStop;
+        this.currentElement = this.storageSrv.currentElement;
       } else if (data === "tag") {
-        this.currentElement = this.storageService.currentElement;
+        this.currentElement = this.storageSrv.currentElement;
       } else if (data === "cancel selection") {
         this.currentElement = undefined;
         delete this.currentElement;
       }
     });
-    this.processingService.refreshMasters.subscribe((data) => {
+    this.processSrv.refreshMasters.subscribe((data) => {
       this.isRequesting = false;
       data["idsHaveMaster"].forEach((id) => {
         this.idsHaveMaster.add(id);
       });
     });
-    this.editingService.editingMode.subscribe((data) => {
+    this.editSrv.editingMode.subscribe((data) => {
       console.log(
         "LOG (route-browser) Editing mode change in routeBrowser - ",
         data
@@ -69,33 +69,33 @@ export class RouteBrowserComponent {
 
   private toggleMembersEdit(): void {
     this.membersEditing = !this.membersEditing;
-    this.mapService.membersEditing = this.membersEditing;
+    this.mapSrv.membersEditing = this.membersEditing;
     if (this.membersEditing) {
       console.log(
         "LOG (route-browser) Toggle members edit",
         this.membersEditing,
-        this.storageService.currentElement
+        this.storageSrv.currentElement
       );
-      this.editingService.redrawMembersHighlight();
+      this.editSrv.redrawMembersHighlight();
     } else {
-      this.mapService.clearCircleHighlight();
+      this.mapSrv.clearCircleHighlight();
     }
   }
 
   private hasMaster(relId: number): boolean {
-    return this.storageService.idsHaveMaster.has(relId);
+    return this.storageSrv.idsHaveMaster.has(relId);
   }
 
   private isDownloaded(relId: number): boolean {
-    return this.storageService.elementsDownloaded.has(relId);
+    return this.storageSrv.elementsDownloaded.has(relId);
   }
 
   private masterWasChecked(relId: number): boolean {
-    return this.storageService.queriedMasters.has(relId);
+    return this.storageSrv.queriedMasters.has(relId);
   }
 
   private cancelFilter(): void {
-    this.processingService.activateFilteredRouteView(false);
+    this.processSrv.activateFilteredRouteView(false);
   }
 
   /**
@@ -104,8 +104,8 @@ export class RouteBrowserComponent {
    * @param rel
    */
   private exploreRelation($event: any, rel: any): void {
-    this.processingService.exploreRelation(
-      this.storageService.elementsMap.get(rel.id),
+    this.processSrv.exploreRelation(
+      this.storageSrv.elementsMap.get(rel.id),
       true,
       true,
       true
@@ -118,9 +118,9 @@ export class RouteBrowserComponent {
    * @param rel
    */
   private exploreAvailableRelation($event: any, rel: any): void {
-    if (this.storageService.elementsDownloaded.has(rel.id)) {
-      this.processingService.exploreRelation(
-        this.storageService.elementsMap.get(rel.id),
+    if (this.storageSrv.elementsDownloaded.has(rel.id)) {
+      this.processSrv.exploreRelation(
+        this.storageSrv.elementsMap.get(rel.id),
         true,
         true,
         true
@@ -129,19 +129,19 @@ export class RouteBrowserComponent {
   }
 
   private exploreMaster($event: any, rel: any): void {
-    this.processingService.exploreMaster(
-      this.storageService.elementsMap.get(rel.id)
+    this.processSrv.exploreMaster(
+      this.storageSrv.elementsMap.get(rel.id)
     );
   }
 
   private downloadMaster(): void {
     this.isRequesting = true;
     console.log("LOG (route-browser) Manually downloading masters");
-    this.overpassService.getRouteMasters(1);
+    this.overpassSrv.getRouteMasters(1);
   }
 
   private createRoute(): void {
-    this.editingService.createRoute();
+    this.editSrv.createRoute();
   }
 
   private elementShouldBeEditable(): boolean {
@@ -156,19 +156,19 @@ export class RouteBrowserComponent {
   }
 
   private isSelected(relId: number): boolean {
-    return this.processingService.haveSameIds(relId, this.currentElement.id);
+    return this.processSrv.haveSameIds(relId, this.currentElement.id);
   }
 
   private visibleInMap(relId: any): string {
-    const rel = this.storageService.elementsMap.get(relId);
+    const rel = this.storageSrv.elementsMap.get(relId);
     let nodesCounter = 0;
     for (const member of rel.members) {
       if (member.type === "node") {
         nodesCounter++;
-        if (this.storageService.elementsMap.has(member.ref)) {
-          const element = this.storageService.elementsMap.get(member.ref);
+        if (this.storageSrv.elementsMap.has(member.ref)) {
+          const element = this.storageSrv.elementsMap.get(member.ref);
           if (
-            this.mapService.map.getBounds().contains({
+            this.mapSrv.map.getBounds().contains({
               lat: element.lat,
               lng: element.lon
             })

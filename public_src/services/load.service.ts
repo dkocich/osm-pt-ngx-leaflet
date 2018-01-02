@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 @Injectable()
-export class LoadingService {
+export class LoadService {
   private _isLoading: boolean = false;
   private _statusMessage: string = "Loading...";
   constructor() {

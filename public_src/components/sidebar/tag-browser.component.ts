@@ -5,8 +5,8 @@ import {
   Input
 } from "@angular/core";
 
-import { EditingService } from "../../services/editing.service";
-import { ProcessingService } from "../../services/processing.service";
+import { EditService } from "../../services/edit.service";
+import { ProcessService } from "../../services/process.service";
 import { StorageService } from "../../services/storage.service";
 
 import { IOsmEntity } from "../../core/osmEntity.interface";
@@ -89,31 +89,31 @@ export class TagBrowserComponent {
 
   constructor(
     private cd: ChangeDetectorRef,
-    private editingService: EditingService,
-    private processingService: ProcessingService,
-    private storageService: StorageService
+    private editSrv: EditService,
+    private processSrv: ProcessService,
+    private storageSrv: StorageService
   ) {
     //
   }
 
   ngOnInit(): void {
-    this.processingService.refreshSidebarViews$.subscribe((data) => {
+    this.processSrv.refreshSidebarViews$.subscribe((data) => {
       if (data === "tag") {
         console.log(
           "LOG (tag-browser) Current selected element changed - ",
           data,
           this.currentElement,
-          this.storageService.currentElement
+          this.storageSrv.currentElement
         );
         delete this.currentElement;
-        this.currentElement = this.storageService.currentElement;
+        this.currentElement = this.storageSrv.currentElement;
       } else if (data === "cancel selection") {
         this.currentElement = undefined;
         delete this.currentElement;
       }
     });
 
-    this.editingService.editingMode.subscribe((data) => {
+    this.editSrv.editingMode.subscribe((data) => {
         console.log(
           "LOG (tag-browser) Editing mode change in tagBrowser - ",
           data
@@ -184,7 +184,7 @@ export class TagBrowserComponent {
         this.currentElement
       );
       this.currentElement.tags[this.tagKey] = this.tagValue;
-      this.storageService.currentElement.tags[this.tagKey] = this.tagValue;
+      this.storageSrv.currentElement.tags[this.tagKey] = this.tagValue;
       change = {
         key: this.tagKey,
         value: this.tagValue
@@ -200,9 +200,9 @@ export class TagBrowserComponent {
       };
 
       delete this.currentElement.tags[key];
-      delete this.storageService.currentElement["tags"][key];
+      delete this.storageSrv.currentElement["tags"][key];
     }
-    this.editingService.addChange(this.currentElement, type, change);
+    this.editSrv.addChange(this.currentElement, type, change);
     this.cd.detectChanges();
     this.cd.markForCheck();
   }
@@ -216,12 +216,12 @@ export class TagBrowserComponent {
     if (Object.keys(this.currentElement.tags).indexOf(key) === -1) {
       this.currentElement.tags[key] = "yes";
       change = { key, value: "yes" };
-      this.editingService.addChange(this.currentElement, "add tag", change);
+      this.editSrv.addChange(this.currentElement, "add tag", change);
     } else if (this.currentElement.tags[key] === "yes") {
       change = { key, value: this.currentElement.tags[key] };
       delete this.currentElement.tags[key];
-      delete this.storageService.currentElement["tags"][key];
-      this.editingService.addChange(this.currentElement, "remove tag", change);
+      delete this.storageSrv.currentElement["tags"][key];
+      this.editSrv.addChange(this.currentElement, "remove tag", change);
     } else {
       return alert(
         "Problem occured - unknown problem in toggle " +

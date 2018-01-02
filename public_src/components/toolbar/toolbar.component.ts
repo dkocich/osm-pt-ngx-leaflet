@@ -3,10 +3,10 @@ import { Component, ViewChild } from "@angular/core";
 import { EditorComponent } from "../editor/editor.component";
 import { TransporterComponent } from "../transporter/transporter.component";
 
-import { ConfigService } from "../../services/config.service";
+import { ConfService } from "../../services/conf.service";
 import { MapService } from "../../services/map.service";
 import { OverpassService } from "../../services/overpass.service";
-import { ProcessingService } from "../../services/processing.service";
+import { ProcessService } from "../../services/process.service";
 import { StorageService } from "../../services/storage.service";
 
 import { IOsmEntity } from "../../core/osmEntity.interface";
@@ -32,40 +32,40 @@ export class ToolbarComponent {
   private stats = { s: 0, r: 0, a: 0, m: 0 };
 
   constructor(
-    private configService: ConfigService,
-    private mapService: MapService,
-    private overpassService: OverpassService,
-    private processingService: ProcessingService,
-    private storageService: StorageService
+    private confSrv: ConfService,
+    private mapSrv: MapService,
+    private overpassSrv: OverpassService,
+    private processSrv: ProcessService,
+    private storageSrv: StorageService
   ) {
     this.downloading = true;
-    this.filtering = this.configService.cfgFilterLines;
-    this.processingService.refreshSidebarViews$.subscribe((data) => {
+    this.filtering = this.confSrv.cfgFilterLines;
+    this.processSrv.refreshSidebarViews$.subscribe((data) => {
       if (data === "tag") {
         console.log(
           "LOG (toolbar) Current selected element changed - ",
-          data, this.currentElement, this.storageService.currentElement
+          data, this.currentElement, this.storageSrv.currentElement
         );
-        this.currentElement = this.storageService.currentElement;
+        this.currentElement = this.storageSrv.currentElement;
       }
     });
-    this.storageService.stats.subscribe((data) => (this.stats = data));
-    this.mapService.highlightTypeEmitter.subscribe((data) => {
+    this.storageSrv.stats.subscribe((data) => (this.stats = data));
+    this.mapSrv.highlightTypeEmitter.subscribe((data) => {
       this.htRadioModel = data.highlightType;
     });
   }
 
   ngOnInit(): void {
-    this.mapService.disableMouseEvent("toggle-download");
-    this.mapService.disableMouseEvent("toggle-filter");
-    this.mapService.disableMouseEvent("toggle-edit");
-    this.mapService.disableMouseEvent("edits-backward-btn");
-    this.mapService.disableMouseEvent("edits-forward-btn");
-    this.mapService.disableMouseEvent("edits-count");
+    this.mapSrv.disableMouseEvent("toggle-download");
+    this.mapSrv.disableMouseEvent("toggle-filter");
+    this.mapSrv.disableMouseEvent("toggle-edit");
+    this.mapSrv.disableMouseEvent("edits-backward-btn");
+    this.mapSrv.disableMouseEvent("edits-forward-btn");
+    this.mapSrv.disableMouseEvent("edits-count");
   }
 
   public Initialize(): void {
-    this.mapService.map.on("zoomend moveend", () => {
+    this.mapSrv.map.on("zoomend moveend", () => {
       this.initDownloader();
     });
   }
@@ -73,11 +73,11 @@ export class ToolbarComponent {
   private changeHighlight(): void {
     if (
       this.highlightIsActive() &&
-      this.htRadioModel !== this.mapService.highlightType
+      this.htRadioModel !== this.mapSrv.highlightType
     ) {
-      this.mapService.highlightType = this.htRadioModel;
-      this.processingService.exploreRelation(
-        this.storageService.elementsMap.get(this.currentElement.id),
+      this.mapSrv.highlightType = this.htRadioModel;
+      this.processSrv.exploreRelation(
+        this.storageSrv.elementsMap.get(this.currentElement.id),
         true,
         false,
         false
@@ -87,19 +87,19 @@ export class ToolbarComponent {
 
   private initDownloader(): void {
     if (this.checkDownloadRules()) {
-      this.overpassService.requestNewOverpassData();
+      this.overpassSrv.requestNewOverpassData();
     }
   }
 
   private checkMinZoomLevel(): boolean {
-    return this.mapService.map.getZoom() > this.configService.minDownloadZoom;
+    return this.mapSrv.map.getZoom() > this.confSrv.minDownloadZoom;
   }
 
   private checkMinDistance(): boolean {
-    const lastDownloadCenterDistance = this.mapService.map
+    const lastDownloadCenterDistance = this.mapSrv.map
       .getCenter()
-      .distanceTo(this.mapService.previousCenter);
-    return lastDownloadCenterDistance > this.configService.minDownloadDistance;
+      .distanceTo(this.mapSrv.previousCenter);
+    return lastDownloadCenterDistance > this.confSrv.minDownloadDistance;
   }
 
   private checkDownloadRules(): boolean {
@@ -109,11 +109,11 @@ export class ToolbarComponent {
   private toggleDownloading(): void {
     this.downloading = !this.downloading;
     if (this.downloading) {
-      this.mapService.map.on("zoomend moveend", () => {
+      this.mapSrv.map.on("zoomend moveend", () => {
         this.initDownloader();
       });
     } else if (!this.downloading) {
-      this.mapService.map.off("zoomend moveend");
+      this.mapSrv.map.off("zoomend moveend");
     }
   }
 
@@ -128,7 +128,7 @@ export class ToolbarComponent {
   private cancelSelection(): void {
     delete this.currentElement;
     this.currentElement = undefined;
-    this.processingService.cancelSelection();
+    this.processSrv.cancelSelection();
   }
 
   private isRelation(): boolean {
@@ -136,7 +136,7 @@ export class ToolbarComponent {
   }
 
   private zoomTo(selection: IOsmEntity): void {
-    this.processingService.zoomToElement(selection);
+    this.processSrv.zoomToElement(selection);
   }
 
   private showOptions(): void {
@@ -147,25 +147,25 @@ export class ToolbarComponent {
   }
 
   private toggleLinesFilter(): void {
-    this.configService.cfgFilterLines = !this.configService.cfgFilterLines;
+    this.confSrv.cfgFilterLines = !this.confSrv.cfgFilterLines;
     this.filtering = !this.filtering;
   }
 
   private highlightIsActive(): boolean {
-    return this.mapService.highlightIsActive();
+    return this.mapSrv.highlightIsActive();
   }
 
   private clearHighlight(): void {
-    return this.mapService.clearHighlight();
+    return this.mapSrv.clearHighlight();
   }
 
   private getLoadAndZoomUrl(): void {
     const josmHref =
       "http://127.0.0.1:8111/load_and_zoom?" +
-      "left=" + this.mapService.map.getBounds().getWest() +
-      "&right=" + this.mapService.map.getBounds().getEast() +
-      "&top=" + this.mapService.map.getBounds().getNorth() +
-      "&bottom=" + this.mapService.map.getBounds().getSouth() +
+      "left=" + this.mapSrv.map.getBounds().getWest() +
+      "&right=" + this.mapSrv.map.getBounds().getEast() +
+      "&top=" + this.mapSrv.map.getBounds().getNorth() +
+      "&bottom=" + this.mapSrv.map.getBounds().getSouth() +
       "&select=" + this.currentElement.type + this.currentElement.id;
     window.open(josmHref, "_blank");
   }

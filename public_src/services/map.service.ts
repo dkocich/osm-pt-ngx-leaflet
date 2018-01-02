@@ -1,8 +1,8 @@
 import { EventEmitter, Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 
-import { ConfigService } from "./config.service";
-import { LoadingService } from "./loading.service";
+import { ConfService } from "./conf.service";
+import { LoadService } from "./load.service";
 import { StorageService } from "./storage.service";
 
 import * as L from "leaflet";
@@ -74,10 +74,10 @@ export class MapService {
   private markerTo: any = undefined;
 
   constructor(
-    private configService: ConfigService,
+    private confSrv: ConfService,
     private http: Http,
-    private loadingService: LoadingService,
-    private storageService: StorageService
+    private loadSrv: LoadService,
+    private storageSrv: StorageService
   ) {
     this.baseMaps = {
       Empty: L.tileLayer("", {
@@ -129,8 +129,8 @@ export class MapService {
             "Map &copy; 1987-2014 <a href='http://developer.here.com'>HERE</a>",
           subdomains: "1234",
           mapID: "newest",
-          app_id: ConfigService.hereAppId,
-          app_code: ConfigService.hereAppCode,
+          app_id: ConfService.hereAppId,
+          app_code: ConfService.hereAppCode,
           base: "aerial",
           maxNativeZoom: 19,
           maxZoom: 20,
@@ -147,8 +147,8 @@ export class MapService {
             "Map &copy; 1987-2014 <a href='http://developer.here.com'>HERE</a>",
           subdomains: "1234",
           mapID: "newest",
-          app_id: ConfigService.hereAppId,
-          app_code: ConfigService.hereAppCode,
+          app_id: ConfService.hereAppId,
+          app_code: ConfService.hereAppCode,
           base: "aerial",
           maxNativeZoom: 19,
           maxZoom: 20,
@@ -160,7 +160,7 @@ export class MapService {
       ),
       MapBox_imagery: L.tileLayer(
         "http://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=" +
-          ConfigService.mapboxToken,
+          ConfService.mapboxToken,
         {
           attribution: `<a href='https://www.mapbox.com/about/maps/'>&copy; Mapbox</a>,
             <a href='http://www.openstreetmap.org/about/'>&copy; OpenStreetMap</a> and
@@ -171,7 +171,7 @@ export class MapService {
       ),
       MapBox_streets: L.tileLayer(
         "http://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=" +
-          ConfigService.mapboxToken,
+          ConfService.mapboxToken,
         {
           attribution: `<a href='https://www.mapbox.com/about/maps/'>&copy; Mapbox</a>,
             <a href='http://www.openstreetmap.org/about/'>&copy; OpenStreetMap</a> and
@@ -261,10 +261,10 @@ export class MapService {
     this.ptLayer = L.geoJSON(transformedGeojson, {
       filter: (feature) => {
         // filter away already rendered elements
-        if (this.storageService.elementsRendered.has(feature.id)) {
+        if (this.storageSrv.elementsRendered.has(feature.id)) {
           return false;
         }
-        if (this.configService.cfgFilterLines) {
+        if (this.confSrv.cfgFilterLines) {
           return (
             "public_transport" in feature.properties && feature.id[0] === "n"
           );
@@ -274,7 +274,7 @@ export class MapService {
       },
       onEachFeature: (feature, layer) => {
         // prevent rendering elements twice later
-        this.storageService.elementsRendered.add(feature.id);
+        this.storageSrv.elementsRendered.add(feature.id);
         this.enableDrag(feature, layer);
       },
       pointToLayer: (feature, latlng) => {
@@ -384,7 +384,7 @@ export class MapService {
           }
         });
         this.ptLayer.addTo(this.map);
-        this.loadingService.hide();
+        this.loadSrv.hide();
       });
   }
 
@@ -420,7 +420,7 @@ export class MapService {
    * @returns {{lat: number, lng: number}}
    */
   public findCoordinates(refId: number): L.LatLngExpression {
-    const element = this.storageService.elementsMap.get(refId);
+    const element = this.storageSrv.elementsMap.get(refId);
     if (!element) {
       console.log("Warning - elem. not found ", refId, JSON.stringify(element));
     } else {
@@ -446,7 +446,7 @@ export class MapService {
    */
   public showRelatedRoutes(filteredRelationsForStop: object[]): void {
     if (filteredRelationsForStop) {
-      this.storageService.stopsForRoute = [];
+      this.storageSrv.stopsForRoute = [];
       for (const rel of filteredRelationsForStop) {
         this.showRoutes(rel);
       }
@@ -469,13 +469,13 @@ export class MapService {
    */
   public showRoutes(rel: any): boolean {
     const latlngs = Array();
-    this.storageService.stopsForRoute = [];
+    this.storageSrv.stopsForRoute = [];
     for (const member of rel.members) {
       if (
         member.type === "node" &&
         ["stop", "stop_entry_only", "stop_exit_only"].indexOf(member.role) > -1
       ) {
-        this.storageService.stopsForRoute.push(member.ref);
+        this.storageSrv.stopsForRoute.push(member.ref);
         const latlng: L.LatLngExpression = this.findCoordinates(member.ref);
         if (latlng) {
           latlngs.push(latlng);
@@ -527,24 +527,24 @@ export class MapService {
         member.type === "node" &&
         ["stop", "stop_entry_only", "stop_exit_only"].indexOf(member.role) > -1
       ) {
-        this.storageService.stopsForRoute.push(member.ref);
+        this.storageSrv.stopsForRoute.push(member.ref);
       } else if (
         member.type === "node" &&
         ["platform", "platform_entry_only", "platform_exit_only"]
           .indexOf(member.role) > -1
       ) {
-        this.storageService.platformsForRoute.push(member.ref);
+        this.storageSrv.platformsForRoute.push(member.ref);
       } else if (member.type === "way") {
-        this.storageService.waysForRoute.push(member.ref);
+        this.storageSrv.waysForRoute.push(member.ref);
       } else if (member.type === "relation") {
-        this.storageService.relationsForRoute.push(member.ref);
+        this.storageSrv.relationsForRoute.push(member.ref);
       }
     }
 
     // setup highlight type
     if (
-      this.storageService.stopsForRoute.length === 0 &&
-      this.storageService.platformsForRoute.length !== 0
+      this.storageSrv.stopsForRoute.length === 0 &&
+      this.storageSrv.platformsForRoute.length !== 0
     ) {
       this.highlightType = "Platforms";
     }
@@ -553,10 +553,10 @@ export class MapService {
     let memberRefs;
     switch (this.highlightType) {
       case "Stops":
-        memberRefs = this.storageService.stopsForRoute;
+        memberRefs = this.storageSrv.stopsForRoute;
         break;
       case "Platforms":
-        memberRefs = this.storageService.platformsForRoute;
+        memberRefs = this.storageSrv.platformsForRoute;
         break;
     }
 
@@ -616,11 +616,11 @@ export class MapService {
     let latlngFrom;
     switch (this.highlightType) {
       case "Stops":
-        latlngFrom = this.findCoordinates(this.storageService.stopsForRoute[0]); // get first and last ID reference
+        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0]); // get first and last ID reference
         return latlngFrom;
       case "Platforms":
         latlngFrom = this.findCoordinates(
-          this.storageService.platformsForRoute[0]
+          this.storageSrv.platformsForRoute[0]
         ); // get first and last ID reference
         return latlngFrom;
     }
@@ -631,15 +631,15 @@ export class MapService {
     switch (this.highlightType) {
       case "Stops":
         latlngTo = this.findCoordinates(
-          this.storageService.stopsForRoute[
-            this.storageService.stopsForRoute.length - 1
+          this.storageSrv.stopsForRoute[
+            this.storageSrv.stopsForRoute.length - 1
           ]
         );
         return latlngTo;
       case "Platforms":
         latlngTo = this.findCoordinates(
-          this.storageService.platformsForRoute[
-            this.storageService.platformsForRoute.length - 1
+          this.storageSrv.platformsForRoute[
+            this.storageSrv.platformsForRoute.length - 1
           ]
         );
         return latlngTo;

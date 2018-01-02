@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 const p = require("../../package.json");
 
 @Injectable()
-export class ConfigService {
+export class ConfService {
   static overpassUrl = "https://overpass-api.de/api/interpreter";
   static baseOsmUrl = "https://www.openstreetmap.org";
   static apiUrl = "https://api.openstreetmap.org/api/0.6";

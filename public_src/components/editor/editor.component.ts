@@ -1,7 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 
 import { AuthService } from "../../services/auth.service";
-import { EditingService } from "../../services/editing.service";
+import { EditService } from "../../services/edit.service";
 import { MapService } from "../../services/map.service";
 import { StorageService } from "../../services/storage.service";
 
@@ -24,39 +24,39 @@ export class EditorComponent {
   private creatingElementOfType: string = "";
 
   constructor(
-    private authService: AuthService,
-    private editingService: EditingService,
-    private mapService: MapService,
-    private storageService: StorageService
+    private authSrv: AuthService,
+    private editSrv: EditService,
+    private mapSrv: MapService,
+    private storageSrv: StorageService
   ) {
     //
   }
 
   ngOnInit(): void {
-    this.editingService.currentTotalSteps.subscribe((data) => {
+    this.editSrv.currentTotalSteps.subscribe((data) => {
       // console.log("LOG (editor) subscribed to counter ", data);
       this.currentEditStep = data.current;
       this.totalEditSteps = data.total;
     });
-    this.mapService.map.on("click", (event: MouseEvent) => {
+    this.mapSrv.map.on("click", (event: MouseEvent) => {
       if (this.editing && this.creatingElementOfType !== "") {
-        this.editingService.createElement(this.creatingElementOfType, event);
+        this.editSrv.createElement(this.creatingElementOfType, event);
         this.creatingElementOfType = "";
       }
     });
   }
 
   ngAfterViewInit(): void {
-    if (this.storageService.getLocalStorageItem("edits")) {
+    if (this.storageSrv.getLocalStorageItem("edits")) {
       this.editModal.show();
     } else {
-      this.storageService.setLocalStorageItem("edits", []);
+      this.storageSrv.setLocalStorageItem("edits", []);
     }
-    console.log("LOG (editor) Current edits are: ", this.storageService.edits);
+    console.log("LOG (editor) Current edits are: ", this.storageSrv.edits);
   }
 
   private isAuthenticated(): void {
-    return this.authService.oauth.authenticated();
+    return this.authSrv.oauth.authenticated();
   }
 
   /**
@@ -64,7 +64,7 @@ export class EditorComponent {
    */
   private deleteEdits(): void {
     localStorage.removeItem("edits");
-    alert(this.storageService.edits);
+    alert(this.storageSrv.edits);
     alert("LOG: LocalStorage changed to " + localStorage.getItem("edits"));
     this.editModal.hide();
   }
@@ -73,9 +73,9 @@ export class EditorComponent {
    * Provides access to editing service function.
    */
   private continueEditing(): void {
-    this.storageService.edits = this.storageService.getLocalStorageItem("edits");
+    this.storageSrv.edits = this.storageSrv.getLocalStorageItem("edits");
     this.editModal.hide();
-    this.editingService.continueEditing();
+    this.editSrv.continueEditing();
   }
 
   private showEditModal(): void {
@@ -91,10 +91,10 @@ export class EditorComponent {
    */
   private stepBackward(): void {
     this.currentEditStep--;
-    this.editingService.currentTotalSteps.emit({
+    this.editSrv.currentTotalSteps.emit({
       current: this.currentEditStep, total: this.totalEditSteps
     });
-    this.editingService.step("backward");
+    this.editSrv.step("backward");
   }
 
   /**
@@ -103,10 +103,10 @@ export class EditorComponent {
   private stepForward(): void {
     this.currentEditStep++;
     console.log("LOG (editor)", this.currentEditStep, this.totalEditSteps);
-    this.editingService.currentTotalSteps.emit({
+    this.editSrv.currentTotalSteps.emit({
       current: this.currentEditStep, total: this.totalEditSteps
     });
-    this.editingService.step("forward");
+    this.editSrv.step("forward");
   }
 
   /**
@@ -123,8 +123,8 @@ export class EditorComponent {
    * @returns {boolean} - when true then button is disabled
    */
   private isInactive(type: string): boolean {
-    this.mapService.disableMouseEvent("edits-backward-btn");
-    this.mapService.disableMouseEvent("edits-forward-btn");
+    this.mapSrv.disableMouseEvent("edits-backward-btn");
+    this.mapSrv.disableMouseEvent("edits-forward-btn");
     // console.log("LOG (editor)", this.totalEditSteps, this.currentEditStep);
     switch (type) {
       case "backward":
@@ -141,15 +141,15 @@ export class EditorComponent {
    */
   private toggleEditMode(): void {
     this.editing = !this.editing;
-    this.editingService.editingMode.emit(this.editing);
-    this.mapService.editingMode = this.editing;
+    this.editSrv.editingMode.emit(this.editing);
+    this.mapSrv.editingMode = this.editing;
     if (this.editing) {
       setTimeout(() => {
-        this.mapService.disableMouseEvent("edits-backward-btn");
-        this.mapService.disableMouseEvent("edits-forward-btn");
-        this.mapService.disableMouseEvent("edits-count");
-        this.mapService.disableMouseEvent("stop-btn");
-        this.mapService.disableMouseEvent("platform-btn");
+        this.mapSrv.disableMouseEvent("edits-backward-btn");
+        this.mapSrv.disableMouseEvent("edits-forward-btn");
+        this.mapSrv.disableMouseEvent("edits-count");
+        this.mapSrv.disableMouseEvent("stop-btn");
+        this.mapSrv.disableMouseEvent("platform-btn");
       }, 250);
     }
   }

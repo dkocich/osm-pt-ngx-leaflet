@@ -44,24 +44,24 @@ export class TransporterComponent {
 
   private source: string = "";
   constructor(
-    private authService: AuthService,
-    private mapService: MapService,
-    private overpassService: OverpassService,
-    private storageService: StorageService
+    private authSrv: AuthService,
+    private mapSrv: MapService,
+    private overpassSrv: OverpassService,
+    private storageSrv: StorageService
   ) {
     //
   }
 
   ngOnInit(): void {
-    this.mapService.disableMouseEvent("download-data");
-    this.mapService.disableMouseEvent("upload-data");
-    this.storageService.editsChanged.subscribe(
+    this.mapSrv.disableMouseEvent("download-data");
+    this.mapSrv.disableMouseEvent("upload-data");
+    this.storageSrv.editsChanged.subscribe(
       /**
-       * @param data - data event is true when storageService.edits change
+       * @param data - data event is true when storageSrv.edits change
        */
       (data) => {
         if (data) {
-          this.editsSummary = this.storageService.edits;
+          this.editsSummary = this.storageSrv.edits;
         }
       }
     );
@@ -69,7 +69,7 @@ export class TransporterComponent {
 
   public showDownloadModal(): void {
     this.downloadModal.show();
-    this.mapService.disableMouseEvent("modalDownload");
+    this.mapSrv.disableMouseEvent("modalDownload");
   }
 
   public hideDownloadModal(): void {
@@ -78,7 +78,7 @@ export class TransporterComponent {
 
   public showUploadModal(): void {
     this.uploadModal.show();
-    this.mapService.disableMouseEvent("modalUpload");
+    this.mapSrv.disableMouseEvent("modalUpload");
   }
 
   public hideUploadModal(): void {
@@ -86,16 +86,16 @@ export class TransporterComponent {
   }
 
   private isAuthenticated(): void {
-    return this.authService.oauth.authenticated();
+    return this.authSrv.oauth.authenticated();
   }
 
   private requestData(requestBody: string): void {
-    this.overpassService.requestOverpassData(requestBody);
+    this.overpassSrv.requestOverpassData(requestBody);
     this.hideDownloadModal();
   }
 
   private uploadData(): void {
-    this.overpassService.uploadData({
+    this.overpassSrv.uploadData({
       comment: this.comment,
       source: this.source
     });
@@ -110,11 +110,11 @@ export class TransporterComponent {
   }
 
   private hasEdits(): boolean {
-    return this.storageService.edits.length > 0;
+    return this.storageSrv.edits.length > 0;
   }
 
   private verifyUpload(): void {
-    this.overpassService.uploadData(
+    this.overpassSrv.uploadData(
       { source: "test upload source", comment: "test upload comment" },
       true
     );

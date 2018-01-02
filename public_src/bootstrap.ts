@@ -39,13 +39,13 @@ import { ToolbarComponent } from "./components/toolbar/toolbar.component";
 import { TransporterComponent } from "./components/transporter/transporter.component";
 
 import { AuthService } from "./services/auth.service";
-import { ConfigService } from "./services/config.service";
-import { EditingService } from "./services/editing.service";
-import { GeocodingService } from "./services/geocoding.service";
-import { LoadingService } from "./services/loading.service";
+import { ConfService } from "./services/conf.service";
+import { EditService } from "./services/edit.service";
+import { GeocodeService } from "./services/geocode.service";
+import { LoadService } from "./services/load.service";
 import { MapService } from "./services/map.service";
 import { OverpassService } from "./services/overpass.service";
-import { ProcessingService } from "./services/processing.service";
+import { ProcessService } from "./services/process.service";
 import { StorageService } from "./services/storage.service";
 
 import { KeysPipe } from "./components/pipes/keys.pipe";
@@ -82,13 +82,13 @@ import { KeysPipe } from "./components/pipes/keys.pipe";
   ],
   providers: [
     AuthService,
-    ConfigService,
-    EditingService,
-    GeocodingService,
-    LoadingService,
+    ConfService,
+    EditService,
+    GeocodeService,
+    LoadService,
     MapService,
     OverpassService,
-    ProcessingService,
+    ProcessService,
     StorageService,
 
     KeysPipe

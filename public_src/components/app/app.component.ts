@@ -3,14 +3,14 @@ import { CarouselConfig, ModalDirective } from "ngx-bootstrap";
 
 import * as L from "leaflet";
 
-import { GeocodingService } from "../../services/geocoding.service";
-import { LoadingService } from "../../services/loading.service";
+import { GeocodeService } from "../../services/geocode.service";
+import { LoadService } from "../../services/load.service";
 import { MapService } from "../../services/map.service";
-import { ProcessingService } from "../../services/processing.service";
+import { ProcessService } from "../../services/process.service";
 
 import { AuthComponent } from "../auth/auth.component";
 import { ToolbarComponent } from "../toolbar/toolbar.component";
-import { EditingService } from "../../services/editing.service";
+import { EditService } from "../../services/edit.service";
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -27,11 +27,11 @@ export class AppComponent {
   @ViewChild("helpModal") public helpModal: ModalDirective;
 
   constructor(
-    private editingService: EditingService,
-    private geocoder: GeocodingService,
-    private loadingService: LoadingService,
-    private mapService: MapService,
-    private processingService: ProcessingService
+    private editSrv: EditService,
+    private geocodeSrv: GeocodeService,
+    private loadSrv: LoadService,
+    private mapSrv: MapService,
+    private processSrv: ProcessService
   ) {
     if (isDevMode()) {
       console.log("WARNING: Ang. development mode is ", isDevMode());
@@ -39,7 +39,7 @@ export class AppComponent {
   }
 
   ngOnInit(): any {
-    this.editingService.editingMode.subscribe((data) => {
+    this.editSrv.editingMode.subscribe((data) => {
       console.log(
         "LOG (relation-browser) Editing mode change in routeBrowser - ",
         data
@@ -48,7 +48,7 @@ export class AppComponent {
     });
     const map = L.map("map", {
       center: L.latLng(49.686, 18.351),
-      layers: [this.mapService.baseMaps.CartoDB_light],
+      layers: [this.mapSrv.baseMaps.CartoDB_light],
       maxZoom: 22,
       minZoom: 4,
       zoom: 14,
@@ -57,20 +57,20 @@ export class AppComponent {
     });
 
     L.control.zoom({ position: "topright" }).addTo(map);
-    L.control.layers(this.mapService.baseMaps).addTo(map);
+    L.control.layers(this.mapSrv.baseMaps).addTo(map);
     L.control.scale().addTo(map);
 
-    this.mapService.map = map;
-    this.mapService.map.on("zoomend moveend", () => {
-      this.processingService.filterDataInBounds();
-      this.processingService.addPositionToUrlHash();
+    this.mapSrv.map = map;
+    this.mapSrv.map.on("zoomend moveend", () => {
+      this.processSrv.filterDataInBounds();
+      this.processSrv.addPositionToUrlHash();
     });
     if (
-      window.location.hash !== "" && this.processingService.hashIsValidPosition()
+      window.location.hash !== "" && this.processSrv.hashIsValidPosition()
     ) {
-      this.mapService.zoomToHashedPosition();
+      this.mapSrv.zoomToHashedPosition();
     } else {
-      this.geocoder
+      this.geocodeSrv
         .getCurrentLocation()
         .subscribe(
           (location) => map.panTo([location.latitude, location.longitude]),
@@ -89,11 +89,11 @@ export class AppComponent {
   }
 
   private isLoading(): boolean {
-    return this.loadingService.isLoading();
+    return this.loadSrv.isLoading();
   }
 
   private getStatus(): string {
-    return this.loadingService.getStatus();
+    return this.loadSrv.getStatus();
   }
 
   private changeMode(): void {
