@@ -9,6 +9,7 @@ import { ProcessingService } from "./processing.service";
 import { StorageService } from "./storage.service";
 
 import { create } from "xmlbuilder";
+import { EditingService } from "./editing.service";
 
 const CONTINUOUS_QUERY: string = `
 [out:json][timeout:25][bbox:{{bbox}}];
@@ -35,7 +36,8 @@ export class OverpassService {
                 private storageService: StorageService,
                 private processingService: ProcessingService,
                 private loadingService: LoadingService,
-                private authService: AuthService) {
+                private authService: AuthService,
+                private editingService: EditingService) {
         /**
          * @param data - string containing ID of clicked marker
          */
@@ -68,6 +70,12 @@ export class OverpassService {
                 this.getRelationData(rel, missingElements);
             }
         );
+
+        this.processingService.osmObjectsToDownload.subscribe(
+            (data) => {
+                this.getData(data.idsToRestore);
+            }
+        )
     }
 
     /**
@@ -219,6 +227,38 @@ export class OverpassService {
                 this.loadingService.hide();
                 this.getRouteMasters(10);
                 // TODO this.processingService.drawStopAreas();
+            });
+    }
+
+    private getData(idsToRestore: [[number, string]]): void {
+        if (!idsToRestore.length) {
+            return;
+        }
+        let requestBody = `
+            [out:json][timeout:25];
+            ( `;
+
+        // adds all elements by its type as "node(id:)" and "relation(id:)"
+        idsToRestore.forEach( (arrElement, index) => {
+            requestBody += `${arrElement[1]}(id:${arrElement[0]})`;
+            if (index === arrElement.length - 1) {
+                requestBody += "); (._;); out meta;";
+                console.log(requestBody);
+            }
+        });
+        const options = this.setRequestOptions("application/X-www-form-urlencoded");
+        this.loadingService.show("Trying to restore edited data...");
+        this.http.post("https://overpass-api.de/api/interpreter", requestBody, options)
+            .map((res) => res.json())
+            .subscribe((response) => {
+                if (!response) {
+                    this.loadingService.hide();
+                    return alert("No response from API. Try again please.");
+                }
+                this.processingService.processNodeResponse(response);
+                const transformedGeojson = this.mapService.osmtogeojson(response);
+                this.mapService.renderTransformedGeojsonData(transformedGeojson);
+                this.editingService.restoreChanges();
             });
     }
 

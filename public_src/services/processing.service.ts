@@ -22,6 +22,7 @@ export class ProcessingService {
     public showStopsForRoute$ = this.showStopsForRouteSource.asObservable();
     public refreshSidebarViews$ = this.refreshSidebarViewsSource.asObservable();
     public membersToDownload: EventEmitter<object> = new EventEmitter();
+    public osmObjectsToDownload: EventEmitter<object> = new EventEmitter();
     public refreshMasters: EventEmitter<object> = new EventEmitter();
 
     constructor(private storageService: StorageService,

@@ -9,6 +9,7 @@ import { StorageService } from "./storage.service";
 import { IPtStop } from "../core/ptStop.interface";
 import { IPtRelation } from "../core/ptRelation.interface";
 import { IPtRelationNew } from "../core/ptRelationNew.interface";
+import { IEdit } from "../core/edit";
 
 @Injectable()
 export class EditingService {
@@ -81,10 +82,32 @@ export class EditingService {
         this.updateCounter();
         // TODO add logic to apply all already created changes
         if (this.storageService.localJsonStorage) {
-            alert("TODO: Data are loaded - edits should be applied right now.");
+            const idsToRestore = this.getEditsUniqueIds().filter( (id) => {
+                return id > 0; // get all IDs and download again only existing objects
+            });
+            this.processingService.osmObjectsToDownload.emit({ idsToRestore }); // download all IDs
         } else {
             alert("TODO: There are no loaded data - can't apply saved edits to map now.");
         }
+    }
+
+    private getEditsUniqueIds(): Array<number> {
+        const editedIds = new Set();
+        this.storageService.edits.forEach( (edit: IEdit) => {
+            editedIds.add(edit.geometryType + "/" + edit.id);
+        });
+        return Array.from(editedIds.keys());
+    }
+
+    /**
+     * Restores all changes after data were loaded with Overpass
+     */
+    public restoreChanges(): void {
+        const restoredChanges: object[] = JSON.parse(localStorage.getItem("edits"));
+        restoredChanges.forEach( (change: IEdit) => {
+            this.addChange(this.storageService.elementsMap.get(change.id), change.type,
+                change.change); // reapply all edits again
+        });
     }
 
     /**
@@ -95,10 +118,11 @@ export class EditingService {
      */
     public addChange(element: any, type: string, change: object): any {
         const edits: object[] = this.storageService.edits;
-        const editObj: any = {
-            "change": change,
-            "id": element.id,
-            "type": type
+        const editObj: IEdit = {
+            change,
+            id: element.id,
+            geometryType: element.type,
+            type
         };
         if (this.isBrowsingHistoryOfChanges()) {
             this.deleteMoreRecentChanges(this.currentEditStep);
