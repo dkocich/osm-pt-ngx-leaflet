@@ -16,7 +16,7 @@ import { EditService } from "../../services/edit.service";
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
   selector: "app",
   styles: [require<any>("./app.component.less")],
-  template: require<any>("./app.component.html")
+  template: require<any>("./app.component.html"),
 })
 export class AppComponent {
   public advancedMode: boolean = Boolean(localStorage.getItem("advancedMode"));
@@ -31,7 +31,7 @@ export class AppComponent {
     private geocodeSrv: GeocodeService,
     private loadSrv: LoadService,
     private mapSrv: MapService,
-    private processSrv: ProcessService
+    private processSrv: ProcessService,
   ) {
     if (isDevMode()) {
       console.log("WARNING: Ang. development mode is ", isDevMode());
@@ -42,7 +42,7 @@ export class AppComponent {
     this.editSrv.editingMode.subscribe((data) => {
       console.log(
         "LOG (relation-browser) Editing mode change in routeBrowser - ",
-        data
+        data,
       );
       this.editingMode = data;
     });
@@ -53,7 +53,7 @@ export class AppComponent {
       minZoom: 4,
       zoom: 14,
       zoomAnimation: false,
-      zoomControl: false
+      zoomControl: false,
     });
 
     L.control.zoom({ position: "topright" }).addTo(map);
@@ -74,7 +74,7 @@ export class AppComponent {
         .getCurrentLocation()
         .subscribe(
           (location) => map.panTo([location.latitude, location.longitude]),
-          (err) => console.error(err)
+          (err) => console.error(err),
         );
     }
     this.toolbarComponent.Initialize();

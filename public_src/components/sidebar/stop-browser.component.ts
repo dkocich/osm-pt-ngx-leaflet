@@ -14,9 +14,9 @@ import { IPtStop } from "../../core/ptStop.interface";
   selector: "stop-browser",
   styles: [
     require<any>("./stop-browser.component.less"),
-    require<any>("../../styles/main.less")
+    require<any>("../../styles/main.less"),
   ],
-  template: require<any>("./stop-browser.component.html")
+  template: require<any>("./stop-browser.component.html"),
 })
 export class StopBrowserComponent {
   public listOfStopsForRoute: object[] = this.storageSrv.listOfStopsForRoute;
@@ -30,7 +30,7 @@ export class StopBrowserComponent {
     private editSrv: EditService,
     private mapSrv: MapService,
     private processSrv: ProcessService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     dragulaSrv.drop.subscribe((value) => {
       this.onDrop(value.slice(1));
@@ -61,10 +61,10 @@ export class StopBrowserComponent {
     this.editSrv.editingMode.subscribe((data) => {
         console.log(
           "LOG (stop-browser) Editing mode change in stopBrowser - ",
-          data
+          data,
         );
         this.editingMode = data;
-      }
+      },
     );
   }
 
@@ -84,8 +84,8 @@ export class StopBrowserComponent {
     let change = {
       from: JSON.parse(JSON.stringify(this.currentElement["members"])),
       to: JSON.parse(
-        JSON.stringify([...this.listOfStopsForRoute, ...elementsWithoutRole])
-      )
+        JSON.stringify([...this.listOfStopsForRoute, ...elementsWithoutRole]),
+      ),
     };
     this.editSrv.addChange(this.currentElement, type, change);
   }

@@ -37,7 +37,7 @@ export class OverpassService {
     private loadSrv: LoadService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
-    private mapSrv: MapService
+    private mapSrv: MapService,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -50,7 +50,7 @@ export class OverpassService {
           this.storageSrv.elementsMap.get(featureId),
           false,
           false,
-          false
+          false,
         );
       }
 
@@ -91,7 +91,7 @@ export class OverpassService {
     const options = this.setRequestOptions("application/X-www-form-urlencoded");
     this.mapSrv.previousCenter = [
       this.mapSrv.map.getCenter().lat,
-      this.mapSrv.map.getCenter().lng
+      this.mapSrv.map.getCenter().lng,
     ];
     this.http
       .post(ConfService.overpassUrl, requestBody, options)
@@ -104,14 +104,14 @@ export class OverpassService {
           console.log(
             "LOG (overpass s.) Stops response error",
             res.status,
-            res.text
+            res.text,
           );
           return setTimeout(
             function(): void {
               console.log("LOG (overpass) Request error - new request?");
               this.requestNewOverpassData();
             }.bind(this),
-            5000
+            5000,
           );
         }
       })
@@ -141,7 +141,7 @@ export class OverpassService {
     if (idsArr.length <= minNumOfRelations) {
       this.loadSrv.hide();
       return console.log(
-        "LOG (overpass s.) Not enough relations to download - stop"
+        "LOG (overpass s.) Not enough relations to download - stop",
       );
     } else if (!idsArr.length) {
       // do not query masters if all relations are already known
@@ -157,7 +157,7 @@ export class OverpassService {
             out meta;`;
     console.log(
       "LOG (overpass s.) Querying rel.'s route masters with query:",
-      requestBody
+      requestBody,
     );
     requestBody = this.replaceBboxString(requestBody);
     const options = this.setRequestOptions("application/X-www-form-urlencoded");
@@ -168,7 +168,7 @@ export class OverpassService {
         this.loadSrv.hide();
         if (!response) {
           return alert(
-            "No response from API. Try to select other master relation again please."
+            "No response from API. Try to select other master relation again please.",
           );
         }
         this.markQueriedRelations(idsArr);
@@ -208,9 +208,9 @@ export class OverpassService {
           content: "<osm><changeset></changeset></osm>", // changeset,
           method: "PUT",
           options: { header: { "Content-Type": "text/xml" } },
-          path: "/api/0.6/changeset/create"
+          path: "/api/0.6/changeset/create",
         },
-        this.createdChangeset.bind(this)
+        this.createdChangeset.bind(this),
       );
     }
   }
@@ -243,7 +243,7 @@ export class OverpassService {
         if (!response) {
           this.loadSrv.hide();
           return alert(
-            "No response from API. Try to select element again please."
+            "No response from API. Try to select element again please.",
           );
         }
         console.log("LOG (overpass s.)", response);
@@ -263,7 +263,7 @@ export class OverpassService {
     if (missingElements.length === 0) {
       return alert(
         "This relation has no stops or platforms. Please add them first and repeat your action. \n" +
-          JSON.stringify(rel)
+          JSON.stringify(rel),
       );
     }
     const requestBody = `
@@ -276,7 +276,7 @@ export class OverpassService {
     console.log(
       "LOG (overpass s.) Should download missing members with query:",
       requestBody,
-      missingElements
+      missingElements,
     );
     // FIXME loading can't be closed sometimes?
     // this.loadSrv.show("Loading relation's missing members...");
@@ -299,7 +299,7 @@ export class OverpassService {
         // continue with the rest of "exploreRelation" function
         console.log(
           "LOG (overpass s.) Continue with downloaded missing members",
-          rel
+          rel,
         );
         this.storageSrv.elementsDownloaded.add(rel.id);
         this.processSrv.downloadedMissingMembers(rel, true, true);
@@ -340,7 +340,7 @@ export class OverpassService {
     const e = b.getEast().toString();
     return requestBody.replace(
       new RegExp("{{bbox}}", "g"),
-      [s, w, n, e].join(", ")
+      [s, w, n, e].join(", "),
     );
   }
 
@@ -398,12 +398,12 @@ export class OverpassService {
     if (err) {
       return alert(
         "Error while creating new changeset. Try again please. " +
-          JSON.stringify(err)
+          JSON.stringify(err),
       );
     }
     console.log(
       "LOG (overpass s.) Created new changeset with ID: ",
-      changeset_id
+      changeset_id,
     );
     this.addChangesetId(changeset_id);
     const osmChangeContent = "<osmChange></osmChange>";
@@ -420,7 +420,7 @@ export class OverpassService {
     });
     for (const changedElementId of changedElementsArr) {
       changedElements.push(
-        this.storageSrv.elementsMap.get(changedElementId)
+        this.storageSrv.elementsMap.get(changedElementId),
       );
     }
 
@@ -428,7 +428,7 @@ export class OverpassService {
 
     const xml = create("osmChange", {
       "@version": "0.6",
-      "@generator": ConfService.appName
+      "@generator": ConfService.appName,
     });
 
     let xmlNodeModify;
@@ -466,14 +466,14 @@ export class OverpassService {
               objectType.ele("member", {
                 type: mem["type"],
                 ref: mem["ref"],
-                role: mem["role"]
+                role: mem["role"],
               });
             } else {
               objectType
                 .ele("member", {
                   type: mem["type"],
                   ref: mem["ref"],
-                  role: mem["role"]
+                  role: mem["role"],
                 })
                 .up();
             }
@@ -531,14 +531,14 @@ export class OverpassService {
               objectType.ele("member", {
                 type: mem["type"],
                 ref: mem["ref"],
-                role: mem["role"]
+                role: mem["role"],
               });
             } else {
               objectType
                 .ele("member", {
                   type: mem["type"],
                   ref: mem["ref"],
-                  role: mem["role"]
+                  role: mem["role"],
                 })
                 .up();
             }
@@ -570,9 +570,9 @@ export class OverpassService {
           content: xmlString, // .osmChangeJXON(this.changes) // JXON.stringify(),
           method: "POST",
           options: { header: { "Content-Type": "text/xml" } },
-          path: "/api/0.6/changeset/" + this.changeset_id + "/upload"
+          path: "/api/0.6/changeset/" + this.changeset_id + "/upload",
         },
-        this.uploadedChangeset.bind(this)
+        this.uploadedChangeset.bind(this),
       );
     }
   }
@@ -585,7 +585,7 @@ export class OverpassService {
     if (err) {
       return alert(
         "Error after data uploading. Changeset is not closed. It should close automatically soon. " +
-          JSON.stringify(err)
+          JSON.stringify(err),
       );
     }
     // Upload was successful, safe to call the callback.
@@ -599,14 +599,14 @@ export class OverpassService {
           {
             method: "PUT",
             options: { header: { "Content-Type": "text/xml" } },
-            path: "/api/0.6/changeset/" + this.changeset_id + "/close"
+            path: "/api/0.6/changeset/" + this.changeset_id + "/close",
           },
           () => {
             return true;
-          }
+          },
         );
       }.bind(this),
-      2500
+      2500,
     );
   }
 }

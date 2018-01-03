@@ -8,7 +8,7 @@ import { StorageService } from "../../services/storage.service";
   providers: [],
   selector: "auth",
   styles: [require<any>("./auth.component.less")],
-  template: require<any>("./auth.component.html")
+  template: require<any>("./auth.component.html"),
 })
 export class AuthComponent {
   private displayName: string;
@@ -16,7 +16,7 @@ export class AuthComponent {
 
   constructor(
     private authSrv: AuthService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     this.displayName = this.getDisplayName();
     this.imgHref = this.storageSrv.getImgHref();
@@ -56,7 +56,7 @@ export class AuthComponent {
       description: d.innerHTML,
       display_name: u.getAttribute("display_name"),
       id: u.getAttribute("id"),
-      img_href: i.getAttribute("href")
+      img_href: i.getAttribute("href"),
     };
     this.storageSrv.setUserData(userDetails);
     // document.getElementById("display_name").innerHTML = userDetails["display_name"];
@@ -72,9 +72,9 @@ export class AuthComponent {
         method: "GET",
         path: "/api/0.6/user/details",
         singlepage: true,
-        url: ConfService.apiUrl
+        url: ConfService.apiUrl,
       },
-      this.gotDetailsCallback.bind(this)
+      this.gotDetailsCallback.bind(this),
     );
   }
 

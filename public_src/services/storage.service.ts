@@ -67,13 +67,13 @@ export class StorageService {
       "elMap: ",
       this.elementsMap.size,
       "queriedM: ",
-      this.queriedMasters.size
+      this.queriedMasters.size,
     );
     const stats = {
       a: this.listOfAreas.length,
       m: this.listOfMasters.length,
       r: this.listOfRelations.length,
-      s: this.listOfStops.length
+      s: this.listOfStops.length,
     };
     this.stats.emit(stats);
   }

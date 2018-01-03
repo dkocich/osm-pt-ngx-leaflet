@@ -14,6 +14,6 @@ export interface IPtRelationNew extends IOsmEntity {
     to: string,
     wheelchair: "yes" | "no" | "limited" | "designated" | "",
     colour: string,
-    "public_transport:version": "2"
+    "public_transport:version": "2",
   };
 }

@@ -12,9 +12,9 @@ import { ModalDirective } from "ngx-bootstrap";
   selector: "transporter",
   styles: [
     require<any>("../toolbar/toolbar.component.less"),
-    require<any>("./transporter.component.less")
+    require<any>("./transporter.component.less"),
   ],
-  template: require<any>("./transporter.component.html")
+  template: require<any>("./transporter.component.html"),
 })
 export class TransporterComponent {
   @ViewChild("downloadModal") public downloadModal: ModalDirective;
@@ -23,18 +23,18 @@ export class TransporterComponent {
     {
       id: 1,
       raw: "%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3B%0A(%0A%20%20node%5B%22route%22%3D%22bus%22%5D(%7B%7Bbbox%7D%7D)%3B%0A%20%20way%5B%22route%22%3D%22bus%22%5D(%7B%7Bbbox%7D%7D)%3B%0A%20%20relation%5B%22route%22%3D%22bus%22%5D(%7B%7Bbbox%7D%7D)%3B%0A)%3B%0Aout%20body%3B%0A%3E%3B%0Aout%20skel%20qt%3B",
-      short: "route=bus"
+      short: "route=bus",
     },
     {
       id: 2,
       raw: "%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3B%0A(%0A%20%20node%5B%22route%22%3D%22bus%22%5D(%7B%7Bbbox%7D%7D)%3B%0A%20%20way%5B%22route%22%3D%22bus%22%5D(%7B%7Bbbox%7D%7D)%3B%0A%20%20relation%5B%22route%22%3D%22bus%22%5D(%7B%7Bbbox%7D%7D)%3B%0A%20%20node%5B%22highway%22%5D(%7B%7Bbbox%7D%7D)%3B%0A%20%20way%5B%22highway%22%5D(%7B%7Bbbox%7D%7D)%3B%0A%20%20relation%5B%22highway%22%5D(%7B%7Bbbox%7D%7D)%3B%0A)%3B%0Aout%20body%3B%0A%3E%3B%0Aout%20skel%20qt%3B",
-      short: "route=bus OR highway=*"
+      short: "route=bus OR highway=*",
     },
     {
       id: 3,
       raw: "%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3B%0A%28%0A%20%20node%5B%22public_transport%22%5D%28%7B%7Bbbox%7D%7D%29%3B%0A%20%20way%5B%22public_transport%22%5D%28%7B%7Bbbox%7D%7D%29%3B%0A%20%20relation%5B%22public_transport%22%5D%28%7B%7Bbbox%7D%7D%29%3B%0A%29%3B%0Aout%20body%3B%0A%3E%3B%0Aout%20skel%20qt%3B",
-      short: "public_transport=*"
-    }
+      short: "public_transport=*",
+    },
   ];
   private queryShort = this.favoriteQueries[0].short;
   private queryRaw = decodeURIComponent(this.favoriteQueries[0].raw);
@@ -47,7 +47,7 @@ export class TransporterComponent {
     private authSrv: AuthService,
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     //
   }
@@ -63,7 +63,7 @@ export class TransporterComponent {
         if (data) {
           this.editsSummary = this.storageSrv.edits;
         }
-      }
+      },
     );
   }
 
@@ -97,7 +97,7 @@ export class TransporterComponent {
   private uploadData(): void {
     this.overpassSrv.uploadData({
       comment: this.comment,
-      source: this.source
+      source: this.source,
     });
   }
 
@@ -116,7 +116,7 @@ export class TransporterComponent {
   private verifyUpload(): void {
     this.overpassSrv.uploadData(
       { source: "test upload source", comment: "test upload comment" },
-      true
+      true,
     );
   }
 }

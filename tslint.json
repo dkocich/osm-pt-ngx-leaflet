@@ -82,7 +82,13 @@
             "always"
         ],
         "space-before-function-paren": false,
-        "trailing-comma": false,
+        "trailing-comma": [
+            true,
+            {
+                "multiline": "always",
+                "singleline": "never"
+            }
+        ],
         "triple-equals": [
             true,
             "allow-null-check"

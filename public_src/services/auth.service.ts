@@ -8,7 +8,7 @@ export class AuthService {
     oauth_consumer_key: ConfService.apiConsumerKey,
     oauth_secret: ConfService.apiConsumerSecret,
     singlepage: false,
-    url: ConfService.baseOsmUrl
+    url: ConfService.baseOsmUrl,
   });
 
   constructor() {

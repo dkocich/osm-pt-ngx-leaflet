@@ -22,7 +22,7 @@ export class EditService {
   constructor(
     private mapSrv: MapService,
     private processSrv: ProcessService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     // local events
     this.currentTotalSteps.subscribe(
@@ -32,7 +32,7 @@ export class EditService {
       (data) => {
         this.currentEditStep = data.current;
         this.totalEditSteps = data.total;
-      }
+      },
     );
 
     // MapService events
@@ -43,10 +43,10 @@ export class EditService {
        */
       (data) => {
         const element = this.processSrv.getElementById(
-          Number(data.featureId)
+          Number(data.featureId),
         );
         this.addChange(element, data.type, data.change);
-      }
+      },
     );
 
     this.editingMode.subscribe(
@@ -56,7 +56,7 @@ export class EditService {
       (data) => {
         console.log(
           "LOG (editing s.) Editing mode change in editSrv- ",
-          data
+          data,
         );
         this.editing = data;
         this.storageSrv.markersMap.forEach((marker) => {
@@ -66,7 +66,7 @@ export class EditService {
             marker.dragging.enable();
           }
         });
-      }
+      },
     );
 
     this.mapSrv.markerMembershipToggleClick.subscribe(
@@ -75,7 +75,7 @@ export class EditService {
        */
       (data) => {
         this.handleMarkerMembershipToggleClick(data.featureId);
-      }
+      },
     );
   }
 
@@ -90,7 +90,7 @@ export class EditService {
       alert("TODO: Data are loaded - edits should be applied right now.");
     } else {
       alert(
-        "TODO: There are no loaded data - can't apply saved edits to map now."
+        "TODO: There are no loaded data - can't apply saved edits to map now.",
       );
     }
   }
@@ -106,7 +106,7 @@ export class EditService {
     const editObj: any = {
       change,
       id: element.id,
-      type
+      type,
     };
     if (this.isBrowsingHistoryOfChanges()) {
       this.deleteMoreRecentChanges(this.currentEditStep);
@@ -115,7 +115,7 @@ export class EditService {
     if (type === "change members") {
       if (this.changeIsEqual(editObj)) {
         return alert(
-          "FIXME: Problem has occured - change is same like previous edit in the editing history."
+          "FIXME: Problem has occured - change is same like previous edit in the editing history.",
         );
       }
       this.simplifyMembers(editObj);
@@ -166,11 +166,11 @@ export class EditService {
         } else {
           alert(
             "FIXME: this new NODE's ID already exists " +
-              JSON.stringify(this.storageSrv.elementsMap.get(editObj.id))
+              JSON.stringify(this.storageSrv.elementsMap.get(editObj.id)),
           );
         }
         this.processSrv.refreshTagView(
-          this.storageSrv.elementsMap.get(editObj.id)
+          this.storageSrv.elementsMap.get(editObj.id),
         );
         break;
       case "modify element":
@@ -188,17 +188,17 @@ export class EditService {
         } else {
           alert(
             "FIXME: this new ROUTE's ID already exists " +
-              JSON.stringify(this.storageSrv.elementsMap.get(editObj.id))
+              JSON.stringify(this.storageSrv.elementsMap.get(editObj.id)),
           );
         }
         this.processSrv.refreshTagView(
-          this.storageSrv.elementsMap.get(editObj.id)
+          this.storageSrv.elementsMap.get(editObj.id),
         );
         break;
       case "toggle members":
         console.log(
           "LOG (editing s.) Should change members for this created route",
-          editObj
+          editObj,
         );
         this.storageSrv.elementsMap.set(element.id, element); // save modified relation
         break;
@@ -210,7 +210,7 @@ export class EditService {
         } else {
           alert(
             "FIXME: this new ROUTE's ID already exists " +
-              JSON.stringify(this.storageSrv.elementsMap.get(editObj.id))
+              JSON.stringify(this.storageSrv.elementsMap.get(editObj.id)),
           );
         }
         let masterRel = this.storageSrv.elementsMap.get(editObj.id);
@@ -219,7 +219,7 @@ export class EditService {
         break;
       default:
         alert(
-          "Current change type was not recognized " + JSON.stringify(editObj)
+          "Current change type was not recognized " + JSON.stringify(editObj),
         );
     }
     if (["add tag", "remove tag", "change tag"].indexOf(type) > -1) {
@@ -228,18 +228,18 @@ export class EditService {
       if (element.tags.type === "route") {
         // to prevent zoom error for route_masters
         this.processSrv.filterStopsByRelation(
-          this.storageSrv.elementsMap.get(editObj.id)
+          this.storageSrv.elementsMap.get(editObj.id),
         );
         this.processSrv.exploreRelation(
           this.storageSrv.elementsMap.get(editObj.id),
           false,
           false,
-          false
+          false,
         );
       }
     } else if (["toggle members"].indexOf(type) > -1) {
       this.processSrv.filterStopsByRelation(
-        this.storageSrv.elementsMap.get(editObj.id)
+        this.storageSrv.elementsMap.get(editObj.id),
       );
     }
     if (["add element", "add route"].indexOf(type) > -1) {
@@ -262,7 +262,7 @@ export class EditService {
     const marker = this.initializeNewMarker(
       creatingElementOfType,
       event,
-      newId
+      newId,
     );
     this.createNewMarkerEvents(marker);
     this.storageSrv.markersMap.set(newId, marker);
@@ -278,25 +278,25 @@ export class EditService {
       type: "node",
       uid: Number(localStorage.getItem("id")),
       user: localStorage.getItem("display_name"),
-      version: 1
+      version: 1,
     };
     switch (creatingElementOfType) {
       case "stop":
         newElement.tags = {
           name: "",
-          public_transport: "stop_position"
+          public_transport: "stop_position",
         };
         break;
       case "platform":
         newElement.tags = {
           name: "",
-          public_transport: "platform"
+          public_transport: "platform",
         };
         break;
       default:
         console.log(
           "LOG (editing s.) Type was created: ",
-          creatingElementOfType
+          creatingElementOfType,
         );
     }
     let change = { from: undefined, to: newElement };
@@ -328,8 +328,8 @@ export class EditService {
         to: "",
         wheelchair: "",
         colour: "",
-        "public_transport:version": "2"
-      }
+        "public_transport:version": "2",
+      },
     };
     let change = { from: undefined, to: newRoute };
     this.addChange(newRoute, "add route", change);
@@ -359,14 +359,14 @@ export class EditService {
         name: "",
         wheelchair: "",
         colour: "",
-        "public_transport:version": "2"
-      }
+        "public_transport:version": "2",
+      },
     };
     if (relId) {
       newMasterRel.members.push({
         type: "relation",
         ref: relId,
-        role: ""
+        role: "",
       });
       this.storageSrv.idsHaveMaster.add(relId);
       this.storageSrv.queriedMasters.add(relId); // FIXME ? Is it rel or master
@@ -383,14 +383,14 @@ export class EditService {
   public changeRouteMasterMembers(relId: number, routeMasterId: number): void {
     console.log(
       "LOOOOOOG test ", typeof relId, relId,
-      typeof routeMasterId, routeMasterId
+      typeof routeMasterId, routeMasterId,
     );
     let routeMaster = this.storageSrv.elementsMap.get(routeMasterId);
     let change: any = { from: JSON.parse(JSON.stringify(routeMaster.members)) };
     let newMember = {
       type: "relation",
       ref: relId,
-      role: ""
+      role: "",
     };
     const newOrder = routeMaster.members;
     newOrder.push(newMember);
@@ -415,14 +415,14 @@ export class EditService {
     const rel = JSON.parse(
       JSON.stringify(
         this.storageSrv.elementsMap.get(
-          this.storageSrv.currentElement.id
-        )
-      )
+          this.storageSrv.currentElement.id,
+        ),
+      ),
     ); // stringified to not influence new route edit
     if (!rel || rel.type !== "relation") {
       return alert(
         "Relation was not found " +
-          JSON.stringify(this.storageSrv.currentElement)
+          JSON.stringify(this.storageSrv.currentElement),
       );
     }
     if (!featureId && rel.members.length === 0) {
@@ -470,7 +470,7 @@ export class EditService {
         const memberToToggle = {
           type: "node",
           ref: featureId,
-          role: probableRole
+          role: probableRole,
         };
         rel.members.push(memberToToggle);
       }
@@ -478,7 +478,7 @@ export class EditService {
       // highlight all members (with/without selected node)
       console.log(
         "LOG (mapservice s.) This relation with members l.",
-        rel, rel.members.length
+        rel, rel.members.length,
       );
       // get all members to highlight
       if (rel["members"].length > 0) {
@@ -499,10 +499,10 @@ export class EditService {
 
       console.log(
         "LOG (editing s.) Array highlight",
-        Array.from(this.storageSrv.elementsToHighlight.values())
+        Array.from(this.storageSrv.elementsToHighlight.values()),
       );
       const clickedNode: IPtStop = this.storageSrv.elementsMap.get(
-        featureId
+        featureId,
       );
 
       // create array of circles to highlight and add to map
@@ -513,14 +513,14 @@ export class EditService {
         let circle = L.circleMarker([node.lat, node.lon], {
           radius: 15,
           color: "#00ffff",
-          opacity: 0.75
+          opacity: 0.75,
         });
         console.log("LOG (editing s.) Created circle:", circle);
         membersHighlight.push(circle);
       }
       console.log(
         "LOG (editing s.) Show all circles array membersHighlight:",
-        membersHighlight
+        membersHighlight,
       );
       this.mapSrv.membersHighlightLayer = L.layerGroup(membersHighlight);
       this.mapSrv.membersHighlightLayer.addTo(this.mapSrv.map);
@@ -538,16 +538,16 @@ export class EditService {
     let change = {
       from: {
         lat: opt.lat,
-        lon: opt.lng
+        lon: opt.lng,
       },
       to: {
         lat: newPosition.lat,
-        lon: newPosition.lng
-      }
+        lon: newPosition.lng,
+      },
     };
     if (!this.storageSrv.elementsMap.has(opt.featureId)) {
       return alert(
-        "FIXME: missing storageSrv mapping for an element? " + opt.featureId
+        "FIXME: missing storageSrv mapping for an element? " + opt.featureId,
       );
     }
     // update position in marker's options
@@ -583,7 +583,7 @@ export class EditService {
   private initializeNewMarker(
     creatingElementOfType: string,
     event: any,
-    newId: number
+    newId: number,
   ): any {
     let iconUrl;
     switch (creatingElementOfType) {
@@ -599,13 +599,13 @@ export class EditService {
     const marker = L.marker(event["latlng"], {
       icon: L.icon({
         iconAnchor: [10, 10],
-        iconUrl
+        iconUrl,
       }),
       draggable: true,
       opacity: 0.8,
-      riseOnHover: true
+      riseOnHover: true,
     }).bindPopup("New " + creatingElementOfType + " #" + newId, {
-      offset: L.point(12, 6)
+      offset: L.point(12, 6),
     });
     marker.options["featureId"] = newId;
     marker.options["lat"] = event["latlng"].lat;
@@ -672,7 +672,7 @@ export class EditService {
           "stop_entry_only",
           "platform",
           "platform_exit_only",
-          "platform_entry_only"
+          "platform_entry_only",
         ].indexOf(mem["role"]) === -1
       ) {
         newOrder.push(mem);
@@ -680,7 +680,7 @@ export class EditService {
     });
     let change = {
       from: JSON.parse(JSON.stringify(rel.members)),
-      to: JSON.parse(JSON.stringify(newOrder))
+      to: JSON.parse(JSON.stringify(newOrder)),
     };
     this.addChange(rel, "change members", change);
   }
@@ -736,7 +736,7 @@ export class EditService {
     this.currentEditStep = this.totalEditSteps = this.storageSrv.edits.length;
     this.currentTotalSteps.emit({
       current: this.currentEditStep,
-      total: this.totalEditSteps
+      total: this.totalEditSteps,
     });
   }
 
@@ -793,46 +793,46 @@ export class EditService {
       case "change members":
         console.log(
           "LOG (editing s.) Should reapply this changed members",
-          edit
+          edit,
         );
         let chmElem = this.storageSrv.elementsMap.get(edit.id);
         chmElem.members = edit.change.to;
         if (chmElem.tags.type === "route_master") {
           this.storageSrv.idsHaveMaster.add(
-            chmElem.members[chmElem.members.length - 1].ref
+            chmElem.members[chmElem.members.length - 1].ref,
           );
           this.storageSrv.queriedMasters.add(
-            chmElem.members[chmElem.members.length - 1].ref
+            chmElem.members[chmElem.members.length - 1].ref,
           );
         }
         this.storageSrv.elementsMap.set(edit.id, chmElem);
         this.processSrv.filterStopsByRelation(
-          this.storageSrv.elementsMap.get(edit.id)
+          this.storageSrv.elementsMap.get(edit.id),
         );
         this.processSrv.exploreRelation(
           this.storageSrv.elementsMap.get(edit.id),
           false,
           false,
-          false
+          false,
         );
         break;
       case "add element":
         console.log(
           "LOG (editing s.) Should recreate this created element",
-          edit
+          edit,
         );
         this.storageSrv.elementsMap.set(edit.id, edit.change.to);
         this.mapSrv.map.addLayer(
-          this.storageSrv.markersMap.get(edit.id)
+          this.storageSrv.markersMap.get(edit.id),
         );
         this.processSrv.refreshTagView(
-          this.storageSrv.elementsMap.get(edit.id)
+          this.storageSrv.elementsMap.get(edit.id),
         );
         break;
       case "modify element":
         console.log(
           "LOG (editing s.) Should reapply element modification",
-          edit
+          edit,
         );
         const mElem = this.storageSrv.elementsMap.get(edit.id);
         mElem.lat = edit.change.to.lat;
@@ -845,18 +845,18 @@ export class EditService {
       case "add route":
         console.log(
           "LOG (editing s.) Should recreate this created route",
-          edit
+          edit,
         );
         this.storageSrv.elementsMap.set(edit.id, edit.change.to);
         this.storageSrv.listOfRelations.push(edit.change.to);
         this.processSrv.refreshTagView(
-          this.storageSrv.elementsMap.get(edit.id)
+          this.storageSrv.elementsMap.get(edit.id),
         );
         break;
       case "toggle members":
         console.log(
           "LOG (editing s.) Should redo this membership change",
-          edit
+          edit,
         );
         this.storageSrv.elementsMap.set(edit.id, edit.change.to);
         this.processSrv.filterStopsByRelation(edit.change.to);
@@ -864,7 +864,7 @@ export class EditService {
           edit.change.to,
           false,
           false,
-          false
+          false,
         );
         break;
       case "create master":
@@ -923,29 +923,29 @@ export class EditService {
         let chmElem = this.storageSrv.elementsMap.get(edit.id);
         if (chmElem.tags.type === "route_master") {
           this.storageSrv.idsHaveMaster.delete(
-            chmElem.members[chmElem.members.length - 1].ref
+            chmElem.members[chmElem.members.length - 1].ref,
           );
           this.storageSrv.queriedMasters.delete(
-            chmElem.members[chmElem.members.length - 1].ref
+            chmElem.members[chmElem.members.length - 1].ref,
           );
         }
         delete chmElem.members;
         chmElem.members = edit.change.from;
         this.storageSrv.elementsMap.set(edit.id, chmElem);
         this.processSrv.filterStopsByRelation(
-          this.storageSrv.elementsMap.get(edit.id)
+          this.storageSrv.elementsMap.get(edit.id),
         );
         this.processSrv.exploreRelation(
           this.storageSrv.elementsMap.get(edit.id),
           false,
           false,
-          true
+          true,
         );
         break;
       case "add element":
         console.log("LOG (editing s.) Should undo this created element", edit);
         this.mapSrv.map.removeLayer(
-          this.storageSrv.markersMap.get(edit.id)
+          this.storageSrv.markersMap.get(edit.id),
         );
         this.processSrv.refreshTagView(undefined);
         break;
@@ -969,7 +969,7 @@ export class EditService {
       case "toggle members":
         console.log(
           "LOG (editing s.) Should undo this membership change",
-          edit
+          edit,
         );
         this.storageSrv.elementsMap.set(edit.id, edit.change.from);
         this.processSrv.filterStopsByRelation(edit.change.from);
@@ -977,13 +977,13 @@ export class EditService {
           edit.change.from,
           false,
           false,
-          true
+          true,
         );
         break;
       case "create master":
         console.log(
           "LOG (editing s.) Should undo this route_master creation",
-          edit
+          edit,
         );
         this.storageSrv.listOfMasters.pop();
         this.processSrv.refreshTagView(undefined);
@@ -1022,7 +1022,7 @@ export class EditService {
   private changeIsEqual(editObj: any): boolean {
     console.log(
       JSON.stringify(editObj.change.from).length,
-      JSON.stringify(editObj.change.to).length
+      JSON.stringify(editObj.change.to).length,
     );
     return (
       JSON.stringify(editObj.change.from) === JSON.stringify(editObj.change.to)

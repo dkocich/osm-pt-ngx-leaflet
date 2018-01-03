@@ -13,41 +13,41 @@ const DEFAULT_ICON = L.icon({
   iconUrl: "",
   shadowAnchor: [22, 94],
   shadowSize: [24, 24],
-  shadowUrl: ""
+  shadowUrl: "",
 });
 const HIGHLIGHT_FILL = {
   color: "#ffff00",
   opacity: 0.6,
-  weight: 6
+  weight: 6,
 };
 const HIGHLIGHT_STROKE = {
   color: "#FF0000",
   opacity: 0.6,
-  weight: 12
+  weight: 12,
 };
 const FROM_TO_LABEL = {
   color: "#00FFFF",
-  opacity: 0.6
+  opacity: 0.6,
 };
 const REL_BUS_STYLE = {
   color: "#0000FF",
   opacity: 0.3,
-  weight: 6
+  weight: 6,
 };
 const REL_TRAIN_STYLE = {
   color: "#000000",
   opacity: 0.3,
-  weight: 6
+  weight: 6,
 };
 const REL_TRAM_STYLE = {
   color: "#FF0000",
   opacity: 0.3,
-  weight: 6
+  weight: 6,
 };
 const OTHER_STYLE = {
   color: "#00FF00",
   opacity: 0.3,
-  weight: 6
+  weight: 6,
 };
 
 @Injectable()
@@ -77,11 +77,11 @@ export class MapService {
     private confSrv: ConfService,
     private http: Http,
     private loadSrv: LoadService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     this.baseMaps = {
       Empty: L.tileLayer("", {
-        attribution: ""
+        attribution: "",
       }),
       CartoDB_dark: L.tileLayer(
         "http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
@@ -89,8 +89,8 @@ export class MapService {
           attribution: `&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap
             </a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>`,
           maxNativeZoom: 19,
-          maxZoom: 22
-        }
+          maxZoom: 22,
+        },
       ),
       CartoDB_light: L.tileLayer(
         "http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
@@ -98,8 +98,8 @@ export class MapService {
           attribution: `&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap
             </a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>`,
           maxNativeZoom: 19,
-          maxZoom: 22
-        }
+          maxZoom: 22,
+        },
       ),
       Esri: L.tileLayer(
         "https://server.arcgisonline.com/ArcGIS/rest/services/" +
@@ -109,8 +109,8 @@ export class MapService {
             iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan,
             METI, Esri China (Hong Kong), and the GIS User Community`,
           maxNativeZoom: 19,
-          maxZoom: 22
-        }
+          maxZoom: 22,
+        },
       ),
       Esri_imagery: L.tileLayer(
         "https://server.arcgisonline.com/ArcGIS/rest/services/" +
@@ -119,8 +119,8 @@ export class MapService {
           attribution: `Tiles &copy; Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye,
             Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community `,
           maxNativeZoom: 19,
-          maxZoom: 22
-        }
+          maxZoom: 22,
+        },
       ),
       HERE_satelliteDay: L.tileLayer(
         "http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}",
@@ -137,8 +137,8 @@ export class MapService {
           type: "maptile",
           language: "eng",
           format: "png8",
-          size: "256"
-        }
+          size: "256",
+        },
       ),
       HERE_hybridDay: L.tileLayer(
         "http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}",
@@ -155,8 +155,8 @@ export class MapService {
           type: "maptile",
           language: "eng",
           format: "png8",
-          size: "256"
-        }
+          size: "256",
+        },
       ),
       MapBox_imagery: L.tileLayer(
         "http://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=" +
@@ -166,8 +166,8 @@ export class MapService {
             <a href='http://www.openstreetmap.org/about/'>&copy; OpenStreetMap</a> and
             <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10'>Improve this map</a>`,
           maxNativeZoom: 20,
-          maxZoom: 22
-        }
+          maxZoom: 22,
+        },
       ),
       MapBox_streets: L.tileLayer(
         "http://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=" +
@@ -177,8 +177,8 @@ export class MapService {
             <a href='http://www.openstreetmap.org/about/'>&copy; OpenStreetMap</a> and
             <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10'>Improve this map</a>`,
           maxNativeZoom: 20,
-          maxZoom: 22
-        }
+          maxZoom: 22,
+        },
       ),
       OSM_hot: L.tileLayer(
         "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
@@ -187,8 +187,8 @@ export class MapService {
             OpenStreetMap</a>, Tiles courtesy of <a href='https://hot.openstreetmap.org/'
             target='_blank' rel='noopener'>Humanitarian OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
-          maxZoom: 22
-        }
+          maxZoom: 22,
+        },
       ),
       OSM_standard: L.tileLayer(
         "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -197,15 +197,15 @@ export class MapService {
             OpenStreetMap</a>, Tiles courtesy of <a href='https://openstreetmap.org/'
             target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
-          maxZoom: 22
-        }
+          maxZoom: 22,
+        },
       ),
       OSM_PT: L.tileLayer("http://www.openptmap.org/tiles/{z}/{x}/{y}.png", {
         attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
           OpenStreetMap</a>, Tiles courtesy of <a href='https://openptmap.org/'
           target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
         maxNativeZoom: 19,
-        maxZoom: 17
+        maxZoom: 17,
       }),
       OSM_transport: L.tileLayer(
         "http://{s}.tile2.opencyclemap.org/" + "transport/{z}/{x}/{y}.png",
@@ -214,9 +214,9 @@ export class MapService {
             OpenStreetMap</a>, Tiles courtesy of <a href='https://opencyclemap.org/'
             target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
-          maxZoom: 22
-        }
-      )
+          maxZoom: 22,
+        },
+      ),
     };
   }
 
@@ -282,7 +282,7 @@ export class MapService {
       },
       style: (feature) => {
         return this.styleFeature(feature);
-      }
+      },
     });
     console.log("LOG (map s.) Adding PTlayer to map again", this.ptLayer);
     this.ptLayer.addTo(this.map);
@@ -343,14 +343,14 @@ export class MapService {
       if (distance > 100) {
         marker.setLatLng(originalCoords).update();
         alert(
-          "Current node was dragged more than 100 meters away which is not allowed - resetting position."
+          "Current node was dragged more than 100 meters away which is not allowed - resetting position.",
         );
         return;
       }
       // console.log("LOG (map s.) Distance is", distance, "meters", marker);
       const change = {
         from: { lat, lng },
-        to: { lat: newCoords["lat"], lng: newCoords["lng"] }
+        to: { lat: newCoords["lat"], lng: newCoords["lng"] },
       };
       // console.log("LOG (map s.) Marker change is ", change);
       // TODO markers geometry editing and history undo/redo
@@ -381,7 +381,7 @@ export class MapService {
           },
           style: (feature) => {
             return this.styleFeature(feature);
-          }
+          },
         });
         this.ptLayer.addTo(this.map);
         this.loadSrv.hide();
@@ -435,7 +435,7 @@ export class MapService {
   public showStop(stop: IPtStop): void {
     this.markerFrom = L.circleMarker(
       { lat: stop.lat, lng: stop.lon },
-      FROM_TO_LABEL
+      FROM_TO_LABEL,
     );
     this.highlight = L.layerGroup([this.markerFrom]);
   }
@@ -488,7 +488,7 @@ export class MapService {
         rel.tags.color ||
         "#" + (Math.floor(Math.random() * 0xffffff) | 0x0f0f0f).toString(16);
       this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL).bindTooltip(
-        rel.tags.name
+        rel.tags.name,
       );
       if (this.highlight) {
         this.highlight.addLayer(L.layerGroup([this.highlightFill]));
@@ -574,15 +574,15 @@ export class MapService {
       currentHighlightFill.color =
         rel.tags.colour || rel.tags.color || HIGHLIGHT_FILL.color;
       this.highlightStroke = L.polyline(latlngs, HIGHLIGHT_STROKE).bindTooltip(
-        rel.tags.name
+        rel.tags.name,
       );
       this.highlightFill = L.polyline(
         latlngs,
-        currentHighlightFill
+        currentHighlightFill,
       ).bindTooltip(rel.tags.name);
       this.highlight = L.layerGroup([
         this.highlightStroke,
-        this.highlightFill
+        this.highlightFill,
       ]).addTo(this.map);
       return true;
     } else {
@@ -592,7 +592,7 @@ export class MapService {
         alert(
           "Problem has occurred while drawing line connecting its members (no added stops?). Please add members and try again." +
             "\n\n" +
-            JSON.stringify(rel)
+            JSON.stringify(rel),
         );
       }
       return false;
@@ -620,7 +620,7 @@ export class MapService {
         return latlngFrom;
       case "Platforms":
         latlngFrom = this.findCoordinates(
-          this.storageSrv.platformsForRoute[0]
+          this.storageSrv.platformsForRoute[0],
         ); // get first and last ID reference
         return latlngFrom;
     }
@@ -633,14 +633,14 @@ export class MapService {
         latlngTo = this.findCoordinates(
           this.storageSrv.stopsForRoute[
             this.storageSrv.stopsForRoute.length - 1
-          ]
+          ],
         );
         return latlngTo;
       case "Platforms":
         latlngTo = this.findCoordinates(
           this.storageSrv.platformsForRoute[
             this.storageSrv.platformsForRoute.length - 1
-          ]
+          ],
         );
         return latlngTo;
     }
@@ -664,16 +664,16 @@ export class MapService {
       {
         className: "from-to-label",
         offset: [0, 0],
-        permanent: true
-      }
+        permanent: true,
+      },
     );
     this.markerFrom = L.circleMarker(latlngFrom, FROM_TO_LABEL).bindTooltip(
       from + " (" + route + " " + ref + ")",
       {
         className: "from-to-label",
         offset: [0, 0],
-        permanent: true
-      }
+        permanent: true,
+      },
     );
     if (this.highlight) {
       this.highlight.addLayer(L.layerGroup([this.markerFrom, this.markerTo]));
@@ -736,14 +736,14 @@ export class MapService {
       iconUrl,
       shadowAnchor: [22, 94],
       shadowSize: [24, 24],
-      shadowUrl
+      shadowUrl,
     });
     return L.marker(latlng, {
       icon: myIcon,
       draggable: false,
       opacity: 0.8,
       riseOnHover: true,
-      title: fp.name || fp.id || ""
+      title: fp.name || fp.id || "",
     });
   }
 

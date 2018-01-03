@@ -12,9 +12,9 @@ import { IPtRouteMasterNew } from "../../core/ptRouteMasterNew.interface";
   selector: "relation-browser",
   styles: [
     require<any>("./relation-browser.component.less"),
-    require<any>("../../styles/main.less")
+    require<any>("../../styles/main.less"),
   ],
-  template: require<any>("./relation-browser.component.html")
+  template: require<any>("./relation-browser.component.html"),
 })
 export class RelationBrowserComponent {
   private currentElement: IPtRouteMasterNew;
@@ -25,7 +25,7 @@ export class RelationBrowserComponent {
   constructor(
     private editSrv: EditService,
     private processSrv: ProcessService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     //
   }
@@ -68,7 +68,7 @@ export class RelationBrowserComponent {
       this.storageSrv.elementsMap.get(relId),
       true,
       false,
-      true
+      true,
     );
   }
 
@@ -94,7 +94,7 @@ export class RelationBrowserComponent {
   private changeRouteMasterMembers(routeMasterId: number): void {
     this.editSrv.changeRouteMasterMembers(
       this.currentElement.id,
-      routeMasterId
+      routeMasterId,
     );
   }
 

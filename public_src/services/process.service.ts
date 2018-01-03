@@ -27,7 +27,7 @@ export class ProcessService {
   constructor(
     private loadSrv: LoadService,
     private mapSrv: MapService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     // this.mapSrv.popupBtnClick.subscribe(
     //     (data) => {
@@ -53,12 +53,12 @@ export class ProcessService {
         const element = this.getElementById(featureId);
         if (!element) {
           alert(
-            "Problem occured - clicked element was not found?! Select different element please."
+            "Problem occured - clicked element was not found?! Select different element please.",
           );
         }
         console.log("LOG (processing s.) Selected element is ", element);
         this.refreshTagView(element);
-      }
+      },
     );
   }
 
@@ -81,7 +81,7 @@ export class ProcessService {
       this.storageSrv.listOfStops.length > 1000
     ) {
       return console.log(
-        "LOG (processing s.) filtering of stops in map bounds was stopped (too much data - limit 1000 nodes)."
+        "LOG (processing s.) filtering of stops in map bounds was stopped (too much data - limit 1000 nodes).",
       );
     }
     this.mapSrv.bounds = this.mapSrv.map.getBounds();
@@ -159,7 +159,7 @@ export class ProcessService {
   public addPositionToUrlHash(): void {
     const center = this.mapSrv.map.getCenter();
     window.location.hash = `map=${this.mapSrv.map.getZoom()}/${center.lat.toFixed(
-      5
+      5,
     )}/${center.lng.toFixed(5)}`;
   }
 
@@ -182,7 +182,7 @@ export class ProcessService {
     });
     console.log(
       "LOG (processing s.) Total # of master rel. (route_master)",
-      this.storageSrv.listOfMasters.length
+      this.storageSrv.listOfMasters.length,
     );
     this.storageSrv.logStats();
 
@@ -248,7 +248,7 @@ export class ProcessService {
       L.rectangle(polyline.getBounds(), {
         color: "#000000",
         fill: false,
-        weight: 2
+        weight: 2,
       })
         .bindTooltip(area["tags"].name)
         .addTo(this.mapSrv.map);
@@ -286,7 +286,7 @@ export class ProcessService {
   public refreshTagView(element: any): void {
     if (element) {
       this.storageSrv.currentElementsChange.emit(
-        JSON.parse(JSON.stringify(element))
+        JSON.parse(JSON.stringify(element)),
       );
       this.refreshSidebarView("tag");
     } else {
@@ -320,7 +320,7 @@ export class ProcessService {
     rel: any,
     refreshTagView?: boolean,
     refreshMasterView?: boolean,
-    zoomToElement?: boolean
+    zoomToElement?: boolean,
   ): void {
     this.mapSrv.clearCircleHighlight();
     const missingElements = [];
@@ -330,7 +330,7 @@ export class ProcessService {
       "stop_entry_only",
       "platform",
       "platform_exit_only",
-      "platform_entry_only"
+      "platform_entry_only",
     ];
     // skip for new (created) relations
     if (rel.id > 0) {
@@ -352,11 +352,11 @@ export class ProcessService {
     ) {
       console.log(
         "LOG (processing s.) Relation is not completely downloaded. Missing: " +
-          missingElements.join(", ")
+          missingElements.join(", "),
       );
       this.membersToDownload.emit({
         rel,
-        missingElements
+        missingElements,
       });
     } else if (
       this.storageSrv.elementsDownloaded.has(rel.id) ||
@@ -375,7 +375,7 @@ export class ProcessService {
           missingElements.length +
           " , # of members " +
           rel["members"].length +
-          JSON.stringify(rel)
+          JSON.stringify(rel),
       );
     }
     if (refreshMasterView) {
@@ -396,7 +396,7 @@ export class ProcessService {
   public downloadedMissingMembers(
     rel: any,
     zoomToElement: boolean,
-    refreshTagView: boolean
+    refreshTagView: boolean,
   ): void {
     if (this.mapSrv.highlightIsActive()) {
       this.mapSrv.clearHighlight();
@@ -408,10 +408,10 @@ export class ProcessService {
       if (zoomToElement) {
         console.log(
           "LOG (processing s.) fitBounds",
-          this.mapSrv.highlightStroke.length
+          this.mapSrv.highlightStroke.length,
         );
         this.mapSrv.map.fitBounds(
-          this.mapSrv.highlightStroke.getBounds()
+          this.mapSrv.highlightStroke.getBounds(),
         );
       }
     }
@@ -427,7 +427,7 @@ export class ProcessService {
   public exploreMaster(rel: any): void {
     if (rel.members.length === 0) {
       return alert(
-        "Problem occured - this relation doesn't contain any route variants."
+        "Problem occured - this relation doesn't contain any route variants.",
       );
     }
     // if (this.mapSrv.highlightIsActive()) this.mapSrv.clearHighlight();
@@ -437,11 +437,11 @@ export class ProcessService {
     // }
     console.log(
       "LOG (processing s.) First master's variant was found: ",
-      this.storageSrv.elementsMap.has(rel.members[0].ref)
+      this.storageSrv.elementsMap.has(rel.members[0].ref),
     );
     if (!this.storageSrv.elementsMap.has(rel.members[0].ref)) {
       return alert(
-        "Problem occured - first route_master's variant isn't fully downloaded."
+        "Problem occured - first route_master's variant isn't fully downloaded.",
       );
     }
     // explore first variant and focus tag/rel. browsers on selected master rel.
@@ -449,7 +449,7 @@ export class ProcessService {
       this.getElementById(rel.members[0].ref),
       false,
       false,
-      false
+      false,
     );
     // this.mapSrv.showRelatedRoutes(routeVariants);
     this.refreshTagView(rel);
@@ -467,7 +467,7 @@ export class ProcessService {
     stop: any,
     filterRelations: boolean,
     refreshTags: boolean,
-    zoomTo: boolean
+    zoomTo: boolean,
   ): void {
     if (this.mapSrv.highlightIsActive()) {
       this.mapSrv.clearHighlight();
@@ -519,10 +519,10 @@ export class ProcessService {
         const stop = this.getElementById(mem.ref);
         const stopWithMemberAttr = Object.assign(
           JSON.parse(JSON.stringify(mem)),
-          JSON.parse(JSON.stringify(stop))
+          JSON.parse(JSON.stringify(stop)),
         );
         this.storageSrv.listOfStopsForRoute.push(
-          JSON.parse(JSON.stringify(stopWithMemberAttr))
+          JSON.parse(JSON.stringify(stopWithMemberAttr)),
         );
       }
     });
@@ -539,7 +539,7 @@ export class ProcessService {
       if (!element["lat"] || !element["lon"]) {
         return alert(
           "Problem occured - element has no coordinates." +
-            JSON.stringify(element)
+            JSON.stringify(element),
         );
       } else {
         this.mapSrv.map.panTo([element["lat"], element["lon"]]);
@@ -561,7 +561,7 @@ export class ProcessService {
       if (coords.length < 2) {
         // do not zoom to point
         return alert(
-          "Problem occured - not enough coordinates to fit into their boundaries."
+          "Problem occured - not enough coordinates to fit into their boundaries.",
         );
       }
       const polyline = L.polyline(coords); // zoom to coords of a relation

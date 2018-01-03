@@ -19,7 +19,7 @@ export class GeocodeService {
     return this.http
       .get(
         "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-          encodeURIComponent(address)
+          encodeURIComponent(address),
       )
       .map((res) => res.json())
       .map((result) => {
@@ -36,12 +36,12 @@ export class GeocodeService {
         location.viewBounds = L.latLngBounds(
           {
             lat: viewPort.southwest.lat,
-            lng: viewPort.southwest.lng
+            lng: viewPort.southwest.lng,
           },
           {
             lat: viewPort.northeast.lat,
-            lng: viewPort.northeast.lng
-          }
+            lng: viewPort.northeast.lng,
+          },
         );
 
         return location;

@@ -5,6 +5,6 @@ declare var require: {
   (paths: string[], callback: (...modules: any[]) => void): void;
   ensure: (
     paths: string[],
-    callback: (require: <T>(path: string) => T) => void
+    callback: (require: <T>(path: string) => T) => void,
   ) => void;
 };

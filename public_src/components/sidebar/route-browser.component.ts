@@ -11,9 +11,9 @@ import { StorageService } from "../../services/storage.service";
   selector: "route-browser",
   styles: [
     require<any>("./route-browser.component.less"),
-    require<any>("../../styles/main.less")
+    require<any>("../../styles/main.less"),
   ],
-  template: require<any>("./route-browser.component.html")
+  template: require<any>("./route-browser.component.html"),
 })
 export class RouteBrowserComponent {
   private currentElement;
@@ -32,7 +32,7 @@ export class RouteBrowserComponent {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     //
   }
@@ -61,7 +61,7 @@ export class RouteBrowserComponent {
     this.editSrv.editingMode.subscribe((data) => {
       console.log(
         "LOG (route-browser) Editing mode change in routeBrowser - ",
-        data
+        data,
       );
       this.editingMode = data;
     });
@@ -74,7 +74,7 @@ export class RouteBrowserComponent {
       console.log(
         "LOG (route-browser) Toggle members edit",
         this.membersEditing,
-        this.storageSrv.currentElement
+        this.storageSrv.currentElement,
       );
       this.editSrv.redrawMembersHighlight();
     } else {
@@ -108,7 +108,7 @@ export class RouteBrowserComponent {
       this.storageSrv.elementsMap.get(rel.id),
       true,
       true,
-      true
+      true,
     );
   }
 
@@ -123,14 +123,14 @@ export class RouteBrowserComponent {
         this.storageSrv.elementsMap.get(rel.id),
         true,
         true,
-        true
+        true,
       );
     }
   }
 
   private exploreMaster($event: any, rel: any): void {
     this.processSrv.exploreMaster(
-      this.storageSrv.elementsMap.get(rel.id)
+      this.storageSrv.elementsMap.get(rel.id),
     );
   }
 
@@ -170,7 +170,7 @@ export class RouteBrowserComponent {
           if (
             this.mapSrv.map.getBounds().contains({
               lat: element.lat,
-              lng: element.lon
+              lng: element.lon,
             })
           ) {
             return "visible"; // return true while at least first node is visible

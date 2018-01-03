@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input
+  Input,
 } from "@angular/core";
 
 import { EditService } from "../../services/edit.service";
@@ -17,9 +17,9 @@ import { IOsmEntity } from "../../core/osmEntity.interface";
   selector: "tag-browser",
   styles: [
     require<any>("./tag-browser.component.less"),
-    require<any>("../../styles/main.less")
+    require<any>("../../styles/main.less"),
   ],
-  template: require<any>("./tag-browser.component.html")
+  template: require<any>("./tag-browser.component.html"),
 })
 export class TagBrowserComponent {
   @Input() public tagKey: string = "";
@@ -56,7 +56,7 @@ export class TagBrowserComponent {
     "tactile_paving",
     "type",
     "uic_name",
-    "uic_ref"
+    "uic_ref",
   ];
   private expectedValues = [
     "aerialway",
@@ -84,14 +84,14 @@ export class TagBrowserComponent {
     "train",
     "tram",
     "trolleybus",
-    "yes"
+    "yes",
   ];
 
   constructor(
     private cd: ChangeDetectorRef,
     private editSrv: EditService,
     private processSrv: ProcessService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     //
   }
@@ -103,7 +103,7 @@ export class TagBrowserComponent {
           "LOG (tag-browser) Current selected element changed - ",
           data,
           this.currentElement,
-          this.storageSrv.currentElement
+          this.storageSrv.currentElement,
         );
         delete this.currentElement;
         this.currentElement = this.storageSrv.currentElement;
@@ -116,10 +116,10 @@ export class TagBrowserComponent {
     this.editSrv.editingMode.subscribe((data) => {
         console.log(
           "LOG (tag-browser) Editing mode change in tagBrowser - ",
-          data
+          data,
         );
         this.editingMode = data;
-      }
+      },
     );
   }
 
@@ -139,12 +139,12 @@ export class TagBrowserComponent {
           change = {
             from: {
               key,
-              value: this.currentElement.tags[key]
+              value: this.currentElement.tags[key],
             },
             to: {
               key: event.target.value,
-              value: this.currentElement.tags[key]
-            }
+              value: this.currentElement.tags[key],
+            },
           };
           if (this.checkUnchanged(change)) {
             return;
@@ -158,12 +158,12 @@ export class TagBrowserComponent {
           change = {
             from: {
               key,
-              value: this.currentElement.tags[key]
+              value: this.currentElement.tags[key],
             },
             to: {
               key,
-              value: event.target.value
-            }
+              value: event.target.value,
+            },
           };
           if (this.checkUnchanged(change)) {
             return;
@@ -181,13 +181,13 @@ export class TagBrowserComponent {
         key,
         this.currentElement.tags[key],
         " for object: ",
-        this.currentElement
+        this.currentElement,
       );
       this.currentElement.tags[this.tagKey] = this.tagValue;
       this.storageSrv.currentElement.tags[this.tagKey] = this.tagValue;
       change = {
         key: this.tagKey,
-        value: this.tagValue
+        value: this.tagValue,
       };
       this.tagKey = this.tagValue = "";
     } else if (type === "remove tag") {
@@ -196,7 +196,7 @@ export class TagBrowserComponent {
         " for object: ", this.currentElement);
       change = {
         key,
-        value: this.currentElement.tags[key]
+        value: this.currentElement.tags[key],
       };
 
       delete this.currentElement.tags[key];
@@ -225,7 +225,7 @@ export class TagBrowserComponent {
     } else {
       return alert(
         "Problem occured - unknown problem in toggle " +
-          JSON.stringify(this.currentElement)
+          JSON.stringify(this.currentElement),
       );
     }
   }

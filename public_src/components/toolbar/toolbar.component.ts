@@ -16,9 +16,9 @@ import { IOsmEntity } from "../../core/osmEntity.interface";
   selector: "toolbar",
   styles: [
     require<any>("./toolbar.component.less"),
-    require<any>("../../styles/main.less")
+    require<any>("../../styles/main.less"),
   ],
-  template: require<any>("./toolbar.component.html")
+  template: require<any>("./toolbar.component.html"),
 })
 export class ToolbarComponent {
   public downloading: boolean;
@@ -36,7 +36,7 @@ export class ToolbarComponent {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     this.downloading = true;
     this.filtering = this.confSrv.cfgFilterLines;
@@ -44,7 +44,7 @@ export class ToolbarComponent {
       if (data === "tag") {
         console.log(
           "LOG (toolbar) Current selected element changed - ",
-          data, this.currentElement, this.storageSrv.currentElement
+          data, this.currentElement, this.storageSrv.currentElement,
         );
         this.currentElement = this.storageSrv.currentElement;
       }
@@ -80,7 +80,7 @@ export class ToolbarComponent {
         this.storageSrv.elementsMap.get(this.currentElement.id),
         true,
         false,
-        false
+        false,
       );
     }
   }

@@ -8,9 +8,9 @@ import { MapService } from "../../services/map.service";
   selector: "navigator",
   styles: [
     require<any>("./navigator.component.less"),
-    require<any>("../../styles/main.less")
+    require<any>("../../styles/main.less"),
   ],
-  template: require<any>("./navigator.component.html")
+  template: require<any>("./navigator.component.html"),
 })
 export class NavigatorComponent {
   public address: string;
@@ -19,7 +19,7 @@ export class NavigatorComponent {
 
   constructor(
     private geocodeSrv: GeocodeService,
-    private mapSrv: MapService
+    private mapSrv: MapService,
   ) {
     this.address = "";
   }
@@ -40,7 +40,7 @@ export class NavigatorComponent {
         this.map.fitBounds(location.viewBounds, {});
         this.address = location.address;
       },
-      (error) => console.error(error)
+      (error) => console.error(error),
     );
   }
 }

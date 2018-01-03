@@ -24,7 +24,7 @@ import {
   CarouselModule,
   ModalModule,
   TooltipModule,
-  TypeaheadModule
+  TypeaheadModule,
 } from "ngx-bootstrap";
 
 import { AppComponent } from "./components/app/app.component";
@@ -64,7 +64,7 @@ import { KeysPipe } from "./components/pipes/keys.pipe";
     ToolbarComponent,
     TransporterComponent,
 
-    KeysPipe
+    KeysPipe,
   ],
   imports: [
     AccordionModule.forRoot(),
@@ -78,7 +78,7 @@ import { KeysPipe } from "./components/pipes/keys.pipe";
     HttpModule,
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
-    TypeaheadModule.forRoot()
+    TypeaheadModule.forRoot(),
   ],
   providers: [
     AuthService,
@@ -91,8 +91,8 @@ import { KeysPipe } from "./components/pipes/keys.pipe";
     ProcessService,
     StorageService,
 
-    KeysPipe
-  ]
+    KeysPipe,
+  ],
 })
 export class AppModule {}
 

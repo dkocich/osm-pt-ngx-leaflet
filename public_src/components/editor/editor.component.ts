@@ -12,9 +12,9 @@ import { ModalDirective } from "ngx-bootstrap";
   selector: "editor",
   styles: [
     require<any>("./editor.component.less"),
-    require<any>("../../styles/main.less")
+    require<any>("../../styles/main.less"),
   ],
-  template: require<any>("./editor.component.html")
+  template: require<any>("./editor.component.html"),
 })
 export class EditorComponent {
   @ViewChild("editModal") public editModal: ModalDirective;
@@ -27,7 +27,7 @@ export class EditorComponent {
     private authSrv: AuthService,
     private editSrv: EditService,
     private mapSrv: MapService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     //
   }
@@ -92,7 +92,7 @@ export class EditorComponent {
   private stepBackward(): void {
     this.currentEditStep--;
     this.editSrv.currentTotalSteps.emit({
-      current: this.currentEditStep, total: this.totalEditSteps
+      current: this.currentEditStep, total: this.totalEditSteps,
     });
     this.editSrv.step("backward");
   }
@@ -104,7 +104,7 @@ export class EditorComponent {
     this.currentEditStep++;
     console.log("LOG (editor)", this.currentEditStep, this.totalEditSteps);
     this.editSrv.currentTotalSteps.emit({
-      current: this.currentEditStep, total: this.totalEditSteps
+      current: this.currentEditStep, total: this.totalEditSteps,
     });
     this.editSrv.step("forward");
   }

@@ -12,6 +12,6 @@ export interface IPtRouteMasterNew extends IOsmEntity {
     name: string,
     wheelchair: "yes" | "no" | "limited" | "designated" | "",
     colour: string,
-    "public_transport:version": "2"
+    "public_transport:version": "2",
   };
 }

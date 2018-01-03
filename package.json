@@ -27,7 +27,7 @@
     "build-prod": "webpack -p --config webpack/webpack.config.prod.js --colors",
     "create-analyzer": "webpack --config webpack/webpack.config.analyzer.js --colors",
     "create-visualizer": "webpack --config webpack/webpack.config.visualizer.js --colors",
-    "lint": "tslint -c tslint.json public_src/**/*.ts",
+    "lint": "tslint -c tslint.json public_src/**/*.ts public_src/components/**/*.ts public_src/*.ts",
     "postinstall": "npm run build-prod",
     "prepublish": "snyk protect",
     "start": "webpack-dev-server --content-base public/",
