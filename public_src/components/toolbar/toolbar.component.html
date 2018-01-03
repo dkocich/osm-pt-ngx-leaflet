@@ -1,52 +1,52 @@
 <button id="toggle-download" class="btn btn-default on-map" [class.btn-primary]="downloading"
         tooltip="Toggle downloading of transport data" container="body" (click)="toggleDownloading()"
         (mouseenter)="showOptions()" btnCheckbox>
-    <i class="fa fa-repeat"></i>
+  <i class="fa fa-repeat"></i>
 </button>
 
 <button id="toggle-filter" class="btn btn-default on-map hidden" [class.btn-primary]="filtering"
         tooltip="Toggle view of routes in map" container="body" (click)="toggleLinesFilter()" btnCheckbox>
-    <i class="fa fa-filter"></i>
+  <i class="fa fa-filter"></i>
 </button>
 
 <transporter></transporter>
 
 <div id="radio-highlight" *ngIf="highlightIsActive() && isRelation()">
-    <div class="btn-group">
-        <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()" [ngClass]="{'text-uppercase': htRadioModel === 'Stops'}"
-               tooltip="Highlight connectivity between route's stops" container="body" btnRadio="Stops">Stops</label>
-        <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()" [ngClass]="{'text-uppercase': htRadioModel === 'Platforms'}"
-               tooltip="Highlight connectivity between route's platforms" container="body" btnRadio="Platforms">Platforms</label>
-    </div>
+  <div class="btn-group">
+    <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()" [ngClass]="{'text-uppercase': htRadioModel === 'Stops'}"
+           tooltip="Highlight connectivity between route's stops" container="body" btnRadio="Stops">Stops</label>
+    <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()" [ngClass]="{'text-uppercase': htRadioModel === 'Platforms'}"
+           tooltip="Highlight connectivity between route's platforms" container="body" btnRadio="Platforms">Platforms</label>
+  </div>
 </div>
 
 <button id="clear-highlight" class="btn btn-danger on-map" *ngIf="highlightIsActive()"
         tooltip="Clear current highlight" container="body" (click)="clearHighlight()">
-    <i class="fa fa-times" aria-hidden="true"></i>
+  <i class="fa fa-times" aria-hidden="true"></i>
 </button>
 
 <editor></editor>
 
 <div id="stats" class="hidden-xs">
-    stops: {{stats.s}}, relations: {{stats.r}}, areas: {{stats.a}} masters: {{stats.m}}
+  stops: {{stats.s}}, relations: {{stats.r}}, areas: {{stats.a}} masters: {{stats.m}}
 </div>
 
 <div id="selection" class="text-center" *ngIf="currentElement">
-    <p class="medium">{{currentElement.tags.name || currentElement.tags.public_transport || ""}} (id: {{currentElement.id || ""}}, type: {{currentElement.type || ""}})</p>
-    <button type="button" class="btn btn-default col-md-6" container="body"
-            tooltip="Cancel current selection" (click)="cancelSelection()">
-        <i class="fa fa-times" aria-hidden="true"></i> Cancel
-    </button>
-    <button type="button" class="btn btn-default col-md-6" container="body"
-            tooltip="Show more information" (click)="showInfo(currentElement)">
-        <i class="fa fa-question-circle" aria-hidden="true"></i> Info
-    </button>
-    <button type="button" class="btn btn-default col-md-6" (click)="zoomTo(currentElement)" [disabled]="isDisabled()"
-            tooltip="Zoom to current element" container="body">
-        <i class="fa fa-search" aria-hidden="true"></i> Show
-    </button>
-    <button type="button" class="btn btn-default col-md-6 visible-md visible-lg" (click)="getLoadAndZoomUrl()" [disabled]="isDisabled()"
-            tooltip="Open current element in JOSM" container="body">
-        <i class="fa fa-download" aria-hidden="true"></i> Open in JOSM
-    </button>
+  <p class="medium">{{currentElement.tags.name || currentElement.tags.public_transport || ""}} (id: {{currentElement.id || ""}}, type: {{currentElement.type || ""}})</p>
+  <button type="button" class="btn btn-default col-md-6" container="body"
+          tooltip="Cancel current selection" (click)="cancelSelection()">
+    <i class="fa fa-times" aria-hidden="true"></i> Cancel
+  </button>
+  <button type="button" class="btn btn-default col-md-6" container="body"
+          tooltip="Show more information" (click)="showInfo(currentElement)">
+    <i class="fa fa-question-circle" aria-hidden="true"></i> Info
+  </button>
+  <button type="button" class="btn btn-default col-md-6" (click)="zoomTo(currentElement)" [disabled]="isDisabled()"
+          tooltip="Zoom to current element" container="body">
+    <i class="fa fa-search" aria-hidden="true"></i> Show
+  </button>
+  <button type="button" class="btn btn-default col-md-6 visible-md visible-lg" (click)="getLoadAndZoomUrl()" [disabled]="isDisabled()"
+          tooltip="Open current element in JOSM" container="body">
+    <i class="fa fa-download" aria-hidden="true"></i> Open in JOSM
+  </button>
 </div>
