@@ -3,6 +3,8 @@ import { CarouselConfig, ModalDirective } from "ngx-bootstrap";
 
 import * as L from "leaflet";
 
+import { Angulartics2Piwik } from "angulartics2/piwik";
+
 import { GeocodeService } from "../../services/geocode.service";
 import { LoadService } from "../../services/load.service";
 import { MapService } from "../../services/map.service";
@@ -27,6 +29,7 @@ export class AppComponent {
   @ViewChild("helpModal") public helpModal: ModalDirective;
 
   constructor(
+    private angulartics2GoogleAnalytics: Angulartics2Piwik,
     private editSrv: EditService,
     private geocodeSrv: GeocodeService,
     private loadSrv: LoadService,
