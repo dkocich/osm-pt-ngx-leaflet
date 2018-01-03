@@ -86,8 +86,8 @@ export class MapService {
       CartoDB_dark: L.tileLayer(
         "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
         {
-          attribution: `&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap
-            </a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>`,
+          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>OpenStreetMap
+            </a> &copy; <a href='https://cartodb.com/attributions' target='_blank' rel='noopener'>CartoDB</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
         },
@@ -95,8 +95,8 @@ export class MapService {
       CartoDB_light: L.tileLayer(
         "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
         {
-          attribution: `&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap
-            </a> &copy; <a href='https://cartodb.com/attributions'>CartoDB</a>`,
+          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>OpenStreetMap
+            </a> &copy; <a href='https://cartodb.com/attributions' target='_blank' rel='noopener'>CartoDB</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
         },
@@ -126,7 +126,7 @@ export class MapService {
         "http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}",
         {
           attribution:
-            "Map &copy; 1987-2014 <a href='http://developer.here.com'>HERE</a>",
+            "Map &copy; 1987-2014 <a href='https://developer.here.com' target='_blank' rel='noopener'>HERE</a>",
           subdomains: "1234",
           mapID: "newest",
           app_id: ConfService.hereAppId,
@@ -144,7 +144,7 @@ export class MapService {
         "http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}",
         {
           attribution:
-            "Map &copy; 1987-2014 <a href='http://developer.here.com'>HERE</a>",
+            "Map &copy; 1987-2014 <a href='https://developer.here.com' target='_blank' rel='noopener'>HERE</a>",
           subdomains: "1234",
           mapID: "newest",
           app_id: ConfService.hereAppId,
@@ -159,23 +159,23 @@ export class MapService {
         },
       ),
       MapBox_imagery: L.tileLayer(
-        "http://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=" +
+        "https://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=" +
           ConfService.mapboxToken,
         {
-          attribution: `<a href='https://www.mapbox.com/about/maps/'>&copy; Mapbox</a>,
-            <a href='http://www.openstreetmap.org/about/'>&copy; OpenStreetMap</a> and
-            <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10'>Improve this map</a>`,
+          attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank' rel='noopener'>&copy; Mapbox</a>,
+            <a href='https://www.openstreetmap.org/about/' target='_blank' rel='noopener'>&copy; OpenStreetMap</a> and
+            <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10' target='_blank' rel='noopener'>Improve this map</a>`,
           maxNativeZoom: 20,
           maxZoom: 22,
         },
       ),
       MapBox_streets: L.tileLayer(
-        "http://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=" +
+        "https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=" +
           ConfService.mapboxToken,
         {
-          attribution: `<a href='https://www.mapbox.com/about/maps/'>&copy; Mapbox</a>,
-            <a href='http://www.openstreetmap.org/about/'>&copy; OpenStreetMap</a> and
-            <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10'>Improve this map</a>`,
+          attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank' rel='noopener'>&copy; Mapbox</a>,
+            <a href='https://www.openstreetmap.org/about/' target='_blank' rel='noopener'>&copy; OpenStreetMap</a> and
+            <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10' target='_blank' rel='noopener'>Improve this map</a>`,
           maxNativeZoom: 20,
           maxZoom: 22,
         },
@@ -183,17 +183,19 @@ export class MapService {
       OSM_hot: L.tileLayer(
         "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
         {
-          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
-            OpenStreetMap</a>, Tiles courtesy of <a href='https://hot.openstreetmap.org/'
+          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'
+            target='_blank' rel='noopener'> OpenStreetMap</a>
+            , Tiles courtesy of <a href='https://hot.openstreetmap.org/'
             target='_blank' rel='noopener'>Humanitarian OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
         },
       ),
       OSM_standard: L.tileLayer(
-        "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
-          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
+          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'
+            target='_blank' rel='noopener'>
             OpenStreetMap</a>, Tiles courtesy of <a href='https://openstreetmap.org/'
             target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
@@ -201,7 +203,7 @@ export class MapService {
         },
       ),
       OSM_PT: L.tileLayer("http://www.openptmap.org/tiles/{z}/{x}/{y}.png", {
-        attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
+        attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>
           OpenStreetMap</a>, Tiles courtesy of <a href='https://openptmap.org/'
           target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
         maxNativeZoom: 19,
@@ -210,7 +212,7 @@ export class MapService {
       OSM_transport: L.tileLayer(
         "http://{s}.tile2.opencyclemap.org/" + "transport/{z}/{x}/{y}.png",
         {
-          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'>
+          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>
             OpenStreetMap</a>, Tiles courtesy of <a href='https://opencyclemap.org/'
             target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
