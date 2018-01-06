@@ -10,9 +10,11 @@ import "dragula/dist/dragula.css";
 import "font-awesome/css/font-awesome.css";
 import "leaflet/dist/leaflet.css";
 
+import { APP_BASE_HREF } from "@angular/common";
 import { enableProdMode, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
+import { RouterModule, Routes } from "@angular/router";
 import { BrowserModule } from "@angular/platform-browser";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -26,6 +28,9 @@ import {
   TooltipModule,
   TypeaheadModule,
 } from "ngx-bootstrap";
+
+import { Angulartics2Module } from "angulartics2";
+import { Angulartics2Piwik } from "angulartics2/piwik";
 
 import { AppComponent } from "./components/app/app.component";
 import { AuthComponent } from "./components/auth/auth.component";
@@ -50,6 +55,10 @@ import { StorageService } from "./services/storage.service";
 
 import { KeysPipe } from "./components/pipes/keys.pipe";
 
+const ROUTES: Routes = [
+  { path: "", component: AppComponent },
+];
+
 @NgModule({
   bootstrap: [AppComponent],
   declarations: [
@@ -68,6 +77,7 @@ import { KeysPipe } from "./components/pipes/keys.pipe";
   ],
   imports: [
     AccordionModule.forRoot(),
+    Angulartics2Module.forRoot([Angulartics2Piwik]),
     BrowserAnimationsModule,
     BrowserModule,
     BusyModule,
@@ -77,6 +87,7 @@ import { KeysPipe } from "./components/pipes/keys.pipe";
     FormsModule,
     HttpModule,
     ModalModule.forRoot(),
+    RouterModule.forRoot(ROUTES),
     TooltipModule.forRoot(),
     TypeaheadModule.forRoot(),
   ],
@@ -92,6 +103,8 @@ import { KeysPipe } from "./components/pipes/keys.pipe";
     StorageService,
 
     KeysPipe,
+
+    { provide: APP_BASE_HREF, useValue : "/" },
   ],
 })
 export class AppModule {}

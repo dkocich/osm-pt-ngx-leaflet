@@ -147,6 +147,12 @@
   dependencies:
     tslib "^1.7.1"
 
+"@angular/router@5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-5.0.2.tgz#be104fb091bcec418dd3d854f8af64a03e5c679d"
+  dependencies:
+    tslib "^1.7.1"
+
 "@ngtools/json-schema@1.1.0", "@ngtools/json-schema@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@ngtools/json-schema/-/json-schema-1.1.0.tgz#c3a0c544d62392acc2813a42c8a0dc6f58f86922"
@@ -302,6 +308,10 @@ amdefine@>=0.0.4:
 angular2-busy@2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/angular2-busy/-/angular2-busy-2.0.4.tgz#82e4b1fbbcaf97bcfac09d237489cfe9e8c4b9f3"
+
+angulartics2@4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/angulartics2/-/angulartics2-4.5.0.tgz#bff8f0236126af0e726c7456be3c9af473fbece1"
 
 ansi-escapes@^1.1.0, ansi-escapes@^1.3.0:
   version "1.4.0"
