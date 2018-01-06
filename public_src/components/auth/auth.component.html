@@ -1,13 +1,13 @@
 <ul class="nav navbar-nav navbar-right">
   <li id="authenticate" *ngIf="!isAuthenticated()" (click)="authenticate()"><a href="#">
-    <i class="fa fa-user" aria-hidden="true"></i> Login</a></li>
+    <i class="fa fa-user" aria-hidden="true"></i>&nbsp;{{ 'Login' | translate }}</a></li>
   <ng-container *ngIf="isAuthenticated()">
     <li><img id="img_href" class="img-thumbnail user_thumbnail_tiny" src="{{imgHref}}" alt="X"></li>
     <li><a id="display_name" href="#">
-      <i class="fa fa-user" aria-hidden="true"></i> {{displayName}}</a>
+      <i class="fa fa-user" aria-hidden="true"></i>&nbsp;{{displayName}}</a>
     </li>
     <li id="logout" *ngIf="isAuthenticated()" (click)="logout()"><a href="#">
-      <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+      <i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;{{ 'Logout' | translate }}</a>
     </li>
   </ng-container>
 </ul>

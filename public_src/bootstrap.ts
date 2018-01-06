@@ -9,8 +9,8 @@ import "bootstrap/dist/css/bootstrap.css";
 import "dragula/dist/dragula.css";
 import "font-awesome/css/font-awesome.css";
 import "leaflet/dist/leaflet.css";
-
 import { APP_BASE_HREF } from "@angular/common";
+import { HttpClientModule, HttpClient } from "@angular/common/http";
 import { enableProdMode, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
@@ -18,10 +18,13 @@ import { RouterModule, Routes } from "@angular/router";
 import { BrowserModule } from "@angular/platform-browser";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { BusyModule } from "angular2-busy";
 import { DragulaModule } from "ng2-dragula";
 import {
   AccordionModule,
+  BsDropdownModule,
   ButtonsModule,
   CarouselModule,
   ModalModule,
@@ -34,6 +37,7 @@ import { Angulartics2Piwik } from "angulartics2/piwik";
 
 import { AppComponent } from "./components/app/app.component";
 import { AuthComponent } from "./components/auth/auth.component";
+import { LangComponent } from "./components/lang/lang.component";
 import { EditorComponent } from "./components/editor/editor.component";
 import { NavigatorComponent } from "./components/navigator/navigator.component";
 import { RelationBrowserComponent } from "./components/sidebar/relation-browser.component";
@@ -55,6 +59,10 @@ import { StorageService } from "./services/storage.service";
 
 import { KeysPipe } from "./components/pipes/keys.pipe";
 
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
+
 const ROUTES: Routes = [
   { path: "", component: AppComponent },
 ];
@@ -65,6 +73,7 @@ const ROUTES: Routes = [
     AppComponent,
     AuthComponent,
     EditorComponent,
+    LangComponent,
     NavigatorComponent,
     RelationBrowserComponent,
     RouteBrowserComponent,
@@ -78,6 +87,7 @@ const ROUTES: Routes = [
   imports: [
     AccordionModule.forRoot(),
     Angulartics2Module.forRoot([Angulartics2Piwik]),
+    BsDropdownModule.forRoot(),
     BrowserAnimationsModule,
     BrowserModule,
     BusyModule,
@@ -86,9 +96,17 @@ const ROUTES: Routes = [
     DragulaModule,
     FormsModule,
     HttpModule,
+    HttpClientModule,
     ModalModule.forRoot(),
     RouterModule.forRoot(ROUTES),
     TooltipModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
     TypeaheadModule.forRoot(),
   ],
   providers: [

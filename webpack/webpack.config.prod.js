@@ -85,6 +85,9 @@ module.exports = {
       canPrint: true
     }),
     new CopyWebpackPlugin([{
+      from:'public_src/assets',
+      to: 'assets'
+    }, {
       from: "public_src/images",
       to: "images"
     }, {
