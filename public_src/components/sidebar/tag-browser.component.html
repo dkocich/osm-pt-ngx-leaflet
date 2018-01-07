@@ -1,84 +1,84 @@
 <div class="panel-group">
-    <div class="panel panel-heading panel-default">
-        <h4 class="text-center text-danger" *ngIf="!currentElement">Please select a feature to browse tags.</h4>
-        <div *ngIf="currentElement" class="medium">
-            <div class="text-center" *ngIf="editingMode && (currentElement.tags.type === 'route_master' ||
+  <div class="panel panel-heading panel-default">
+    <h4 class="text-center text-danger" *ngIf="!currentElement">Please select a feature to browse tags.</h4>
+    <div *ngIf="currentElement" class="medium">
+      <div class="text-center" *ngIf="editingMode && (currentElement.tags.type === 'route_master' ||
                  ['platform', 'stop_position', 'station'].indexOf(currentElement.tags.public_transport) > -1)">
-                <button class="btn btn-default" [class.btn-primary]="currentElement.tags.train === 'yes'"
-                        tooltip="Train" container="body" (click)="toggleType('train')" btnCheckbox>
-                    <i class="fa fa-train"> Train</i>
-                </button>
-                <button class="btn btn-default" [class.btn-primary]="currentElement.tags.subway === 'yes'"
-                        tooltip="Subway" container="body" (click)="toggleType('subway')" btnCheckbox>
-                    <i class="fa fa-subway"> Subway</i>
-                </button>
-                <button class="btn btn-default" [class.btn-primary]="currentElement.tags.monorail === 'yes'"
-                        tooltip="Monorail" container="body" (click)="toggleType('monorail')" btnCheckbox>
-                    <i class="fa fa-train"> Monorail</i>
-                </button>
-                <button class="btn btn-default" [class.btn-primary]="currentElement.tags.tram === 'yes'"
-                        tooltip="Tram" container="body" (click)="toggleType('tram')" btnCheckbox>
-                    <i class="fa fa-bus"> Tram</i>
-                </button>
-                <button class="btn btn-default" [class.btn-primary]="currentElement.tags.bus === 'yes'"
-                        tooltip="Bus" container="body" (click)="toggleType('bus')" btnCheckbox>
-                    <i class="fa fa-bus"> Bus</i>
-                </button>
-                <button class="btn btn-default" [class.btn-primary]="currentElement.tags.trolleybus === 'yes'"
-                        tooltip="Trolleybus" container="body" (click)="toggleType('trolleybus')" btnCheckbox>
-                    <i class="fa fa-bus"> Trolley</i>
-                </button>
-                <button class="btn btn-default" [class.btn-primary]="currentElement.tags.aerialway === 'yes'"
-                        tooltip="Aerialway" container="body" (click)="toggleType('aerialway')" btnCheckbox>
-                    <i class="fa fa-cogs"> Aerial</i>
-                </button>
-                <button class="btn btn-default" [class.btn-primary]="currentElement.tags.ferry === 'yes'"
-                        tooltip="Ferry" container="body" (click)="toggleType('ferry')" btnCheckbox>
-                    <i class="fa fa-ship"> Ferry</i>
-                </button>
-            </div>
-        </div>
+        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.train === 'yes'"
+                tooltip="Train" container="body" (click)="toggleType('train')" btnCheckbox>
+          <i class="fa fa-train"> Train</i>
+        </button>
+        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.subway === 'yes'"
+                tooltip="Subway" container="body" (click)="toggleType('subway')" btnCheckbox>
+          <i class="fa fa-subway"> Subway</i>
+        </button>
+        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.monorail === 'yes'"
+                tooltip="Monorail" container="body" (click)="toggleType('monorail')" btnCheckbox>
+          <i class="fa fa-train"> Monorail</i>
+        </button>
+        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.tram === 'yes'"
+                tooltip="Tram" container="body" (click)="toggleType('tram')" btnCheckbox>
+          <i class="fa fa-bus"> Tram</i>
+        </button>
+        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.bus === 'yes'"
+                tooltip="Bus" container="body" (click)="toggleType('bus')" btnCheckbox>
+          <i class="fa fa-bus"> Bus</i>
+        </button>
+        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.trolleybus === 'yes'"
+                tooltip="Trolleybus" container="body" (click)="toggleType('trolleybus')" btnCheckbox>
+          <i class="fa fa-bus"> Trolley</i>
+        </button>
+        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.aerialway === 'yes'"
+                tooltip="Aerialway" container="body" (click)="toggleType('aerialway')" btnCheckbox>
+          <i class="fa fa-cogs"> Aerial</i>
+        </button>
+        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.ferry === 'yes'"
+                tooltip="Ferry" container="body" (click)="toggleType('ferry')" btnCheckbox>
+          <i class="fa fa-ship"> Ferry</i>
+        </button>
+      </div>
     </div>
-    <div *ngIf="currentElement" class="content panel panel-body panel-default">
-        <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
-            <tbody>
-            <tr *ngFor="let tag of currentElement['tags'] | keys;">
-                <td>
-                    <ng-container *ngIf="!editingMode">{{tag.key}}</ng-container>
-                    <input type="text" *ngIf="editingMode" value="{{tag.key}}" data-type="key"
-                           (blur)="createChange('change tag', tag.key, $event)">
-                </td>
-                <td>
-                    <ng-container *ngIf="!editingMode">{{tag.value}}</ng-container>
-                    <input type="text" *ngIf="editingMode" value="{{tag.value}}" data-type="value"
-                           (blur)="createChange('change tag', tag.key, $event)" >
-                </td>
-                <td *ngIf="editingMode">
-                    <button class="btn btn-sm btn-danger glyphicon glyphicon-minus"
-                            aria-hidden="true" tooltip="Remove tag" container="body"
-                            (click)="createChange('remove tag', tag.key)"></button>
-                </td>
-            </tr>
-            <tr *ngIf="editingMode">
-                <td>
-                    <input #k class="form-control" id="inputkey" type="text" [ngModel]="tagKey"
-                           (ngModelChange)="keyChange($event)" (keyup.enter)="updateKey(k.value)"
-                           (blur)="updateKey(k.value)" placeholder="Add new tag" minlength="1"
-                           [typeahead]="expectedKeys" required>
-                </td>
-                <td>
-                    <input #v class="form-control" id="inputvalue" type="text" [ngModel]="tagValue"
-                           (ngModelChange)="valueChange($event)" (keyup.enter)="updateValue(v.value)"
-                           (blur)="updateValue(v.value)" placeholder="Add new value" minlength="1"
-                           [typeahead]="expectedValues" required>
-                </td>
-                <td>
-                    <button class="btn btn-sm btn-default glyphicon glyphicon-plus" aria-hidden="true"
-                            (click)="createChange('add tag')" [disabled]="isUnchanged()"
-                            tooltip="Create new tag" container="body"></button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+  </div>
+  <div *ngIf="currentElement" class="content panel panel-body panel-default">
+    <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
+      <tbody>
+      <tr *ngFor="let tag of currentElement['tags'] | keys;">
+        <td>
+          <ng-container *ngIf="!editingMode">{{tag.key}}</ng-container>
+          <input type="text" *ngIf="editingMode" value="{{tag.key}}" data-type="key"
+                 (blur)="createChange('change tag', tag.key, $event)">
+        </td>
+        <td>
+          <ng-container *ngIf="!editingMode">{{tag.value}}</ng-container>
+          <input type="text" *ngIf="editingMode" value="{{tag.value}}" data-type="value"
+                 (blur)="createChange('change tag', tag.key, $event)" >
+        </td>
+        <td *ngIf="editingMode">
+          <button class="btn btn-sm btn-danger glyphicon glyphicon-minus"
+                  aria-hidden="true" tooltip="Remove tag" container="body"
+                  (click)="createChange('remove tag', tag.key)"></button>
+        </td>
+      </tr>
+      <tr *ngIf="editingMode">
+        <td>
+          <input #k class="form-control" id="inputkey" type="text" [ngModel]="tagKey"
+                 (ngModelChange)="keyChange($event)" (keyup.enter)="updateKey(k.value)"
+                 (blur)="updateKey(k.value)" placeholder="Add new tag" minlength="1"
+                 [typeahead]="expectedKeys" required>
+        </td>
+        <td>
+          <input #v class="form-control" id="inputvalue" type="text" [ngModel]="tagValue"
+                 (ngModelChange)="valueChange($event)" (keyup.enter)="updateValue(v.value)"
+                 (blur)="updateValue(v.value)" placeholder="Add new value" minlength="1"
+                 [typeahead]="expectedValues" required>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-default glyphicon glyphicon-plus" aria-hidden="true"
+                  (click)="createChange('add tag')" [disabled]="isUnchanged()"
+                  tooltip="Create new tag" container="body"></button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

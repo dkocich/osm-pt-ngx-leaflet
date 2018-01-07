@@ -3,158 +3,174 @@ import { Component, ViewChild } from "@angular/core";
 import { EditorComponent } from "../editor/editor.component";
 import { TransporterComponent } from "../transporter/transporter.component";
 
-import { ConfigService } from "../../services/config.service";
+import { ConfService } from "../../services/conf.service";
 import { MapService } from "../../services/map.service";
 import { OverpassService } from "../../services/overpass.service";
-import { ProcessingService } from "../../services/processing.service";
+import { ProcessService } from "../../services/process.service";
 import { StorageService } from "../../services/storage.service";
 
 import { IOsmEntity } from "../../core/osmEntity.interface";
 
 @Component({
-    providers: [],
-    selector: "toolbar",
-    styles: [
-        require<any>("./toolbar.component.less"),
-        require<any>("../../styles/main.less")
-    ],
-    template: require<any>("./toolbar.component.html")
+  providers: [],
+  selector: "toolbar",
+  styles: [
+    require<any>("./toolbar.component.less"),
+    require<any>("../../styles/main.less"),
+  ],
+  template: require<any>("./toolbar.component.html"),
 })
 export class ToolbarComponent {
-    public downloading: boolean;
-    public htRadioModel: string;
-    @ViewChild(TransporterComponent) public transporterComponent: TransporterComponent;
-    @ViewChild(EditorComponent) public editorComponent: EditorComponent;
-    private filtering: boolean;
+  public downloading: boolean;
+  public htRadioModel: string;
+  @ViewChild(TransporterComponent)
+  public transporterComponent: TransporterComponent;
+  @ViewChild(EditorComponent) public editorComponent: EditorComponent;
+  private filtering: boolean;
 
-    private currentElement: IOsmEntity;
-    private stats = { s: 0, r: 0, a: 0, m: 0 };
+  private currentElement: IOsmEntity;
+  private stats = { s: 0, r: 0, a: 0, m: 0 };
 
-    constructor(private mapService: MapService, private overpassService: OverpassService,
-                private configService: ConfigService, private storageService: StorageService,
-                private processingService: ProcessingService) {
-        this.downloading = true;
-        this.filtering = this.configService.cfgFilterLines;
-        this.processingService.refreshSidebarViews$.subscribe(
-            (data) => {
-                if (data === "tag") {
-                    console.log("LOG (toolbar) Current selected element changed - ", data,
-                        this.currentElement, this.storageService.currentElement);
-                    this.currentElement = this.storageService.currentElement;
-                }
-            }
+  constructor(
+    private confSrv: ConfService,
+    private mapSrv: MapService,
+    private overpassSrv: OverpassService,
+    private processSrv: ProcessService,
+    private storageSrv: StorageService,
+  ) {
+    this.downloading = true;
+    this.filtering = this.confSrv.cfgFilterLines;
+    this.processSrv.refreshSidebarViews$.subscribe((data) => {
+      if (data === "tag") {
+        console.log(
+          "LOG (toolbar) Current selected element changed - ",
+          data, this.currentElement, this.storageSrv.currentElement,
         );
-        this.storageService.stats.subscribe((data) => this.stats = data);
-        this.mapService.highlightTypeEmitter.subscribe((data) => {
-            this.htRadioModel = data.highlightType;
-        });
-    }
+        this.currentElement = this.storageSrv.currentElement;
+      }
+    });
+    this.storageSrv.stats.subscribe((data) => (this.stats = data));
+    this.mapSrv.highlightTypeEmitter.subscribe((data) => {
+      this.htRadioModel = data.highlightType;
+    });
+  }
 
-    ngOnInit(): void {
-        this.mapService.disableMouseEvent("toggle-download");
-        this.mapService.disableMouseEvent("toggle-filter");
-        this.mapService.disableMouseEvent("toggle-edit");
-        this.mapService.disableMouseEvent("edits-backward-btn");
-        this.mapService.disableMouseEvent("edits-forward-btn");
-        this.mapService.disableMouseEvent("edits-count");
-    }
+  ngOnInit(): void {
+    this.mapSrv.disableMouseEvent("toggle-download");
+    this.mapSrv.disableMouseEvent("toggle-filter");
+    this.mapSrv.disableMouseEvent("toggle-edit");
+    this.mapSrv.disableMouseEvent("edits-backward-btn");
+    this.mapSrv.disableMouseEvent("edits-forward-btn");
+    this.mapSrv.disableMouseEvent("edits-count");
+  }
 
-    public Initialize(): void {
-        this.mapService.map.on("zoomend moveend", () => {
-            this.initDownloader();
-        });
-    }
+  public Initialize(): void {
+    this.mapSrv.map.on("zoomend moveend", () => {
+      this.initDownloader();
+    });
+  }
 
-    private changeHighlight(): void {
-        if (this.highlightIsActive() && this.htRadioModel !== this.mapService.highlightType) {
-            this.mapService.highlightType = this.htRadioModel;
-            this.processingService.exploreRelation(
-                this.storageService.elementsMap.get(this.currentElement.id), true, false, false);
-        }
+  private changeHighlight(): void {
+    if (
+      this.highlightIsActive() &&
+      this.htRadioModel !== this.mapSrv.highlightType
+    ) {
+      this.mapSrv.highlightType = this.htRadioModel;
+      this.processSrv.exploreRelation(
+        this.storageSrv.elementsMap.get(this.currentElement.id),
+        true,
+        false,
+        false,
+      );
     }
+  }
 
-    private initDownloader(): void {
-        if (this.checkDownloadRules()) {
-            this.overpassService.requestNewOverpassData();
-        }
+  private initDownloader(): void {
+    if (this.checkDownloadRules()) {
+      this.overpassSrv.requestNewOverpassData();
     }
+  }
 
-    private checkMinZoomLevel (): boolean {
-        return this.mapService.map.getZoom() > this.configService.minDownloadZoom;
-    }
+  private checkMinZoomLevel(): boolean {
+    return this.mapSrv.map.getZoom() > this.confSrv.minDownloadZoom;
+  }
 
-    private checkMinDistance(): boolean {
-        const lastDownloadCenterDistance = this.mapService.map.getCenter().distanceTo(this.mapService.previousCenter);
-        return lastDownloadCenterDistance > this.configService.minDownloadDistance;
-    }
+  private checkMinDistance(): boolean {
+    const lastDownloadCenterDistance = this.mapSrv.map
+      .getCenter()
+      .distanceTo(this.mapSrv.previousCenter);
+    return lastDownloadCenterDistance > this.confSrv.minDownloadDistance;
+  }
 
-    private checkDownloadRules(): boolean {
-        return this.checkMinZoomLevel() && this.checkMinDistance();
-    }
+  private checkDownloadRules(): boolean {
+    return this.checkMinZoomLevel() && this.checkMinDistance();
+  }
 
-    private toggleDownloading(): void {
-        this.downloading = !this.downloading;
-        if (this.downloading) {
-            this.mapService.map.on("zoomend moveend", () => {
-                this.initDownloader();
-            });
-        } else if (!this.downloading) {
-            this.mapService.map.off("zoomend moveend");
-        }
+  private toggleDownloading(): void {
+    this.downloading = !this.downloading;
+    if (this.downloading) {
+      this.mapSrv.map.on("zoomend moveend", () => {
+        this.initDownloader();
+      });
+    } else if (!this.downloading) {
+      this.mapSrv.map.off("zoomend moveend");
     }
+  }
 
-    /**
-     *
-     * @param selection
-     */
-    private showInfo(selection: object): void {
-        alert(JSON.stringify(selection, null, "\t"));
-    }
+  /**
+   *
+   * @param selection
+   */
+  private showInfo(selection: object): void {
+    alert(JSON.stringify(selection, null, "\t"));
+  }
 
-    private cancelSelection(): void {
-        delete this.currentElement;
-        this.currentElement = undefined;
-        this.processingService.cancelSelection();
-    }
+  private cancelSelection(): void {
+    delete this.currentElement;
+    this.currentElement = undefined;
+    this.processSrv.cancelSelection();
+  }
 
-    private isRelation(): boolean {
-        return this.currentElement && this.currentElement.type === "relation";
-    }
+  private isRelation(): boolean {
+    return this.currentElement && this.currentElement.type === "relation";
+  }
 
-    private zoomTo(selection: IOsmEntity): void {
-        this.processingService.zoomToElement(selection);
-    }
+  private zoomTo(selection: IOsmEntity): void {
+    this.processSrv.zoomToElement(selection);
+  }
 
-    private showOptions(): void {
-        document.getElementById("toggle-filter").style.display = "inline";
-        setTimeout(() => {
-            document.getElementById("toggle-filter").style.display = "none";
-        }, 5000);
-    }
+  private showOptions(): void {
+    document.getElementById("toggle-filter").style.display = "inline";
+    setTimeout(() => {
+      document.getElementById("toggle-filter").style.display = "none";
+    }, 5000);
+  }
 
-    private toggleLinesFilter(): void {
-        this.configService.cfgFilterLines = !this.configService.cfgFilterLines;
-        this.filtering = !this.filtering;
-    }
+  private toggleLinesFilter(): void {
+    this.confSrv.cfgFilterLines = !this.confSrv.cfgFilterLines;
+    this.filtering = !this.filtering;
+  }
 
-    private highlightIsActive(): boolean {
-        return this.mapService.highlightIsActive();
-    }
+  private highlightIsActive(): boolean {
+    return this.mapSrv.highlightIsActive();
+  }
 
-    private clearHighlight(): void {
-        return this.mapService.clearHighlight();
-    }
+  private clearHighlight(): void {
+    return this.mapSrv.clearHighlight();
+  }
 
-    private getLoadAndZoomUrl(): void {
-        const josmHref = "http://127.0.0.1:8111/load_and_zoom?left=" + this.mapService.map.getBounds().getWest() +
-            "&right=" + this.mapService.map.getBounds().getEast() +
-            "&top=" + this.mapService.map.getBounds().getNorth() +
-            "&bottom=" + this.mapService.map.getBounds().getSouth() +
-            "&select=" + this.currentElement.type + this.currentElement.id;
-        window.open(josmHref, "_blank");
-    }
+  private getLoadAndZoomUrl(): void {
+    const josmHref =
+      "http://127.0.0.1:8111/load_and_zoom?" +
+      "left=" + this.mapSrv.map.getBounds().getWest() +
+      "&right=" + this.mapSrv.map.getBounds().getEast() +
+      "&top=" + this.mapSrv.map.getBounds().getNorth() +
+      "&bottom=" + this.mapSrv.map.getBounds().getSouth() +
+      "&select=" + this.currentElement.type + this.currentElement.id;
+    window.open(josmHref, "_blank");
+  }
 
-    private isDisabled(): boolean {
-        return this.currentElement.id < 0;
-    }
+  private isDisabled(): boolean {
+    return this.currentElement.id < 0;
+  }
 }

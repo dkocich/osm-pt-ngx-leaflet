@@ -20,6 +20,6 @@ import { IOsmEntity } from "./osmEntity.interface";
  *  }
  */
 export interface IPtStop extends IOsmEntity {
-    lat: number;
-    lon: number;
+  lat: number;
+  lon: number;
 }

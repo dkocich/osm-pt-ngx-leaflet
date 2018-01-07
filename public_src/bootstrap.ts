@@ -10,17 +10,27 @@ import "dragula/dist/dragula.css";
 import "font-awesome/css/font-awesome.css";
 import "leaflet/dist/leaflet.css";
 
+import { APP_BASE_HREF } from "@angular/common";
 import { enableProdMode, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
+import { RouterModule, Routes } from "@angular/router";
 import { BrowserModule } from "@angular/platform-browser";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { BusyModule } from "angular2-busy";
 import { DragulaModule } from "ng2-dragula";
 import {
-    AccordionModule, ButtonsModule, CarouselModule, ModalModule, TooltipModule, TypeaheadModule
+  AccordionModule,
+  ButtonsModule,
+  CarouselModule,
+  ModalModule,
+  TooltipModule,
+  TypeaheadModule,
 } from "ngx-bootstrap";
+
+import { Angulartics2Module } from "angulartics2";
+import { Angulartics2Piwik } from "angulartics2/piwik";
 
 import { AppComponent } from "./components/app/app.component";
 import { AuthComponent } from "./components/auth/auth.component";
@@ -34,53 +44,72 @@ import { ToolbarComponent } from "./components/toolbar/toolbar.component";
 import { TransporterComponent } from "./components/transporter/transporter.component";
 
 import { AuthService } from "./services/auth.service";
-import { ConfigService } from "./services/config.service";
-import { EditingService } from "./services/editing.service";
-import { GeocodingService } from "./services/geocoding.service";
-import { LoadingService } from "./services/loading.service";
+import { ConfService } from "./services/conf.service";
+import { EditService } from "./services/edit.service";
+import { GeocodeService } from "./services/geocode.service";
+import { LoadService } from "./services/load.service";
 import { MapService } from "./services/map.service";
 import { OverpassService } from "./services/overpass.service";
-import { ProcessingService } from "./services/processing.service";
+import { ProcessService } from "./services/process.service";
 import { StorageService } from "./services/storage.service";
 
 import { KeysPipe } from "./components/pipes/keys.pipe";
 
-@NgModule({
-    bootstrap: [AppComponent],
-    declarations: [
-        AppComponent,
-        NavigatorComponent,
-        ToolbarComponent,
-        RelationBrowserComponent,
-        TagBrowserComponent,
-        RouteBrowserComponent,
-        StopBrowserComponent,
-        TransporterComponent,
-        EditorComponent,
-        AuthComponent,
-        KeysPipe
-    ],
-    imports: [AccordionModule.forRoot(), HttpModule, FormsModule, BrowserModule,
-        ModalModule.forRoot(), CarouselModule.forRoot(),
-        BusyModule, BrowserAnimationsModule, DragulaModule, TooltipModule.forRoot(),
-        ButtonsModule.forRoot(), TypeaheadModule.forRoot() ],
-    providers: [
-        MapService,
-        GeocodingService,
-        OverpassService,
-        StorageService,
-        ProcessingService,
-        ConfigService,
-        LoadingService,
-        EditingService,
-        AuthService,
-        KeysPipe
-    ]
-})
+const ROUTES: Routes = [
+  { path: "", component: AppComponent },
+];
 
+@NgModule({
+  bootstrap: [AppComponent],
+  declarations: [
+    AppComponent,
+    AuthComponent,
+    EditorComponent,
+    NavigatorComponent,
+    RelationBrowserComponent,
+    RouteBrowserComponent,
+    StopBrowserComponent,
+    TagBrowserComponent,
+    ToolbarComponent,
+    TransporterComponent,
+
+    KeysPipe,
+  ],
+  imports: [
+    AccordionModule.forRoot(),
+    Angulartics2Module.forRoot([Angulartics2Piwik]),
+    BrowserAnimationsModule,
+    BrowserModule,
+    BusyModule,
+    ButtonsModule.forRoot(),
+    CarouselModule.forRoot(),
+    DragulaModule,
+    FormsModule,
+    HttpModule,
+    ModalModule.forRoot(),
+    RouterModule.forRoot(ROUTES),
+    TooltipModule.forRoot(),
+    TypeaheadModule.forRoot(),
+  ],
+  providers: [
+    AuthService,
+    ConfService,
+    EditService,
+    GeocodeService,
+    LoadService,
+    MapService,
+    OverpassService,
+    ProcessService,
+    StorageService,
+
+    KeysPipe,
+
+    { provide: APP_BASE_HREF, useValue : "/" },
+  ],
+})
 export class AppModule {}
 
 if (window.location.hostname !== "localhost") {
-    enableProdMode(); // run angular development mode outside testing environment
+  enableProdMode(); // run angular development mode outside testing environment
 }
 platformBrowserDynamic().bootstrapModule(AppModule);
