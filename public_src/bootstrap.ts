@@ -57,7 +57,7 @@ import { OverpassService } from "./services/overpass.service";
 import { ProcessService } from "./services/process.service";
 import { StorageService } from "./services/storage.service";
 
-import { KeysPipe } from "./components/pipes/keys.pipe";
+import { KeysPipe } from "./pipes/keys.pipe";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
