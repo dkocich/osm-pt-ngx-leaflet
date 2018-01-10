@@ -54,11 +54,10 @@
       <div class="modal-body">
         <ul class="list-group" *ngFor="let rel of listOfMasters; trackBy: trackByFn">
           <li class="list-group-item">
-            <button type="button" class="btn btn-primary text-center" container="body"
+            <button type="button" class="btn btn-primary text-center fa fa-plus-square" container="body"
                     tooltip="{{ 'Add a route to the members of a route_master' | translate }}"
                     [disabled]="isAlreadyAdded(rel.id)"
                     (click)="changeRouteMasterMembers(rel.id)">
-              <span class="glyphicon glyphicon-plus"></span>
             </button>
             {{rel.tags.route_master || "#ROUTE_MASTER"}} <i>route <b>MASTER</b> ({{ rel.members.length }} members)</i> {{rel.tags.ref || "#REF"}}: {{rel.tags.name || "#NAME"}} (ID: {{ rel.id }} , author: {{ rel.user }})
           </li>

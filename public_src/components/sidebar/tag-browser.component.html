@@ -86,7 +86,7 @@
                  (blur)="createChange('change tag', tag.key, $event)" >
         </td>
         <td *ngIf="editingMode">
-          <button class="btn btn-sm btn-danger glyphicon glyphicon-minus"
+          <button class="btn btn-sm btn-danger fa fa-minus"
                   aria-hidden="true" container="body"
                   tooltip="{{ 'Remove tag' | translate }}"
                   (click)="createChange('remove tag', tag.key)">
@@ -115,7 +115,7 @@
                  required>
         </td>
         <td>
-          <button class="btn btn-sm btn-default glyphicon glyphicon-plus" aria-hidden="true" container="body"
+          <button class="btn btn-sm btn-primary fa fa-plus" aria-hidden="true" container="body"
                   tooltip="{{ 'Create a new tag' | translate }}"
                   [disabled]="isUnchanged()"
                   (click)="createChange('add tag')">
