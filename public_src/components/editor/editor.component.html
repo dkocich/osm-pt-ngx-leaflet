@@ -1,13 +1,22 @@
-<button *ngIf="isAuthenticated()" id="toggle-edit" class="btn btn-default on-map" [class.btn-primary]="editing"
-        tooltip="Enable edit mode" container="body" (click)="toggleEditMode()" btnCheckbox>
+<button id="toggle-edit" class="btn btn-default on-map" container="body"
+        *ngIf="isAuthenticated()"
+        tooltip="{{ 'Switch edit mode' | translate }}"
+        [class.btn-primary]="editing"
+        (click)="toggleEditMode()" btnCheckbox>
   <i class="fa fa-pencil" aria-hidden="true"></i>
 </button>
-<button *ngIf="editing" id="edits-backward-btn" class="btn btn-default on-map"
-        tooltip="Step back" container="body" (click)="stepBackward()" [disabled]="isInactive('backward')">
+<button id="edits-backward-btn" class="btn btn-default on-map" container="body"
+        *ngIf="editing"
+        tooltip="{{ 'Step back' | translate }}"
+        [disabled]="isInactive('backward')"
+        (click)="stepBackward()">
   <i class="fa fa-undo" aria-hidden="true"></i>
 </button>
-<button *ngIf="editing" id="edits-forward-btn" class="btn btn-default on-map"
-        tooltip="Step forward" container="body" (click)="stepForward()" [disabled]="isInactive('forward')">
+<button id="edits-forward-btn" class="btn btn-default on-map" container="body"
+        *ngIf="editing"
+        tooltip="{{ 'Step forward' | translate }}Step forward"
+        [disabled]="isInactive('forward')"
+        (click)="stepForward()">
   <i class="fa fa-repeat" aria-hidden="true"></i>
 </button>
 <span *ngIf="editing" id="edits-count" class="label label-info on-map">
@@ -15,15 +24,17 @@
 </span>
 
 <div *ngIf="editing">
-  <button id="stop-btn" type="button" class="btn btn-default on-map" [class.btn-primary]="creatingElementOfType === 'stop'"
-          tooltip="Create a new stop" container="body" (click)="createElement('stop')" disabled>
-    <img src="/images/transport/bus.png" alt="stop">
-    Stop
+  <button id="stop-btn" type="button" class="btn btn-default on-map"
+          tooltip="{{ 'Create a new stop' | translate }}" container="body"
+          [class.btn-primary]="creatingElementOfType === 'stop'"
+          (click)="createElement('stop')" disabled>
+    <img src="/images/transport/bus.png" alt="stop">&nbsp;{{ 'Stop' | translate }}
   </button>
-  <button id="platform-btn" type="button" class="btn btn-default on-map" [class.btn-primary]="creatingElementOfType === 'platform'"
-          tooltip="Create a new platform" container="body" (click)="createElement('platform')">
-    <img src="/images/transport/platform.png" alt="platform">
-    Platform
+  <button id="platform-btn" type="button" class="btn btn-default on-map" container="body"
+          tooltip="{{ 'Create a new platform' | translate }}"
+          [class.btn-primary]="creatingElementOfType === 'platform'"
+          (click)="createElement('platform')">
+    <img src="/images/transport/platform.png" alt="platform">&nbsp;{{ 'Platform' | translate }}
   </button>
 </div>
 
@@ -32,17 +43,24 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Unsaved edits were found</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="continueEditing()">
+        <h4 class="modal-title pull-left">{{ 'Unsaved edits were found' | translate }}</h4>
+        <button type="button" class="close pull-right" aria-label="Close"
+                (click)="continueEditing()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body text-center">
-        <button type="button" class="btn btn-lg btn-danger" tooltip="Delete changes" container="body" (click)="deleteEdits()">
-          <span class="glyphicon glyphicon-trash"></span> Delete changes
+        <button type="button" class="btn btn-lg btn-danger" container="body"
+                tooltip="{{ 'Delete current changes' | translate }}"
+                (click)="deleteEdits()">
+          <span class="glyphicon glyphicon-trash"></span>
+          &nbsp;{{ 'Delete' | translate }}
         </button>
-        <button type="button" class="btn btn-lg btn-success" tooltip="Continue editing" container="body" (click)="continueEditing()">
-          <span class="glyphicon glyphicon-repeat"></span> Continue editing
+        <button type="button" class="btn btn-lg btn-success" container="body"
+                tooltip="{{ 'Continue with editing' | translate }}"
+                (click)="continueEditing()">
+          <span class="glyphicon glyphicon-repeat"></span>
+          &nbsp;{{ 'Continue' | translate }}
         </button>
       </div>
     </div>

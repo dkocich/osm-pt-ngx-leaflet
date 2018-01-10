@@ -58,6 +58,9 @@ module.exports = {
       exclude: ["index.html", "data/airports.geojson"]
     }),
     new CopyWebpackPlugin([{
+      from:'public_src/assets',
+      to: 'assets'
+    }, {
       from: "public_src/images",
       to: "images"
     }, {

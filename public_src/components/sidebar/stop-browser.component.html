@@ -1,13 +1,20 @@
 <div class="panel-group">
   <div *ngIf="listOfStops.length === 0 || filteredView || (editingMode && reorderingEnabled)"
        class="panel panel-heading panel-default text-center">
-    <h4 class="text-danger" *ngIf="listOfStops.length === 0">There are no loaded stops (zoom map).</h4>
+    <h4 class="text-danger" *ngIf="listOfStops.length === 0">{{ 'There are no loaded stops (zoom map).' | translate }}</h4>
     <ng-container *ngIf="filteredView">
-      <button class="btn btn-warning" (click)="cancelFilter()" tooltip="Cancel filter showing only route's related nodes" container="body">Cancel filter</button>
+      <button class="btn btn-warning" container="body"
+              tooltip="{{ 'Cancel filter showing only nodes related to the route' | translate }}"
+              (click)="cancelFilter()">
+        {{ 'Cancel filter' | translate }}
+      </button>
     </ng-container>
     <ng-container *ngIf="editingMode && reorderingEnabled()">
-      <button class="btn btn-warning" (click)="reorderMembers(currentElement)"
-              tooltip="Reorder members to have stops and platforms first" container="body">Reorder members</button>
+      <button class="btn btn-warning" container="body"
+              tooltip="{{ 'Reorder members to have stops and platforms first' | translate }}"
+              (click)="reorderMembers(currentElement)">
+        {{ 'Reorder members' | translate }}
+      </button>
     </ng-container>
   </div>
 
@@ -19,13 +26,14 @@
         <thead>
         <tr>
           <td><b>#</b></td>
-          <td><b>Role</b></td>
-          <td><b>Name/Id</b></td>
-          <td tooltip="route_ref" container="body"><b>Route ref.</b></td>
+          <td><b>{{ 'Role' | translate }}</b></td>
+          <td><b>{{ 'atrId' | translate }}</b></td>
+          <td tooltip="{{ 'atrRefT' | translate }}" container="body"><b>{{ 'atrRef' | translate }}</b></td>
         </tr>
         </thead>
         <tbody *ngIf="!editingMode">
-        <tr *ngFor="let stop of listOfStopsForRoute; trackBy: trackByFn; let i = index;" class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
+        <tr *ngFor="let stop of listOfStopsForRoute; trackBy: trackByFn; let i = index;"
+            class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
           <td>{{i + 1}}.</td>
           <td>{{stop.role}}</td>
           <td>
@@ -55,18 +63,20 @@
       <table class="table-responsive table-condensed table-bordered table-hover wide-table">
         <thead>
         <tr>
-          <td><b>Name/Id</b></td>
-          <td tooltip="public_transport" container="body"><b>PT</b></td>
-          <td tooltip="route_ref" container="body"><b>Route ref.</b></td>
+          <td><b>{{ 'Name/Id' | translate }}</b></td>
+          <td container="body" tooltip="{{ 'OSM public_transport tag' | translate }}"><b>PT</b></td>
+          <td container="body" tooltip="{{ 'OSM route_ref tag' | translate }}"><b>{{ 'Route ref.' | translate }}</b></td>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let stop of listOfStops; trackBy: trackByFn" id="{{stop.id}}" class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
           <td>
-            <i *ngIf="isDownloaded(stop.id)" class="fa fa-check-square-o" aria-hidden="true"
-               tooltip="Routes related to this stop were checked and downloaded" container="body"></i>
-            <i *ngIf="!isDownloaded(stop.id)" class="fa fa-question-circle" aria-hidden="true"
-               tooltip="Routes related to this stop weren't checked" container="body"></i>
+            <i class="fa fa-check-square-o" aria-hidden="true" container="body"
+               *ngIf="isDownloaded(stop.id)"
+               tooltip="{{ 'Routes related to this stop were checked and downloaded' | translate }}"></i>
+            <i class="fa fa-question-circle" aria-hidden="true" container="body"
+               *ngIf="!isDownloaded(stop.id)"
+               tooltip="{{ 'Routes related to this stop weren not checked' | translate }}"></i>
             {{stop.tags.name || stop.id}}
           </td>
           <td>{{stop.tags.public_transport}}</td>

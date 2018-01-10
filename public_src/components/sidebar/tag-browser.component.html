@@ -1,40 +1,72 @@
 <div class="panel-group">
   <div class="panel panel-heading panel-default">
-    <h4 class="text-center text-danger" *ngIf="!currentElement">Please select a feature to browse tags.</h4>
+    <h4 class="text-center text-danger" *ngIf="!currentElement">{{ 'Please select a feature to browse tags.' | translate }}</h4>
     <div *ngIf="currentElement" class="medium">
       <div class="text-center" *ngIf="editingMode && (currentElement.tags.type === 'route_master' ||
                  ['platform', 'stop_position', 'station'].indexOf(currentElement.tags.public_transport) > -1)">
-        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.train === 'yes'"
-                tooltip="Train" container="body" (click)="toggleType('train')" btnCheckbox>
-          <i class="fa fa-train"> Train</i>
+        <button class="btn btn-default" container="body"
+                tooltip="{{ 'Train' | translate }}"
+                [class.btn-primary]="currentElement.tags.train === 'yes'"
+                (click)="toggleType('train')" btnCheckbox>
+          <i class="fa fa-train">
+            <span class="hidden-xs">&nbsp;{{ 'Train' | translate }}</span>
+          </i>
         </button>
-        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.subway === 'yes'"
-                tooltip="Subway" container="body" (click)="toggleType('subway')" btnCheckbox>
-          <i class="fa fa-subway"> Subway</i>
+        <button class="btn btn-default" container="body"
+                tooltip="{{ 'Subway' | translate }}"
+                [class.btn-primary]="currentElement.tags.subway === 'yes'"
+                (click)="toggleType('subway')" btnCheckbox>
+          <i class="fa fa-subway">
+            <span class="hidden-xs">&nbsp;{{ 'Subway' | translate }}</span>
+          </i>
         </button>
-        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.monorail === 'yes'"
-                tooltip="Monorail" container="body" (click)="toggleType('monorail')" btnCheckbox>
-          <i class="fa fa-train"> Monorail</i>
+        <button class="btn btn-default" container="body"
+                tooltip="{{ 'Monorail' | translate }}"
+                [class.btn-primary]="currentElement.tags.monorail === 'yes'"
+                (click)="toggleType('monorail')" btnCheckbox>
+          <i class="fa fa-train">
+            <span class="hidden-xs">&nbsp;{{ 'Monorail' | translate }}</span>
+          </i>
         </button>
-        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.tram === 'yes'"
-                tooltip="Tram" container="body" (click)="toggleType('tram')" btnCheckbox>
-          <i class="fa fa-bus"> Tram</i>
+        <button class="btn btn-default" container="body"
+                tooltip="{{ 'Tram' | translate }}"
+                [class.btn-primary]="currentElement.tags.tram === 'yes'"
+                (click)="toggleType('tram')" btnCheckbox>
+          <i class="fa fa-bus">
+            <span class="hidden-xs">&nbsp;{{ 'Tram' | translate }}</span>
+          </i>
         </button>
-        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.bus === 'yes'"
-                tooltip="Bus" container="body" (click)="toggleType('bus')" btnCheckbox>
-          <i class="fa fa-bus"> Bus</i>
+        <button class="btn btn-default" container="body"
+                tooltip="{{ 'Bus' | translate }}"
+                [class.btn-primary]="currentElement.tags.bus === 'yes'"
+                (click)="toggleType('bus')" btnCheckbox>
+          <i class="fa fa-bus">
+            <span class="hidden-xs">&nbsp;{{ 'Bus' | translate }}</span>
+          </i>
         </button>
-        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.trolleybus === 'yes'"
-                tooltip="Trolleybus" container="body" (click)="toggleType('trolleybus')" btnCheckbox>
-          <i class="fa fa-bus"> Trolley</i>
+        <button class="btn btn-default" container="body"
+                tooltip="{{ 'Trolleybus' | translate }}"
+                [class.btn-primary]="currentElement.tags.trolleybus === 'yes'"
+                (click)="toggleType('trolleybus')" btnCheckbox>
+          <i class="fa fa-bus">
+            <span class="hidden-xs">&nbsp;{{ 'Trolleybus' | translate }}</span>
+          </i>
         </button>
-        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.aerialway === 'yes'"
-                tooltip="Aerialway" container="body" (click)="toggleType('aerialway')" btnCheckbox>
-          <i class="fa fa-cogs"> Aerial</i>
+        <button class="btn btn-default" container="body"
+                tooltip="{{ 'Aerialway' | translate }}"
+                [class.btn-primary]="currentElement.tags.aerialway === 'yes'"
+                (click)="toggleType('aerialway')" btnCheckbox>
+          <i class="fa fa-plane">
+            <span class="hidden-xs">&nbsp;{{ 'Aerialway' | translate }}</span>
+          </i>
         </button>
-        <button class="btn btn-default" [class.btn-primary]="currentElement.tags.ferry === 'yes'"
-                tooltip="Ferry" container="body" (click)="toggleType('ferry')" btnCheckbox>
-          <i class="fa fa-ship"> Ferry</i>
+        <button class="btn btn-default" container="body"
+                [class.btn-primary]="currentElement.tags.ferry === 'yes'"
+                tooltip="{{ 'Ferry' | translate }}"
+                (click)="toggleType('ferry')" btnCheckbox>
+          <i class="fa fa-ship">
+            <span class="hidden-xs">&nbsp;{{ 'fer' | translate }}</span>
+          </i>
         </button>
       </div>
     </div>
@@ -55,27 +87,39 @@
         </td>
         <td *ngIf="editingMode">
           <button class="btn btn-sm btn-danger glyphicon glyphicon-minus"
-                  aria-hidden="true" tooltip="Remove tag" container="body"
-                  (click)="createChange('remove tag', tag.key)"></button>
+                  aria-hidden="true" container="body"
+                  tooltip="{{ 'Remove tag' | translate }}"
+                  (click)="createChange('remove tag', tag.key)">
+          </button>
         </td>
       </tr>
       <tr *ngIf="editingMode">
         <td>
-          <input #k class="form-control" id="inputkey" type="text" [ngModel]="tagKey"
-                 (ngModelChange)="keyChange($event)" (keyup.enter)="updateKey(k.value)"
-                 (blur)="updateKey(k.value)" placeholder="Add new tag" minlength="1"
-                 [typeahead]="expectedKeys" required>
+          <input #k class="form-control" id="inputkey" type="text" minlength="1"
+                 placeholder="{{ 'Add new tag' | translate }}"
+                 [ngModel]="tagKey"
+                 [typeahead]="expectedKeys"
+                 (ngModelChange)="keyChange($event)"
+                 (keyup.enter)="updateKey(k.value)"
+                 (blur)="updateKey(k.value)"
+                 required>
         </td>
         <td>
-          <input #v class="form-control" id="inputvalue" type="text" [ngModel]="tagValue"
-                 (ngModelChange)="valueChange($event)" (keyup.enter)="updateValue(v.value)"
-                 (blur)="updateValue(v.value)" placeholder="Add new value" minlength="1"
-                 [typeahead]="expectedValues" required>
+          <input #v class="form-control" id="inputvalue" type="text" minlength="1"
+                 placeholder="{{ 'Add new value' | translate }}"
+                 [ngModel]="tagValue"
+                 [typeahead]="expectedValues"
+                 (ngModelChange)="valueChange($event)"
+                 (keyup.enter)="updateValue(v.value)"
+                 (blur)="updateValue(v.value)"
+                 required>
         </td>
         <td>
-          <button class="btn btn-sm btn-default glyphicon glyphicon-plus" aria-hidden="true"
-                  (click)="createChange('add tag')" [disabled]="isUnchanged()"
-                  tooltip="Create new tag" container="body"></button>
+          <button class="btn btn-sm btn-default glyphicon glyphicon-plus" aria-hidden="true" container="body"
+                  tooltip="{{ 'Create a new tag' | translate }}"
+                  [disabled]="isUnchanged()"
+                  (click)="createChange('add tag')">
+          </button>
         </td>
       </tr>
       </tbody>

@@ -1,30 +1,37 @@
 <div class="panel-group">
   <div *ngIf="listOfVariants.length === 0" class="panel panel-heading panel-default text-center">
-    <h4 class="text-center text-danger">Selected relation has no master relation.</h4>
+    <h4 class="text-center text-danger">{{ 'Selected relation has no master relation.' | translate }}</h4>
     <div *ngIf="editingMode" class="text-center">
-      <button class="btn btn-success" tooltip="Create master for currently selected element/relation"
-              container="body" (click)="createMaster()" [disabled]="hasMaster()">
-        <i class="fa fa-sitemap" aria-hidden="true"></i> Create master rel.</button>
-      <button class="btn btn-default" tooltip="Search existing master relation by attributes"
-              container="body" (click)="showMasterModal()" [disabled]="">
-        <i class="fa fa-search" aria-hidden="true"></i> Find existing master</button>
+      <button class="btn btn-success" container="body"
+              tooltip="{{ 'Create master for selected element/relation' | translate }}"
+              [disabled]="hasMaster()"
+              (click)="createMaster()">
+        <i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp;{{ 'Create master relation' | translate }}</button>
+      <button class="btn btn-default" container="body"
+              tooltip="{{ 'Search existing master relation by attributes' | translate }}"
+              [disabled]=""
+              (click)="showMasterModal()">
+        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;{{ 'Find existing master relation' | translate }}</button>
     </div>
   </div>
   <div *ngIf="listOfVariants.length > 0" class="content panel panel-body panel-default">
     This master relation contains {{listOfVariants.length}} route variants.
-    <h4>Route master's variants</h4>
+    <h4>{{ 'Variants of route_master' | translate }}</h4>
     <div *ngFor="let rel of listOfVariants; trackBy: trackByFn">
-      <ng-container *ngIf="!rel">Incomplete relation (click to download it by reference ID)...</ng-container>
+      <ng-container *ngIf="!rel">{{ 'Incomplete relation (click to download it by reference ID)...' | translate }}</ng-container>
       <ng-container *ngIf="rel">
         <div id="{{rel.id}}" class="explore" (click)="exploreRelation($event, rel.id)" [class.selected]="currentElement && isSelected(rel.id)">
           <span *ngIf="rel.id < 0">
-            <i class="fa fa-plus" tooltip="This relation is created by you" container="body" aria-hidden="true"></i>
+            <i class="fa fa-plus" container="body" aria-hidden="true"
+               tooltip="{{ 'This relation is created by you' | translate }}"></i>
           </span>
           <span *ngIf="rel.id > 0">
-            <i *ngIf="rel && isDownloaded(rel.id)" class="fa fa-check-square-o" aria-hidden="true"
-               tooltip="Route is fully downloaded" container="body"></i>
-            <i *ngIf="rel && !isDownloaded(rel.id)" class="fa fa-square-o" aria-hidden="true"
-               tooltip="Route is not fully downloaded" container="body"></i>
+            <i class="fa fa-check-square-o" aria-hidden="true" container="body"
+               *ngIf="rel && isDownloaded(rel.id)"
+               tooltip="{{ 'Route is fully downloaded' | translate }}"></i>
+            <i class="fa fa-square-o" aria-hidden="true" container="body"
+               *ngIf="rel && !isDownloaded(rel.id)"
+               tooltip="{{ 'Route is not fully downloaded' | translate }}"></i>
           </span>
           <span>{{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}</span>
         </div>
@@ -33,8 +40,9 @@
   </div>
 </div>
 
-<div id="modalMaster" class="modal fade" bsModal #masterModal="bs-modal" [config]="{backdrop: 'static'}"
-     tabindex="-1" role="dialog" aria-labelledby="myDownloadModalLabel" aria-hidden="true">
+<div id="modalMaster" class="modal fade" bsModal #masterModal="bs-modal" tabindex="-1" role="dialog"
+     aria-labelledby="myDownloadModalLabel" aria-hidden="true"
+     [config]="{backdrop: 'static'}">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -46,8 +54,10 @@
       <div class="modal-body">
         <ul class="list-group" *ngFor="let rel of listOfMasters; trackBy: trackByFn">
           <li class="list-group-item">
-            <button type="button" class="btn btn-primary text-center" (click)="changeRouteMasterMembers(rel.id)"
-                    tooltip="Add route to route_master's members" container="body" [disabled]="isAlreadyAdded(rel.id)">
+            <button type="button" class="btn btn-primary text-center" container="body"
+                    tooltip="{{ 'Add a route to the members of a route_master' | translate }}"
+                    [disabled]="isAlreadyAdded(rel.id)"
+                    (click)="changeRouteMasterMembers(rel.id)">
               <span class="glyphicon glyphicon-plus"></span>
             </button>
             {{rel.tags.route_master || "#ROUTE_MASTER"}} <i>route <b>MASTER</b> ({{ rel.members.length }} members)</i> {{rel.tags.ref || "#REF"}}: {{rel.tags.name || "#NAME"}} (ID: {{ rel.id }} , author: {{ rel.user }})
