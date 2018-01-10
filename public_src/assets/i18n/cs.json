@@ -115,5 +115,6 @@
   "Verify changeset consistency": "Verify changeset consistency",
   "Verify existence and download route_master relations for all currently available routes": "Verify existence and download route_master relations for all currently available routes",
   "Verify": "Verifikovat",
+  "We are sorry but it is not currently possible to restore any unsaved edits from the browser history. Use the save button more frequently, please.": "We are sorry but it is not currently possible to restore any unsaved edits from the browser history. Use the save button more frequently, please.",
   "Zoom to selected element": "Přiblížit na vybraný prvek"
 }
