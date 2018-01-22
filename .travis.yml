@@ -1,17 +1,17 @@
 language: node_js
 
 node_js:
-  - "node"
+- "node"
 
 install:
-  - npm install
+- npm install
 
-## Cache folders with installed NPM modules
-## to avoid downloading Cypress again and again
+  ## Cache folders with installed NPM modules
+  ## to avoid downloading Cypress again and again
 cache:
   directories:
-    - ~/.npm
-    - node_modules
+  - ~/.npm
+  - node_modules
 
 before_script:
   ## runs the 'start' script which boots our local app server
@@ -21,8 +21,14 @@ before_script:
   ## ---------------------------------------
   ## we use the '&' ampersand which tells Travis to run this process
   ## in the background else it would block execution and hang travis
-  - node server.js -- &
+- node server.js -- &
 
+- docker build -t osm-pt-leaflet-ngx .
+- docker run -d -p 127.0.0.1:80:80 --name osm-pt-leaflet-ngx osm-pt-leaflet-ngx
 script:
-  - npm run ngbuild
-  - npm run cypress-run
+- npm run ngbuild
+- npm run cypress-run
+- npm run build-dev
+- npm run build-prod
+services:
+- docker

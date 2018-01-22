@@ -1,18 +1,17 @@
-# Stage 0, based on Node.js, to build and compile Angular
-FROM node:9 as node
+FROM teracy/angular-cli
 
-WORKDIR /code
-COPY ./ /code
+MAINTAINER hoatle <hoatle@teracy.com>
 
-RUN yarn install
+# pattern YYYMMDD:HHMMSS
+# update this when we want to rebuild the image, for example, to update npm modules
+ENV REFRESHED_AT 20160922:000000
 
-# NOTE: build is currently run after installation phase automatically
-# ARG env=prod
-# RUN npm run ngbuild -- --environment $env
+ENV HOME=/usr/src/app
 
-# Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
-FROM nginx:1.14
+RUN mkdir $HOME
 
-COPY --from=node /code/public/ /usr/share/nginx/html
+COPY package.json $HOME/
 
-COPY ./nginx-custom.conf /etc/nginx/conf.d/default.conf
+WORKDIR $HOME
+
+RUN rm -rf node_modules && npm install && npm cache clean && rm -rf ~/.npm
