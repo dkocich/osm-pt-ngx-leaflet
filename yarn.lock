@@ -169,11 +169,11 @@
     source-map "^0.5.6"
     tree-kill "^1.0.0"
 
-"@ngx-translate/core@^9.0.2":
+"@ngx-translate/core@9.0.2":
   version "9.0.2"
   resolved "https://registry.yarnpkg.com/@ngx-translate/core/-/core-9.0.2.tgz#d4cab861e3ea8ea14a6df5dcd744dfeb29fb15e2"
 
-"@ngx-translate/http-loader@^2.0.1":
+"@ngx-translate/http-loader@2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@ngx-translate/http-loader/-/http-loader-2.0.1.tgz#aa67788e64bfa8652691a77b022b3b4031209113"
 
