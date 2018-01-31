@@ -6,6 +6,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin");
 const WebpackCleanupPlugin = require("webpack-cleanup-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const Jarvis = require("webpack-jarvis");
 
 const srcDir = "public_src";
 const outputDir = "../public";
@@ -72,6 +73,9 @@ module.exports = {
     }, {
       from: "public_src/manifest.json",
       to: ""
-    }])
+    }]),
+    new Jarvis({
+      port: 1337
+    })
   ]
 };
