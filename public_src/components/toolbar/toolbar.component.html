@@ -1,11 +1,16 @@
-<button id="toggle-download" class="btn btn-default on-map" [class.btn-primary]="downloading"
-        tooltip="Toggle downloading of transport data" container="body" (click)="toggleDownloading()"
-        (mouseenter)="showOptions()" btnCheckbox>
+<button id="toggle-download" class="btn btn-default on-map" container="body"
+        tooltip="{{ 'Toggle downloading of transport data' | translate }}"
+        [class.btn-primary]="downloading"
+        (click)="toggleDownloading()" (mouseenter)="showOptions()"
+        btnCheckbox>
   <i class="fa fa-repeat"></i>
 </button>
 
-<button id="toggle-filter" class="btn btn-default on-map hidden" [class.btn-primary]="filtering"
-        tooltip="Toggle view of routes in map" container="body" (click)="toggleLinesFilter()" btnCheckbox>
+<button id="toggle-filter" class="btn btn-default on-map hidden" container="body"
+        tooltip="{{ 'Toggle view of routes in map' | translate }}"
+        [class.btn-primary]="filtering"
+        (click)="toggleLinesFilter()"
+        btnCheckbox>
   <i class="fa fa-filter"></i>
 </button>
 
@@ -13,15 +18,25 @@
 
 <div id="radio-highlight" *ngIf="highlightIsActive() && isRelation()">
   <div class="btn-group">
-    <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()" [ngClass]="{'text-uppercase': htRadioModel === 'Stops'}"
-           tooltip="Highlight connectivity between route's stops" container="body" btnRadio="Stops">Stops</label>
-    <label class="btn btn-primary" [(ngModel)]="htRadioModel" (click)="changeHighlight()" [ngClass]="{'text-uppercase': htRadioModel === 'Platforms'}"
-           tooltip="Highlight connectivity between route's platforms" container="body" btnRadio="Platforms">Platforms</label>
+    <label class="btn btn-primary" container="body" btnRadio="Stops"
+           tooltip="{{ 'Highlight connectivity between platforms of a route' | translate }}"
+           [(ngModel)]="htRadioModel"
+           [ngClass]="{'text-uppercase': htRadioModel === 'Stops'}"
+           (click)="changeHighlight()">
+      {{ 'Stops' | translate }}
+    </label>
+    <label class="btn btn-primary" container="body" btnRadio="Platforms"
+           tooltip="{{ 'Highlight connectivity between stops of a route' | translate }}"
+           [(ngModel)]="htRadioModel"
+           [ngClass]="{'text-uppercase': htRadioModel === 'Platforms'}"
+           (click)="changeHighlight()">
+      {{ 'Platforms' | translate }}
+    </label>
   </div>
 </div>
 
 <button id="clear-highlight" class="btn btn-danger on-map" *ngIf="highlightIsActive()"
-        tooltip="Clear current highlight" container="body" (click)="clearHighlight()">
+        tooltip="{{ 'Disable current highlight' | translate }}" container="body" (click)="clearHighlight()">
   <i class="fa fa-times" aria-hidden="true"></i>
 </button>
 
@@ -34,19 +49,29 @@
 <div id="selection" class="text-center" *ngIf="currentElement">
   <p class="medium">{{currentElement.tags.name || currentElement.tags.public_transport || ""}} (id: {{currentElement.id || ""}}, type: {{currentElement.type || ""}})</p>
   <button type="button" class="btn btn-default col-md-6" container="body"
-          tooltip="Cancel current selection" (click)="cancelSelection()">
-    <i class="fa fa-times" aria-hidden="true"></i> Cancel
+          tooltip="{{ 'Cancel selection' | translate }}"
+          (click)="cancelSelection()">
+    <i class="fa fa-times" aria-hidden="true"></i>
+    &nbsp;{{ 'Cancel' | translate }}
   </button>
   <button type="button" class="btn btn-default col-md-6" container="body"
-          tooltip="Show more information" (click)="showInfo(currentElement)">
-    <i class="fa fa-question-circle" aria-hidden="true"></i> Info
+          tooltip="{{ 'Show more information' | translate }}"
+          (click)="showInfo(currentElement)">
+    <i class="fa fa-question-circle" aria-hidden="true"></i>
+    &nbsp;{{ 'Info' | translate }}
   </button>
-  <button type="button" class="btn btn-default col-md-6" (click)="zoomTo(currentElement)" [disabled]="isDisabled()"
-          tooltip="Zoom to current element" container="body">
-    <i class="fa fa-search" aria-hidden="true"></i> Show
+  <button type="button" class="btn btn-default col-md-6" container="body"
+          tooltip="{{ 'Zoom to selected element' | translate }}"
+          (click)="zoomTo(currentElement)"
+          [disabled]="isDisabled()">
+    <i class="fa fa-search" aria-hidden="true"></i>
+    &nbsp;{{ 'Show' | translate }}
   </button>
-  <button type="button" class="btn btn-default col-md-6 visible-md visible-lg" (click)="getLoadAndZoomUrl()" [disabled]="isDisabled()"
-          tooltip="Open current element in JOSM" container="body">
-    <i class="fa fa-download" aria-hidden="true"></i> Open in JOSM
+  <button type="button" class="btn btn-default col-md-6 visible-md visible-lg" container="body"
+          tooltip="{{ 'Open JOSM and show selected element' | translate }}"
+          (click)="getLoadAndZoomUrl()"
+          [disabled]="isDisabled()">
+    <i class="fa fa-download" aria-hidden="true"></i>
+    &nbsp;{{ 'Open in JOSM' | translate }}
   </button>
 </div>

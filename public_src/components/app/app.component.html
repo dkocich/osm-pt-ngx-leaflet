@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="navbar-header navbar-left">
       <a class="navbar-brand" href="#" scroll-to="welcome" offset="50">
-        <span class="text-capitalize">OSM public transport editor</span></a>
+        <span class="text-capitalize">{{ 'OSM public transport editor' | translate }}</span></a>
     </div>
     <!--<ul class="nav navbar-nav navbar-left">-->
       <!--<li>-->
@@ -16,19 +16,20 @@
         <!--</a>-->
       <!--</li>-->
     <!--</ul>-->
+    <lang></lang>
     <auth></auth>
     <ul class="nav navbar-nav navbar-right">
       <!--<li>-->
         <!--<a href="#" (click)="showHelpModal()">-->
-          <!--<i class="fa fa-info" aria-hidden="true"></i> Help</a>-->
+          <!--<i class="fa fa-info" aria-hidden="true"></i>&nbsp;{{ 'Help' | translate }} </a>-->
       <!--</li>-->
       <li>
         <a href="https://github.com/dkocich/osm-pt-ngx-leaflet" target="_blank" rel="noopener">
-          <i class="fa fa-github" aria-hidden="true"></i> About</a>
+          <i class="fa fa-github" aria-hidden="true"></i>&nbsp;{{ 'About' | translate}}</a>
       </li>
       <li>
         <a href="https://osm-pt.blogspot.com/" target="_blank" rel="noopener">
-          <i class="fa fa-book"></i> Blog</a>
+          <i class="fa fa-book"></i>&nbsp;{{ 'Blog' | translate}}</a>
       </li>
     </ul>
   </div>
@@ -45,33 +46,33 @@
   <accordion>
     <accordion-group #a1 [isOpen]="false" [hidden]="!editingMode">
       <div accordion-heading class="text-center text-uppercase">
-        <i class="fa fa-sitemap" aria-hidden="true"></i> Relation browser
-        <i class="pull-right float-xs-right glyphicon"
-           [ngClass]="{'glyphicon-chevron-down': a1?.isOpen, 'glyphicon-chevron-right': !a1?.isOpen}"></i>
+        <i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp;{{ 'Relations' | translate }}
+        <i class="pull-right float-xs-right fa"
+           [ngClass]="{'fa-chevron-down': a1?.isOpen, 'fa-chevron-right': !a1?.isOpen}"></i>
       </div>
       <relation-browser></relation-browser>
     </accordion-group>
     <accordion-group #a2 [isOpen]="" [hidden]="!editingMode">
       <div accordion-heading class="text-center text-uppercase">
-        <i class="fa fa-tags" aria-hidden="true"></i> Tag browser
-        <i class="pull-right float-xs-right glyphicon"
-           [ngClass]="{'glyphicon-chevron-down': a2?.isOpen, 'glyphicon-chevron-right': !a2?.isOpen}"></i>
+        <i class="fa fa-tags" aria-hidden="true"></i>&nbsp;{{ 'Tags' | translate }}
+        <i class="pull-right float-xs-right fa"
+           [ngClass]="{'fa-chevron-down': a2?.isOpen, 'fa-chevron-right': !a2?.isOpen}"></i>
       </div>
       <tag-browser></tag-browser>
     </accordion-group>
     <accordion-group #a3 [isOpen]="true">
       <div accordion-heading class="text-center text-uppercase">
-        <i class="fa fa-road" aria-hidden="true"></i> Route browser
-        <i class="pull-right float-xs-right glyphicon"
-           [ngClass]="{'glyphicon-chevron-down': a3?.isOpen, 'glyphicon-chevron-right': !a3?.isOpen}"></i>
+        <i class="fa fa-road" aria-hidden="true"></i>&nbsp;{{ 'Routes' | translate }}
+        <i class="pull-right float-xs-right fa"
+           [ngClass]="{'fa-chevron-down': a3?.isOpen, 'fa-chevron-right': !a3?.isOpen}"></i>
       </div>
       <route-browser></route-browser>
     </accordion-group>
     <accordion-group #a4 [isOpen]="true">
       <div accordion-heading class="text-center text-uppercase">
-        <i class="fa fa-map-marker" aria-hidden="true"></i> Stop/platform data browser
-        <i class="pull-right float-xs-right glyphicon"
-           [ngClass]="{'glyphicon-chevron-down': a4?.isOpen, 'glyphicon-chevron-right': !a4?.isOpen}"></i>
+        <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{ 'Stops/platforms' | translate }}
+        <i class="pull-right float-xs-right fa"
+           [ngClass]="{'fa-chevron-down': a4?.isOpen, 'fa-chevron-right': !a4?.isOpen}"></i>
       </div>
       <stop-browser></stop-browser>
     </accordion-group>
@@ -83,7 +84,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title pull-left">Help guide</h4>
+        <h4 class="modal-title pull-left">&nbsp;{{ 'Help guide' | translate }}</h4>
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideHelpModal()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -93,22 +94,22 @@
           <slide>
             <img src="../../images/help1.png" alt="First slide">
             <div class="carousel-caption">
-              <h3>First slide label</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+              <h3>{{ 'First slide label' | translate }}</h3>
+              <p>{{ 'slideText1' | translate }}</p>
             </div>
           </slide>
           <slide>
             <img src="../../images/help2.png" alt="Second slide">
             <div class="carousel-caption">
-              <h3>Second slide label</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <h3>{{ 'Second slide label' | translate }}</h3>
+              <p>{{ 'slideText2' | translate }}</p>
             </div>
           </slide>
           <slide>
             <img src="../../images/help3.png" alt="Third slide">
             <div class="carousel-caption">
-              <h3>Third slide label</h3>
-              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+              <h3>{{ 'Third slide label' | translate }}</h3>
+              <p>{{ 'slideText3' | translate }}</p>
             </div>
           </slide>
         </carousel>

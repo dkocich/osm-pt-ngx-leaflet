@@ -34,3 +34,8 @@ This project was made possible by Google/OSM during the [GSOC 2017](https://summ
 
 Thanks to [haolingyu](https://github.com/haoliangyu) for his work on [Ngx-leaflet-starter](https://github.com/haoliangyu/ngx-leaflet-starter)
  and [Ngx-MapboxGL-starter](https://github.com/haoliangyu/ngx-mapboxgl-starter) example demos.
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/dkocich/osm-pt-ngx-leaflet/badge.svg?style=beer-square)](https://beerpay.io/dkocich/osm-pt-ngx-leaflet)  [![Beerpay](https://beerpay.io/dkocich/osm-pt-ngx-leaflet/make-wish.svg?style=flat-square)](https://beerpay.io/dkocich/osm-pt-ngx-leaflet?focus=wish)
