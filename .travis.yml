@@ -1,8 +1,28 @@
 language: node_js
+
 node_js:
   - "node"
+
 install:
   - npm install
+
+## Cache folders with installed NPM modules
+## to avoid downloading Cypress again and again
+cache:
+  directories:
+    - ~/.npm
+    - node_modules
+
+before_script:
+  ## runs the 'start' script which boots our local app server
+  ## on port 8080 which Cypress expects to be running
+  ## -----------------------------------
+  ## https://docs.npmjs.com/cli/start
+  ## ---------------------------------------
+  ## we use the '&' ampersand which tells Travis to run this process
+  ## in the background else it would block execution and hang travis
+  - node server.js -- &
+
 script:
   - npm run build-dev
   - npm run build-prod
