@@ -24,7 +24,7 @@ Visit the [wiki page](https://github.com/dkocich/osm-pt-ngx-leaflet/wiki) for mo
 
 ## Communication
 
-Contact me on Slack [osm-pt.slack.com](https://osm-pt.slack.com/).
+Contact me on Slack [osm-pt.slack.com](https://join.slack.com/t/osm-pt/shared_invite/enQtMjkzOTU1NTA3MTU5LWVkMWNlMTRkOTU5ZDcxMTExYzZmM2U3OTE4NDFjZTM3MmExMTQzMzRhY2VjOTYyMmI3ZjRmYjI3OWUwNDZkMWQ).
 
 ## Acknowledgment
 
