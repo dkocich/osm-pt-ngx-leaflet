@@ -33,3 +33,6 @@ public/**/*
 
 # VSCode settings
 .vscode
+
+# Cypress tests
+cypress/videos
