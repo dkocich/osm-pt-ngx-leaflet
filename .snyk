@@ -12,4 +12,11 @@ ignore:
     - osmtogeojson > geojson-rewind > concat-stream:
         reason: None given
         expires: '2017-08-27T16:56:23.878Z'
-patch: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:debug:20170905':
+    - karma > log4js > mailgun-js > debug:
+        patched: '2018-02-23T16:55:12.708Z'
+  'npm:ms:20170412':
+    - karma > log4js > mailgun-js > debug > ms:
+        patched: '2018-02-23T16:55:12.708Z'
