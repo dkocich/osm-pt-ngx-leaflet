@@ -29,7 +29,9 @@
     "create-visualizer": "webpack --config webpack/webpack.config.visualizer.js --colors",
     "cypress-open": "node_modules/.bin/cypress open",
     "cypress-run": "node_modules/.bin/cypress run --record --key 5bed002a-82c7-44a6-9e99-8fee9727f7d2",
+    "gen-ngrx": "gen-ngrx",
     "lint": "tslint -c tslint.json public_src/**/*.ts public_src/components/**/*.ts public_src/*.ts",
+    "ngrx-gen": "ngrx-gen",
     "postinstall": "npm run build-prod",
     "prepare": "npm run snyk-protect",
     "prepublish": "snyk protect",
@@ -122,5 +124,9 @@
     "zone.js": "0.8.20"
   },
   "devDependencies": {},
+  "ngrxGen": {
+    "basePath": "./public_src/state",
+    "seperateDirectory": "true"
+  },
   "snyk": true
 }
