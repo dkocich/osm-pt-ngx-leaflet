@@ -86,8 +86,9 @@ export class MapService {
       CartoDB_dark: L.tileLayer(
         'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
         {
-          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>OpenStreetMap
-            </a> &copy; <a href='https://cartodb.com/attributions' target='_blank' rel='noopener'>CartoDB</a>`,
+          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank'
+            rel='noopener'>OpenStreetMap</a>&nbsp;&copy;&nbsp;<a href='https://cartodb.com/attributions'
+            target='_blank' rel='noopener'>CartoDB</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
         },
@@ -95,8 +96,9 @@ export class MapService {
       CartoDB_light: L.tileLayer(
         'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
         {
-          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>OpenStreetMap
-            </a> &copy; <a href='https://cartodb.com/attributions' target='_blank' rel='noopener'>CartoDB</a>`,
+          attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank'
+            rel='noopener'>OpenStreetMap</a>&nbsp;&copy;&nbsp;<a href='https://cartodb.com/attributions'
+            target='_blank' rel='noopener'>CartoDB</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
         },
@@ -123,7 +125,8 @@ export class MapService {
         },
       ),
       HERE_satelliteDay: L.tileLayer(
-        'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
+        'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/' +
+          'satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
         {
           attribution:
             'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
@@ -141,7 +144,8 @@ export class MapService {
         },
       ),
       HERE_hybridDay: L.tileLayer(
-        'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
+        'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/' +
+          'hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
         {
           attribution:
             'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
@@ -162,9 +166,11 @@ export class MapService {
         'https://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=' +
           ConfService.mapboxToken,
         {
-          attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank' rel='noopener'>&copy; Mapbox</a>,
-            <a href='https://www.openstreetmap.org/about/' target='_blank' rel='noopener'>&copy; OpenStreetMap</a> and
-            <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10' target='_blank' rel='noopener'>Improve this map</a>`,
+          attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank'
+            rel='noopener'>&copy;&nbsp;Mapbox</a>,&nbsp;<a href='https://www.openstreetmap.org/about/'
+            target='_blank' rel='noopener'>&copy;&nbsp;OpenStreetMap</a>&nbsp;and&nbsp;<a
+            href='https://www.mapbox.com/map-feedback/#/-74.5/40/10' target='_blank'
+            rel='noopener'>Improve this map</a>`,
           maxNativeZoom: 20,
           maxZoom: 22,
         },
@@ -173,9 +179,11 @@ export class MapService {
         'https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=' +
           ConfService.mapboxToken,
         {
-          attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank' rel='noopener'>&copy; Mapbox</a>,
-            <a href='https://www.openstreetmap.org/about/' target='_blank' rel='noopener'>&copy; OpenStreetMap</a> and
-            <a href='https://www.mapbox.com/map-feedback/#/-74.5/40/10' target='_blank' rel='noopener'>Improve this map</a>`,
+          attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank'
+            rel='noopener'>&copy;&nbsp;Mapbox</a>,&nbsp;<a href='https://www.openstreetmap.org/about/'
+            target='_blank' rel='noopener'>&copy;&nbsp;OpenStreetMap</a>&nbsp;and&nbsp;<a
+            href='https://www.mapbox.com/map-feedback/#/-74.5/40/10' target='_blank'
+            rel='noopener'>Improve this map</a>`,
           maxNativeZoom: 20,
           maxZoom: 22,
         },
