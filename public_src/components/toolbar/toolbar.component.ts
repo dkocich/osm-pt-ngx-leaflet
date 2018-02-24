@@ -1,24 +1,24 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild } from '@angular/core';
 
-import { EditorComponent } from "../editor/editor.component";
-import { TransporterComponent } from "../transporter/transporter.component";
+import { EditorComponent } from '../editor/editor.component';
+import { TransporterComponent } from '../transporter/transporter.component';
 
-import { ConfService } from "../../services/conf.service";
-import { MapService } from "../../services/map.service";
-import { OverpassService } from "../../services/overpass.service";
-import { ProcessService } from "../../services/process.service";
-import { StorageService } from "../../services/storage.service";
+import { ConfService } from '../../services/conf.service';
+import { MapService } from '../../services/map.service';
+import { OverpassService } from '../../services/overpass.service';
+import { ProcessService } from '../../services/process.service';
+import { StorageService } from '../../services/storage.service';
 
-import { IOsmEntity } from "../../core/osmEntity.interface";
+import { IOsmEntity } from '../../core/osmEntity.interface';
 
 @Component({
   providers: [],
-  selector: "toolbar",
+  selector: 'toolbar',
   styles: [
-    require<any>("./toolbar.component.less"),
-    require<any>("../../styles/main.less"),
+    require<any>('./toolbar.component.less'),
+    require<any>('../../styles/main.less'),
   ],
-  template: require<any>("./toolbar.component.html"),
+  template: require<any>('./toolbar.component.html'),
 })
 export class ToolbarComponent {
   public downloading: boolean;
@@ -41,9 +41,9 @@ export class ToolbarComponent {
     this.downloading = true;
     this.filtering = this.confSrv.cfgFilterLines;
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
-      if (data === "tag") {
+      if (data === 'tag') {
         console.log(
-          "LOG (toolbar) Current selected element changed - ",
+          'LOG (toolbar) Current selected element changed - ',
           data, this.currentElement, this.storageSrv.currentElement,
         );
         this.currentElement = this.storageSrv.currentElement;
@@ -56,16 +56,16 @@ export class ToolbarComponent {
   }
 
   ngOnInit(): void {
-    this.mapSrv.disableMouseEvent("toggle-download");
-    this.mapSrv.disableMouseEvent("toggle-filter");
-    this.mapSrv.disableMouseEvent("toggle-edit");
-    this.mapSrv.disableMouseEvent("edits-backward-btn");
-    this.mapSrv.disableMouseEvent("edits-forward-btn");
-    this.mapSrv.disableMouseEvent("edits-count");
+    this.mapSrv.disableMouseEvent('toggle-download');
+    this.mapSrv.disableMouseEvent('toggle-filter');
+    this.mapSrv.disableMouseEvent('toggle-edit');
+    this.mapSrv.disableMouseEvent('edits-backward-btn');
+    this.mapSrv.disableMouseEvent('edits-forward-btn');
+    this.mapSrv.disableMouseEvent('edits-count');
   }
 
   public Initialize(): void {
-    this.mapSrv.map.on("zoomend moveend", () => {
+    this.mapSrv.map.on('zoomend moveend', () => {
       this.initDownloader();
     });
   }
@@ -109,11 +109,11 @@ export class ToolbarComponent {
   private toggleDownloading(): void {
     this.downloading = !this.downloading;
     if (this.downloading) {
-      this.mapSrv.map.on("zoomend moveend", () => {
+      this.mapSrv.map.on('zoomend moveend', () => {
         this.initDownloader();
       });
     } else if (!this.downloading) {
-      this.mapSrv.map.off("zoomend moveend");
+      this.mapSrv.map.off('zoomend moveend');
     }
   }
 
@@ -122,7 +122,7 @@ export class ToolbarComponent {
    * @param selection
    */
   private showInfo(selection: object): void {
-    alert(JSON.stringify(selection, null, "\t"));
+    alert(JSON.stringify(selection, null, '\t'));
   }
 
   private cancelSelection(): void {
@@ -132,7 +132,7 @@ export class ToolbarComponent {
   }
 
   private isRelation(): boolean {
-    return this.currentElement && this.currentElement.type === "relation";
+    return this.currentElement && this.currentElement.type === 'relation';
   }
 
   private zoomTo(selection: IOsmEntity): void {
@@ -140,9 +140,9 @@ export class ToolbarComponent {
   }
 
   private showOptions(): void {
-    document.getElementById("toggle-filter").style.display = "inline";
+    document.getElementById('toggle-filter').style.display = 'inline';
     setTimeout(() => {
-      document.getElementById("toggle-filter").style.display = "none";
+      document.getElementById('toggle-filter').style.display = 'none';
     }, 5000);
   }
 
@@ -161,13 +161,13 @@ export class ToolbarComponent {
 
   private getLoadAndZoomUrl(): void {
     const josmHref =
-      "http://127.0.0.1:8111/load_and_zoom?" +
-      "left=" + this.mapSrv.map.getBounds().getWest() +
-      "&right=" + this.mapSrv.map.getBounds().getEast() +
-      "&top=" + this.mapSrv.map.getBounds().getNorth() +
-      "&bottom=" + this.mapSrv.map.getBounds().getSouth() +
-      "&select=" + this.currentElement.type + this.currentElement.id;
-    window.open(josmHref, "_blank");
+      'http://127.0.0.1:8111/load_and_zoom?' +
+      'left=' + this.mapSrv.map.getBounds().getWest() +
+      '&right=' + this.mapSrv.map.getBounds().getEast() +
+      '&top=' + this.mapSrv.map.getBounds().getNorth() +
+      '&bottom=' + this.mapSrv.map.getBounds().getSouth() +
+      '&select=' + this.currentElement.type + this.currentElement.id;
+    window.open(josmHref, '_blank');
   }
 
   private isDisabled(): boolean {

@@ -15,7 +15,7 @@ export interface IOsmTags {
   network?: string;
   operator?: string;
   public_transport?: string;
-  "public_transport:version"?: string;
+  'public_transport:version'?: string;
   railway?: string;
   ref?: string;
   roundtrip?: string;

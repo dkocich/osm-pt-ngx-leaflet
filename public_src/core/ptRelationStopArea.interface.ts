@@ -5,6 +5,6 @@
  */
 export class IPtRelationStopArea {
   public name: string;
-  public public_transport: string = "stop_area";
+  public public_transport: string = 'stop_area';
   public type: string;
 }

@@ -1,22 +1,22 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
-import { EditService } from "../../services/edit.service";
-import { MapService } from "../../services/map.service";
-import { ProcessService } from "../../services/process.service";
-import { StorageService } from "../../services/storage.service";
-import { DragulaService } from "ng2-dragula";
+import { EditService } from '../../services/edit.service';
+import { MapService } from '../../services/map.service';
+import { ProcessService } from '../../services/process.service';
+import { StorageService } from '../../services/storage.service';
+import { DragulaService } from 'ng2-dragula';
 
-import { IPtRelation } from "../../core/ptRelation.interface";
-import { IPtStop } from "../../core/ptStop.interface";
+import { IPtRelation } from '../../core/ptRelation.interface';
+import { IPtStop } from '../../core/ptStop.interface';
 
 @Component({
   providers: [],
-  selector: "stop-browser",
+  selector: 'stop-browser',
   styles: [
-    require<any>("./stop-browser.component.less"),
-    require<any>("../../styles/main.less"),
+    require<any>('./stop-browser.component.less'),
+    require<any>('../../styles/main.less'),
   ],
-  template: require<any>("./stop-browser.component.html"),
+  template: require<any>('./stop-browser.component.html'),
 })
 export class StopBrowserComponent {
   public listOfStopsForRoute: object[] = this.storageSrv.listOfStopsForRoute;
@@ -43,13 +43,13 @@ export class StopBrowserComponent {
     });
 
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
-      if (data === "stop") {
+      if (data === 'stop') {
         this.listOfStopsForRoute = this.storageSrv.listOfStopsForRoute;
         this.currentElement = this.storageSrv.currentElement;
         console.log(this.currentElement, this.listOfStopsForRoute);
-      } else if (data === "tag") {
+      } else if (data === 'tag') {
         this.currentElement = this.storageSrv.currentElement;
-      } else if (data === "cancel selection") {
+      } else if (data === 'cancel selection') {
         this.listOfStopsForRoute = undefined;
         delete this.listOfStopsForRoute;
         this.currentElement = undefined;
@@ -60,7 +60,7 @@ export class StopBrowserComponent {
 
     this.editSrv.editingMode.subscribe((data) => {
         console.log(
-          "LOG (stop-browser) Editing mode change in stopBrowser - ",
+          'LOG (stop-browser) Editing mode change in stopBrowser - ',
           data,
         );
         this.editingMode = data;
@@ -77,12 +77,12 @@ export class StopBrowserComponent {
   }
 
   private createChange(): void {
-    const type = "change members";
-    let elementsWithoutRole = this.currentElement["members"].filter((member) => {
-      return member["role"] === "";
+    const type = 'change members';
+    let elementsWithoutRole = this.currentElement['members'].filter((member) => {
+      return member['role'] === '';
     });
     let change = {
-      from: JSON.parse(JSON.stringify(this.currentElement["members"])),
+      from: JSON.parse(JSON.stringify(this.currentElement['members'])),
       to: JSON.parse(
         JSON.stringify([...this.listOfStopsForRoute, ...elementsWithoutRole]),
       ),
@@ -91,8 +91,8 @@ export class StopBrowserComponent {
   }
 
   private onDrop(args: any): void {
-    if (this.currentElement.type !== "relation") {
-      return alert("Current element has incorrent type. Select relation one more time please.");
+    if (this.currentElement.type !== 'relation') {
+      return alert('Current element has incorrent type. Select relation one more time please.');
     }
     this.createChange();
   }
@@ -107,7 +107,7 @@ export class StopBrowserComponent {
 
   private reorderingEnabled(): boolean {
     if (this.currentElement) {
-      return this.currentElement.type === "relation" && this.filteredView;
+      return this.currentElement.type === 'relation' && this.filteredView;
     } else {
       return false;
     }

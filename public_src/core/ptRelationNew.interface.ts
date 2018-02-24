@@ -1,10 +1,10 @@
-import { IOsmEntity } from "./osmEntity.interface";
-import { IPtMember } from "./ptMember";
+import { IOsmEntity } from './osmEntity.interface';
+import { IPtMember } from './ptMember';
 export interface IPtRelationNew extends IOsmEntity {
-  type: "relation";
+  type: 'relation';
   members: IPtMember[];
   tags: {
-    type: "route",
+    type: 'route',
     route: string,
     ref: string,
     network: string,
@@ -12,8 +12,8 @@ export interface IPtRelationNew extends IOsmEntity {
     name: string,
     from: string,
     to: string,
-    wheelchair: "yes" | "no" | "limited" | "designated" | "",
+    wheelchair: 'yes' | 'no' | 'limited' | 'designated' | '',
     colour: string,
-    "public_transport:version": "2",
+    'public_transport:version': '2',
   };
 }

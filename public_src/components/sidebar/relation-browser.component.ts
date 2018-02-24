@@ -1,20 +1,20 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild } from '@angular/core';
 
-import { ProcessService } from "../../services/process.service";
-import { StorageService } from "../../services/storage.service";
-import { EditService } from "../../services/edit.service";
-import { ModalDirective } from "ngx-bootstrap";
+import { ProcessService } from '../../services/process.service';
+import { StorageService } from '../../services/storage.service';
+import { EditService } from '../../services/edit.service';
+import { ModalDirective } from 'ngx-bootstrap';
 
-import { IPtRouteMasterNew } from "../../core/ptRouteMasterNew.interface";
+import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
 
 @Component({
   providers: [],
-  selector: "relation-browser",
+  selector: 'relation-browser',
   styles: [
-    require<any>("./relation-browser.component.less"),
-    require<any>("../../styles/main.less"),
+    require<any>('./relation-browser.component.less'),
+    require<any>('../../styles/main.less'),
   ],
-  template: require<any>("./relation-browser.component.html"),
+  template: require<any>('./relation-browser.component.html'),
 })
 export class RelationBrowserComponent {
   private currentElement: IPtRouteMasterNew;
@@ -32,13 +32,13 @@ export class RelationBrowserComponent {
 
   ngOnInit(): void {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
-      if (data === "tag") {
-        console.log("LOG (relation-browser) Current selected element changed - ", data);
-        if (this.storageSrv.currentElement.tags.type === "route_master") {
+      if (data === 'tag') {
+        console.log('LOG (relation-browser) Current selected element changed - ', data);
+        if (this.storageSrv.currentElement.tags.type === 'route_master') {
           // prevent showing members of everything except route_master
           this.currentElement = this.storageSrv.currentElement;
         }
-      } else if (data === "cancel selection") {
+      } else if (data === 'cancel selection') {
         this.currentElement = undefined;
         delete this.currentElement;
         this.storageSrv.listOfVariants.length = 0;
@@ -47,14 +47,14 @@ export class RelationBrowserComponent {
     });
 
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
-      if (data === "relation") {
+      if (data === 'relation') {
         this.listOfVariants = this.storageSrv.listOfVariants;
-        console.log("LOG (relation-browser) List of variants ", this.storageSrv.listOfVariants,
-          " currentElement", this.storageSrv.currentElement);
+        console.log('LOG (relation-browser) List of variants ', this.storageSrv.listOfVariants,
+          ' currentElement', this.storageSrv.currentElement);
       }
     });
     this.editSrv.editingMode.subscribe((data) => {
-      console.log("LOG (relation-browser) Editing mode change in routeBrowser - ", data);
+      console.log('LOG (relation-browser) Editing mode change in routeBrowser - ', data);
       this.editingMode = data;
     });
   }
@@ -83,7 +83,7 @@ export class RelationBrowserComponent {
     // FIXME - allow to create route_master of route_masters later
     if (
       this.currentElement &&
-      this.currentElement.tags.type !== "route_master"
+      this.currentElement.tags.type !== 'route_master'
     ) {
       this.editSrv.createMaster(this.currentElement.id);
     } else {
@@ -98,7 +98,7 @@ export class RelationBrowserComponent {
     );
   }
 
-  @ViewChild("masterModal") public masterModal: ModalDirective;
+  @ViewChild('masterModal') public masterModal: ModalDirective;
   public showMasterModal(): void {
     this.masterModal.show();
     // this.mapSrv.disableMouseEvent("modalDownload");

@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { Headers, Http, RequestOptions } from "@angular/http";
+import { Injectable } from '@angular/core';
+import { Headers, Http, RequestOptions } from '@angular/http';
 
-import { AuthService } from "./auth.service";
-import { ConfService } from "./conf.service";
-import { LoadService } from "./load.service";
-import { MapService } from "./map.service";
-import { ProcessService } from "./process.service";
-import { StorageService } from "./storage.service";
+import { AuthService } from './auth.service';
+import { ConfService } from './conf.service';
+import { LoadService } from './load.service';
+import { MapService } from './map.service';
+import { ProcessService } from './process.service';
+import { StorageService } from './storage.service';
 
-import { create } from "xmlbuilder";
+import { create } from 'xmlbuilder';
 
 const CONTINUOUS_QUERY: string = `
 [out:json][timeout:25][bbox:{{bbox}}];
@@ -58,10 +58,10 @@ export class OverpassService {
         !this.storageSrv.elementsDownloaded.has(featureId) &&
         featureId > 0
       ) {
-        console.log("LOG (overpass s.) Requesting started for ", featureId);
+        console.log('LOG (overpass s.) Requesting started for ', featureId);
         this.getNodeData(featureId);
         this.storageSrv.elementsDownloaded.add(featureId);
-        console.log("LOG (overpass s.) Requesting finished for", featureId);
+        console.log('LOG (overpass s.) Requesting finished for', featureId);
       }
     });
 
@@ -71,8 +71,8 @@ export class OverpassService {
      * {"rel": rel, "missingElements": missingElements}
      */
     this.processSrv.membersToDownload.subscribe((data) => {
-      const rel = data["rel"];
-      const missingElements = data["missingElements"];
+      const rel = data['rel'];
+      const missingElements = data['missingElements'];
       this.getRelationData(rel, missingElements);
     });
   }
@@ -81,14 +81,14 @@ export class OverpassService {
    * Requests new batch of data from Overpass.
    */
   public requestNewOverpassData(): void {
-    this.loadSrv.show("Loading bus stops...");
+    this.loadSrv.show('Loading bus stops...');
     setTimeout(() => {
       if (this.loadSrv.isLoading()) {
         this.loadSrv.hide(); // close loading window on timeout errors
       }
     }, 5000);
     const requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
-    const options = this.setRequestOptions("application/X-www-form-urlencoded");
+    const options = this.setRequestOptions('application/X-www-form-urlencoded');
     this.mapSrv.previousCenter = [
       this.mapSrv.map.getCenter().lat,
       this.mapSrv.map.getCenter().lng,
@@ -97,18 +97,18 @@ export class OverpassService {
       .post(ConfService.overpassUrl, requestBody, options)
       .map((res) => {
         this.loadSrv.hide();
-        console.log("LOG (overpass s.)", res);
+        console.log('LOG (overpass s.)', res);
         if (res.status === 200) {
           return res.json();
         } else {
           console.log(
-            "LOG (overpass s.) Stops response error",
+            'LOG (overpass s.) Stops response error',
             res.status,
             res.text,
           );
           return setTimeout(
             function(): void {
-              console.log("LOG (overpass) Request error - new request?");
+              console.log('LOG (overpass) Request error - new request?');
               this.requestNewOverpassData();
             }.bind(this),
             5000,
@@ -131,7 +131,7 @@ export class OverpassService {
     if (!minNumOfRelations) {
       minNumOfRelations = 10;
     }
-    this.loadSrv.show("Loading route master relations...");
+    this.loadSrv.show('Loading route master relations...');
     setTimeout(() => {
       if (this.loadSrv.isLoading()) {
         this.loadSrv.hide(); // close loading window on timeout errors
@@ -141,7 +141,7 @@ export class OverpassService {
     if (idsArr.length <= minNumOfRelations) {
       this.loadSrv.hide();
       return console.log(
-        "LOG (overpass s.) Not enough relations to download - stop",
+        'LOG (overpass s.) Not enough relations to download - stop',
       );
     } else if (!idsArr.length) {
       // do not query masters if all relations are already known
@@ -151,16 +151,16 @@ export class OverpassService {
     let requestBody: string = `
             [out:json][timeout:25][bbox:{{bbox}}];
             (
-              rel(id:${idsArr.join(", ")});
+              rel(id:${idsArr.join(', ')});
               <<;
             );
             out meta;`;
     console.log(
-      "LOG (overpass s.) Querying rel.'s route masters with query:",
+      'LOG (overpass s.) Querying rel.\'s route masters with query:',
       requestBody,
     );
     requestBody = this.replaceBboxString(requestBody);
-    const options = this.setRequestOptions("application/X-www-form-urlencoded");
+    const options = this.setRequestOptions('application/X-www-form-urlencoded');
     this.http
       .post(ConfService.overpassUrl, requestBody, options)
       .map((res) => res.json())
@@ -168,7 +168,7 @@ export class OverpassService {
         this.loadSrv.hide();
         if (!response) {
           return alert(
-            "No response from API. Try to select other master relation again please.",
+            'No response from API. Try to select other master relation again please.',
           );
         }
         this.markQueriedRelations(idsArr);
@@ -183,7 +183,7 @@ export class OverpassService {
     this.loadSrv.show();
     this.mapSrv.clearLayer();
     requestBody = this.replaceBboxString(requestBody);
-    const options = this.setRequestOptions("application/X-www-form-urlencoded");
+    const options = this.setRequestOptions('application/X-www-form-urlencoded');
     this.mapSrv.renderData(requestBody, options);
   }
 
@@ -198,17 +198,17 @@ export class OverpassService {
    */
   public putChangeset(changeset: any, testUpload?: boolean): void {
     if (!this.storageSrv.edits) {
-      return alert("Create some edits before trying to upload changes please.");
+      return alert('Create some edits before trying to upload changes please.');
     }
     if (testUpload) {
       this.createdChangeset(undefined, 1, true);
     } else {
       this.authSrv.oauth.xhr(
         {
-          content: "<osm><changeset></changeset></osm>", // changeset,
-          method: "PUT",
-          options: { header: { "Content-Type": "text/xml" } },
-          path: "/api/0.6/changeset/create",
+          content: '<osm><changeset></changeset></osm>', // changeset,
+          method: 'PUT',
+          options: { header: { 'Content-Type': 'text/xml' } },
+          path: '/api/0.6/changeset/create',
         },
         this.createdChangeset.bind(this),
       );
@@ -227,15 +227,15 @@ export class OverpassService {
             );
             (._;<);
             out meta;`;
-    console.log("LOG (overpass s.) Querying nodes", requestBody);
-    this.loadSrv.show("Loading clicked feature data...");
+    console.log('LOG (overpass s.) Querying nodes', requestBody);
+    this.loadSrv.show('Loading clicked feature data...');
     setTimeout(() => {
       if (this.loadSrv.isLoading()) {
         this.loadSrv.hide(); // close loading window on timeout errors
       }
     }, 5000);
     requestBody = this.replaceBboxString(requestBody);
-    const options = this.setRequestOptions("application/X-www-form-urlencoded");
+    const options = this.setRequestOptions('application/X-www-form-urlencoded');
     this.http
       .post(ConfService.overpassUrl, requestBody, options)
       .map((res) => res.json())
@@ -243,10 +243,10 @@ export class OverpassService {
         if (!response) {
           this.loadSrv.hide();
           return alert(
-            "No response from API. Try to select element again please.",
+            'No response from API. Try to select element again please.',
           );
         }
-        console.log("LOG (overpass s.)", response);
+        console.log('LOG (overpass s.)', response);
         this.processSrv.processNodeResponse(response);
         this.loadSrv.hide();
         this.getRouteMasters(10);
@@ -262,7 +262,7 @@ export class OverpassService {
   private getRelationData(rel: any, missingElements: number[]): void {
     if (missingElements.length === 0) {
       return alert(
-        "This relation has no stops or platforms. Please add them first and repeat your action. \n" +
+        'This relation has no stops or platforms. Please add them first and repeat your action. \n' +
           JSON.stringify(rel),
       );
     }
@@ -274,20 +274,20 @@ export class OverpassService {
             (._;);
             out meta;`;
     console.log(
-      "LOG (overpass s.) Should download missing members with query:",
+      'LOG (overpass s.) Should download missing members with query:',
       requestBody,
       missingElements,
     );
     // FIXME loading can't be closed sometimes?
     // this.loadSrv.show("Loading relation's missing members...");
-    const options = this.setRequestOptions("application/X-www-form-urlencoded");
+    const options = this.setRequestOptions('application/X-www-form-urlencoded');
     this.http
       .post(ConfService.overpassUrl, requestBody, options)
       .map((res) => res.json())
       .subscribe((response) => {
         if (!response) {
           this.loadSrv.hide();
-          return alert("No response from API. Try again please.");
+          return alert('No response from API. Try again please.');
         }
         this.processSrv.processNodeResponse(response);
 
@@ -298,7 +298,7 @@ export class OverpassService {
 
         // continue with the rest of "exploreRelation" function
         console.log(
-          "LOG (overpass s.) Continue with downloaded missing members",
+          'LOG (overpass s.) Continue with downloaded missing members',
           rel,
         );
         this.storageSrv.elementsDownloaded.add(rel.id);
@@ -312,8 +312,8 @@ export class OverpassService {
   private findRouteIdsWithoutMaster(): Array<number> {
     const idsArr = [];
     this.storageSrv.listOfRelations.forEach((rel) => {
-      if (!this.storageSrv.queriedMasters.has(rel["id"])) {
-        idsArr.push(rel["id"]);
+      if (!this.storageSrv.queriedMasters.has(rel['id'])) {
+        idsArr.push(rel['id']);
       }
     });
     return idsArr;
@@ -339,8 +339,8 @@ export class OverpassService {
     const n = b.getNorth().toString();
     const e = b.getEast().toString();
     return requestBody.replace(
-      new RegExp("{{bbox}}", "g"),
-      [s, w, n, e].join(", "),
+      new RegExp('{{bbox}}', 'g'),
+      [s, w, n, e].join(', '),
     );
   }
 
@@ -351,7 +351,7 @@ export class OverpassService {
    */
   private setRequestOptions(contentType: string): RequestOptions {
     const headers = new Headers();
-    headers.append("Content-Type", contentType);
+    headers.append('Content-Type', contentType);
     return new RequestOptions({ headers });
   }
 
@@ -361,17 +361,17 @@ export class OverpassService {
    * @returns {string}
    */
   private createChangeset(metadata: object): any {
-    console.log("LOG (overpass s.)", metadata["source"], metadata["comment"]);
-    const changeset = create("osm")
-      .ele("changeset")
-      .ele("tag", { k: "created_by", v: ConfService.appName })
+    console.log('LOG (overpass s.)', metadata['source'], metadata['comment']);
+    const changeset = create('osm')
+      .ele('changeset')
+      .ele('tag', { k: 'created_by', v: ConfService.appName })
       .up()
-      .ele("tag", { k: "source", v: metadata["source"] })
+      .ele('tag', { k: 'source', v: metadata['source'] })
       .up()
-      .ele("tag", { k: "comment", v: metadata["comment"] })
+      .ele('tag', { k: 'comment', v: metadata['comment'] })
       .end({ pretty: true });
 
-    console.log("LOG (overpass s.)", changeset);
+    console.log('LOG (overpass s.)', changeset);
     return changeset;
   }
 
@@ -382,10 +382,10 @@ export class OverpassService {
   private addChangesetId(changeset_id: any): void {
     this.changeset_id = changeset_id;
     const parser = new DOMParser();
-    const doc = parser.parseFromString(this.changeset, "application/xml");
-    doc.querySelector("changeset").setAttribute("id", changeset_id);
+    const doc = parser.parseFromString(this.changeset, 'application/xml');
+    doc.querySelector('changeset').setAttribute('id', changeset_id);
     this.changeset = doc;
-    console.log("LOG (overpass s.)", this.changeset, doc);
+    console.log('LOG (overpass s.)', this.changeset, doc);
   }
 
   /**
@@ -397,20 +397,20 @@ export class OverpassService {
   private createdChangeset(err: any, changeset_id: any, testUpload?: boolean): void {
     if (err) {
       return alert(
-        "Error while creating new changeset. Try again please. " +
+        'Error while creating new changeset. Try again please. ' +
           JSON.stringify(err),
       );
     }
     console.log(
-      "LOG (overpass s.) Created new changeset with ID: ",
+      'LOG (overpass s.) Created new changeset with ID: ',
       changeset_id,
     );
     this.addChangesetId(changeset_id);
-    const osmChangeContent = "<osmChange></osmChange>";
+    const osmChangeContent = '<osmChange></osmChange>';
     const idsChanged = new Set();
     for (const edit of this.storageSrv.edits) {
-      if (!idsChanged.has(edit["id"])) {
-        idsChanged.add(edit["id"]);
+      if (!idsChanged.has(edit['id'])) {
+        idsChanged.add(edit['id']);
       }
     }
     const changedElements = [];
@@ -424,71 +424,71 @@ export class OverpassService {
       );
     }
 
-    console.log("LOG (overpass s.) Changed documents: ", changedElements);
+    console.log('LOG (overpass s.) Changed documents: ', changedElements);
 
-    const xml = create("osmChange", {
-      "@version": "0.6",
-      "@generator": ConfService.appName,
+    const xml = create('osmChange', {
+      '@version': '0.6',
+      '@generator': ConfService.appName,
     });
 
     let xmlNodeModify;
     for (const el of changedElements) {
       if (el.id > 0) {
-        xmlNodeModify = xml.ele("modify"); // creation of elements
+        xmlNodeModify = xml.ele('modify'); // creation of elements
         break;
       }
     }
     for (const el of changedElements) {
       if (el.id > 0) {
-        console.log("LOG (overpass s.) I should transform ", el);
+        console.log('LOG (overpass s.) I should transform ', el);
         const tagsObj: object = {};
         for (const key of Object.keys(el)) {
           // do not add some attributes because they are added automatically on API
           if (
-            ["members", "tags", "type", "timestamp", "uid", "user"]
+            ['members', 'tags', 'type', 'timestamp', 'uid', 'user']
               .indexOf(key) === -1
           ) {
             // adds - id="123", uid="123", etc.
-            if (["version"].indexOf(key) > -1) {
-              tagsObj["version"] = el[key]; // API should increment version later
-            } else if (["changeset"].indexOf(key) > -1) {
-              tagsObj["changeset"] = this.changeset_id;
+            if (['version'].indexOf(key) > -1) {
+              tagsObj['version'] = el[key]; // API should increment version later
+            } else if (['changeset'].indexOf(key) > -1) {
+              tagsObj['changeset'] = this.changeset_id;
             } else {
               tagsObj[key] = el[key];
             }
           }
         }
-        const objectType = xmlNodeModify.ele(el["type"], tagsObj); // adds XML element node|way|relation
-        if (el["type"] === "relation" && el["members"]) {
-          const members = el["members"]; // array of objects
+        const objectType = xmlNodeModify.ele(el['type'], tagsObj); // adds XML element node|way|relation
+        if (el['type'] === 'relation' && el['members']) {
+          const members = el['members']; // array of objects
           members.forEach((mem) => {
             if (mem === members[members.length - 1]) {
-              objectType.ele("member", {
-                type: mem["type"],
-                ref: mem["ref"],
-                role: mem["role"],
+              objectType.ele('member', {
+                type: mem['type'],
+                ref: mem['ref'],
+                role: mem['role'],
               });
             } else {
               objectType
-                .ele("member", {
-                  type: mem["type"],
-                  ref: mem["ref"],
-                  role: mem["role"],
+                .ele('member', {
+                  type: mem['type'],
+                  ref: mem['ref'],
+                  role: mem['role'],
                 })
                 .up();
             }
           });
         }
-        if (el["tags"]) {
-          const tags = Object.keys(el["tags"]); // objects
+        if (el['tags']) {
+          const tags = Object.keys(el['tags']); // objects
           for (const tag of tags) {
             if (!el[tag]) {
               continue;
             }
             if (tag === tags[tags.length - 1]) {
-              objectType.ele("tag", { k: tag, v: el["tags"][tag] });
+              objectType.ele('tag', { k: tag, v: el['tags'][tag] });
             } else {
-              objectType.ele("tag", { k: tag, v: el["tags"][tag] }).up();
+              objectType.ele('tag', { k: tag, v: el['tags'][tag] }).up();
             }
           }
         }
@@ -498,62 +498,62 @@ export class OverpassService {
     let xmlNodeCreate;
     for (const el of changedElements) {
       if (el.id < 0) {
-        xmlNodeCreate = xml.ele("create"); // creation of elements
+        xmlNodeCreate = xml.ele('create'); // creation of elements
         break;
       }
     }
 
     for (const el of changedElements) {
       if (el.id < 0) {
-        console.log("LOG (overpass s.) I should transform ", el);
+        console.log('LOG (overpass s.) I should transform ', el);
         const tagsObj: object = {};
         for (const key of Object.keys(el)) {
           // do not add some attributes because they are added automatically on API
           if (
-            ["members", "tags", "type", "timestamp", "uid", "user"]
+            ['members', 'tags', 'type', 'timestamp', 'uid', 'user']
               .indexOf(key) === -1
           ) {
             // adds - id="123", uid="123", etc.
-            if (["version"].indexOf(key) > -1) {
-              tagsObj["version"] = el[key]; // API should increment version later
-            } else if (["changeset"].indexOf(key) > -1) {
-              tagsObj["changeset"] = this.changeset_id;
+            if (['version'].indexOf(key) > -1) {
+              tagsObj['version'] = el[key]; // API should increment version later
+            } else if (['changeset'].indexOf(key) > -1) {
+              tagsObj['changeset'] = this.changeset_id;
             } else {
               tagsObj[key] = el[key];
             }
           }
         }
-        const objectType = xmlNodeCreate.ele(el["type"], tagsObj); // adds XML element node|way|relation
-        if (el["type"] === "relation" && el["members"]) {
-          const members = el["members"]; // array of objects
+        const objectType = xmlNodeCreate.ele(el['type'], tagsObj); // adds XML element node|way|relation
+        if (el['type'] === 'relation' && el['members']) {
+          const members = el['members']; // array of objects
           members.forEach((mem) => {
             if (mem === members[members.length - 1]) {
-              objectType.ele("member", {
-                type: mem["type"],
-                ref: mem["ref"],
-                role: mem["role"],
+              objectType.ele('member', {
+                type: mem['type'],
+                ref: mem['ref'],
+                role: mem['role'],
               });
             } else {
               objectType
-                .ele("member", {
-                  type: mem["type"],
-                  ref: mem["ref"],
-                  role: mem["role"],
+                .ele('member', {
+                  type: mem['type'],
+                  ref: mem['ref'],
+                  role: mem['role'],
                 })
                 .up();
             }
           });
         }
-        if (el["tags"]) {
-          const tags = Object.keys(el["tags"]); // objects
+        if (el['tags']) {
+          const tags = Object.keys(el['tags']); // objects
           for (const tag of tags) {
             if (!el.tags[tag]) {
               continue;
             }
             if (tag === tags[tags.length - 1]) {
-              objectType.ele("tag", { k: tag, v: el["tags"][tag] });
+              objectType.ele('tag', { k: tag, v: el['tags'][tag] });
             } else {
-              objectType.ele("tag", { k: tag, v: el["tags"][tag] }).up();
+              objectType.ele('tag', { k: tag, v: el['tags'][tag] }).up();
             }
           }
         }
@@ -561,16 +561,16 @@ export class OverpassService {
     }
 
     const xmlString = xml.end({ pretty: true });
-    console.log("LOG (overpass s.) Uploading this XML ", xml, xmlString);
+    console.log('LOG (overpass s.) Uploading this XML ', xml, xmlString);
     if (testUpload) {
       return;
     } else {
       this.authSrv.oauth.xhr.bind(this)(
         {
           content: xmlString, // .osmChangeJXON(this.changes) // JXON.stringify(),
-          method: "POST",
-          options: { header: { "Content-Type": "text/xml" } },
-          path: "/api/0.6/changeset/" + this.changeset_id + "/upload",
+          method: 'POST',
+          options: { header: { 'Content-Type': 'text/xml' } },
+          path: '/api/0.6/changeset/' + this.changeset_id + '/upload',
         },
         this.uploadedChangeset.bind(this),
       );
@@ -584,7 +584,7 @@ export class OverpassService {
   private uploadedChangeset(err: any): void {
     if (err) {
       return alert(
-        "Error after data uploading. Changeset is not closed. It should close automatically soon. " +
+        'Error after data uploading. Changeset is not closed. It should close automatically soon. ' +
           JSON.stringify(err),
       );
     }
@@ -592,14 +592,14 @@ export class OverpassService {
     // Add delay to allow for postgres replication #1646 #2678
     window.setTimeout(
       function(): void {
-        console.log("LOG (overpass s.) Timeout 2500");
+        console.log('LOG (overpass s.) Timeout 2500');
         // callback(null, this.changeset);
         // Still attempt to close changeset, but ignore response because iD/issues/2667
         this.authSrv.oauth.xhr(
           {
-            method: "PUT",
-            options: { header: { "Content-Type": "text/xml" } },
-            path: "/api/0.6/changeset/" + this.changeset_id + "/close",
+            method: 'PUT',
+            options: { header: { 'Content-Type': 'text/xml' } },
+            path: '/api/0.6/changeset/' + this.changeset_id + '/close',
           },
           () => {
             return true;

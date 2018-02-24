@@ -1,16 +1,16 @@
-import { Component } from "@angular/core";
-import { Map } from "leaflet";
-import { GeocodeService } from "../../services/geocode.service";
-import { MapService } from "../../services/map.service";
+import { Component } from '@angular/core';
+import { Map } from 'leaflet';
+import { GeocodeService } from '../../services/geocode.service';
+import { MapService } from '../../services/map.service';
 
 @Component({
   providers: [],
-  selector: "navigator",
+  selector: 'navigator',
   styles: [
-    require<any>("./navigator.component.less"),
-    require<any>("../../styles/main.less"),
+    require<any>('./navigator.component.less'),
+    require<any>('../../styles/main.less'),
   ],
-  template: require<any>("./navigator.component.html"),
+  template: require<any>('./navigator.component.html'),
 })
 export class NavigatorComponent {
   public address: string;
@@ -21,12 +21,12 @@ export class NavigatorComponent {
     private geocodeSrv: GeocodeService,
     private mapSrv: MapService,
   ) {
-    this.address = "";
+    this.address = '';
   }
 
   ngOnInit(): void {
-    this.mapSrv.disableMouseEvent("goto");
-    this.mapSrv.disableMouseEvent("place-input");
+    this.mapSrv.disableMouseEvent('goto');
+    this.mapSrv.disableMouseEvent('place-input');
     this.map = this.mapSrv.map;
   }
 

@@ -1,19 +1,19 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
-import { EditService } from "../../services/edit.service";
-import { MapService } from "../../services/map.service";
-import { OverpassService } from "../../services/overpass.service";
-import { ProcessService } from "../../services/process.service";
-import { StorageService } from "../../services/storage.service";
+import { EditService } from '../../services/edit.service';
+import { MapService } from '../../services/map.service';
+import { OverpassService } from '../../services/overpass.service';
+import { ProcessService } from '../../services/process.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   providers: [],
-  selector: "route-browser",
+  selector: 'route-browser',
   styles: [
-    require<any>("./route-browser.component.less"),
-    require<any>("../../styles/main.less"),
+    require<any>('./route-browser.component.less'),
+    require<any>('../../styles/main.less'),
   ],
-  template: require<any>("./route-browser.component.html"),
+  template: require<any>('./route-browser.component.html'),
 })
 export class RouteBrowserComponent {
   private currentElement;
@@ -42,25 +42,25 @@ export class RouteBrowserComponent {
       this.filteredView = data;
     });
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
-      if (data === "route") {
+      if (data === 'route') {
         this.listOfRelationsForStop = this.storageSrv.listOfRelationsForStop;
         this.currentElement = this.storageSrv.currentElement;
-      } else if (data === "tag") {
+      } else if (data === 'tag') {
         this.currentElement = this.storageSrv.currentElement;
-      } else if (data === "cancel selection") {
+      } else if (data === 'cancel selection') {
         this.currentElement = undefined;
         delete this.currentElement;
       }
     });
     this.processSrv.refreshMasters.subscribe((data) => {
       this.isRequesting = false;
-      data["idsHaveMaster"].forEach((id) => {
+      data['idsHaveMaster'].forEach((id) => {
         this.idsHaveMaster.add(id);
       });
     });
     this.editSrv.editingMode.subscribe((data) => {
       console.log(
-        "LOG (route-browser) Editing mode change in routeBrowser - ",
+        'LOG (route-browser) Editing mode change in routeBrowser - ',
         data,
       );
       this.editingMode = data;
@@ -72,7 +72,7 @@ export class RouteBrowserComponent {
     this.mapSrv.membersEditing = this.membersEditing;
     if (this.membersEditing) {
       console.log(
-        "LOG (route-browser) Toggle members edit",
+        'LOG (route-browser) Toggle members edit',
         this.membersEditing,
         this.storageSrv.currentElement,
       );
@@ -136,7 +136,7 @@ export class RouteBrowserComponent {
 
   private downloadMaster(): void {
     this.isRequesting = true;
-    console.log("LOG (route-browser) Manually downloading masters");
+    console.log('LOG (route-browser) Manually downloading masters');
     this.overpassSrv.getRouteMasters(1);
   }
 
@@ -147,8 +147,8 @@ export class RouteBrowserComponent {
   private elementShouldBeEditable(): boolean {
     if (this.currentElement) {
       return (
-        this.currentElement.type === "relation" &&
-        this.currentElement.tags.type === "route"
+        this.currentElement.type === 'relation' &&
+        this.currentElement.tags.type === 'route'
       );
     } else {
       return false;
@@ -163,7 +163,7 @@ export class RouteBrowserComponent {
     const rel = this.storageSrv.elementsMap.get(relId);
     let nodesCounter = 0;
     for (const member of rel.members) {
-      if (member.type === "node") {
+      if (member.type === 'node') {
         nodesCounter++;
         if (this.storageSrv.elementsMap.has(member.ref)) {
           const element = this.storageSrv.elementsMap.get(member.ref);
@@ -173,15 +173,15 @@ export class RouteBrowserComponent {
               lng: element.lon,
             })
           ) {
-            return "visible"; // return true while at least first node is visible
+            return 'visible'; // return true while at least first node is visible
           }
         }
       }
     }
     if (rel.members.length === 0 || nodesCounter === 0) {
-      return "warning"; // empty routes or without nodes (lat/lon) are always visible
+      return 'warning'; // empty routes or without nodes (lat/lon) are always visible
     }
-    return "hidden";
+    return 'hidden';
   }
 
   /**

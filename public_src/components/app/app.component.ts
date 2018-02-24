@@ -1,32 +1,32 @@
-import { Component, isDevMode, ViewChild } from "@angular/core";
-import { CarouselConfig, ModalDirective } from "ngx-bootstrap";
+import { Component, isDevMode, ViewChild } from '@angular/core';
+import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
 
-import * as L from "leaflet";
+import * as L from 'leaflet';
 
-import { Angulartics2Piwik } from "angulartics2/piwik";
+import { Angulartics2Piwik } from 'angulartics2/piwik';
 
-import { GeocodeService } from "../../services/geocode.service";
-import { LoadService } from "../../services/load.service";
-import { MapService } from "../../services/map.service";
-import { ProcessService } from "../../services/process.service";
+import { GeocodeService } from '../../services/geocode.service';
+import { LoadService } from '../../services/load.service';
+import { MapService } from '../../services/map.service';
+import { ProcessService } from '../../services/process.service';
 
-import { AuthComponent } from "../auth/auth.component";
-import { ToolbarComponent } from "../toolbar/toolbar.component";
-import { EditService } from "../../services/edit.service";
+import { AuthComponent } from '../auth/auth.component';
+import { ToolbarComponent } from '../toolbar/toolbar.component';
+import { EditService } from '../../services/edit.service';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
-  selector: "app",
-  styles: [require<any>("./app.component.less")],
-  template: require<any>("./app.component.html"),
+  selector: 'app',
+  styles: [require<any>('./app.component.less')],
+  template: require<any>('./app.component.html'),
 })
 export class AppComponent {
-  public advancedMode: boolean = Boolean(localStorage.getItem("advancedMode"));
+  public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
   private editingMode: boolean;
 
   @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
   @ViewChild(AuthComponent) public authComponent: AuthComponent;
-  @ViewChild("helpModal") public helpModal: ModalDirective;
+  @ViewChild('helpModal') public helpModal: ModalDirective;
 
   constructor(
     private angulartics2GoogleAnalytics: Angulartics2Piwik,
@@ -37,19 +37,19 @@ export class AppComponent {
     private processSrv: ProcessService,
   ) {
     if (isDevMode()) {
-      console.log("WARNING: Ang. development mode is ", isDevMode());
+      console.log('WARNING: Ang. development mode is ', isDevMode());
     }
   }
 
   ngOnInit(): any {
     this.editSrv.editingMode.subscribe((data) => {
       console.log(
-        "LOG (relation-browser) Editing mode change in routeBrowser - ",
+        'LOG (relation-browser) Editing mode change in routeBrowser - ',
         data,
       );
       this.editingMode = data;
     });
-    const map = L.map("map", {
+    const map = L.map('map', {
       center: L.latLng(49.686, 18.351),
       layers: [this.mapSrv.baseMaps.CartoDB_light],
       maxZoom: 22,
@@ -59,17 +59,17 @@ export class AppComponent {
       zoomControl: false,
     });
 
-    L.control.zoom({ position: "topright" }).addTo(map);
+    L.control.zoom({ position: 'topright' }).addTo(map);
     L.control.layers(this.mapSrv.baseMaps).addTo(map);
     L.control.scale().addTo(map);
 
     this.mapSrv.map = map;
-    this.mapSrv.map.on("zoomend moveend", () => {
+    this.mapSrv.map.on('zoomend moveend', () => {
       this.processSrv.filterDataInBounds();
       this.processSrv.addPositionToUrlHash();
     });
     if (
-      window.location.hash !== "" && this.processSrv.hashIsValidPosition()
+      window.location.hash !== '' && this.processSrv.hashIsValidPosition()
     ) {
       this.mapSrv.zoomToHashedPosition();
     } else {
@@ -100,6 +100,6 @@ export class AppComponent {
   }
 
   private changeMode(): void {
-    localStorage.setItem("advancedMode", JSON.stringify(this.advancedMode));
+    localStorage.setItem('advancedMode', JSON.stringify(this.advancedMode));
   }
 }

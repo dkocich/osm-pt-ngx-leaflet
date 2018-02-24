@@ -1,27 +1,27 @@
-import "leaflet";
-import "leaflet.vectorgrid";
-import "reflect-metadata";
-import "zone.js/dist/zone";
-import "zone.js/dist/long-stack-trace-zone";
+import 'leaflet';
+import 'leaflet.vectorgrid';
+import 'reflect-metadata';
+import 'zone.js/dist/zone';
+import 'zone.js/dist/long-stack-trace-zone';
 
-import "angular2-busy/build/style/busy.css";
-import "bootstrap/dist/css/bootstrap.css";
-import "dragula/dist/dragula.css";
-import "font-awesome/css/font-awesome.css";
-import "leaflet/dist/leaflet.css";
-import { APP_BASE_HREF } from "@angular/common";
-import { HttpClientModule, HttpClient } from "@angular/common/http";
-import { enableProdMode, NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { HttpModule } from "@angular/http";
-import { RouterModule, Routes } from "@angular/router";
-import { BrowserModule } from "@angular/platform-browser";
-import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { BusyModule } from "angular2-busy";
-import { DragulaModule } from "ng2-dragula";
+import 'angular2-busy/build/style/busy.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'dragula/dist/dragula.css';
+import 'font-awesome/css/font-awesome.css';
+import 'leaflet/dist/leaflet.css';
+import { APP_BASE_HREF } from '@angular/common';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { enableProdMode, NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { RouterModule, Routes } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { BusyModule } from 'angular2-busy';
+import { DragulaModule } from 'ng2-dragula';
 import {
   AccordionModule,
   BsDropdownModule,
@@ -30,41 +30,41 @@ import {
   ModalModule,
   TooltipModule,
   TypeaheadModule,
-} from "ngx-bootstrap";
+} from 'ngx-bootstrap';
 
-import { Angulartics2Module } from "angulartics2";
-import { Angulartics2Piwik } from "angulartics2/piwik";
+import { Angulartics2Module } from 'angulartics2';
+import { Angulartics2Piwik } from 'angulartics2/piwik';
 
-import { AppComponent } from "./components/app/app.component";
-import { AuthComponent } from "./components/auth/auth.component";
-import { LangComponent } from "./components/lang/lang.component";
-import { EditorComponent } from "./components/editor/editor.component";
-import { NavigatorComponent } from "./components/navigator/navigator.component";
-import { RelationBrowserComponent } from "./components/sidebar/relation-browser.component";
-import { RouteBrowserComponent } from "./components/sidebar/route-browser.component";
-import { StopBrowserComponent } from "./components/sidebar/stop-browser.component";
-import { TagBrowserComponent } from "./components/sidebar/tag-browser.component";
-import { ToolbarComponent } from "./components/toolbar/toolbar.component";
-import { TransporterComponent } from "./components/transporter/transporter.component";
+import { AppComponent } from './components/app/app.component';
+import { AuthComponent } from './components/auth/auth.component';
+import { LangComponent } from './components/lang/lang.component';
+import { EditorComponent } from './components/editor/editor.component';
+import { NavigatorComponent } from './components/navigator/navigator.component';
+import { RelationBrowserComponent } from './components/sidebar/relation-browser.component';
+import { RouteBrowserComponent } from './components/sidebar/route-browser.component';
+import { StopBrowserComponent } from './components/sidebar/stop-browser.component';
+import { TagBrowserComponent } from './components/sidebar/tag-browser.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { TransporterComponent } from './components/transporter/transporter.component';
 
-import { AuthService } from "./services/auth.service";
-import { ConfService } from "./services/conf.service";
-import { EditService } from "./services/edit.service";
-import { GeocodeService } from "./services/geocode.service";
-import { LoadService } from "./services/load.service";
-import { MapService } from "./services/map.service";
-import { OverpassService } from "./services/overpass.service";
-import { ProcessService } from "./services/process.service";
-import { StorageService } from "./services/storage.service";
+import { AuthService } from './services/auth.service';
+import { ConfService } from './services/conf.service';
+import { EditService } from './services/edit.service';
+import { GeocodeService } from './services/geocode.service';
+import { LoadService } from './services/load.service';
+import { MapService } from './services/map.service';
+import { OverpassService } from './services/overpass.service';
+import { ProcessService } from './services/process.service';
+import { StorageService } from './services/storage.service';
 
-import { KeysPipe } from "./pipes/keys.pipe";
+import { KeysPipe } from './pipes/keys.pipe';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 
 const ROUTES: Routes = [
-  { path: "", component: AppComponent },
+  { path: '', component: AppComponent },
 ];
 
 @NgModule({
@@ -122,15 +122,15 @@ const ROUTES: Routes = [
 
     KeysPipe,
 
-    { provide: APP_BASE_HREF, useValue : "/" },
+    { provide: APP_BASE_HREF, useValue : '/' },
   ],
 })
 export class AppModule {}
 
 if (module.hot) {
   module.hot.accept();
-  console.log("[HMR] Accepting module hot update.");
-  const applicationTagName = "app";
+  console.log('[HMR] Accepting module hot update.');
+  const applicationTagName = 'app';
   tryRemoveApplicationNode(applicationTagName);
   tryBootstrapNewApplication(applicationTagName);
 }
@@ -145,14 +145,14 @@ function tryRemoveApplicationNode(tagName: string): void {
 
 function tryBootstrapNewApplication(tagName: string): void {
   const newNode = document.createElement(tagName);
-  document.getElementsByTagName("body")[0].insertAdjacentElement("beforeend", newNode);
+  document.getElementsByTagName('body')[0].insertAdjacentElement('beforeend', newNode);
 
-  const bootstrap: any = require("./bootstrap");
+  const bootstrap: any = require('./bootstrap');
   const newAppModule = bootstrap.AppModule;
   platformBrowserDynamic().bootstrapModule(newAppModule);
 }
 
-if (window.location.hostname !== "localhost") {
+if (window.location.hostname !== 'localhost') {
   enableProdMode(); // run angular development mode outside testing environment
 }
 platformBrowserDynamic().bootstrapModule(AppModule);

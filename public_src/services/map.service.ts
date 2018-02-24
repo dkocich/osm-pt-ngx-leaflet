@@ -1,51 +1,51 @@
-import { EventEmitter, Injectable } from "@angular/core";
-import { Http } from "@angular/http";
+import { EventEmitter, Injectable } from '@angular/core';
+import { Http } from '@angular/http';
 
-import { ConfService } from "./conf.service";
-import { LoadService } from "./load.service";
-import { StorageService } from "./storage.service";
+import { ConfService } from './conf.service';
+import { LoadService } from './load.service';
+import { StorageService } from './storage.service';
 
-import * as L from "leaflet";
+import * as L from 'leaflet';
 
-import { IPtStop } from "../core/ptStop.interface";
+import { IPtStop } from '../core/ptStop.interface';
 
 const DEFAULT_ICON = L.icon({
-  iconUrl: "",
+  iconUrl: '',
   shadowAnchor: [22, 94],
   shadowSize: [24, 24],
-  shadowUrl: "",
+  shadowUrl: '',
 });
 const HIGHLIGHT_FILL = {
-  color: "#ffff00",
+  color: '#ffff00',
   opacity: 0.6,
   weight: 6,
 };
 const HIGHLIGHT_STROKE = {
-  color: "#FF0000",
+  color: '#FF0000',
   opacity: 0.6,
   weight: 12,
 };
 const FROM_TO_LABEL = {
-  color: "#00FFFF",
+  color: '#00FFFF',
   opacity: 0.6,
 };
 const REL_BUS_STYLE = {
-  color: "#0000FF",
+  color: '#0000FF',
   opacity: 0.3,
   weight: 6,
 };
 const REL_TRAIN_STYLE = {
-  color: "#000000",
+  color: '#000000',
   opacity: 0.3,
   weight: 6,
 };
 const REL_TRAM_STYLE = {
-  color: "#FF0000",
+  color: '#FF0000',
   opacity: 0.3,
   weight: 6,
 };
 const OTHER_STYLE = {
-  color: "#00FF00",
+  color: '#00FF00',
   opacity: 0.3,
   weight: 6,
 };
@@ -55,7 +55,7 @@ export class MapService {
   public map: L.Map;
   public baseMaps: any;
   public previousCenter: [number, number] = [0.0, 0.0];
-  public osmtogeojson: any = require("osmtogeojson");
+  public osmtogeojson: any = require('osmtogeojson');
   public bounds;
   public highlightStroke: any = undefined;
   public editingMode: boolean;
@@ -63,7 +63,7 @@ export class MapService {
   public markerClick: EventEmitter<any> = new EventEmitter();
   public markerEdit: EventEmitter<object> = new EventEmitter();
   public highlightTypeEmitter: EventEmitter<object> = new EventEmitter();
-  public highlightType: string = "Stops";
+  public highlightType: string = 'Stops';
   public membersEditing: boolean;
   public markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
   public membersHighlightLayer: any = undefined;
@@ -80,11 +80,11 @@ export class MapService {
     private storageSrv: StorageService,
   ) {
     this.baseMaps = {
-      Empty: L.tileLayer("", {
-        attribution: "",
+      Empty: L.tileLayer('', {
+        attribution: '',
       }),
       CartoDB_dark: L.tileLayer(
-        "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
+        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
         {
           attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>OpenStreetMap
             </a> &copy; <a href='https://cartodb.com/attributions' target='_blank' rel='noopener'>CartoDB</a>`,
@@ -93,7 +93,7 @@ export class MapService {
         },
       ),
       CartoDB_light: L.tileLayer(
-        "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
         {
           attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>OpenStreetMap
             </a> &copy; <a href='https://cartodb.com/attributions' target='_blank' rel='noopener'>CartoDB</a>`,
@@ -102,8 +102,8 @@ export class MapService {
         },
       ),
       Esri: L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/" +
-          "World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+        'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+          'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
         {
           attribution: `Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap,
             iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan,
@@ -113,8 +113,8 @@ export class MapService {
         },
       ),
       Esri_imagery: L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/" +
-          "World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+          'World_Imagery/MapServer/tile/{z}/{y}/{x}',
         {
           attribution: `Tiles &copy; Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye,
             Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community `,
@@ -123,43 +123,43 @@ export class MapService {
         },
       ),
       HERE_satelliteDay: L.tileLayer(
-        "http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}",
+        'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
         {
           attribution:
-            "Map &copy; 1987-2014 <a href='https://developer.here.com' target='_blank' rel='noopener'>HERE</a>",
-          subdomains: "1234",
-          mapID: "newest",
+            'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
+          subdomains: '1234',
+          mapID: 'newest',
           app_id: ConfService.hereAppId,
           app_code: ConfService.hereAppCode,
-          base: "aerial",
+          base: 'aerial',
           maxNativeZoom: 19,
           maxZoom: 20,
-          type: "maptile",
-          language: "eng",
-          format: "png8",
-          size: "256",
+          type: 'maptile',
+          language: 'eng',
+          format: 'png8',
+          size: '256',
         },
       ),
       HERE_hybridDay: L.tileLayer(
-        "http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}",
+        'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
         {
           attribution:
-            "Map &copy; 1987-2014 <a href='https://developer.here.com' target='_blank' rel='noopener'>HERE</a>",
-          subdomains: "1234",
-          mapID: "newest",
+            'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
+          subdomains: '1234',
+          mapID: 'newest',
           app_id: ConfService.hereAppId,
           app_code: ConfService.hereAppCode,
-          base: "aerial",
+          base: 'aerial',
           maxNativeZoom: 19,
           maxZoom: 20,
-          type: "maptile",
-          language: "eng",
-          format: "png8",
-          size: "256",
+          type: 'maptile',
+          language: 'eng',
+          format: 'png8',
+          size: '256',
         },
       ),
       MapBox_imagery: L.tileLayer(
-        "https://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=" +
+        'https://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=' +
           ConfService.mapboxToken,
         {
           attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank' rel='noopener'>&copy; Mapbox</a>,
@@ -170,7 +170,7 @@ export class MapService {
         },
       ),
       MapBox_streets: L.tileLayer(
-        "https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=" +
+        'https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=' +
           ConfService.mapboxToken,
         {
           attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank' rel='noopener'>&copy; Mapbox</a>,
@@ -181,7 +181,7 @@ export class MapService {
         },
       ),
       OSM_hot: L.tileLayer(
-        "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+        'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
         {
           attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'
             target='_blank' rel='noopener'> OpenStreetMap</a>
@@ -192,7 +192,7 @@ export class MapService {
         },
       ),
       OSM_standard: L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         {
           attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'
             target='_blank' rel='noopener'>
@@ -202,7 +202,7 @@ export class MapService {
           maxZoom: 22,
         },
       ),
-      OSM_PT: L.tileLayer("http://www.openptmap.org/tiles/{z}/{x}/{y}.png", {
+      OSM_PT: L.tileLayer('http://www.openptmap.org/tiles/{z}/{x}/{y}.png', {
         attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>
           OpenStreetMap</a>, Tiles courtesy of <a href='https://openptmap.org/'
           target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
@@ -210,7 +210,7 @@ export class MapService {
         maxZoom: 17,
       }),
       OSM_transport: L.tileLayer(
-        "http://{s}.tile2.opencyclemap.org/" + "transport/{z}/{x}/{y}.png",
+        'http://{s}.tile2.opencyclemap.org/' + 'transport/{z}/{x}/{y}.png',
         {
           attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>
             OpenStreetMap</a>, Tiles courtesy of <a href='https://opencyclemap.org/'
@@ -240,7 +240,7 @@ export class MapService {
   public zoomToHashedPosition(): void {
     const h = window.location.hash
       .slice(5)
-      .split("/")
+      .split('/')
       .map(Number);
     this.map.setView({ lat: h[1], lng: h[2] }, h[0]);
   }
@@ -268,7 +268,7 @@ export class MapService {
         }
         if (this.confSrv.cfgFilterLines) {
           return (
-            "public_transport" in feature.properties && feature.id[0] === "n"
+            'public_transport' in feature.properties && feature.id[0] === 'n'
           );
         } else {
           return true;
@@ -286,7 +286,7 @@ export class MapService {
         return this.styleFeature(feature);
       },
     });
-    console.log("LOG (map s.) Adding PTlayer to map again", this.ptLayer);
+    console.log('LOG (map s.) Adding PTlayer to map again', this.ptLayer);
     this.ptLayer.addTo(this.map);
   }
 
@@ -296,12 +296,12 @@ export class MapService {
    * @param layer
    */
   public enableDrag(feature: any, layer: any): any {
-    layer.on("click", (e) => {
+    layer.on('click', (e) => {
       if (!this.membersEditing) {
         this.handleMarkerClick(feature);
       }
     });
-    layer.on("click", (e) => {
+    layer.on('click', (e) => {
       if (this.membersEditing) {
         this.handleMembershipToggle(feature);
       } else if (this.editingMode) {
@@ -331,28 +331,28 @@ export class MapService {
       }
     });
 
-    layer.on("dragend", (e) => {
+    layer.on('dragend', (e) => {
       // console.log("LOG (map s.) Dragend event during editing mode", e);
       const marker = e.target;
-      const featureTypeId = marker.feature.properties.id.split("/");
+      const featureTypeId = marker.feature.properties.id.split('/');
       const featureType = featureTypeId[0];
       const featureId = featureTypeId[1];
       const lat = marker.feature.geometry.coordinates[1];
       const lng = marker.feature.geometry.coordinates[0];
       const originalCoords: L.LatLng = new L.LatLng(lat, lng);
-      const newCoords: L.LatLng = marker["_latlng"]; // .; getLatLng()
+      const newCoords: L.LatLng = marker['_latlng']; // .; getLatLng()
       const distance = originalCoords.distanceTo(newCoords);
       if (distance > 100) {
         marker.setLatLng(originalCoords).update();
         alert(
-          "Current node was dragged more than 100 meters away which is not allowed - resetting position.",
+          'Current node was dragged more than 100 meters away which is not allowed - resetting position.',
         );
         return;
       }
       // console.log("LOG (map s.) Distance is", distance, "meters", marker);
       const change = {
         from: { lat, lng },
-        to: { lat: newCoords["lat"], lng: newCoords["lng"] },
+        to: { lat: newCoords['lat'], lng: newCoords['lng'] },
       };
       // console.log("LOG (map s.) Marker change is ", change);
       // TODO markers geometry editing and history undo/redo
@@ -370,7 +370,7 @@ export class MapService {
    */
   public renderData(requestBody: any, options: any): void {
     this.http
-      .post("https://overpass-api.de/api/interpreter", requestBody, options)
+      .post('https://overpass-api.de/api/interpreter', requestBody, options)
       .map((res) => res.json())
       .subscribe((result) => {
         const transformed = this.osmtogeojson(result);
@@ -424,7 +424,7 @@ export class MapService {
   public findCoordinates(refId: number): L.LatLngExpression {
     const element = this.storageSrv.elementsMap.get(refId);
     if (!element) {
-      console.log("Warning - elem. not found ", refId, JSON.stringify(element));
+      console.log('Warning - elem. not found ', refId, JSON.stringify(element));
     } else {
       return { lat: element.lat, lng: element.lon };
     }
@@ -474,8 +474,8 @@ export class MapService {
     this.storageSrv.stopsForRoute = [];
     for (const member of rel.members) {
       if (
-        member.type === "node" &&
-        ["stop", "stop_entry_only", "stop_exit_only"].indexOf(member.role) > -1
+        member.type === 'node' &&
+        ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
         this.storageSrv.stopsForRoute.push(member.ref);
         const latlng: L.LatLngExpression = this.findCoordinates(member.ref);
@@ -488,7 +488,7 @@ export class MapService {
       HIGHLIGHT_FILL.color =
         rel.tags.colour ||
         rel.tags.color ||
-        "#" + (Math.floor(Math.random() * 0xffffff) | 0x0f0f0f).toString(16);
+        '#' + (Math.floor(Math.random() * 0xffffff) | 0x0f0f0f).toString(16);
       this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL).bindTooltip(
         rel.tags.name,
       );
@@ -512,7 +512,7 @@ export class MapService {
       this.membersHighlightLayer &&
       this.map.hasLayer(this.membersHighlightLayer)
     ) {
-      console.log("LOG: delete existing highlight");
+      console.log('LOG: delete existing highlight');
       this.map.removeLayer(this.membersHighlightLayer);
       this.membersHighlightLayer = undefined;
     }
@@ -526,19 +526,19 @@ export class MapService {
   public showRoute(rel: any): boolean {
     for (const member of rel.members) {
       if (
-        member.type === "node" &&
-        ["stop", "stop_entry_only", "stop_exit_only"].indexOf(member.role) > -1
+        member.type === 'node' &&
+        ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
         this.storageSrv.stopsForRoute.push(member.ref);
       } else if (
-        member.type === "node" &&
-        ["platform", "platform_entry_only", "platform_exit_only"]
+        member.type === 'node' &&
+        ['platform', 'platform_entry_only', 'platform_exit_only']
           .indexOf(member.role) > -1
       ) {
         this.storageSrv.platformsForRoute.push(member.ref);
-      } else if (member.type === "way") {
+      } else if (member.type === 'way') {
         this.storageSrv.waysForRoute.push(member.ref);
-      } else if (member.type === "relation") {
+      } else if (member.type === 'relation') {
         this.storageSrv.relationsForRoute.push(member.ref);
       }
     }
@@ -548,16 +548,16 @@ export class MapService {
       this.storageSrv.stopsForRoute.length === 0 &&
       this.storageSrv.platformsForRoute.length !== 0
     ) {
-      this.highlightType = "Platforms";
+      this.highlightType = 'Platforms';
     }
     this.highlightTypeEmitter.emit({ highlightType: this.highlightType });
 
     let memberRefs;
     switch (this.highlightType) {
-      case "Stops":
+      case 'Stops':
         memberRefs = this.storageSrv.stopsForRoute;
         break;
-      case "Platforms":
+      case 'Platforms':
         memberRefs = this.storageSrv.platformsForRoute;
         break;
     }
@@ -589,11 +589,11 @@ export class MapService {
       return true;
     } else {
       if (rel.members.length <= 1) {
-        console.log("LOG (map s.) This is new relation -> do not highlight route");
+        console.log('LOG (map s.) This is new relation -> do not highlight route');
       } else {
         alert(
-          "Problem has occurred while drawing line connecting its members (no added stops?). Please add members and try again." +
-            "\n\n" +
+          'Problem has occurred while drawing line connecting its members (no added stops?). Please add members and try again.' +
+            '\n\n' +
             JSON.stringify(rel),
         );
       }
@@ -617,10 +617,10 @@ export class MapService {
   private getFirstNode(): L.LatLngExpression {
     let latlngFrom;
     switch (this.highlightType) {
-      case "Stops":
+      case 'Stops':
         latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0]); // get first and last ID reference
         return latlngFrom;
-      case "Platforms":
+      case 'Platforms':
         latlngFrom = this.findCoordinates(
           this.storageSrv.platformsForRoute[0],
         ); // get first and last ID reference
@@ -631,14 +631,14 @@ export class MapService {
   private getLastNode(): L.LatLngExpression {
     let latlngTo;
     switch (this.highlightType) {
-      case "Stops":
+      case 'Stops':
         latlngTo = this.findCoordinates(
           this.storageSrv.stopsForRoute[
             this.storageSrv.stopsForRoute.length - 1
           ],
         );
         return latlngTo;
-      case "Platforms":
+      case 'Platforms':
         latlngTo = this.findCoordinates(
           this.storageSrv.platformsForRoute[
             this.storageSrv.platformsForRoute.length - 1
@@ -656,23 +656,23 @@ export class MapService {
     const latlngFrom = this.getFirstNode();
     const latlngTo = this.getLastNode();
 
-    const from: string = "Tag from: " + rel.tags.from || "#FROM";
-    const to: string = "Tag to: " + rel.tags.to || "#TO";
-    const route: string = rel.tags.route || "#ROUTE";
-    const ref: string = rel.tags.ref || "#REF";
+    const from: string = 'Tag from: ' + rel.tags.from || '#FROM';
+    const to: string = 'Tag to: ' + rel.tags.to || '#TO';
+    const route: string = rel.tags.route || '#ROUTE';
+    const ref: string = rel.tags.ref || '#REF';
 
     this.markerTo = L.circleMarker(latlngTo, FROM_TO_LABEL).bindTooltip(
-      to + " (" + route + " " + ref + ")",
+      to + ' (' + route + ' ' + ref + ')',
       {
-        className: "from-to-label",
+        className: 'from-to-label',
         offset: [0, 0],
         permanent: true,
       },
     );
     this.markerFrom = L.circleMarker(latlngFrom, FROM_TO_LABEL).bindTooltip(
-      from + " (" + route + " " + ref + ")",
+      from + ' (' + route + ' ' + ref + ')',
       {
-        className: "from-to-label",
+        className: 'from-to-label',
         offset: [0, 0],
         permanent: true,
       },
@@ -691,46 +691,46 @@ export class MapService {
    * @returns {any}
    */
   private stylePoint(feature: any, latlng: any): any {
-    let iconUrl = "images/marker-icon.png";
-    let shadowUrl = "";
+    let iconUrl = 'images/marker-icon.png';
+    let shadowUrl = '';
     const fp = feature.properties;
-    if ("public_transport" in fp) {
+    if ('public_transport' in fp) {
       // && fp["railway"] === undefined
-      if (fp["public_transport"] === "platform") {
-        iconUrl = "images/transport/platform.png";
-      } else if (fp["public_transport"] === "stop_position") {
-        iconUrl = "images/transport/bus.png";
-      } else if (fp["public_transport"] === "station") {
-        iconUrl = "images/transport/station.png";
+      if (fp['public_transport'] === 'platform') {
+        iconUrl = 'images/transport/platform.png';
+      } else if (fp['public_transport'] === 'stop_position') {
+        iconUrl = 'images/transport/bus.png';
+      } else if (fp['public_transport'] === 'station') {
+        iconUrl = 'images/transport/station.png';
       }
-    } else if ("highway" in fp) {
-      if (fp["highway"] === "bus_stop") {
-        iconUrl = "images/transport/bus.png";
-      } else if (fp["highway"] === "traffic_signals") {
-        iconUrl = "images/traffic/traffic_signals.png";
-      } else if (fp["highway"] === "crossing") {
-        iconUrl = "images/traffic/crossing.png";
+    } else if ('highway' in fp) {
+      if (fp['highway'] === 'bus_stop') {
+        iconUrl = 'images/transport/bus.png';
+      } else if (fp['highway'] === 'traffic_signals') {
+        iconUrl = 'images/traffic/traffic_signals.png';
+      } else if (fp['highway'] === 'crossing') {
+        iconUrl = 'images/traffic/crossing.png';
       }
-    } else if ("railway" in fp) {
+    } else if ('railway' in fp) {
       if (
-        ["crossing", "level_crossing", "railway_crossing"]
-          .indexOf(fp["railway"]) > -1
+        ['crossing', 'level_crossing', 'railway_crossing']
+          .indexOf(fp['railway']) > -1
       ) {
-        iconUrl = "images/transport/railway/crossing.png";
-      } else if (fp["railway"] === ["tram_stop"]) {
-        iconUrl = "images/transport/railway/tram.png";
-      } else if (fp["railway"] === "stop_position") {
-        iconUrl = "images/transport/train.png";
-      } else if (fp["public_transport"] === "station") {
-        iconUrl = "images/transport/railway_station.png";
+        iconUrl = 'images/transport/railway/crossing.png';
+      } else if (fp['railway'] === ['tram_stop']) {
+        iconUrl = 'images/transport/railway/tram.png';
+      } else if (fp['railway'] === 'stop_position') {
+        iconUrl = 'images/transport/train.png';
+      } else if (fp['public_transport'] === 'station') {
+        iconUrl = 'images/transport/railway_station.png';
       }
     }
-    if ("public_transport:version" in fp) {
-      if (fp["public_transport:version"] === "1") {
-        shadowUrl = "images/nr1-24x24.png";
+    if ('public_transport:version' in fp) {
+      if (fp['public_transport:version'] === '1') {
+        shadowUrl = 'images/nr1-24x24.png';
       }
-      if (fp["public_transport:version"] === "2") {
-        iconUrl = "images/nr2-24x24.png";
+      if (fp['public_transport:version'] === '2') {
+        iconUrl = 'images/nr2-24x24.png';
       }
     }
     const myIcon = L.icon({
@@ -745,7 +745,7 @@ export class MapService {
       draggable: false,
       opacity: 0.8,
       riseOnHover: true,
-      title: fp.name || fp.id || "",
+      title: fp.name || fp.id || '',
     });
   }
 
@@ -756,11 +756,11 @@ export class MapService {
    */
   private styleFeature(feature: any): object {
     switch (feature.properties.route) {
-      case "bus":
+      case 'bus':
         return REL_BUS_STYLE;
-      case "train":
+      case 'train':
         return REL_TRAIN_STYLE;
-      case "tram":
+      case 'tram':
         return REL_TRAM_STYLE;
       default:
         return OTHER_STYLE;
@@ -773,7 +773,7 @@ export class MapService {
    * @returns {number}
    */
   private getFeatureIdFromMarker(feature: any): number {
-    const featureTypeId = feature.id.split("/");
+    const featureTypeId = feature.id.split('/');
     const featureType = featureTypeId[0];
     return Number(featureTypeId[1]); // featureId
   }

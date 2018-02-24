@@ -13,7 +13,7 @@ export interface IPtRelationTags {
   from: string;
   to: string;
   name: string;
-  "public_transport:version": string;
+  'public_transport:version': string;
   type: string;
   route: string;
   route_ref: string;
