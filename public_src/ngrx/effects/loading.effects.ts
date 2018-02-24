@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { TestService } from '../services/test.service';
-import * as test from '../actions/test.actions';
+import { LoadingService } from '../services/loading.service';
+import * as test from '../actions/loading.actions';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/map';
@@ -11,7 +11,7 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class TestEffects {
   constructor(
-    private testService: TestService,
+    private testService: LoadingService,
     private actions$: Actions,
   ) { }
 

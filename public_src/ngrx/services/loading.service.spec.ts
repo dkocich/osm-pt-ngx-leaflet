@@ -1,10 +1,10 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { Http, BaseRequestOptions, Response, ResponseOptions, RequestMethod } from '@angular/http';
 import { MockBackend, MockConnection } from '@angular/http/testing';
-import { TestService } from '../services/test.service';
+import { LoadingService  } from './loading.service';
 
-describe('Service: TestService', () => {
-  let service: TestService = null;
+describe('Service: LoadingService', () => {
+  let service: LoadingService = null;
   let backend: MockBackend = null;
 
   beforeEach(() => {
@@ -17,20 +17,20 @@ describe('Service: TestService', () => {
           useFactory: (backendInstance: MockBackend, defaultOptions: BaseRequestOptions) => {
             return new Http(backendInstance, defaultOptions);
           },
-          deps: [ MockBackend, BaseRequestOptions ]
+          deps: [ MockBackend, BaseRequestOptions ],
         },
-        TestService
-      ]
+        LoadingService,
+      ],
     });
   });
 
-  beforeEach(inject([TestService, MockBackend], (testService: TestService, mockBackend: MockBackend) => {
-    service = testService;
+  beforeEach(inject([LoadingService, MockBackend], (loadingService: LoadingService, mockBackend: MockBackend) => {
+    service = loadingService;
     backend = mockBackend;
   }));
 
   // --------------------Example------------------------
-  
+
   // const data = {
   //   'title': 'Book Title',
   //   'author': 'John Smith',

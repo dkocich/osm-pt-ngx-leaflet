@@ -2,8 +2,8 @@
 // import 'rxjs/add/observable/throw';
 // import { EffectsRunner, EffectsTestingModule } from '@ngrx/effects/testing';
 // import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-// import { TestEffects } from '../effects/test.effects';
-// import { TestService } from '../services/test.service';
+// import { TestEffects } from './loading.effects';
+// import { LoadingService } from '../services/loading.service';
 // import { Observable } from 'rxjs/Observable';
 //
 // describe('TestEffects', () => {
@@ -18,7 +18,7 @@
 //     providers: [
 //       TestEffects,
 //       {
-//         provide: TestService,
+//         provide: LoadingService,
 //         useValue: jasmine.createSpyObj('testService', ['get']),
 //       },
 //     ],
@@ -27,7 +27,7 @@
 //   beforeEach(() => {
 //     runner = TestBed.get(EffectsRunner);
 //     testEffects = TestBed.get(TestEffects);
-//     testService = TestBed.get(TestService);
+//     testService = TestBed.get(LoadingService);
 //   });
 //
 //   describe('test$', () => {

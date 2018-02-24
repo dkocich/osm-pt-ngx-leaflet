@@ -140,17 +140,18 @@ export class EditorComponent {
    * Activates editing mode (locally/globally).
    */
   private toggleEditMode(): void {
-    this.editing = !this.editing;
-    this.editSrv.editingMode.emit(this.editing);
-    this.mapSrv.editingMode = this.editing;
-    if (this.editing) {
-      setTimeout(() => {
-        this.mapSrv.disableMouseEvent('edits-backward-btn');
-        this.mapSrv.disableMouseEvent('edits-forward-btn');
-        this.mapSrv.disableMouseEvent('edits-count');
-        this.mapSrv.disableMouseEvent('stop-btn');
-        this.mapSrv.disableMouseEvent('platform-btn');
-      }, 250);
-    }
+    debugger;
+    // this.editing = !this.editing;
+    // this.editSrv.editingMode.emit(this.editing);
+    // this.mapSrv.editingMode = this.editing;
+    // if (this.editing) {
+    //   setTimeout(() => {
+    //     this.mapSrv.disableMouseEvent('edits-backward-btn');
+    //     this.mapSrv.disableMouseEvent('edits-forward-btn');
+    //     this.mapSrv.disableMouseEvent('edits-count');
+    //     this.mapSrv.disableMouseEvent('stop-btn');
+    //     this.mapSrv.disableMouseEvent('platform-btn');
+    //   }, 250);
+    // }
   }
 }

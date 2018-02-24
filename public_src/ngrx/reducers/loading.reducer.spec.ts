@@ -1,5 +1,5 @@
-import { reducer } from '../reducers/test.reducer';
-import * as fromTest from '../reducers/test.reducer';
+import { loadingReducer } from './loading.reducer';
+import * as fromTest from '../reducers/loading.reducer';
 
 describe('TestReducer', () => {
 
@@ -7,7 +7,7 @@ describe('TestReducer', () => {
     it('should return the default state', () => {
       const action = {} as any;
 
-      const result = reducer(undefined, action);
+      const result = loadingReducer(undefined, action);
       expect(result).toEqual(fromTest.initialState);
     });
   });

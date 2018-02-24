@@ -1,8 +1,10 @@
-import * as test from '../actions/test.actions';
+import * as loading from '../actions/loading.actions';
 
 export interface IState {
   loading: boolean;
-  entities: { [id: string]: any };
+  entities: {
+    [id: string]: any,
+  };
   result: string[];
 }
 
@@ -12,16 +14,16 @@ export const initialState: IState = {
   result: [],
 };
 
-export function reducer(state: IState = initialState, action: test.Actions): IState {
+export const loadingReducer = (state: IState = initialState, action: loading.Actions): IState => {
   switch (action.type) {
-    case test.LOAD: {
+    case loading.LOAD: {
       return {
         ...state,
         loading: true,
       };
     }
 
-    case test.LOAD_SUCCESS: {
+    case loading.LOAD_SUCCESS: {
 
       return {
         ...state,
@@ -29,7 +31,7 @@ export function reducer(state: IState = initialState, action: test.Actions): ISt
       };
     }
 
-     case test.LOAD_FAIL: {
+     case loading.LOAD_FAIL: {
 
       return {
         ...state,
@@ -41,4 +43,4 @@ export function reducer(state: IState = initialState, action: test.Actions): ISt
       return state;
     }
   }
-}
+};
