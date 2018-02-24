@@ -58,6 +58,7 @@
         "no-submodule-imports": [true,
           "rxjs",
           "@angular",
+          "@ngrx",
           "angulartics2/piwik",
           "zone.js",
           "angular2-busy",
