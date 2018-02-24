@@ -29,8 +29,6 @@ public/**/*
 
 .tscache
 
-!public/data/airports.geojson
-
 # VSCode settings
 .vscode
 

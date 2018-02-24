@@ -127,6 +127,31 @@ const ROUTES: Routes = [
 })
 export class AppModule {}
 
+if (module.hot) {
+  module.hot.accept();
+  console.log("[HMR] Accepting module hot update.");
+  const applicationTagName = "app";
+  tryRemoveApplicationNode(applicationTagName);
+  tryBootstrapNewApplication(applicationTagName);
+}
+
+function tryRemoveApplicationNode(tagName: string): void {
+  const currentApplicationNode = document.getElementsByTagName(tagName)[0];
+  if (currentApplicationNode) {
+    const parent = currentApplicationNode.parentNode;
+    parent.removeChild(currentApplicationNode);
+  }
+}
+
+function tryBootstrapNewApplication(tagName: string): void {
+  const newNode = document.createElement(tagName);
+  document.getElementsByTagName("body")[0].insertAdjacentElement("beforeend", newNode);
+
+  const bootstrap: any = require("./bootstrap");
+  const newAppModule = bootstrap.AppModule;
+  platformBrowserDynamic().bootstrapModule(newAppModule);
+}
+
 if (window.location.hostname !== "localhost") {
   enableProdMode(); // run angular development mode outside testing environment
 }

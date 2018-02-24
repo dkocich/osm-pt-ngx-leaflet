@@ -14,7 +14,8 @@
     "types": [
       "node",
       "jasmine",
-      "leaflet"
+      "leaflet",
+      "webpack-env"
     ]
   },
   "compileOnSave": false,

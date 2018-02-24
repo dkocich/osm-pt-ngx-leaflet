@@ -58,7 +58,7 @@ module.exports = {
       defaultAttribute: "defer"
     }),
     new WebpackCleanupPlugin({
-      exclude: ["index.html", "data/airports.geojson"]
+      exclude: ["index.html"]
     }),
     new OptimizeJsPlugin(),
     // new UglifyJsPlugin({
@@ -85,8 +85,8 @@ module.exports = {
       canPrint: true
     }),
     new CopyWebpackPlugin([{
-      from:'public_src/assets',
-      to: 'assets'
+      from: "public_src/assets",
+      to: "assets"
     }, {
       from: "public_src/images",
       to: "images"

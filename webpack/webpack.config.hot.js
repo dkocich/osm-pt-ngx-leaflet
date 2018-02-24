@@ -13,6 +13,9 @@ const outputDir = "../public";
 
 module.exports = {
   devtool: "inline-source-map",
+  devServer: {
+    hot: true
+  },
   entry: {
     app: path.resolve(srcDir, "bootstrap.ts")
   },
@@ -74,8 +77,9 @@ module.exports = {
       from: "public_src/manifest.json",
       to: ""
     }]),
-    new Jarvis({
-      port: 1337
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin({
+      multistep: true
     })
   ]
 };

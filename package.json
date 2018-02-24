@@ -39,6 +39,7 @@
     "test": "snyk test && NODE_ENV=development karma start",
     "watch": "webpack --config webpack/webpack.config.dev.js --watch",
     "wds-dev": "webpack-dev-server --config webpack/webpack.config.dev.js  --content-base public/ --progress --colors",
+    "wds-hot": "webpack-dev-server --config webpack/webpack.config.hot.js  --content-base public/ --progress --colors --inline --watch --hotOnly",
     "wds-prod": "webpack-dev-server --config webpack/webpack.config.prod.js  --content-base public/ --progress --colors"
   },
   "homepage": "https://github.com/dkocich/osm-pt-ngx-leaflet#readme",
@@ -61,6 +62,7 @@
     "@types/jasmine": "2.8.6",
     "@types/leaflet": "1.2.5",
     "@types/node": "9.4.6",
+    "@types/webpack-env": "1.13.5",
     "@types/xmlbuilder": "0.0.32",
     "angular2-busy": "2.0.4",
     "angulartics2": "5.1.1",
