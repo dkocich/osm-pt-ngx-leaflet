@@ -152,7 +152,7 @@ function tryBootstrapNewApplication(tagName: string): void {
   platformBrowserDynamic().bootstrapModule(newAppModule);
 }
 
-if (window.location.hostname !== 'localhost') {
+if (window.location.hostname !== 'localhost' || process.env.NODE_ENV === 'production') {
   enableProdMode(); // run angular development mode outside testing environment
 }
 platformBrowserDynamic().bootstrapModule(AppModule);
