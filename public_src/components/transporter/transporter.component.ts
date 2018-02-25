@@ -14,7 +14,7 @@ import { ModalDirective } from 'ngx-bootstrap';
     require<any>('../toolbar/toolbar.component.less'),
     require<any>('./transporter.component.less'),
   ],
-  template: require<any>('./transporter.component.html'),
+  templateUrl: './transporter.component.html',
 })
 export class TransporterComponent {
   @ViewChild('downloadModal') public downloadModal: ModalDirective;

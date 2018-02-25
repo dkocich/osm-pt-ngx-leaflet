@@ -10,7 +10,7 @@ import { MapService } from '../../services/map.service';
     require<any>('./navigator.component.less'),
     require<any>('../../styles/main.less'),
   ],
-  template: require<any>('./navigator.component.html'),
+  templateUrl: './navigator.component.html',
 })
 export class NavigatorComponent {
   public address: string;

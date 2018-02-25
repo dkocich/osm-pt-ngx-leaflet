@@ -18,7 +18,7 @@ import { IOsmEntity } from '../../core/osmEntity.interface';
     require<any>('./toolbar.component.less'),
     require<any>('../../styles/main.less'),
   ],
-  template: require<any>('./toolbar.component.html'),
+  templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent {
   public downloading: boolean;

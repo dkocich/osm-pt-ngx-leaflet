@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
   providers: [],
   selector: 'lang',
   styles: [require<any>('./lang.component.less')],
-  template: require<any>('./lang.component.html'),
+  templateUrl: './lang.component.html',
 })
 export class LangComponent {
   constructor(

@@ -8,7 +8,7 @@ import { StorageService } from '../../services/storage.service';
   providers: [],
   selector: 'auth',
   styles: [require<any>('./auth.component.less')],
-  template: require<any>('./auth.component.html'),
+  templateUrl: './auth.component.html',
 })
 export class AuthComponent {
   private displayName: string;

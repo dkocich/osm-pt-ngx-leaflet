@@ -14,7 +14,7 @@ import { ModalDirective } from 'ngx-bootstrap';
     require<any>('./editor.component.less'),
     require<any>('../../styles/main.less'),
   ],
-  template: require<any>('./editor.component.html'),
+  templateUrl: './editor.component.html',
 })
 export class EditorComponent {
   @ViewChild('editModal') public editModal: ModalDirective;

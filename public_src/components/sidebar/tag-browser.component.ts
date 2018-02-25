@@ -19,7 +19,7 @@ import { IOsmEntity } from '../../core/osmEntity.interface';
     require<any>('./tag-browser.component.less'),
     require<any>('../../styles/main.less'),
   ],
-  template: require<any>('./tag-browser.component.html'),
+  templateUrl: './tag-browser.component.html',
 })
 export class TagBrowserComponent {
   @Input() public tagKey: string = '';

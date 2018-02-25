@@ -14,7 +14,7 @@ import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
     require<any>('./relation-browser.component.less'),
     require<any>('../../styles/main.less'),
   ],
-  template: require<any>('./relation-browser.component.html'),
+  templateUrl: './relation-browser.component.html',
 })
 export class RelationBrowserComponent {
   private currentElement: IPtRouteMasterNew;

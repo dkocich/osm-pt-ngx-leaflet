@@ -13,7 +13,7 @@ import { StorageService } from '../../services/storage.service';
     require<any>('./route-browser.component.less'),
     require<any>('../../styles/main.less'),
   ],
-  template: require<any>('./route-browser.component.html'),
+  templateUrl: './route-browser.component.html',
 })
 export class RouteBrowserComponent {
   private currentElement;

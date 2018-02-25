@@ -16,7 +16,7 @@ import { EditService } from '../../services/edit.service';
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
   selector: 'app',
   styles: [require<any>('./app.component.less')],
-  template: require<any>('./app.component.html'),
+  templateUrl: './app.component.html',
 })
 export class AppComponent {
   public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));

@@ -16,7 +16,7 @@ import { IPtStop } from '../../core/ptStop.interface';
     require<any>('./stop-browser.component.less'),
     require<any>('../../styles/main.less'),
   ],
-  template: require<any>('./stop-browser.component.html'),
+  templateUrl: './stop-browser.component.html',
 })
 export class StopBrowserComponent {
   public listOfStopsForRoute: object[] = this.storageSrv.listOfStopsForRoute;
