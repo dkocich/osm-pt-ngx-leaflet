@@ -92,10 +92,6 @@ export class AppComponent {
     this.helpModal.show();
   }
 
-  private getStatus(): string {
-    return this.loadSrv.getStatus();
-  }
-
   private changeMode(): void {
     localStorage.setItem('advancedMode', JSON.stringify(this.advancedMode));
   }

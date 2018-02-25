@@ -74,7 +74,6 @@
     "@types/node": "9.4.6",
     "@types/webpack-env": "1.13.5",
     "@types/xmlbuilder": "0.0.32",
-    "angular2-busy": "2.0.4",
     "angulartics2": "5.1.1",
     "bootstrap": "3.3.7",
     "codelyzer": "4.0.1",

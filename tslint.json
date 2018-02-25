@@ -61,7 +61,6 @@
           "@angular",
           "angulartics2/piwik",
           "zone.js",
-          "angular2-busy",
           "bootstrap",
           "dragula",
           "font-awesome",

@@ -14,7 +14,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { BusyModule } from 'angular2-busy';
 import { DragulaModule } from 'ng2-dragula';
 import {
   AccordionModule,
@@ -84,7 +83,6 @@ const ROUTES: Routes = [
     BsDropdownModule.forRoot(),
     BrowserAnimationsModule,
     BrowserModule,
-    BusyModule,
     ButtonsModule.forRoot(),
     CarouselModule.forRoot(),
     DragulaModule,

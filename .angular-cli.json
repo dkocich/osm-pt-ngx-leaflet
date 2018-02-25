@@ -23,7 +23,6 @@
         "../node_modules/bootstrap/dist/css/bootstrap.css",
         "../node_modules/leaflet/dist/leaflet.css",
         "../node_modules/font-awesome/css/font-awesome.css",
-        "../node_modules/angular2-busy/build/style/busy.css",
         "../node_modules/dragula/dist/dragula.css"
       ],
       "scripts": [],
