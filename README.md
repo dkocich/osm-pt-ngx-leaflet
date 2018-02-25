@@ -27,8 +27,8 @@ This project requires [yarn](https://yarnpkg.com/) to run locally and it is buil
  [Angular](https://angular.io/), [Leaflet](http://leafletjs.com/) and [Webpack](https://webpack.js.org/).
 
 1.	Run `yarn install` to install all dependencies.
-2.	Run `npm run wds-dev` to start local development with `webpack-dev-server`.
-3.  Open the browser at `http://localhost:8080/` to see current app build.
+2.	Run `npm start` to enable local development server.
+3.  Open the browser at `http://localhost:4200/` to see the app.
 
 Visit the [wiki page](https://github.com/dkocich/osm-pt-ngx-leaflet/wiki) for more information.
 

@@ -57,6 +57,7 @@
         "no-string-literal": false,
         "no-submodule-imports": [true,
           "rxjs",
+          "core-js",
           "@angular",
           "angulartics2/piwik",
           "zone.js",

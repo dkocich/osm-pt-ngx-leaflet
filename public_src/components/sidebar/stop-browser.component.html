@@ -37,8 +37,8 @@
           <td>{{i + 1}}.</td>
           <td>{{stop.role}}</td>
           <td>
-            <img *ngIf="stop.tags.public_transport === 'platform'" src="/images/transport/platform.png" alt="platform">
-            <img *ngIf="stop.tags.public_transport === 'stop_position'" src="/images/transport/bus.png" alt="stop">
+            <img *ngIf="stop.tags.public_transport === 'platform'" src="/assets/transport/platform.png" alt="platform">
+            <img *ngIf="stop.tags.public_transport === 'stop_position'" src="/assets/transport/bus.png" alt="stop">
             {{stop.tags.name || stop.id}}
           </td>
           <td>{{stop.tags.route_ref}}</td>
@@ -49,8 +49,8 @@
           <td>{{i + 1}}.</td>
           <td><input type="text" value="{{stop.role}}" disabled></td>
           <td>
-            <img *ngIf="stop.tags.public_transport === 'platform'" src="/images/transport/platform.png" alt="platform">
-            <img *ngIf="stop.tags.public_transport === 'stop_position'" src="/images/transport/bus.png" alt="stop">
+            <img *ngIf="stop.tags.public_transport === 'platform'" src="/assets/transport/platform.png" alt="platform">
+            <img *ngIf="stop.tags.public_transport === 'stop_position'" src="/assets/transport/bus.png" alt="stop">
             {{stop.tags.name || stop.id}}
           </td>
           <td>{{stop.tags.route_ref}}</td>

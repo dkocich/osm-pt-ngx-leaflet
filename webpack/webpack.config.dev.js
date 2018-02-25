@@ -14,7 +14,7 @@ const outputDir = "../public";
 module.exports = {
   devtool: "inline-source-map",
   entry: {
-    app: path.resolve(srcDir, "bootstrap.ts")
+    app: path.resolve(srcDir, "main.ts")
   },
   output: {
     path: path.resolve(__dirname, outputDir),
@@ -32,7 +32,7 @@ module.exports = {
       { test: /\.component\.html$/, use: [{ loader: "html-loader", options: { minimize: false } }] },
       { test: /(\.component|)\.less$/, use: ["to-string-loader", "css-loader", "less-loader"] },
       { test: /\.css$/, use: ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader" })},
-      { test: /\.(png|gif|jpg|ico|svg)$/, use:[{ loader: "file-loader", options: { name: "images/[name].[ext]"} } ]},
+      { test: /\.(png|gif|jpg|ico|svg)$/, use:[{ loader: "file-loader", options: { name: "assets/[name].[ext]"} } ]},
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, use:[{ loader: "file-loader", options: { name: "fonts/[name].[ext]"} } ]},
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, use:[{ loader: "file-loader", options: { name: "fonts/[name].[ext]"} } ]},
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, use:[{ loader: "file-loader", options: { name: "fonts/[name].[ext]"} } ]},

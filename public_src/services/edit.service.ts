@@ -588,10 +588,10 @@ export class EditService {
     let iconUrl;
     switch (creatingElementOfType) {
       case 'stop':
-        iconUrl = require<any>('../images/transport/bus.png');
+        iconUrl = require<any>('../assets/transport/bus.png');
         break;
       case 'platform':
-        iconUrl = require<any>('../images/transport/platform.png');
+        iconUrl = require<any>('../assets/transport/platform.png');
         break;
       default:
         iconUrl = require<any>('../../node_modules/leaflet/dist/images/marker-icon.png');

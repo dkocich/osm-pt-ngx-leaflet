@@ -28,13 +28,13 @@
           tooltip="{{ 'Create a new stop' | translate }}" container="body"
           [class.btn-primary]="creatingElementOfType === 'stop'"
           (click)="createElement('stop')" disabled>
-    <img src="/images/transport/bus.png" alt="stop">&nbsp;{{ 'Stop' | translate }}
+    <img src="/assets/transport/bus.png" alt="stop">&nbsp;{{ 'Stop' | translate }}
   </button>
   <button id="platform-btn" type="button" class="btn btn-default on-map" container="body"
           tooltip="{{ 'Create a new platform' | translate }}"
           [class.btn-primary]="creatingElementOfType === 'platform'"
           (click)="createElement('platform')">
-    <img src="/images/transport/platform.png" alt="platform">&nbsp;{{ 'Platform' | translate }}
+    <img src="/assets/transport/platform.png" alt="platform">&nbsp;{{ 'Platform' | translate }}
   </button>
 </div>
 
