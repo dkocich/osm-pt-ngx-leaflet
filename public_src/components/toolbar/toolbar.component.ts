@@ -14,9 +14,9 @@ import { IOsmEntity } from '../../core/osmEntity.interface';
 @Component({
   providers: [],
   selector: 'toolbar',
-  styles: [
-    require<any>('./toolbar.component.less'),
-    require<any>('../../styles/main.less'),
+  styleUrls: [
+    './toolbar.component.less',
+    '../../styles/main.less',
   ],
   templateUrl: './toolbar.component.html',
 })

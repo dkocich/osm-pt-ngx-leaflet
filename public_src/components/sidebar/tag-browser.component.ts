@@ -15,9 +15,9 @@ import { IOsmEntity } from '../../core/osmEntity.interface';
   changeDetection: ChangeDetectionStrategy.Default,
   providers: [],
   selector: 'tag-browser',
-  styles: [
-    require<any>('./tag-browser.component.less'),
-    require<any>('../../styles/main.less'),
+  styleUrls: [
+    './tag-browser.component.less',
+    '../../styles/main.less',
   ],
   templateUrl: './tag-browser.component.html',
 })

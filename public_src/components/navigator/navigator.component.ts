@@ -6,9 +6,9 @@ import { MapService } from '../../services/map.service';
 @Component({
   providers: [],
   selector: 'navigator',
-  styles: [
-    require<any>('./navigator.component.less'),
-    require<any>('../../styles/main.less'),
+  styleUrls: [
+    './navigator.component.less',
+    '../../styles/main.less',
   ],
   templateUrl: './navigator.component.html',
 })

@@ -15,7 +15,9 @@ import { EditService } from '../../services/edit.service';
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
   selector: 'app',
-  styles: [require<any>('./app.component.less')],
+  styleUrls: [
+    './app.component.less',
+  ],
   templateUrl: './app.component.html',
 })
 export class AppComponent {

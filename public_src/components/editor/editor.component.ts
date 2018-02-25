@@ -10,9 +10,9 @@ import { ModalDirective } from 'ngx-bootstrap';
 @Component({
   providers: [],
   selector: 'editor',
-  styles: [
-    require<any>('./editor.component.less'),
-    require<any>('../../styles/main.less'),
+  styleUrls: [
+    './editor.component.less',
+    '../../styles/main.less',
   ],
   templateUrl: './editor.component.html',
 })

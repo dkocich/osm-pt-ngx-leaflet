@@ -7,7 +7,9 @@ import { StorageService } from '../../services/storage.service';
 @Component({
   providers: [],
   selector: 'auth',
-  styles: [require<any>('./auth.component.less')],
+  styleUrls: [
+    './auth.component.less',
+  ],
   templateUrl: './auth.component.html',
 })
 export class AuthComponent {

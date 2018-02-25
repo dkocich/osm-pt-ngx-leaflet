@@ -9,9 +9,9 @@ import { StorageService } from '../../services/storage.service';
 @Component({
   providers: [],
   selector: 'route-browser',
-  styles: [
-    require<any>('./route-browser.component.less'),
-    require<any>('../../styles/main.less'),
+  styleUrls: [
+    './route-browser.component.less',
+    '../../styles/main.less',
   ],
   templateUrl: './route-browser.component.html',
 })

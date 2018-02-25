@@ -10,9 +10,9 @@ import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
 @Component({
   providers: [],
   selector: 'relation-browser',
-  styles: [
-    require<any>('./relation-browser.component.less'),
-    require<any>('../../styles/main.less'),
+  styleUrls: [
+    './relation-browser.component.less',
+    '../../styles/main.less',
   ],
   templateUrl: './relation-browser.component.html',
 })

@@ -6,7 +6,9 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   providers: [],
   selector: 'lang',
-  styles: [require<any>('./lang.component.less')],
+  styleUrls: [
+    './lang.component.less',
+  ],
   templateUrl: './lang.component.html',
 })
 export class LangComponent {

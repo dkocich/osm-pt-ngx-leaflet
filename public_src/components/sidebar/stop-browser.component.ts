@@ -12,9 +12,9 @@ import { IPtStop } from '../../core/ptStop.interface';
 @Component({
   providers: [],
   selector: 'stop-browser',
-  styles: [
-    require<any>('./stop-browser.component.less'),
-    require<any>('../../styles/main.less'),
+  styleUrls: [
+    './stop-browser.component.less',
+    '../../styles/main.less',
   ],
   templateUrl: './stop-browser.component.html',
 })

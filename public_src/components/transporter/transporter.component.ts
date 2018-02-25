@@ -10,9 +10,9 @@ import { ModalDirective } from 'ngx-bootstrap';
 @Component({
   providers: [],
   selector: 'transporter',
-  styles: [
-    require<any>('../toolbar/toolbar.component.less'),
-    require<any>('./transporter.component.less'),
+  styleUrls: [
+    '../toolbar/toolbar.component.less',
+    './transporter.component.less',
   ],
   templateUrl: './transporter.component.html',
 })
