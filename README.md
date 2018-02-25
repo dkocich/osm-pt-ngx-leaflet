@@ -2,6 +2,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/231206018f6e41d9bddee2b4bb4683dc)](https://www.codacy.com/app/dkocich/osm-pt-ngx-leaflet?utm_source=github.com&utm_medium=referral&utm_content=dkocich/osm-pt-ngx-leaflet&utm_campaign=badger)
 [![codebeat badge](https://codebeat.co/badges/525de5f2-8276-4e4a-ad5f-0b8c6c854f0d)](https://codebeat.co/projects/github-com-dkocich-osm-pt-ngx-leaflet-master)
+[![BCH compliance](https://bettercodehub.com/edge/badge/dkocich/osm-pt-ngx-leaflet?branch=develop)](https://bettercodehub.com/)
 [![Known Vulnerabilities](https://snyk.io/test/github/snyk/goof/badge.svg)](https://snyk.io/test/github/snyk/goof)
 [![Build Status](https://api.travis-ci.org/dkocich/osm-pt-ngx-leaflet.svg?branch=master)](https://travis-ci.org/dkocich/osm-pt-ngx-leaflet)
 
