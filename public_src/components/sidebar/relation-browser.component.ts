@@ -18,9 +18,9 @@ import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
 })
 export class RelationBrowserComponent {
   private currentElement: IPtRouteMasterNew;
-  private listOfVariants = this.storageSrv.listOfVariants;
+  public listOfVariants = this.storageSrv.listOfVariants;
   private editingMode: boolean;
-  private listOfMasters = this.storageSrv.listOfMasters;
+  public listOfMasters = this.storageSrv.listOfMasters;
 
   constructor(
     private editSrv: EditService,
@@ -59,6 +59,21 @@ export class RelationBrowserComponent {
     });
   }
 
+  /**
+   * NgFor track function which helps to re-render rows faster.
+   *
+   * @param index
+   * @param item
+   * @returns {number}
+   */
+  public trackByFn(index: number, item: any): number {
+    return item.id;
+  }
+
+  public hideMasterModal(): void {
+    this.masterModal.hide();
+  }
+
   private isDownloaded(relId: number): boolean {
     return this.storageSrv.elementsDownloaded.has(relId) || relId < 0; // show created
   }
@@ -90,7 +105,6 @@ export class RelationBrowserComponent {
       this.editSrv.createMaster();
     }
   }
-
   private changeRouteMasterMembers(routeMasterId: number): void {
     this.editSrv.changeRouteMasterMembers(
       this.currentElement.id,
@@ -99,13 +113,10 @@ export class RelationBrowserComponent {
   }
 
   @ViewChild('masterModal') public masterModal: ModalDirective;
+
   public showMasterModal(): void {
     this.masterModal.show();
     // this.mapSrv.disableMouseEvent("modalDownload");
-  }
-
-  private hideMasterModal(): void {
-    this.masterModal.hide();
   }
 
   private isAlreadyAdded(relId: number): boolean {
@@ -125,16 +136,5 @@ export class RelationBrowserComponent {
 
   private isSelected(relId: number): boolean {
     return this.processSrv.haveSameIds(relId, this.currentElement.id);
-  }
-
-  /**
-   * NgFor track function which helps to re-render rows faster.
-   *
-   * @param index
-   * @param item
-   * @returns {number}
-   */
-  private trackByFn(index: number, item: any): number {
-    return item.id;
   }
 }

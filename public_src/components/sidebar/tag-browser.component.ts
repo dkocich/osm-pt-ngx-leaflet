@@ -24,7 +24,7 @@ import { IOsmEntity } from '../../core/osmEntity.interface';
 export class TagBrowserComponent {
   @Input() public tagKey: string = '';
   @Input() public tagValue: string = '';
-  private currentElement: IOsmEntity;
+  public currentElement: IOsmEntity;
   private editingMode: boolean;
 
   private expectedKeys = [

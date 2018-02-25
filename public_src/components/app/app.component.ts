@@ -20,7 +20,7 @@ import { EditService } from '../../services/edit.service';
 })
 export class AppComponent {
   public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
-  private editingMode: boolean;
+  public editingMode: boolean;
 
   @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
   @ViewChild(AuthComponent) public authComponent: AuthComponent;
@@ -80,16 +80,16 @@ export class AppComponent {
     this.toolbarComponent.Initialize();
   }
 
-  private showHelpModal(): void {
-    this.helpModal.show();
+  public isLoading(): boolean {
+    return this.loadSrv.isLoading();
   }
 
-  private hideHelpModal(): void {
+  public hideHelpModal(): void {
     this.helpModal.hide();
   }
 
-  private isLoading(): boolean {
-    return this.loadSrv.isLoading();
+  private showHelpModal(): void {
+    this.helpModal.show();
   }
 
   private getStatus(): string {

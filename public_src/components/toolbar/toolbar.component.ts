@@ -26,10 +26,10 @@ export class ToolbarComponent {
   @ViewChild(TransporterComponent)
   public transporterComponent: TransporterComponent;
   @ViewChild(EditorComponent) public editorComponent: EditorComponent;
-  private filtering: boolean;
+  public filtering: boolean;
 
-  private currentElement: IOsmEntity;
-  private stats = { s: 0, r: 0, a: 0, m: 0 };
+  public currentElement: IOsmEntity;
+  public stats = { s: 0, r: 0, a: 0, m: 0 };
 
   constructor(
     private confSrv: ConfService,
@@ -70,6 +70,37 @@ export class ToolbarComponent {
     });
   }
 
+  public highlightIsActive(): boolean {
+    return this.mapSrv.highlightIsActive();
+  }
+
+  public isRelation(): boolean {
+    return this.currentElement && this.currentElement.type === 'relation';
+  }
+
+  public toggleDownloading(): void {
+    this.downloading = !this.downloading;
+    if (this.downloading) {
+      this.mapSrv.map.on('zoomend moveend', () => {
+        this.initDownloader();
+      });
+    } else if (!this.downloading) {
+      this.mapSrv.map.off('zoomend moveend');
+    }
+  }
+
+  public showOptions(): void {
+    document.getElementById('toggle-filter').style.display = 'inline';
+    setTimeout(() => {
+      document.getElementById('toggle-filter').style.display = 'none';
+    }, 5000);
+  }
+
+  public toggleLinesFilter(): void {
+    this.confSrv.cfgFilterLines = !this.confSrv.cfgFilterLines;
+    this.filtering = !this.filtering;
+  }
+
   private changeHighlight(): void {
     if (
       this.highlightIsActive() &&
@@ -106,17 +137,6 @@ export class ToolbarComponent {
     return this.checkMinZoomLevel() && this.checkMinDistance();
   }
 
-  private toggleDownloading(): void {
-    this.downloading = !this.downloading;
-    if (this.downloading) {
-      this.mapSrv.map.on('zoomend moveend', () => {
-        this.initDownloader();
-      });
-    } else if (!this.downloading) {
-      this.mapSrv.map.off('zoomend moveend');
-    }
-  }
-
   /**
    *
    * @param selection
@@ -131,28 +151,8 @@ export class ToolbarComponent {
     this.processSrv.cancelSelection();
   }
 
-  private isRelation(): boolean {
-    return this.currentElement && this.currentElement.type === 'relation';
-  }
-
   private zoomTo(selection: IOsmEntity): void {
     this.processSrv.zoomToElement(selection);
-  }
-
-  private showOptions(): void {
-    document.getElementById('toggle-filter').style.display = 'inline';
-    setTimeout(() => {
-      document.getElementById('toggle-filter').style.display = 'none';
-    }, 5000);
-  }
-
-  private toggleLinesFilter(): void {
-    this.confSrv.cfgFilterLines = !this.confSrv.cfgFilterLines;
-    this.filtering = !this.filtering;
-  }
-
-  private highlightIsActive(): boolean {
-    return this.mapSrv.highlightIsActive();
   }
 
   private clearHighlight(): void {

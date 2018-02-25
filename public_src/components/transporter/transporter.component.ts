@@ -19,7 +19,7 @@ import { ModalDirective } from 'ngx-bootstrap';
 export class TransporterComponent {
   @ViewChild('downloadModal') public downloadModal: ModalDirective;
   @ViewChild('uploadModal') public uploadModal: ModalDirective;
-  private favoriteQueries = [
+  public favoriteQueries = [
     {
       id: 1,
       raw: '%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3B%0A(%0A%20%20node%5B%22route%22%3D%22bus%22' +
@@ -47,13 +47,13 @@ export class TransporterComponent {
       short: 'public_transport=*',
     },
   ];
-  private queryShort = this.favoriteQueries[0].short;
-  private queryRaw = decodeURIComponent(this.favoriteQueries[0].raw);
-  private editsSummary;
+  public queryShort = this.favoriteQueries[0].short;
+  public queryRaw = decodeURIComponent(this.favoriteQueries[0].raw);
+  public editsSummary;
 
-  private comment: string = '';
+  public comment: string = '';
 
-  private source: string = '';
+  public source: string = '';
   constructor(
     private authSrv: AuthService,
     private mapSrv: MapService,
@@ -96,20 +96,35 @@ export class TransporterComponent {
     this.uploadModal.hide();
   }
 
-  private isAuthenticated(): void {
+  public isAuthenticated(): void {
     return this.authSrv.oauth.authenticated();
   }
 
-  private requestData(requestBody: string): void {
+  public hasEdits(): boolean {
+    return this.storageSrv.edits.length > 0;
+  }
+
+  public requestData(requestBody: string): void {
     this.overpassSrv.requestOverpassData(requestBody);
     this.hideDownloadModal();
   }
 
-  private uploadData(): void {
+  public verifyUpload(): void {
+    this.overpassSrv.uploadData(
+      { source: 'test upload source', comment: 'test upload comment' },
+      true,
+    );
+  }
+
+  public uploadData(): void {
     this.overpassSrv.uploadData({
       comment: this.comment,
       source: this.source,
     });
+  }
+
+  public downloading(): boolean {
+    return true;
   }
 
   private setQuery(event: any): void {
@@ -118,16 +133,5 @@ export class TransporterComponent {
       return iter.short === event.target.textContent;
     });
     this.queryRaw = decodeURIComponent(filtered[0].raw);
-  }
-
-  private hasEdits(): boolean {
-    return this.storageSrv.edits.length > 0;
-  }
-
-  private verifyUpload(): void {
-    this.overpassSrv.uploadData(
-      { source: 'test upload source', comment: 'test upload comment' },
-      true,
-    );
   }
 }

@@ -20,7 +20,7 @@ export class EditorComponent {
   @ViewChild('editModal') public editModal: ModalDirective;
   private totalEditSteps: number = 0;
   private currentEditStep: number = 0;
-  private editing: boolean = false;
+  public editing: boolean = false;
   private creatingElementOfType: string = '';
 
   constructor(
@@ -55,27 +55,27 @@ export class EditorComponent {
     console.log('LOG (editor) Current edits are: ', this.storageSrv.edits);
   }
 
-  private isAuthenticated(): void {
+  public isAuthenticated(): void {
     return this.authSrv.oauth.authenticated();
-  }
-
-  /**
-   * Deletes current edits create in the localStorage.
-   */
-  private deleteEdits(): void {
-    localStorage.removeItem('edits');
-    alert(this.storageSrv.edits);
-    alert('LOG: LocalStorage changed to ' + localStorage.getItem('edits'));
-    this.editModal.hide();
   }
 
   /**
    * Provides access to editing service function.
    */
-  private continueEditing(): void {
+  public continueEditing(): void {
     this.storageSrv.edits = this.storageSrv.getLocalStorageItem('edits');
     this.editModal.hide();
     this.editSrv.continueEditing();
+  }
+
+  /**
+   * Deletes current edits create in the localStorage.
+   */
+  public deleteEdits(): void {
+    localStorage.removeItem('edits');
+    alert(this.storageSrv.edits);
+    alert('LOG: LocalStorage changed to ' + localStorage.getItem('edits'));
+    this.editModal.hide();
   }
 
   private showEditModal(): void {

@@ -22,6 +22,10 @@ export class AuthComponent {
     this.imgHref = this.storageSrv.getImgHref();
   }
 
+  public isAuthenticated(): void {
+    return this.authSrv.oauth.authenticated();
+  }
+
   private getDisplayName(): string {
     return this.storageSrv.getDisplayName();
   }
@@ -60,10 +64,6 @@ export class AuthComponent {
     };
     this.storageSrv.setUserData(userDetails);
     // document.getElementById("display_name").innerHTML = userDetails["display_name"];
-  }
-
-  private isAuthenticated(): void {
-    return this.authSrv.oauth.authenticated();
   }
 
   private showDetails(): void {
