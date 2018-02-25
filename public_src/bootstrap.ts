@@ -69,6 +69,8 @@ import { StorageService } from './services/storage.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
+import { metaReducers, reducers } from './ngrx/reducers';
+
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
