@@ -11,6 +11,9 @@ import { StorageService } from '../../services/storage.service';
 
 import { IOsmEntity } from '../../core/osmEntity.interface';
 
+import { select } from '@angular-redux/store';
+import { Observable } from 'rxjs/Observable';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
   providers: [],
@@ -25,9 +28,9 @@ export class TagBrowserComponent {
   @Input() public tagKey: string = '';
   @Input() public tagValue: string = '';
   public currentElement: IOsmEntity;
-  private editingMode: boolean;
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
-  private expectedKeys = [
+  public expectedKeys = [
     'ascent',
     'bench',
     'building',
@@ -58,7 +61,7 @@ export class TagBrowserComponent {
     'uic_name',
     'uic_ref',
   ];
-  private expectedValues = [
+  public expectedValues = [
     'aerialway',
     'backward',
     'bus',
@@ -112,15 +115,6 @@ export class TagBrowserComponent {
         delete this.currentElement;
       }
     });
-
-    this.editSrv.editingMode.subscribe((data) => {
-        console.log(
-          'LOG (tag-browser) Editing mode change in tagBrowser - ',
-          data,
-        );
-        this.editingMode = data;
-      },
-    );
   }
 
   private checkUnchanged(change: any): boolean {

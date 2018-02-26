@@ -1,5 +1,5 @@
 <div class="panel-group">
-  <div *ngIf="listOfStops.length === 0 || filteredView || (editingMode && reorderingEnabled)"
+  <div *ngIf="listOfStops.length === 0 || filteredView || ((editing$ | async) && reorderingEnabled)"
        class="panel panel-heading panel-default text-center">
     <h4 class="text-danger" *ngIf="listOfStops.length === 0">{{ 'There are no loaded stops (zoom map).' | translate }}</h4>
     <ng-container *ngIf="filteredView">
@@ -9,7 +9,7 @@
         {{ 'Cancel filter' | translate }}
       </button>
     </ng-container>
-    <ng-container *ngIf="editingMode && reorderingEnabled()">
+    <ng-container *ngIf="(editing$ | async) && reorderingEnabled()">
       <button class="btn btn-warning" container="body"
               tooltip="{{ 'Reorder members to have stops and platforms first' | translate }}"
               (click)="reorderMembers(currentElement)">
@@ -31,7 +31,7 @@
           <td tooltip="{{ 'atrRefT' | translate }}" container="body"><b>{{ 'atrRef' | translate }}</b></td>
         </tr>
         </thead>
-        <tbody *ngIf="!editingMode">
+        <tbody *ngIf="!editing$ | async">
         <tr *ngFor="let stop of listOfStopsForRoute; trackBy: trackByFn; let i = index;"
             class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
           <td>{{i + 1}}.</td>
@@ -44,7 +44,7 @@
           <td>{{stop.tags.route_ref}}</td>
         </tr>
         </tbody>
-        <tbody *ngIf="editingMode" [dragula]="'my-box'" [dragulaModel]="listOfStopsForRoute">
+        <tbody *ngIf="editing$ | async" [dragula]="'my-box'" [dragulaModel]="listOfStopsForRoute">
         <tr *ngFor="let stop of listOfStopsForRoute; trackBy: trackByFn; let i = index ;" class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
           <td>{{i + 1}}.</td>
           <td><input type="text" value="{{stop.role}}" disabled></td>

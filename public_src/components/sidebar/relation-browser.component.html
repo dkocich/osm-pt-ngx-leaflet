@@ -1,7 +1,7 @@
 <div class="panel-group">
   <div *ngIf="listOfVariants.length === 0" class="panel panel-heading panel-default text-center">
     <h4 class="text-center text-danger">{{ 'Selected relation has no master relation.' | translate }}</h4>
-    <div *ngIf="editingMode" class="text-center">
+    <div *ngIf="editing$ | async" class="text-center">
       <button class="btn btn-success" container="body"
               tooltip="{{ 'Create master for selected element/relation' | translate }}"
               [disabled]="hasMaster()"

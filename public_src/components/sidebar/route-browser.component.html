@@ -9,7 +9,7 @@
         &nbsp;{{ 'Cancel filter' | translate }}
       </button>
     </span>
-    <span *ngIf="editingMode">
+    <span *ngIf="editing$ | async">
       <button type="button" class="btn btn-default" container="body"
               tooltip="{{ 'Create a new empty route relation' | translate }}"
               (click)="createRoute()">
