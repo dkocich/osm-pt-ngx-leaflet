@@ -6,11 +6,11 @@ import { MapService } from '../../services/map.service';
 @Component({
   providers: [],
   selector: 'navigator',
-  styles: [
-    require<any>('./navigator.component.less'),
-    require<any>('../../styles/main.less'),
+  styleUrls: [
+    './navigator.component.less',
+    '../../styles/main.less',
   ],
-  template: require<any>('./navigator.component.html'),
+  templateUrl: './navigator.component.html',
 })
 export class NavigatorComponent {
   public address: string;

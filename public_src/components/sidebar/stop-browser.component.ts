@@ -12,18 +12,18 @@ import { IPtStop } from '../../core/ptStop.interface';
 @Component({
   providers: [],
   selector: 'stop-browser',
-  styles: [
-    require<any>('./stop-browser.component.less'),
-    require<any>('../../styles/main.less'),
+  styleUrls: [
+    './stop-browser.component.less',
+    '../../styles/main.less',
   ],
-  template: require<any>('./stop-browser.component.html'),
+  templateUrl: './stop-browser.component.html',
 })
 export class StopBrowserComponent {
   public listOfStopsForRoute: object[] = this.storageSrv.listOfStopsForRoute;
-  private currentElement: any;
-  private listOfStops: object[] = this.storageSrv.listOfStops;
-  private filteredView: boolean;
-  private editingMode: boolean;
+  public currentElement: any;
+  public listOfStops: object[] = this.storageSrv.listOfStops;
+  public filteredView: boolean;
+  public editingMode: boolean;
 
   constructor(
     private dragulaSrv: DragulaService,
@@ -68,6 +68,14 @@ export class StopBrowserComponent {
     );
   }
 
+  public reorderingEnabled(): boolean {
+    if (this.currentElement) {
+      return this.currentElement.type === 'relation' && this.filteredView;
+    } else {
+      return false;
+    }
+  }
+
   private isDownloaded(nodeId: number): boolean {
     return this.storageSrv.elementsDownloaded.has(nodeId);
   }
@@ -103,14 +111,6 @@ export class StopBrowserComponent {
 
   private exploreStop($event: any, stop: IPtStop): void {
     this.processSrv.exploreStop(stop, true, true, true);
-  }
-
-  private reorderingEnabled(): boolean {
-    if (this.currentElement) {
-      return this.currentElement.type === 'relation' && this.filteredView;
-    } else {
-      return false;
-    }
   }
 
   private isSelected(relId: number): boolean {

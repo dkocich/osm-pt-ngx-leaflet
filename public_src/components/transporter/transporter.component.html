@@ -1,13 +1,13 @@
 <button id="download-data" class="btn btn-default on-map hidden" container="body"
         tooltip="{{ 'Download data from Overpass API' | translate }}"
-        [class.btn-primary]="downloading"
+        [class.btn-primary]="downloading()"
         (click)="showDownloadModal()">
   <i class="fa fa-download" aria-hidden="true"></i>
 </button>
 
 <button *ngIf="isAuthenticated() && hasEdits()" id="upload-data" class="btn btn-default on-map" container="body"
         tooltip="{{ 'Save changes to OpenStreetMap' | translate }}"
-        [class.btn-primary]="downloading"
+        [class.btn-primary]="downloading()"
         (click)="showUploadModal()">
   <i class="fa fa-upload" aria-hidden="true"></i>
   &nbsp;{{ 'Save' | translate }}

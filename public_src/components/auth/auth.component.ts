@@ -7,8 +7,10 @@ import { StorageService } from '../../services/storage.service';
 @Component({
   providers: [],
   selector: 'auth',
-  styles: [require<any>('./auth.component.less')],
-  template: require<any>('./auth.component.html'),
+  styleUrls: [
+    './auth.component.less',
+  ],
+  templateUrl: './auth.component.html',
 })
 export class AuthComponent {
   private displayName: string;
@@ -20,6 +22,10 @@ export class AuthComponent {
   ) {
     this.displayName = this.getDisplayName();
     this.imgHref = this.storageSrv.getImgHref();
+  }
+
+  public isAuthenticated(): void {
+    return this.authSrv.oauth.authenticated();
   }
 
   private getDisplayName(): string {
@@ -60,10 +66,6 @@ export class AuthComponent {
     };
     this.storageSrv.setUserData(userDetails);
     // document.getElementById("display_name").innerHTML = userDetails["display_name"];
-  }
-
-  private isAuthenticated(): void {
-    return this.authSrv.oauth.authenticated();
   }
 
   private showDetails(): void {

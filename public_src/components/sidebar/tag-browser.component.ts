@@ -15,16 +15,16 @@ import { IOsmEntity } from '../../core/osmEntity.interface';
   changeDetection: ChangeDetectionStrategy.Default,
   providers: [],
   selector: 'tag-browser',
-  styles: [
-    require<any>('./tag-browser.component.less'),
-    require<any>('../../styles/main.less'),
+  styleUrls: [
+    './tag-browser.component.less',
+    '../../styles/main.less',
   ],
-  template: require<any>('./tag-browser.component.html'),
+  templateUrl: './tag-browser.component.html',
 })
 export class TagBrowserComponent {
   @Input() public tagKey: string = '';
   @Input() public tagValue: string = '';
-  private currentElement: IOsmEntity;
+  public currentElement: IOsmEntity;
   private editingMode: boolean;
 
   private expectedKeys = [

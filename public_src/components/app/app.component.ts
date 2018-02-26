@@ -15,12 +15,14 @@ import { EditService } from '../../services/edit.service';
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
   selector: 'app',
-  styles: [require<any>('./app.component.less')],
-  template: require<any>('./app.component.html'),
+  styleUrls: [
+    './app.component.less',
+  ],
+  templateUrl: './app.component.html',
 })
 export class AppComponent {
   public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
-  private editingMode: boolean;
+  public editingMode: boolean;
 
   @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
   @ViewChild(AuthComponent) public authComponent: AuthComponent;
@@ -80,20 +82,16 @@ export class AppComponent {
     this.toolbarComponent.Initialize();
   }
 
-  private showHelpModal(): void {
-    this.helpModal.show();
-  }
-
-  private hideHelpModal(): void {
-    this.helpModal.hide();
-  }
-
-  private isLoading(): boolean {
+  public isLoading(): boolean {
     return this.loadSrv.isLoading();
   }
 
-  private getStatus(): string {
-    return this.loadSrv.getStatus();
+  public hideHelpModal(): void {
+    this.helpModal.hide();
+  }
+
+  private showHelpModal(): void {
+    this.helpModal.show();
   }
 
   private changeMode(): void {

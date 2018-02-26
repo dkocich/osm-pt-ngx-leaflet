@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "./public/out-tsc",
     "target": "ES5",
     "module": "commonjs",
     "moduleResolution": "node",
@@ -9,8 +10,14 @@
     "removeComments": false,
     "noImplicitAny": false,
     "skipLibCheck": true,
-    "lib": ["es2015", "es2017", "dom"],
-    "typeRoots": [ "node_modules/@types" ],
+    "lib": [
+      "es2015",
+      "es2017",
+      "dom"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "types": [
       "node",
       "jasmine",

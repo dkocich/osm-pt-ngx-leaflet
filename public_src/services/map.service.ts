@@ -600,9 +600,8 @@ export class MapService {
         console.log('LOG (map s.) This is new relation -> do not highlight route');
       } else {
         alert(
-          'Problem has occurred while drawing line connecting its members (no added stops?). Please add members and try again.' +
-            '\n\n' +
-            JSON.stringify(rel),
+          'Problem has occurred while drawing line connecting its members (no added stops?).' +
+          ' Please add members and try again.' + '\n\n' + JSON.stringify(rel),
         );
       }
       return false;
@@ -699,46 +698,46 @@ export class MapService {
    * @returns {any}
    */
   private stylePoint(feature: any, latlng: any): any {
-    let iconUrl = 'images/marker-icon.png';
+    let iconUrl = 'assets/marker-icon.png';
     let shadowUrl = '';
     const fp = feature.properties;
     if ('public_transport' in fp) {
       // && fp["railway"] === undefined
       if (fp['public_transport'] === 'platform') {
-        iconUrl = 'images/transport/platform.png';
+        iconUrl = 'assets/transport/platform.png';
       } else if (fp['public_transport'] === 'stop_position') {
-        iconUrl = 'images/transport/bus.png';
+        iconUrl = 'assets/transport/bus.png';
       } else if (fp['public_transport'] === 'station') {
-        iconUrl = 'images/transport/station.png';
+        iconUrl = 'assets/transport/station.png';
       }
     } else if ('highway' in fp) {
       if (fp['highway'] === 'bus_stop') {
-        iconUrl = 'images/transport/bus.png';
+        iconUrl = 'assets/transport/bus.png';
       } else if (fp['highway'] === 'traffic_signals') {
-        iconUrl = 'images/traffic/traffic_signals.png';
+        iconUrl = 'assets/traffic/traffic_signals.png';
       } else if (fp['highway'] === 'crossing') {
-        iconUrl = 'images/traffic/crossing.png';
+        iconUrl = 'assets/traffic/crossing.png';
       }
     } else if ('railway' in fp) {
       if (
         ['crossing', 'level_crossing', 'railway_crossing']
           .indexOf(fp['railway']) > -1
       ) {
-        iconUrl = 'images/transport/railway/crossing.png';
+        iconUrl = 'assets/transport/railway/crossing.png';
       } else if (fp['railway'] === ['tram_stop']) {
-        iconUrl = 'images/transport/railway/tram.png';
+        iconUrl = 'assets/transport/railway/tram.png';
       } else if (fp['railway'] === 'stop_position') {
-        iconUrl = 'images/transport/train.png';
+        iconUrl = 'assets/transport/train.png';
       } else if (fp['public_transport'] === 'station') {
-        iconUrl = 'images/transport/railway_station.png';
+        iconUrl = 'assets/transport/railway_station.png';
       }
     }
     if ('public_transport:version' in fp) {
       if (fp['public_transport:version'] === '1') {
-        shadowUrl = 'images/nr1-24x24.png';
+        shadowUrl = 'assets/nr1-24x24.png';
       }
       if (fp['public_transport:version'] === '2') {
-        iconUrl = 'images/nr2-24x24.png';
+        iconUrl = 'assets/nr2-24x24.png';
       }
     }
     const myIcon = L.icon({

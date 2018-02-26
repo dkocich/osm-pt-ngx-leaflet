@@ -9,22 +9,22 @@ import { StorageService } from '../../services/storage.service';
 @Component({
   providers: [],
   selector: 'route-browser',
-  styles: [
-    require<any>('./route-browser.component.less'),
-    require<any>('../../styles/main.less'),
+  styleUrls: [
+    './route-browser.component.less',
+    '../../styles/main.less',
   ],
-  template: require<any>('./route-browser.component.html'),
+  templateUrl: './route-browser.component.html',
 })
 export class RouteBrowserComponent {
-  private currentElement;
+  public currentElement;
   private listOfMasters: object[] = this.storageSrv.listOfMasters;
-  private listOfRelations: object[] = this.storageSrv.listOfRelations;
-  private listOfRelationsForStop: object[] = this.storageSrv.listOfRelationsForStop;
+  public listOfRelations: object[] = this.storageSrv.listOfRelations;
+  public listOfRelationsForStop: object[] = this.storageSrv.listOfRelationsForStop;
 
   private isRequesting: boolean;
-  private filteredView: boolean;
+  public filteredView: boolean;
   private idsHaveMaster = new Set();
-  private editingMode: boolean;
+  public editingMode: boolean;
   private membersEditing: boolean = false;
 
   constructor(

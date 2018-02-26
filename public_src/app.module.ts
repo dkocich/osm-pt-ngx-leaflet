@@ -4,23 +4,16 @@ import 'reflect-metadata';
 import 'zone.js/dist/zone';
 import 'zone.js/dist/long-stack-trace-zone';
 
-import 'angular2-busy/build/style/busy.css';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'dragula/dist/dragula.css';
-import 'font-awesome/css/font-awesome.css';
-import 'leaflet/dist/leaflet.css';
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { enableProdMode, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { BusyModule } from 'angular2-busy';
 import { DragulaModule } from 'ng2-dragula';
 import {
   AccordionModule,
@@ -90,7 +83,6 @@ const ROUTES: Routes = [
     BsDropdownModule.forRoot(),
     BrowserAnimationsModule,
     BrowserModule,
-    BusyModule,
     ButtonsModule.forRoot(),
     CarouselModule.forRoot(),
     DragulaModule,
@@ -126,33 +118,3 @@ const ROUTES: Routes = [
   ],
 })
 export class AppModule {}
-
-if (module.hot) {
-  module.hot.accept();
-  console.log('[HMR] Accepting module hot update.');
-  const applicationTagName = 'app';
-  tryRemoveApplicationNode(applicationTagName);
-  tryBootstrapNewApplication(applicationTagName);
-}
-
-function tryRemoveApplicationNode(tagName: string): void {
-  const currentApplicationNode = document.getElementsByTagName(tagName)[0];
-  if (currentApplicationNode) {
-    const parent = currentApplicationNode.parentNode;
-    parent.removeChild(currentApplicationNode);
-  }
-}
-
-function tryBootstrapNewApplication(tagName: string): void {
-  const newNode = document.createElement(tagName);
-  document.getElementsByTagName('body')[0].insertAdjacentElement('beforeend', newNode);
-
-  const bootstrap: any = require('./bootstrap');
-  const newAppModule = bootstrap.AppModule;
-  platformBrowserDynamic().bootstrapModule(newAppModule);
-}
-
-if (window.location.hostname !== 'localhost' || process.env.NODE_ENV === 'production') {
-  enableProdMode(); // run angular development mode outside testing environment
-}
-platformBrowserDynamic().bootstrapModule(AppModule);
