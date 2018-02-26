@@ -24,6 +24,5 @@ before_script:
   - node server.js -- &
 
 script:
-  - npm run build-dev
-  - npm run build-prod
+  - npm run ngbuild
   - npm run cypress-run

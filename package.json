@@ -30,7 +30,7 @@
     "cypress-open": "node_modules/.bin/cypress open",
     "cypress-run": "node_modules/.bin/cypress run --record --key 5bed002a-82c7-44a6-9e99-8fee9727f7d2",
     "lint": "tslint -c tslint.json public_src/**/*.ts public_src/components/**/*.ts public_src/*.ts",
-    "postinstall": "npm run build",
+    "postinstall": "npm run ngbuild",
     "prepare": "npm run snyk-protect",
     "prepublish": "snyk protect",
     "snyk-protect": "snyk protect",
@@ -42,12 +42,12 @@
     "wds-hot": "webpack-dev-server --config webpack/webpack.config.hot.js  --content-base public/ --progress --colors --inline --watch --hotOnly",
     "wds-prod": "webpack-dev-server --config webpack/webpack.config.prod.js  --content-base public/ --progress --colors",
     "ng": "ng",
-    "start": "ng serve",
-    "start-hmr": "ng serve --hmr",
-    "build": "ng build --prod",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "ngstart": "ng serve",
+    "ngstart-hmr": "ng serve --hmr",
+    "ngbuild": "ng build --prod --aot=false",
+    "ngtest": "ng test",
+    "nglint": "ng lint",
+    "nge2e": "ng e2e"
   },
   "homepage": "https://github.com/dkocich/osm-pt-ngx-leaflet#readme",
   "dependencies": {
