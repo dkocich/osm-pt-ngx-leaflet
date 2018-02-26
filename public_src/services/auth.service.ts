@@ -7,7 +7,7 @@ export class AuthService {
   public oauth: any = this.osmAuth({
     oauth_consumer_key: ConfService.apiConsumerKey,
     oauth_secret: ConfService.apiConsumerSecret,
-    singlepage: true,
+    singlepage: false,
     url: ConfService.baseOsmUrl,
   });
 
