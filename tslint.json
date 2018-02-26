@@ -59,6 +59,7 @@
           "rxjs",
           "core-js",
           "@angular",
+          "@angular-redux",
           "angulartics2/piwik",
           "zone.js",
           "bootstrap",

@@ -12,6 +12,10 @@ import { AuthComponent } from '../auth/auth.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { EditService } from '../../services/edit.service';
 
+import { IAppState } from '../../store/model';
+import { NgRedux, select } from '@angular-redux/store';
+import { Observable } from 'rxjs/Observable';
+
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
   selector: 'app',
@@ -22,13 +26,15 @@ import { EditService } from '../../services/edit.service';
 })
 export class AppComponent {
   public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
-  public editingMode: boolean;
 
   @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
   @ViewChild(AuthComponent) public authComponent: AuthComponent;
   @ViewChild('helpModal') public helpModal: ModalDirective;
 
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+
   constructor(
+    private ngRedux: NgRedux<IAppState>,
     private editSrv: EditService,
     private geocodeSrv: GeocodeService,
     private loadSrv: LoadService,
@@ -40,14 +46,7 @@ export class AppComponent {
     }
   }
 
-  ngOnInit(): any {
-    this.editSrv.editingMode.subscribe((data) => {
-      console.log(
-        'LOG (relation-browser) Editing mode change in routeBrowser - ',
-        data,
-      );
-      this.editingMode = data;
-    });
+  public ngOnInit(): any {
     const map = L.map('map', {
       center: L.latLng(49.686, 18.351),
       layers: [this.mapSrv.baseMaps.CartoDB_light],

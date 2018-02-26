@@ -10,6 +10,9 @@ import { StorageService } from './storage.service';
 import { IOsmEntity } from '../core/osmEntity.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtStop } from '../core/ptStop.interface';
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from '../store/model';
+import { AppActions } from '../store/app/actions';
 
 @Injectable()
 export class ProcessService {
@@ -25,6 +28,9 @@ export class ProcessService {
   public refreshMasters: EventEmitter<object> = new EventEmitter();
 
   constructor(
+    private ngRedux: NgRedux<IAppState>,
+    private appActions: AppActions,
+
     private loadSrv: LoadService,
     private mapSrv: MapService,
     private storageSrv: StorageService,
@@ -56,6 +62,7 @@ export class ProcessService {
             'Problem occured - clicked element was not found?! Select different element please.',
           );
         }
+        this.appActions.actSelectElement({ element });
         console.log('LOG (processing s.) Selected element is ', element);
         this.refreshTagView(element);
       },

@@ -52,7 +52,12 @@ import { StorageService } from './services/storage.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
-export function HttpLoaderFactory(http: HttpClient) {
+import { StoreModule } from './store/module';
+
+import { AppActions } from './store/app/actions';
+import { RootEpics } from './store/epics';
+
+export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
 }
 
@@ -90,7 +95,6 @@ const ROUTES: Routes = [
     HttpModule,
     HttpClientModule,
     ModalModule.forRoot(),
-    RouterModule.forRoot(ROUTES),
     TooltipModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
@@ -100,6 +104,8 @@ const ROUTES: Routes = [
       },
     }),
     TypeaheadModule.forRoot(),
+    RouterModule.forRoot(ROUTES),
+    StoreModule,
   ],
   providers: [
     AuthService,
@@ -115,6 +121,9 @@ const ROUTES: Routes = [
     KeysPipe,
 
     { provide: APP_BASE_HREF, useValue : '/' },
+
+    AppActions,
+    RootEpics,
   ],
 })
-export class AppModule {}
+export class AppModule { }
