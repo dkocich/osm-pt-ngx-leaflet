@@ -67,11 +67,33 @@
     <i class="fa fa-search" aria-hidden="true"></i>
     &nbsp;{{ 'Show' | translate }}
   </button>
-  <button type="button" class="btn btn-default col-md-6 visible-md visible-lg" container="body"
-          tooltip="{{ 'Open JOSM and show selected element' | translate }}"
-          (click)="getLoadAndZoomUrl()"
-          [disabled]="isDisabled()">
-    <i class="fa fa-download" aria-hidden="true"></i>
-    &nbsp;{{ 'Open in JOSM' | translate }}
-  </button>
+
+  <div id="dropdown" class="btn-group col-md-6" dropdown>
+
+     <button dropdownToggle type="button" class="btn btn-default btn-block dropdown-toggle" container="body"
+             tooltip="{{ 'Open in JOSM/ID' | translate }}"
+             [disabled]="isDisabled()">
+            &nbsp;{{ 'Open in ..' | translate }} 
+        <span class="caret"></span>
+      </button>
+  
+     <ul *dropdownMenu id="dropdownitems" class="dropdown-menu" role="menu" >
+
+       <li role="menuitem">
+         <a class="dropdown-item" href="#" tooltip="{{ 'Open in ID' | translate }}"
+            (click)="openInIdEditor(currentElement)">Open in ID
+         </a>
+      </li>
+
+      <li role="menuitem">
+        <a class="dropdown-item" href="#" tooltip="{{ 'Open JOSM and show selected element' | translate }}"
+           (click)="getLoadAndZoomUrl()">Open in JOSM
+        </a>
+      </li>
+
+     </ul>
+
+  </div>  
+
+
 </div>
