@@ -54,12 +54,26 @@
     <i class="fa fa-times" aria-hidden="true"></i>
     &nbsp;{{ 'Cancel' | translate }}
   </button>
-  <button type="button" class="btn btn-default col-md-6" container="body"
-          tooltip="{{ 'Show more information' | translate }}"
-          (click)="showInfo(currentElement)">
-    <i class="fa fa-question-circle" aria-hidden="true"></i>
-    &nbsp;{{ 'Info' | translate }}
-  </button>
+
+  <div id="dropdown" class="btn-group col-md-6" dropdown [dropup]=true >
+    <button dropdownToggle type="button" class="btn btn-default btn-block dropdown-toggle" container="body" [disabled]="isDisabled()">
+      &nbsp;{{ 'Open in ...' | translate }}
+      <span class="caret"></span>
+    </button>
+    <ul *dropdownMenu id="dropdownitems" class="dropdown-menu" role="menu">
+      <li role="menuitem">
+        <a class="dropdown-item" href="#" tooltip="{{ 'Open in ID' | translate }}" (click)="openInIdEditor(currentElement)">
+          &nbsp;{{ 'Open in ID' | translate }}
+        </a>
+      </li>
+      <li role="menuitem">
+        <a class="dropdown-item" href="#" tooltip="{{ 'Open JOSM and show selected element' | translate }}" (click)="getLoadAndZoomUrl()" >
+          &nbsp;{{ 'Open in JOSM' | translate }}
+        </a>
+      </li>
+    </ul>
+  </div>
+
   <button type="button" class="btn btn-default col-md-6" container="body"
           tooltip="{{ 'Zoom to selected element' | translate }}"
           (click)="zoomTo(currentElement)"
@@ -67,11 +81,13 @@
     <i class="fa fa-search" aria-hidden="true"></i>
     &nbsp;{{ 'Show' | translate }}
   </button>
-  <button type="button" class="btn btn-default col-md-6 visible-md visible-lg" container="body"
-          tooltip="{{ 'Open JOSM and show selected element' | translate }}"
-          (click)="getLoadAndZoomUrl()"
-          [disabled]="isDisabled()">
-    <i class="fa fa-download" aria-hidden="true"></i>
-    &nbsp;{{ 'Open in JOSM' | translate }}
+  <button type="button" class="btn btn-default col-md-6" container="body"
+          tooltip="{{ 'Show more information' | translate }}"
+          (click)="showInfo(currentElement)">
+    <i class="fa fa-question-circle" aria-hidden="true"></i>
+    &nbsp;{{ 'Info' | translate }}
   </button>
+
+
+
 </div>
