@@ -170,22 +170,21 @@ export class ToolbarComponent {
     window.open(josmHref, '_blank');
   }
 
- 
   private openInIdEditor(selection: object): void {
-    var zoomlevel=this.mapSrv.map.getZoom();
-    if(zoomlevel<=12)
-    {
-     zoomlevel=13;
+    let zoomlevel = this.mapSrv.map.getZoom();
+    if (zoomlevel <= 12) {
+      zoomlevel = 13;
     }
-    const idHref = 
-    'https://www.openstreetmap.org/edit?editor=id#map='+
-    zoomlevel+'/'+
-    selection['lat']+'/'+
-    selection['lon'];   
+    const idHref =
+      'https://www.openstreetmap.org/edit?editor=id#map=' +
+      zoomlevel + '/' +
+      selection['lat'] + '/' +
+      selection['lon'];
     window.open(idHref);
   }
 
   private isDisabled(): boolean {
     return this.currentElement.id < 0;
   }
+
 }
