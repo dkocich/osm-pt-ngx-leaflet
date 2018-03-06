@@ -55,7 +55,7 @@
     &nbsp;{{ 'Cancel' | translate }}
   </button>
 
-  <div id="dropdown" class="btn-group col-md-6" dropdown [dropup]=true (onShown)="dropdownOpen()">
+  <div id="dropdown" class="btn-group col-md-6" dropdown [dropup]=true >
     <button dropdownToggle type="button" class="btn btn-default btn-block dropdown-toggle" container="body"
       [disabled]="isDisabled()">
       &nbsp;{{ 'Open in ...' | translate }}

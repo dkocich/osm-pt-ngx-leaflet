@@ -186,7 +186,4 @@ export class ToolbarComponent {
   private isDisabled(): boolean {
     return this.currentElement.id < 0;
   }
-  private dropdownOpen(){
-
-  }
 }
