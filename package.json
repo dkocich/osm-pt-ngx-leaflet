@@ -84,7 +84,7 @@
     "cssnano": "3.10.0",
     "cypress": "2.0.4",
     "eslint-plugin-cypress": "2.0.1",
-    "eslint": "4.18.1",
+    "eslint": "4.18.2",
     "express": "4.16.2",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "1.1.9",
