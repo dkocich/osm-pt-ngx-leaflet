@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
 
 import * as L from 'leaflet';
@@ -7,10 +8,11 @@ import { LoadService } from './load.service';
 import { MapService } from './map.service';
 import { StorageService } from './storage.service';
 
-import { IOsmEntity } from '../core/osmEntity.interface';
+import { IOsmElement } from '../core/osmElement.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtStop } from '../core/ptStop.interface';
-import { NgRedux } from '@angular-redux/store';
+import { IOverpassResponse } from '../core/overpassResponse.interface';
+
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
 
@@ -117,7 +119,7 @@ export class ProcessService {
    *
    * @param response
    */
-  public processResponse(response: object): void {
+  public processResponse(response: IOverpassResponse): void {
     const responseId = this.getResponseId();
     const transformedGeojson = this.mapSrv.osmtogeojson(response);
     this.storageSrv.localJsonStorage.set(responseId, response);
@@ -541,7 +543,7 @@ export class ProcessService {
    * Zooms to the input element (point position or relation geometry).
    * @param element
    */
-  public zoomToElement(element: IOsmEntity): void {
+  public zoomToElement(element: IOsmElement): void {
     if (element.type === 'node') {
       if (!element['lat'] || !element['lon']) {
         return alert(
