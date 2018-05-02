@@ -39,6 +39,7 @@ import { TagBrowserComponent } from './components/sidebar/tag-browser.component'
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { NotFoundComponent } from './components/not-found.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
@@ -67,6 +68,8 @@ export function HttpLoaderFactory(http: HttpClient): any {
 
 const ROUTES: Routes = [
   { path: '', component: AppComponent },
+  { path: 'not-found', component: NotFoundComponent },
+  { path: '**', redirectTo: 'not-found' },
 ];
 
 const conditional_providers = [
@@ -88,6 +91,7 @@ const conditional_providers = [
     ToolbarComponent,
     TransporterComponent,
     SettingsComponent,
+    NotFoundComponent,
 
     KeysPipe,
   ],
