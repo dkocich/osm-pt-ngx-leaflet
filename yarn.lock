@@ -391,9 +391,13 @@ acorn@^4.0.3:
   version "4.0.13"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-4.0.13.tgz#105495ae5361d697bd195c825192e1ad7f253787"
 
-acorn@^5.0.0, acorn@^5.2.1, acorn@^5.3.0, acorn@^5.4.0:
+acorn@^5.0.0, acorn@^5.2.1, acorn@^5.3.0:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.4.1.tgz#fdc58d9d17f4a4e98d102ded826a9b9759125102"
+
+acorn@^5.5.0:
+  version "5.5.3"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.5.3.tgz#f473dd47e0277a08e28e9bec5aeeb04751f0b8c9"
 
 addressparser@1.0.1:
   version "1.0.1"
@@ -455,8 +459,8 @@ align-text@^0.1.1, align-text@^0.1.3:
     repeat-string "^1.5.2"
 
 all-contributors-cli@^4.10.1:
-  version "4.11.0"
-  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-4.11.0.tgz#efba8d8107a8fcc99590010e9ed25a79b4e643a6"
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-4.11.1.tgz#8e4d28a69bb60006b72d53758177a0c7b8a20f19"
   dependencies:
     async "^2.0.0-rc.1"
     chalk "^2.3.0"
@@ -1512,9 +1516,15 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-clean-css@4.1.x, clean-css@^4.1.9:
+clean-css@4.1.x:
   version "4.1.9"
   resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-4.1.9.tgz#35cee8ae7687a49b98034f70de00c4edd3826301"
+  dependencies:
+    source-map "0.5.x"
+
+clean-css@^4.1.9:
+  version "4.1.11"
+  resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-4.1.11.tgz#2ecdf145aba38f54740f26cefd0ff3e03e125d6a"
   dependencies:
     source-map "0.5.x"
 
@@ -2280,6 +2290,10 @@ deep-equal@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
 
+deep-extend@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.5.1.tgz#b894a9dd90d3023fbf1c55a394fb858eb2066f1f"
+
 deep-extend@~0.4.0:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.4.2.tgz#48b699c27e334bf89f10892be432f6e4c7d34a7f"
@@ -2571,7 +2585,16 @@ duplexer@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
 
-duplexify@^3.2.0, duplexify@^3.4.2, duplexify@^3.5.3:
+duplexify@^3.2.0:
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/duplexify/-/duplexify-3.5.4.tgz#4bb46c1796eabebeec4ca9a2e66b808cb7a3d8b4"
+  dependencies:
+    end-of-stream "^1.0.0"
+    inherits "^2.0.1"
+    readable-stream "^2.0.0"
+    stream-shift "^1.0.0"
+
+duplexify@^3.4.2, duplexify@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/duplexify/-/duplexify-3.5.3.tgz#8b5818800df92fd0125b27ab896491912858243e"
   dependencies:
@@ -2614,9 +2637,9 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-email-validator@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/email-validator/-/email-validator-1.1.1.tgz#b07f3be7bac1dc099bc43e75f6ae399f552d5a80"
+email-validator@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/email-validator/-/email-validator-2.0.3.tgz#33e50d66f526b97cd72c17205aefaec79c8a2a1e"
 
 ember-cli-string-utils@^1.0.0:
   version "1.1.0"
@@ -2896,10 +2919,10 @@ eslint@4.18.1:
     text-table "~0.2.0"
 
 espree@^3.5.2:
-  version "3.5.3"
-  resolved "https://registry.yarnpkg.com/espree/-/espree-3.5.3.tgz#931e0af64e7fbbed26b050a29daad1fc64799fa6"
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/espree/-/espree-3.5.4.tgz#b0f447187c8a8bed944b815a660bddf5deb5d1a7"
   dependencies:
-    acorn "^5.4.0"
+    acorn "^5.5.0"
     acorn-jsx "^3.0.0"
 
 esprima-fb@^15001.1.0-dev-harmony-fb:
@@ -3096,9 +3119,17 @@ extend@3, extend@^3.0.0, extend@~3.0.0, extend@~3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.1.tgz#a755ea7bc1adfcc5a31ce7e762dbaadc5e636444"
 
-external-editor@^2.0.4, external-editor@^2.1.0:
+external-editor@^2.0.4:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/external-editor/-/external-editor-2.1.0.tgz#3d026a21b7f95b5726387d4200ac160d372c3b48"
+  dependencies:
+    chardet "^0.4.0"
+    iconv-lite "^0.4.17"
+    tmp "^0.0.33"
+
+external-editor@^2.1.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/external-editor/-/external-editor-2.2.0.tgz#045511cfd8d133f3846673d1047c154e214ad3d5"
   dependencies:
     chardet "^0.4.0"
     iconv-lite "^0.4.17"
@@ -5262,8 +5293,8 @@ locate-path@^2.0.0:
     path-exists "^3.0.0"
 
 lodash-es@^4.2.1:
-  version "4.17.5"
-  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.5.tgz#9fc6e737b1c4d151d8f9cae2247305d552ce748f"
+  version "4.17.10"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.10.tgz#62cd7104cdf5dd87f235a837f0ede0e8e5117e05"
 
 lodash.assign@^4.0.3, lodash.assign@^4.0.6, lodash.assign@^4.2.0:
   version "4.2.0"
@@ -5313,9 +5344,13 @@ lodash@4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
-lodash@^4.0.0, lodash@^4.11.1, lodash@^4.11.2, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.5.0, lodash@^4.5.1, lodash@~4.17.4:
+lodash@^4.0.0, lodash@^4.11.1, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.5.0, lodash@^4.5.1, lodash@~4.17.4:
   version "4.17.5"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
+
+lodash@^4.11.2, lodash@^4.2.1:
+  version "4.17.10"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
 log-symbols@^1.0.2:
   version "1.0.2"
@@ -5400,8 +5435,8 @@ lower-case@^1.1.1:
   resolved "https://registry.yarnpkg.com/lower-case/-/lower-case-1.1.4.tgz#9a2cabd1b9e8e0ae993a4bf7d5875c39c42e8eac"
 
 lowercase-keys@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-1.0.0.tgz#4e3366b39e7f5457e35f1324bdf6f88d0bfc7306"
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-1.0.1.tgz#6f9e30b47084d971a7c820ff15a6c5167b74c26f"
 
 lru-cache@2.2.x:
   version "2.2.4"
@@ -6736,8 +6771,8 @@ postcss-import@^11.0.0:
     resolve "^1.1.7"
 
 postcss-less@^1.1.0:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/postcss-less/-/postcss-less-1.1.3.tgz#6930525271bfe38d5793d33ac09c1a546b87bb51"
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/postcss-less/-/postcss-less-1.1.5.tgz#a6f0ce180cf3797eeee1d4adc0e9e6d6db665609"
   dependencies:
     postcss "^5.2.16"
 
@@ -7258,7 +7293,16 @@ raw-loader@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/raw-loader/-/raw-loader-0.5.1.tgz#0c3d0beaed8a01c966d9787bf778281252a979aa"
 
-rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
+rc@^1.0.1, rc@^1.1.6:
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.7.tgz#8a10ca30d588d00464360372b890d06dacd02297"
+  dependencies:
+    deep-extend "^0.5.1"
+    ini "~1.3.0"
+    minimist "^1.2.0"
+    strip-json-comments "~2.0.1"
+
+rc@^1.1.7:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.5.tgz#275cd687f6e3b36cc756baa26dfee80a790301fd"
   dependencies:
@@ -7340,7 +7384,7 @@ read-pkg@^3.0.0:
     normalize-package-data "^2.3.2"
     path-type "^3.0.0"
 
-"readable-stream@1 || 2", readable-stream@2, readable-stream@^2.0.0, readable-stream@^2.0.1, readable-stream@^2.0.2, readable-stream@^2.0.4, readable-stream@^2.0.5, readable-stream@^2.0.6, readable-stream@^2.1.4, readable-stream@^2.1.5, readable-stream@^2.2.2, readable-stream@^2.2.9, readable-stream@^2.3.0, readable-stream@^2.3.3:
+"readable-stream@1 || 2", readable-stream@2, readable-stream@^2.0.0, readable-stream@^2.0.1, readable-stream@^2.0.2, readable-stream@^2.0.4, readable-stream@^2.0.6, readable-stream@^2.1.4, readable-stream@^2.1.5, readable-stream@^2.2.2, readable-stream@^2.2.9, readable-stream@^2.3.0, readable-stream@^2.3.3:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.4.tgz#c946c3f47fa7d8eabc0b6150f4a12f69a4574071"
   dependencies:
@@ -7378,6 +7422,18 @@ readable-stream@1.1.x, "readable-stream@1.x >=1.1.9":
     inherits "~2.0.1"
     isarray "0.0.1"
     string_decoder "~0.10.x"
+
+readable-stream@^2.0.5:
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.6.tgz#b11c27d88b8ff1fbe070643cf94b0c79ae1b0aaf"
+  dependencies:
+    core-util-is "~1.0.0"
+    inherits "~2.0.3"
+    isarray "~1.0.0"
+    process-nextick-args "~2.0.0"
+    safe-buffer "~5.1.1"
+    string_decoder "~1.1.1"
+    util-deprecate "~1.0.1"
 
 readable-stream@~2.0.5, readable-stream@~2.0.6:
   version "2.0.6"
@@ -7638,7 +7694,7 @@ request-progress@0.3.1:
   dependencies:
     throttleit "~0.0.2"
 
-request@2, request@^2.0.0, request@^2.72.0, request@^2.74.0, request@^2.78.0:
+request@2, request@^2.0.0, request@^2.74.0, request@^2.78.0:
   version "2.83.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.83.0.tgz#ca0b65da02ed62935887808e6f510381034e3356"
   dependencies:
@@ -7718,7 +7774,7 @@ request@2.81.0:
     tunnel-agent "^0.6.0"
     uuid "^3.0.0"
 
-request@^2.83.0:
+request@^2.72.0, request@^2.83.0:
   version "2.85.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.85.0.tgz#5a03615a47c61420b3eb99b7dba204f83603e1fa"
   dependencies:
@@ -8033,7 +8089,7 @@ semver-intersect@^1.1.2:
   dependencies:
     semver "^5.0.0"
 
-"semver@2 || 3 || 4 || 5", semver@^5.0.0, semver@^5.0.1, semver@^5.0.3, semver@^5.1.0, semver@^5.3.0:
+"semver@2 || 3 || 4 || 5", semver@^5.0.0, semver@^5.0.1, semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.5.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
 
@@ -8290,11 +8346,18 @@ snyk-gradle-plugin@1.2.0:
   dependencies:
     clone-deep "^0.3.0"
 
-snyk-module@1.8.1, snyk-module@^1.6.0, snyk-module@^1.8.1:
+snyk-module@1.8.1, snyk-module@^1.6.0:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/snyk-module/-/snyk-module-1.8.1.tgz#31d5080fb1c0dfd6fa8567dd34a523fd02bf1fca"
   dependencies:
     debug "^2.2.0"
+    hosted-git-info "^2.1.4"
+
+snyk-module@^1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/snyk-module/-/snyk-module-1.8.2.tgz#bd3c11b46a90b8ccb0a04a18b387b1d0e5b10291"
+  dependencies:
+    debug "^3.1.0"
     hosted-git-info "^2.1.4"
 
 snyk-mvn-plugin@1.1.1:
@@ -8317,17 +8380,16 @@ snyk-php-plugin@1.3.2:
     debug "^3.1.0"
 
 snyk-policy@^1.10.1:
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/snyk-policy/-/snyk-policy-1.10.2.tgz#2a7bf0f07c7b811b9dda93cf9bbb10dc992dd7bc"
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/snyk-policy/-/snyk-policy-1.12.0.tgz#5167cbc4a28b2046b82234f866e49ee4fea1f52a"
   dependencies:
-    debug "^2.2.0"
-    email-validator "^1.1.1"
-    es6-promise "^3.1.2"
+    debug "^3.1.0"
+    email-validator "^2.0.3"
     js-yaml "^3.5.3"
     lodash.clonedeep "^4.3.1"
-    semver "^5.1.0"
-    snyk-module "^1.8.1"
-    snyk-resolve "^1.0.0"
+    semver "^5.5.0"
+    snyk-module "^1.8.2"
+    snyk-resolve "^1.0.1"
     snyk-try-require "^1.1.1"
     then-fs "^2.0.0"
 
@@ -8361,6 +8423,13 @@ snyk-resolve@1.0.0, snyk-resolve@^1.0.0:
     debug "^2.2.0"
     then-fs "^2.0.0"
 
+snyk-resolve@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/snyk-resolve/-/snyk-resolve-1.0.1.tgz#eaa4a275cf7e2b579f18da5b188fe601b8eed9ab"
+  dependencies:
+    debug "^3.1.0"
+    then-fs "^2.0.0"
+
 snyk-sbt-plugin@1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/snyk-sbt-plugin/-/snyk-sbt-plugin-1.2.4.tgz#20b02f49c62b836f2a31362ac43d92d83d9b95e5"
@@ -8373,12 +8442,21 @@ snyk-tree@^1.0.0:
   dependencies:
     archy "^1.0.0"
 
-snyk-try-require@^1.1.1, snyk-try-require@^1.2.0:
+snyk-try-require@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/snyk-try-require/-/snyk-try-require-1.2.0.tgz#30fc2b11c07064591ee35780c826be91312f2144"
   dependencies:
     debug "^2.2.0"
     es6-promise "^3.1.2"
+    lodash.clonedeep "^4.3.0"
+    lru-cache "^4.0.0"
+    then-fs "^2.0.0"
+
+snyk-try-require@^1.2.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/snyk-try-require/-/snyk-try-require-1.3.0.tgz#f35706acf91c8af788d58e1f1ad6bf0fcf6c5493"
+  dependencies:
+    debug "^3.1.0"
     lodash.clonedeep "^4.3.0"
     lru-cache "^4.0.0"
     then-fs "^2.0.0"
@@ -8564,8 +8642,8 @@ source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
 
 source-map@^0.7.0:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.1.tgz#493620ba1692945d680b93862435bf0ed95a2aa4"
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.2.tgz#115c3e891aaa9a484869fd2b89391a225feba344"
 
 spawn-command@^0.0.2-1:
   version "0.0.2-1"
@@ -8750,6 +8828,12 @@ string_decoder@^1.0.0, string_decoder@~1.0.3:
 string_decoder@~0.10.x:
   version "0.10.31"
   resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-0.10.31.tgz#62e203bc41766c6c28c9fc84301dab1c5310fa94"
+
+string_decoder@~1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.1.1.tgz#9cf1611ba62685d7030ae9e4ba34149c3af03fc8"
+  dependencies:
+    safe-buffer "~5.1.0"
 
 stringify-entities@^1.0.1:
   version "1.3.1"
