@@ -6,7 +6,7 @@ import 'zone.js/dist/long-stack-trace-zone';
 
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
@@ -57,12 +57,20 @@ import { StoreModule } from './store/module';
 import { AppActions } from './store/app/actions';
 import { RootEpics } from './store/epics';
 
+import { RavenErrorHandler } from './raven-error-handler';
+
+import { Utils } from './core/utils';
+
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
 }
 
 const ROUTES: Routes = [
   { path: '', component: AppComponent },
+];
+
+const conditional_providers = [
+  Utils.isProductionDeployment() ? { provide: ErrorHandler, useClass: RavenErrorHandler } : [],
 ];
 
 @NgModule({
@@ -108,6 +116,8 @@ const ROUTES: Routes = [
     StoreModule,
   ],
   providers: [
+    ...conditional_providers,
+
     AuthService,
     ConfService,
     EditService,
