@@ -6,7 +6,7 @@ import 'zone.js/dist/long-stack-trace-zone';
 
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
@@ -52,12 +52,25 @@ import { StorageService } from './services/storage.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
-export function HttpLoaderFactory(http: HttpClient) {
+import { StoreModule } from './store/module';
+
+import { AppActions } from './store/app/actions';
+import { RootEpics } from './store/epics';
+
+import { RavenErrorHandler } from './raven-error-handler';
+
+import { Utils } from './core/utils';
+
+export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
 }
 
 const ROUTES: Routes = [
   { path: '', component: AppComponent },
+];
+
+const conditional_providers = [
+  Utils.isProductionDeployment() ? { provide: ErrorHandler, useClass: RavenErrorHandler } : [],
 ];
 
 @NgModule({
@@ -90,7 +103,6 @@ const ROUTES: Routes = [
     HttpModule,
     HttpClientModule,
     ModalModule.forRoot(),
-    RouterModule.forRoot(ROUTES),
     TooltipModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
@@ -100,8 +112,12 @@ const ROUTES: Routes = [
       },
     }),
     TypeaheadModule.forRoot(),
+    RouterModule.forRoot(ROUTES),
+    StoreModule,
   ],
   providers: [
+    ...conditional_providers,
+
     AuthService,
     ConfService,
     EditService,
@@ -115,6 +131,9 @@ const ROUTES: Routes = [
     KeysPipe,
 
     { provide: APP_BASE_HREF, useValue : '/' },
+
+    AppActions,
+    RootEpics,
   ],
 })
-export class AppModule {}
+export class AppModule { }

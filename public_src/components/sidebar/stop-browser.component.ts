@@ -9,6 +9,9 @@ import { DragulaService } from 'ng2-dragula';
 import { IPtRelation } from '../../core/ptRelation.interface';
 import { IPtStop } from '../../core/ptStop.interface';
 
+import { Observable } from 'rxjs/Observable';
+import { select } from '@angular-redux/store';
+
 @Component({
   providers: [],
   selector: 'stop-browser',
@@ -23,7 +26,7 @@ export class StopBrowserComponent {
   public currentElement: any;
   public listOfStops: object[] = this.storageSrv.listOfStops;
   public filteredView: boolean;
-  public editingMode: boolean;
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   constructor(
     private dragulaSrv: DragulaService,
@@ -57,15 +60,6 @@ export class StopBrowserComponent {
         this.filteredView = false;
       }
     });
-
-    this.editSrv.editingMode.subscribe((data) => {
-        console.log(
-          'LOG (stop-browser) Editing mode change in stopBrowser - ',
-          data,
-        );
-        this.editingMode = data;
-      },
-    );
   }
 
   public reorderingEnabled(): boolean {

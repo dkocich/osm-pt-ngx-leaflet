@@ -6,6 +6,8 @@ import { EditService } from '../../services/edit.service';
 import { ModalDirective } from 'ngx-bootstrap';
 
 import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
+import { Observable } from 'rxjs/Observable';
+import { select } from '@angular-redux/store';
 
 @Component({
   providers: [],
@@ -19,7 +21,7 @@ import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
 export class RelationBrowserComponent {
   private currentElement: IPtRouteMasterNew;
   public listOfVariants = this.storageSrv.listOfVariants;
-  private editingMode: boolean;
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   public listOfMasters = this.storageSrv.listOfMasters;
 
   constructor(
@@ -52,10 +54,6 @@ export class RelationBrowserComponent {
         console.log('LOG (relation-browser) List of variants ', this.storageSrv.listOfVariants,
           ' currentElement', this.storageSrv.currentElement);
       }
-    });
-    this.editSrv.editingMode.subscribe((data) => {
-      console.log('LOG (relation-browser) Editing mode change in routeBrowser - ', data);
-      this.editingMode = data;
     });
   }
 

@@ -5,6 +5,8 @@ import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
+import { Observable } from 'rxjs/Observable';
+import { select } from '@angular-redux/store';
 
 @Component({
   providers: [],
@@ -16,16 +18,17 @@ import { StorageService } from '../../services/storage.service';
   templateUrl: './route-browser.component.html',
 })
 export class RouteBrowserComponent {
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+
   public currentElement;
-  private listOfMasters: object[] = this.storageSrv.listOfMasters;
+  public listOfMasters: object[] = this.storageSrv.listOfMasters;
   public listOfRelations: object[] = this.storageSrv.listOfRelations;
   public listOfRelationsForStop: object[] = this.storageSrv.listOfRelationsForStop;
 
-  private isRequesting: boolean;
+  public isRequesting: boolean;
   public filteredView: boolean;
   private idsHaveMaster = new Set();
-  public editingMode: boolean;
-  private membersEditing: boolean = false;
+  public membersEditing: boolean = false;
 
   constructor(
     private editSrv: EditService,
@@ -57,13 +60,6 @@ export class RouteBrowserComponent {
       data['idsHaveMaster'].forEach((id) => {
         this.idsHaveMaster.add(id);
       });
-    });
-    this.editSrv.editingMode.subscribe((data) => {
-      console.log(
-        'LOG (route-browser) Editing mode change in routeBrowser - ',
-        data,
-      );
-      this.editingMode = data;
     });
   }
 

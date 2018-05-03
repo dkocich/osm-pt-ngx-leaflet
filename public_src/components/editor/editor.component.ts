@@ -6,6 +6,10 @@ import { MapService } from '../../services/map.service';
 import { StorageService } from '../../services/storage.service';
 
 import { ModalDirective } from 'ngx-bootstrap';
+import { select } from '@angular-redux/store';
+import { Observable } from 'rxjs/Observable';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { AppActions } from '../../store/app/actions';
 
 @Component({
   providers: [],
@@ -15,15 +19,18 @@ import { ModalDirective } from 'ngx-bootstrap';
     '../../styles/main.less',
   ],
   templateUrl: './editor.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditorComponent {
   @ViewChild('editModal') public editModal: ModalDirective;
-  private totalEditSteps: number = 0;
-  private currentEditStep: number = 0;
+  public totalEditSteps: number = 0;
+  public currentEditStep: number = 0;
   public editing: boolean = false;
-  private creatingElementOfType: string = '';
+  public creatingElementOfType: string = '';
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   constructor(
+    public appActions: AppActions,
     private authSrv: AuthService,
     private editSrv: EditService,
     private mapSrv: MapService,
@@ -32,7 +39,7 @@ export class EditorComponent {
     //
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.editSrv.currentTotalSteps.subscribe((data) => {
       // console.log("LOG (editor) subscribed to counter ", data);
       this.currentEditStep = data.current;
@@ -46,7 +53,7 @@ export class EditorComponent {
     });
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     if (this.storageSrv.getLocalStorageItem('edits')) {
       this.editModal.show();
     } else {
