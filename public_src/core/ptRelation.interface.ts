@@ -1,6 +1,7 @@
-import { IOsmEntity } from './osmEntity.interface';
+import { IOsmElement } from './osmElement.interface';
 import { IPtMember } from './ptMember';
 import { IOsmTags } from './osmTags.interface';
+
 /**
  *  {
  *    "type": "relation",
@@ -39,7 +40,7 @@ import { IOsmTags } from './osmTags.interface';
  *    }
  *  }
  */
-export interface IPtRelation extends IOsmEntity {
+export interface IPtRelation extends IOsmElement {
   type: 'relation';
   members: IPtMember[];
   tags: IOsmTags;

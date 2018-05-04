@@ -1,6 +1,7 @@
-import { IOsmEntity } from './osmEntity.interface';
+import { IOsmElement } from './osmElement.interface';
 import { IPtMember } from './ptMember';
-export interface IPtRouteMasterNew extends IOsmEntity {
+
+export interface IPtRouteMasterNew extends IOsmElement {
   type: 'relation';
   members: IPtMember[];
   tags: {

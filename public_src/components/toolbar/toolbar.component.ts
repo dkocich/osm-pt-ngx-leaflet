@@ -9,7 +9,7 @@ import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 
-import { IOsmEntity } from '../../core/osmEntity.interface';
+import { IOsmElement } from '../../core/osmElement.interface';
 
 @Component({
   providers: [],
@@ -28,7 +28,7 @@ export class ToolbarComponent {
   @ViewChild(EditorComponent) public editorComponent: EditorComponent;
   public filtering: boolean;
 
-  public currentElement: IOsmEntity;
+  public currentElement: IOsmElement;
   public stats = { s: 0, r: 0, a: 0, m: 0 };
 
   constructor(
@@ -151,7 +151,7 @@ export class ToolbarComponent {
     this.processSrv.cancelSelection();
   }
 
-  private zoomTo(selection: IOsmEntity): void {
+  private zoomTo(selection: IOsmElement): void {
     this.processSrv.zoomToElement(selection);
   }
 

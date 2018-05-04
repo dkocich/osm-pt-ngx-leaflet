@@ -1,6 +1,7 @@
-import { IOsmEntity } from './osmEntity.interface';
+import { IOsmElement } from './osmElement.interface';
 import { IPtMember } from './ptMember';
-export interface IPtRelationNew extends IOsmEntity {
+
+export interface IPtRelationNew extends IOsmElement {
   type: 'relation';
   members: IPtMember[];
   tags: {

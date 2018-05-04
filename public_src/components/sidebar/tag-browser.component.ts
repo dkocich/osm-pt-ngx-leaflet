@@ -4,15 +4,16 @@ import {
   Component,
   Input,
 } from '@angular/core';
+import { select } from '@angular-redux/store';
+
+import { Observable } from 'rxjs/Observable';
 
 import { EditService } from '../../services/edit.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 
-import { IOsmEntity } from '../../core/osmEntity.interface';
+import { IOsmElement } from '../../core/osmElement.interface';
 
-import { select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -27,7 +28,7 @@ import { Observable } from 'rxjs/Observable';
 export class TagBrowserComponent {
   @Input() public tagKey: string = '';
   @Input() public tagValue: string = '';
-  public currentElement: IOsmEntity;
+  public currentElement: IOsmElement;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   public expectedKeys = [

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { AuthService } from './auth.service';
 import { ConfService } from './conf.service';
@@ -9,6 +9,8 @@ import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 
 import { create } from 'xmlbuilder';
+
+import { IOverpassResponse } from '../core/overpassResponse.interface';
 
 const CONTINUOUS_QUERY: string = `
 [out:json][timeout:25][bbox:{{bbox}}];
@@ -26,6 +28,9 @@ const CONTINUOUS_QUERY: string = `
 (._;>;);
 out meta;`;
 
+const HTTP_HEADERS: HttpHeaders = new HttpHeaders(
+  { 'Content-Type': 'application/X-www-form-urlencoded' });
+
 @Injectable()
 export class OverpassService {
   public changeset;
@@ -33,7 +38,7 @@ export class OverpassService {
 
   constructor(
     private authSrv: AuthService,
-    private http: Http,
+    private httpClient: HttpClient,
     private loadSrv: LoadService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
@@ -88,39 +93,35 @@ export class OverpassService {
       }
     }, 5000);
     const requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
-    const options = this.setRequestOptions('application/X-www-form-urlencoded');
     this.mapSrv.previousCenter = [
       this.mapSrv.map.getCenter().lat,
       this.mapSrv.map.getCenter().lng,
     ];
-    this.http
-      .post(ConfService.overpassUrl, requestBody, options)
+    this.httpClient
+      .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
+        responseType: 'json',
+        headers: HTTP_HEADERS,
+      })
       .map((res) => {
         this.loadSrv.hide();
         console.log('LOG (overpass s.)', res);
-        if (res.status === 200) {
-          return res.json();
-        } else {
-          console.log(
-            'LOG (overpass s.) Stops response error',
-            res.status,
-            res.text,
-          );
-          return setTimeout(
-            function(): void {
+        return res;
+      })
+      .subscribe(
+        (res: IOverpassResponse) => {
+          this.processSrv.processResponse(res);
+          // FIXME
+          // this.processSrv.drawStopAreas();
+          // this.getRouteMasters();
+        },
+        (err) => {
+          console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
+          return setTimeout(() => {
               console.log('LOG (overpass) Request error - new request?');
               this.requestNewOverpassData();
-            }.bind(this),
-            5000,
-          );
-        }
-      })
-      .subscribe((response) => {
-        this.processSrv.processResponse(response);
-        // FIXME
-        // this.processSrv.drawStopAreas();
-        // this.getRouteMasters();
-      });
+            }, 5000);
+        },
+      );
   }
 
   /**
@@ -160,20 +161,23 @@ export class OverpassService {
       requestBody,
     );
     requestBody = this.replaceBboxString(requestBody);
-    const options = this.setRequestOptions('application/X-www-form-urlencoded');
-    this.http
-      .post(ConfService.overpassUrl, requestBody, options)
-      .map((res) => res.json())
-      .subscribe((response) => {
-        this.loadSrv.hide();
-        if (!response) {
-          return alert(
-            'No response from API. Try to select other master relation again please.',
-          );
-        }
-        this.markQueriedRelations(idsArr);
-        this.processSrv.processMastersResponse(response);
-      });
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          this.loadSrv.hide();
+          if (!res) {
+            return alert(
+              'No response from API. Try to select other master relation again please.',
+            );
+          }
+          this.markQueriedRelations(idsArr);
+          this.processSrv.processMastersResponse(res);
+        },
+        (err) => {
+          throw new Error(err);
+        },
+      );
   }
 
   /**
@@ -183,8 +187,16 @@ export class OverpassService {
     this.loadSrv.show();
     this.mapSrv.clearLayer();
     requestBody = this.replaceBboxString(requestBody);
-    const options = this.setRequestOptions('application/X-www-form-urlencoded');
-    this.mapSrv.renderData(requestBody, options);
+    this.httpClient
+      .post('https://overpass-api.de/api/interpreter', requestBody, { headers: HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          this.mapSrv.renderData(res);
+        },
+        (err) => {
+          throw new Error(err);
+        },
+      );
   }
 
   public uploadData(metadata: object, testUpload: boolean = false): void {
@@ -221,12 +233,12 @@ export class OverpassService {
    */
   private getNodeData(featureId: number): void {
     let requestBody = `
-            [out:json][timeout:25][bbox:{{bbox}}];
-            (
-              node(id:${featureId})
-            );
-            (._;<);
-            out meta;`;
+      [out:json][timeout:25];
+      (
+        node(${featureId})({{bbox}});
+      );
+      (._;<;);
+      out meta;`;
     console.log('LOG (overpass s.) Querying nodes', requestBody);
     this.loadSrv.show('Loading clicked feature data...');
     setTimeout(() => {
@@ -234,24 +246,24 @@ export class OverpassService {
         this.loadSrv.hide(); // close loading window on timeout errors
       }
     }, 5000);
-    requestBody = this.replaceBboxString(requestBody);
-    const options = this.setRequestOptions('application/X-www-form-urlencoded');
-    this.http
-      .post(ConfService.overpassUrl, requestBody, options)
-      .map((res) => res.json())
-      .subscribe((response) => {
-        if (!response) {
+    requestBody = this.replaceBboxString(requestBody.trim());
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          if (!res) {
+            this.loadSrv.hide();
+            return alert('No response from API. Try to select element again please.');
+          }
+          console.log('LOG (overpass s.)', res);
+          this.processSrv.processNodeResponse(res);
           this.loadSrv.hide();
-          return alert(
-            'No response from API. Try to select element again please.',
-          );
-        }
-        console.log('LOG (overpass s.)', response);
-        this.processSrv.processNodeResponse(response);
-        this.loadSrv.hide();
-        this.getRouteMasters(10);
-        // TODO this.processSrv.drawStopAreas();
-      });
+          this.getRouteMasters(10);
+          // TODO this.processSrv.drawStopAreas();
+        },
+        (err) => {
+          throw new Error(err);
+        });
   }
 
   /**
@@ -269,7 +281,7 @@ export class OverpassService {
     const requestBody = `
             [out:json][timeout:25];
             (
-              node(id:${missingElements})
+              node(id:${missingElements});
             );
             (._;);
             out meta;`;
@@ -280,30 +292,32 @@ export class OverpassService {
     );
     // FIXME loading can't be closed sometimes?
     // this.loadSrv.show("Loading relation's missing members...");
-    const options = this.setRequestOptions('application/X-www-form-urlencoded');
-    this.http
-      .post(ConfService.overpassUrl, requestBody, options)
-      .map((res) => res.json())
-      .subscribe((response) => {
-        if (!response) {
-          this.loadSrv.hide();
-          return alert('No response from API. Try again please.');
-        }
-        this.processSrv.processNodeResponse(response);
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          if (!res) {
+            this.loadSrv.hide();
+            return alert('No response from API. Try again please.');
+          }
+          this.processSrv.processNodeResponse(res);
 
-        const transformedGeojson = this.mapSrv.osmtogeojson(response);
-        // FIXME save all requests...
-        // this.storageSrv.localGeojsonStorage = transformedGeojson;
-        this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
+          const transformedGeojson = this.mapSrv.osmtogeojson(res);
+          // FIXME save all requests...
+          // this.storageSrv.localGeojsonStorage = transformedGeojson;
+          this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
 
-        // continue with the rest of "exploreRelation" function
-        console.log(
-          'LOG (overpass s.) Continue with downloaded missing members',
-          rel,
-        );
-        this.storageSrv.elementsDownloaded.add(rel.id);
-        this.processSrv.downloadedMissingMembers(rel, true, true);
-      });
+          // continue with the rest of "exploreRelation" function
+          console.log(
+            'LOG (overpass s.) Continue with downloaded missing members',
+            rel,
+          );
+          this.storageSrv.elementsDownloaded.add(rel.id);
+          this.processSrv.downloadedMissingMembers(rel, true, true);
+        },
+        (err) => {
+          throw new Error(err);
+        });
   }
 
   /**
@@ -342,17 +356,6 @@ export class OverpassService {
       new RegExp('{{bbox}}', 'g'),
       [s, w, n, e].join(', '),
     );
-  }
-
-  /**
-   * Creates new request options with headers.
-   * @param contentType
-   * @returns {RequestOptions}
-   */
-  private setRequestOptions(contentType: string): RequestOptions {
-    const headers = new Headers();
-    headers.append('Content-Type', contentType);
-    return new RequestOptions({ headers });
   }
 
   /**

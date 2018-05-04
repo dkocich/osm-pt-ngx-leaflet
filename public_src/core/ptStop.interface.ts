@@ -1,4 +1,5 @@
-import { IOsmEntity } from './osmEntity.interface';
+import { IOsmElement } from './osmElement.interface';
+
 /**
  * {
  *    "type": "node",
@@ -19,7 +20,7 @@ import { IOsmEntity } from './osmEntity.interface';
  *    }
  *  }
  */
-export interface IPtStop extends IOsmEntity {
+export interface IPtStop extends IOsmElement {
   lat: number;
   lon: number;
 }
