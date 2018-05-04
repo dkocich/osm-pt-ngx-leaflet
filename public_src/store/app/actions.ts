@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { dispatch, NgRedux } from '@angular-redux/store';
 import { Action } from 'redux';
 import { IAppState } from '../model';
-import { dispatch, NgRedux } from '@angular-redux/store';
 
 @Injectable()
 export class AppActions {

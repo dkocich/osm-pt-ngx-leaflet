@@ -1,4 +1,4 @@
-export interface IOsmEntity {
+export interface IOsmElement {
   type: string;
   id: number;
   timestamp: string;

@@ -1,8 +1,12 @@
 import { Component, isDevMode, ViewChild } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
 import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
 
 import * as L from 'leaflet';
 
+import { Observable } from 'rxjs/Observable';
+
+import { EditService } from '../../services/edit.service';
 import { GeocodeService } from '../../services/geocode.service';
 import { LoadService } from '../../services/load.service';
 import { MapService } from '../../services/map.service';
@@ -10,11 +14,8 @@ import { ProcessService } from '../../services/process.service';
 
 import { AuthComponent } from '../auth/auth.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
-import { EditService } from '../../services/edit.service';
 
 import { IAppState } from '../../store/model';
-import { NgRedux, select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -71,12 +72,7 @@ export class AppComponent {
     ) {
       this.mapSrv.zoomToHashedPosition();
     } else {
-      this.geocodeSrv
-        .getCurrentLocation()
-        .subscribe(
-          (location) => map.panTo([location.latitude, location.longitude]),
-          (err) => console.error(err),
-        );
+      this.geocodeSrv.getCurrentLocation();
     }
     this.toolbarComponent.Initialize();
   }

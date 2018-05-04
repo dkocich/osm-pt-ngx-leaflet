@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { ConfService } from './conf.service';
 import { LoadService } from './load.service';
@@ -75,7 +75,7 @@ export class MapService {
 
   constructor(
     private confSrv: ConfService,
-    private http: Http,
+    private httpClient: HttpClient,
     private loadSrv: LoadService,
     private storageSrv: StorageService,
   ) {
@@ -372,30 +372,23 @@ export class MapService {
   }
 
   /**
-   *
-   * @param requestBody
-   * @param options
+   * @param res
    */
-  public renderData(requestBody: any, options: any): void {
-    this.http
-      .post('https://overpass-api.de/api/interpreter', requestBody, options)
-      .map((res) => res.json())
-      .subscribe((result) => {
-        const transformed = this.osmtogeojson(result);
-        this.ptLayer = L.geoJSON(transformed, {
-          onEachFeature: (feature, layer) => {
-            this.enableDrag(feature, layer);
-          },
-          pointToLayer: (feature, latlng) => {
-            return this.stylePoint(feature, latlng);
-          },
-          style: (feature) => {
-            return this.styleFeature(feature);
-          },
-        });
-        this.ptLayer.addTo(this.map);
-        this.loadSrv.hide();
-      });
+  public renderData(res: any): void {
+    const transformed = this.osmtogeojson(res);
+    this.ptLayer = L.geoJSON(transformed, {
+      onEachFeature: (feature, layer) => {
+        this.enableDrag(feature, layer);
+      },
+      pointToLayer: (feature, latlng) => {
+        return this.stylePoint(feature, latlng);
+      },
+      style: (feature) => {
+        return this.styleFeature(feature);
+      },
+    });
+    this.ptLayer.addTo(this.map);
+    this.loadSrv.hide();
   }
 
   /**

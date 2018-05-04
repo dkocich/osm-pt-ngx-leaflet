@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+
 import { Map } from 'leaflet';
+
 import { GeocodeService } from '../../services/geocode.service';
 import { MapService } from '../../services/map.service';
 
@@ -34,13 +36,6 @@ export class NavigatorComponent {
     if (!this.address) {
       return;
     }
-
-    this.geocodeSrv.geocode(this.address).subscribe(
-      (location) => {
-        this.map.fitBounds(location.viewBounds, {});
-        this.address = location.address;
-      },
-      (error) => console.error(error),
-    );
+    this.geocodeSrv.geocode(this.address);
   }
 }
