@@ -29,7 +29,7 @@
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
-      "environments": {
+      "fileReplacements": {
         "dev": "environments/environment.ts",
         "hmr": "environments/environment.hmr.ts",
         "prod": "environments/environment.prod.ts"
