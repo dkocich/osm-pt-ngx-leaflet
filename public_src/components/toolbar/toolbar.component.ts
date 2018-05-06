@@ -123,14 +123,14 @@ export class ToolbarComponent {
   }
 
   private checkMinZoomLevel(): boolean {
-    return this.mapSrv.map.getZoom() > this.confSrv.minDownloadZoom;
+    return this.mapSrv.map.getZoom() > ConfService.minDownloadZoom;
   }
 
   private checkMinDistance(): boolean {
     const lastDownloadCenterDistance = this.mapSrv.map
       .getCenter()
       .distanceTo(this.mapSrv.previousCenter);
-    return lastDownloadCenterDistance > this.confSrv.minDownloadDistance;
+    return lastDownloadCenterDistance > ConfService.minDownloadDistance;
   }
 
   private checkDownloadRules(): boolean {

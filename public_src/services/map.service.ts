@@ -8,47 +8,7 @@ import { StorageService } from './storage.service';
 import * as L from 'leaflet';
 
 import { IPtStop } from '../core/ptStop.interface';
-
-const DEFAULT_ICON = L.icon({
-  iconUrl: '',
-  shadowAnchor: [22, 94],
-  shadowSize: [24, 24],
-  shadowUrl: '',
-});
-const HIGHLIGHT_FILL = {
-  color: '#ffff00',
-  opacity: 0.6,
-  weight: 6,
-};
-const HIGHLIGHT_STROKE = {
-  color: '#FF0000',
-  opacity: 0.6,
-  weight: 12,
-};
-const FROM_TO_LABEL = {
-  color: '#00FFFF',
-  opacity: 0.6,
-};
-const REL_BUS_STYLE = {
-  color: '#0000FF',
-  opacity: 0.3,
-  weight: 6,
-};
-const REL_TRAIN_STYLE = {
-  color: '#000000',
-  opacity: 0.3,
-  weight: 6,
-};
-const REL_TRAM_STYLE = {
-  color: '#FF0000',
-  opacity: 0.3,
-  weight: 6,
-};
-const OTHER_STYLE = {
-  color: '#00FF00',
-  opacity: 0.3,
-  weight: 6,
-};
+import { Utils } from '../core/utils.class';
 
 @Injectable()
 export class MapService {
@@ -438,7 +398,7 @@ export class MapService {
   public showStop(stop: IPtStop): void {
     this.markerFrom = L.circleMarker(
       { lat: stop.lat, lng: stop.lon },
-      FROM_TO_LABEL,
+      Utils.FROM_TO_LABEL,
     );
     this.highlight = L.layerGroup([this.markerFrom]);
   }
@@ -486,11 +446,11 @@ export class MapService {
       }
     }
     if (latlngs.length > 0) {
-      HIGHLIGHT_FILL.color =
+      Utils.HIGHLIGHT_FILL.color =
         rel.tags.colour ||
         rel.tags.color ||
         '#' + (Math.floor(Math.random() * 0xffffff) | 0x0f0f0f).toString(16);
-      this.highlightFill = L.polyline(latlngs, HIGHLIGHT_FILL).bindTooltip(
+      this.highlightFill = L.polyline(latlngs, Utils.HIGHLIGHT_FILL).bindTooltip(
         rel.tags.name,
       );
       if (this.highlight) {
@@ -573,10 +533,10 @@ export class MapService {
 
     // at least two nodes to form a polyline and not point
     if (latlngs.length > 1) {
-      let currentHighlightFill = JSON.parse(JSON.stringify(HIGHLIGHT_FILL));
+      let currentHighlightFill = JSON.parse(JSON.stringify(Utils.HIGHLIGHT_FILL));
       currentHighlightFill.color =
-        rel.tags.colour || rel.tags.color || HIGHLIGHT_FILL.color;
-      this.highlightStroke = L.polyline(latlngs, HIGHLIGHT_STROKE).bindTooltip(
+        rel.tags.colour || rel.tags.color || Utils.HIGHLIGHT_FILL.color;
+      this.highlightStroke = L.polyline(latlngs, Utils.HIGHLIGHT_STROKE).bindTooltip(
         rel.tags.name,
       );
       this.highlightFill = L.polyline(
@@ -661,7 +621,7 @@ export class MapService {
     const route: string = rel.tags.route || '#ROUTE';
     const ref: string = rel.tags.ref || '#REF';
 
-    this.markerTo = L.circleMarker(latlngTo, FROM_TO_LABEL).bindTooltip(
+    this.markerTo = L.circleMarker(latlngTo, Utils.FROM_TO_LABEL).bindTooltip(
       to + ' (' + route + ' ' + ref + ')',
       {
         className: 'from-to-label',
@@ -669,7 +629,7 @@ export class MapService {
         permanent: true,
       },
     );
-    this.markerFrom = L.circleMarker(latlngFrom, FROM_TO_LABEL).bindTooltip(
+    this.markerFrom = L.circleMarker(latlngFrom, Utils.FROM_TO_LABEL).bindTooltip(
       from + ' (' + route + ' ' + ref + ')',
       {
         className: 'from-to-label',
@@ -757,13 +717,13 @@ export class MapService {
   private styleFeature(feature: any): object {
     switch (feature.properties.route) {
       case 'bus':
-        return REL_BUS_STYLE;
+        return Utils.REL_BUS_STYLE;
       case 'train':
-        return REL_TRAIN_STYLE;
+        return Utils.REL_TRAIN_STYLE;
       case 'tram':
-        return REL_TRAM_STYLE;
+        return Utils.REL_TRAM_STYLE;
       default:
-        return OTHER_STYLE;
+        return Utils.OTHER_STYLE;
     }
   }
 
