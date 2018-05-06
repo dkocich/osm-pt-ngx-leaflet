@@ -38,6 +38,7 @@ import { StopBrowserComponent } from './components/sidebar/stop-browser.componen
 import { TagBrowserComponent } from './components/sidebar/tag-browser.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
@@ -86,6 +87,7 @@ const conditional_providers = [
     TagBrowserComponent,
     ToolbarComponent,
     TransporterComponent,
+    SettingsComponent,
 
     KeysPipe,
   ],

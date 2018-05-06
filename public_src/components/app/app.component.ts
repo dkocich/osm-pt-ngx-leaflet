@@ -16,6 +16,7 @@ import { AuthComponent } from '../auth/auth.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 import { IAppState } from '../../store/model';
+import { AppActions } from '../../store/app/actions';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -35,6 +36,7 @@ export class AppComponent {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   constructor(
+    public appActions: AppActions,
     private ngRedux: NgRedux<IAppState>,
     private editSrv: EditService,
     private geocodeSrv: GeocodeService,
@@ -87,9 +89,5 @@ export class AppComponent {
 
   private showHelpModal(): void {
     this.helpModal.show();
-  }
-
-  private changeMode(): void {
-    localStorage.setItem('advancedMode', JSON.stringify(this.advancedMode));
   }
 }
