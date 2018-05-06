@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { NgRedux } from '@angular-redux/store';
 
 import { AuthService } from './auth.service';
 import { ConfService } from './conf.service';
@@ -13,12 +14,15 @@ import { create } from 'xmlbuilder';
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { Utils } from '../core/utils.class';
 
+import {IAppState, IRootAppState} from '../store/model';
+
 @Injectable()
 export class OverpassService {
   public changeset;
   private changeset_id: string;
 
   constructor(
+    private ngRedux: NgRedux<IRootAppState>,
     private authSrv: AuthService,
     private httpClient: HttpClient,
     private loadSrv: LoadService,
@@ -45,10 +49,31 @@ export class OverpassService {
         !this.storageSrv.elementsDownloaded.has(featureId) &&
         featureId > 0
       ) {
-        console.log('LOG (overpass s.) Requesting started for ', featureId);
-        this.getNodeData(featureId);
-        this.storageSrv.elementsDownloaded.add(featureId);
-        console.log('LOG (overpass s.) Requesting finished for', featureId);
+
+        const state = this.ngRedux.getState();
+        debugger;
+        if (state.app.goodConnectMode) {
+          // let pointIds = this.processSrv.getRandomPointIds();
+          let ids: number[] = [];
+          for (let stop of this.storageSrv.listOfStops.length) {
+            if (!this.storageSrv.elementsDownloaded.has(stop.id)) {
+              ids.push(stop.id);
+            }
+          }
+          console.log('LOG (overpass s.) Requesting started for ', ids);
+          this.getNodeData(featureId);
+          for (let id of ids) {
+            this.storageSrv.elementsDownloaded.add(id);
+          }
+          console.log('LOG (overpass s.) Requesting finished for', ids);
+          return ids;
+        }
+        else {
+          console.log('LOG (overpass s.) Requesting started for ', featureId);
+          this.getNodeData(featureId);
+          this.storageSrv.elementsDownloaded.add(featureId);
+          console.log('LOG (overpass s.) Requesting finished for', featureId);
+        }
       }
     });
 
@@ -213,7 +238,7 @@ export class OverpassService {
    * Downloads all data for currently selected node.
    * @param featureId
    */
-  private getNodeData(featureId: number): void {
+  private getNodeData(featureId: number | number[]): void {
     let requestBody = `
       [out:json][timeout:25];
       (

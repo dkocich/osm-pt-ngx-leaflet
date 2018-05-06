@@ -129,6 +129,10 @@ export class ProcessService {
     this.loadSrv.hide();
   }
 
+  // public getRandomPointIds(): number[] {
+  //
+  // }
+
   /**
    *
    * @param response

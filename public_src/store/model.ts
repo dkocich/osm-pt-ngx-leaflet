@@ -2,7 +2,7 @@
 // In the 'standard' way, initialState is defined in reducers: http://redux.js.org/docs/basics/Reducers.html
 
 export interface IRootAppState {
-  // app: IAppState;
+  app: IAppState;
   routes?: any;
 }
 
