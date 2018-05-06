@@ -1,6 +1,6 @@
 import { IOsmElement } from './osmElement.interface';
 import { IPtMember } from './ptMember';
-import { IOsmTags } from './osmTags.interface';
+import { IPtTags } from './ptTags.class';
 
 /**
  *  {
@@ -43,5 +43,5 @@ import { IOsmTags } from './osmTags.interface';
 export interface IPtRelation extends IOsmElement {
   type: 'relation';
   members: IPtMember[];
-  tags: IOsmTags;
+  tags: IPtTags;
 }

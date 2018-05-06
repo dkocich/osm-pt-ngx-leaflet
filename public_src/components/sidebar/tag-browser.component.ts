@@ -13,7 +13,7 @@ import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 
 import { IOsmElement } from '../../core/osmElement.interface';
-
+import { PtTags } from '../../core/ptTags.class';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -29,67 +29,9 @@ export class TagBrowserComponent {
   @Input() public tagKey: string = '';
   @Input() public tagValue: string = '';
   public currentElement: IOsmElement;
+  public expectedKeys = PtTags.expectedKeys;
+  public expectedValues = PtTags.expectedValues;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-
-  public expectedKeys = [
-    'ascent',
-    'bench',
-    'building',
-    'bus',
-    'colour',
-    'covered',
-    'descent',
-    'description',
-    'distance',
-    'highway',
-    'layer',
-    'level',
-    'name',
-    'network',
-    'operator',
-    'public_transport',
-    'public_transport:version',
-    'railway',
-    'ref',
-    'roundtrip',
-    'route',
-    'route_ref',
-    'shelter',
-    'surface',
-    'symbol',
-    'tactile_paving',
-    'type',
-    'uic_name',
-    'uic_ref',
-  ];
-  public expectedValues = [
-    'aerialway',
-    'backward',
-    'bus',
-    'bus_stop',
-    'coach',
-    'ferry',
-    'forward',
-    'gate',
-    'limited',
-    'monorail',
-    'no',
-    'platform',
-    'public_transport',
-    'route',
-    'route_master',
-    'share_taxi',
-    'station',
-    'stop',
-    'stop_area',
-    'stop_position',
-    'subway',
-    'taxi',
-    'train',
-    'tram',
-    'trolleybus',
-    'yes',
-  ];
 
   constructor(
     private cd: ChangeDetectorRef,

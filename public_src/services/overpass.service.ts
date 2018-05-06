@@ -11,25 +11,7 @@ import { StorageService } from './storage.service';
 import { create } from 'xmlbuilder';
 
 import { IOverpassResponse } from '../core/overpassResponse.interface';
-
-const CONTINUOUS_QUERY: string = `
-[out:json][timeout:25][bbox:{{bbox}}];
-(
-  node["route"="train"];
-  node["route"="subway"];
-  node["route"="monorail"];
-  node["route"="tram"];
-  node["route"="bus"];
-  node["route"="trolleybus"];
-  node["route"="aerialway"];
-  node["route"="ferry"];
-  node["public_transport"];
-);
-(._;>;);
-out meta;`;
-
-const HTTP_HEADERS: HttpHeaders = new HttpHeaders(
-  { 'Content-Type': 'application/X-www-form-urlencoded' });
+import { Utils } from '../core/utils.class';
 
 @Injectable()
 export class OverpassService {
@@ -92,7 +74,7 @@ export class OverpassService {
         this.loadSrv.hide(); // close loading window on timeout errors
       }
     }, 5000);
-    const requestBody = this.replaceBboxString(CONTINUOUS_QUERY);
+    const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
     this.mapSrv.previousCenter = [
       this.mapSrv.map.getCenter().lat,
       this.mapSrv.map.getCenter().lng,
@@ -100,7 +82,7 @@ export class OverpassService {
     this.httpClient
       .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
         responseType: 'json',
-        headers: HTTP_HEADERS,
+        headers: Utils.HTTP_HEADERS,
       })
       .map((res) => {
         this.loadSrv.hide();
@@ -162,7 +144,7 @@ export class OverpassService {
     );
     requestBody = this.replaceBboxString(requestBody);
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
         (res) => {
           this.loadSrv.hide();
@@ -188,7 +170,7 @@ export class OverpassService {
     this.mapSrv.clearLayer();
     requestBody = this.replaceBboxString(requestBody);
     this.httpClient
-      .post('https://overpass-api.de/api/interpreter', requestBody, { headers: HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
         (res) => {
           this.mapSrv.renderData(res);
@@ -248,7 +230,7 @@ export class OverpassService {
     }, 5000);
     requestBody = this.replaceBboxString(requestBody.trim());
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
         (res) => {
           if (!res) {
@@ -293,7 +275,7 @@ export class OverpassService {
     // FIXME loading can't be closed sometimes?
     // this.loadSrv.show("Loading relation's missing members...");
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
         (res) => {
           if (!res) {

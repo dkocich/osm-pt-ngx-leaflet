@@ -8,7 +8,6 @@ import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -59,7 +58,7 @@ import { RootEpics } from './store/epics';
 
 import { RavenErrorHandler } from './raven-error-handler';
 
-import { Utils } from './core/utils';
+import { Utils } from './core/utils.class';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
@@ -100,7 +99,6 @@ const conditional_providers = [
     CarouselModule.forRoot(),
     DragulaModule,
     FormsModule,
-    HttpModule,
     HttpClientModule,
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
