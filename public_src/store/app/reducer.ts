@@ -5,6 +5,7 @@ import { AppActions } from './actions';
 export const INITIAL_STATE: IAppState = {
   editing: false,
   selectObject: null,
+  listofStops: [],
 };
 
 export function appReducer(state: IAppState = INITIAL_STATE, action: AnyAction): any {
@@ -18,6 +19,11 @@ export function appReducer(state: IAppState = INITIAL_STATE, action: AnyAction):
       return {
         ...state,
         selectObject: action.payload,
+      };
+    case AppActions.ADD_TO_LISTOFSTOPS:
+      return {
+        ...state,
+        listofStops : [...state.listofStops.concat(action.payload.newStops)],
       };
     default:
       // We don't care about any other actions right now.

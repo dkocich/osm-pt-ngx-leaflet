@@ -9,4 +9,5 @@ export interface IRootAppState {
 export interface IAppState {
   editing: boolean;
   selectObject: number;
+  listofStops: object[];
 }

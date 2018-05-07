@@ -84,23 +84,24 @@ export class ProcessService {
   /**
    * Filters data in the sidebar depending on current view's bounding box.
    */
-  public filterDataInBounds(): void {
-    if (
-      !this.storageSrv.localJsonStorage ||
-      this.storageSrv.listOfStops.length > 1000
-    ) {
-      return console.log(
-        'LOG (processing s.) filtering of stops in map bounds was stopped (too much data - limit 1000 nodes).',
-      );
-    }
-    this.mapSrv.bounds = this.mapSrv.map.getBounds();
-    for (const stop of this.storageSrv.listOfStops) {
-      const el = document.getElementById(stop.id.toString());
-      if (!el) {
-        return;
+  public filterDataInBounds(listofStops: object[]): void {
+    if (listofStops) {
+      if (
+        !this.storageSrv.localJsonStorage ||
+        listofStops.length > 1000
+      ) {
+        return console.log(
+          'LOG (processing s.) filtering of stops in map bounds was stopped (too much data - limit 1000 nodes).',
+        );
       }
-      el.style.display = el && this.mapSrv.bounds.contains([stop.lat, stop.lon]) ? 'table-row' : 'none';
-      // el.style.display = el && this.mapSrv.bounds.contains([stop.lat, stop.lon]) ? "table-row" : "none";
+      this.mapSrv.bounds = this.mapSrv.map.getBounds();
+      for (const stop of listofStops) {
+        const el = document.getElementById(stop['id'].toString());
+        if (!el) {
+          return;
+        }
+        el.style.display = el && this.mapSrv.bounds.contains([stop['lat'], stop['lon']]) ? 'table-row' : 'none';
+      }
     }
   }
 
@@ -134,6 +135,7 @@ export class ProcessService {
    * @param response
    */
   public processNodeResponse(response: any): void {
+    let listOfStops: object [] = [];
     for (const element of response.elements) {
       if (!this.storageSrv.elementsMap.has(element.id)) {
         this.storageSrv.elementsMap.set(element.id, element);
@@ -146,7 +148,7 @@ export class ProcessService {
             this.storageSrv.elementsDownloaded.add(element.id);
 
             if (element.tags.bus === 'yes' || element.tags.public_transport) {
-              this.storageSrv.listOfStops.push(element);
+              listOfStops.push(element);
             }
             break;
           case 'relation':
@@ -158,6 +160,9 @@ export class ProcessService {
             }
         }
       }
+    }
+    if (listOfStops.length > 0) {
+      this.appActions.actAddToListOfStops({ newStops: listOfStops });
     }
     this.storageSrv.logStats();
   }
@@ -210,6 +215,7 @@ export class ProcessService {
    * @param id
    */
   public createLists(id: number): void {
+    let listOfStops: object[] = [];
     const response = this.storageSrv.localJsonStorage.get(id);
     response.elements.forEach((element) => {
       if (!this.storageSrv.elementsMap.has(element.id)) {
@@ -223,7 +229,7 @@ export class ProcessService {
               ['platform', 'stop_position', 'station']
                 .indexOf(element.tags.public_transport) > -1
             ) {
-              this.storageSrv.listOfStops.push(element);
+              listOfStops.push(element);
             }
             break;
           case 'relation':
@@ -236,6 +242,8 @@ export class ProcessService {
         }
       }
     });
+    if (listOfStops.length > 0) {
+      this.appActions.actAddToListOfStops({ newStops: listOfStops }); }
     this.storageSrv.logStats();
   }
 

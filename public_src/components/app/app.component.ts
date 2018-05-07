@@ -1,4 +1,4 @@
-import { Component, isDevMode, ViewChild } from '@angular/core';
+import { Component, isDevMode, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
 
@@ -25,7 +25,7 @@ import { IAppState } from '../../store/model';
   ],
   templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy{
   public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
 
   @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
@@ -33,7 +33,8 @@ export class AppComponent {
   @ViewChild('helpModal') public helpModal: ModalDirective;
 
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-
+  public listofStops: object[];
+  public listofStops_subscription;
   constructor(
     private ngRedux: NgRedux<IAppState>,
     private editSrv: EditService,
@@ -64,7 +65,7 @@ export class AppComponent {
 
     this.mapSrv.map = map;
     this.mapSrv.map.on('zoomend moveend', () => {
-      this.processSrv.filterDataInBounds();
+      this.processSrv.filterDataInBounds(this.listofStops);
       this.processSrv.addPositionToUrlHash();
     });
     if (
@@ -91,5 +92,8 @@ export class AppComponent {
 
   private changeMode(): void {
     localStorage.setItem('advancedMode', JSON.stringify(this.advancedMode));
+  }
+  ngOnDestroy(): void {
+    this.listofStops_subscription.unsubscribe();
   }
 }

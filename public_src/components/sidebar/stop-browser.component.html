@@ -1,7 +1,7 @@
 <div class="panel-group">
-  <div *ngIf="listOfStops.length === 0 || filteredView || ((editing$ | async) && reorderingEnabled)"
+  <div *ngIf="listOfStops?.length === 0 || filteredView || ((editing$ | async) && reorderingEnabled)"
        class="panel panel-heading panel-default text-center">
-    <h4 class="text-danger" *ngIf="listOfStops.length === 0">{{ 'There are no loaded stops (zoom map).' | translate }}</h4>
+    <h4 class="text-danger" *ngIf="listOfStops?.length === 0">{{ 'There are no loaded stops (zoom map).' | translate }}</h4>
     <ng-container *ngIf="filteredView">
       <button class="btn btn-warning" container="body"
               tooltip="{{ 'Cancel filter showing only nodes related to the route' | translate }}"
@@ -18,7 +18,7 @@
     </ng-container>
   </div>
 
-  <div *ngIf="filteredView || (listOfStops.length !== 0 && !filteredView)"
+  <div *ngIf="filteredView || (listOfStops?.length !== 0 && !filteredView)"
        class="content panel panel-body panel-default">
 
     <div *ngIf="filteredView" class="medium">
@@ -31,7 +31,7 @@
           <td tooltip="{{ 'atrRefT' | translate }}" container="body"><b>{{ 'atrRef' | translate }}</b></td>
         </tr>
         </thead>
-        <tbody *ngIf="!editing$ | async">
+        <tbody *ngIf="!(editing$ | async)">
         <tr *ngFor="let stop of listOfStopsForRoute; trackBy: trackByFn; let i = index;"
             class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
           <td>{{i + 1}}.</td>
@@ -59,7 +59,7 @@
       </table>
     </div>
 
-    <div *ngIf="listOfStops.length !== 0 && !filteredView" class="medium">
+    <div *ngIf="listOfStops?.length !== 0 && !filteredView" class="medium">
       <table class="table-responsive table-condensed table-bordered table-hover wide-table">
         <thead>
         <tr>

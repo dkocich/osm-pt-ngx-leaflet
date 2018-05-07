@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
@@ -10,8 +10,8 @@ import { IPtRelation } from '../../core/ptRelation.interface';
 import { IPtStop } from '../../core/ptStop.interface';
 
 import { Observable } from 'rxjs/Observable';
-import { select } from '@angular-redux/store';
-
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from '../../store/model';
 @Component({
   providers: [],
   selector: 'stop-browser',
@@ -21,22 +21,26 @@ import { select } from '@angular-redux/store';
   ],
   templateUrl: './stop-browser.component.html',
 })
-export class StopBrowserComponent {
+export class StopBrowserComponent implements OnInit, OnDestroy  {
   public listOfStopsForRoute: object[] = this.storageSrv.listOfStopsForRoute;
   public currentElement: any;
-  public listOfStops: object[] = this.storageSrv.listOfStops;
+  public listOfStops: object[];
   public filteredView: boolean;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-
+  public listofStops_subscription;
   constructor(
     private dragulaSrv: DragulaService,
     private editSrv: EditService,
     private mapSrv: MapService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    ngRedux: NgRedux<IAppState>,
   ) {
     dragulaSrv.drop.subscribe((value) => {
       this.onDrop(value.slice(1));
+    });
+    this.listofStops_subscription = ngRedux.subscribe(() => {
+      this.listOfStops = ngRedux.getState()['app']['listofStops'];
     });
   }
 
@@ -120,5 +124,8 @@ export class StopBrowserComponent {
    */
   private trackByFn(index: number, item: any): number {
     return item.id;
+  }
+  ngOnDestroy(): void {
+    this.listofStops_subscription.unsubscribe();
   }
 }

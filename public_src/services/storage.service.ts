@@ -13,7 +13,6 @@ export class StorageService {
 
   public localJsonStorage: any = new Map();
   public localGeojsonStorage: any = new Map();
-  public listOfStops: IPtStop[] = [];
   public listOfRelations: object[] = [];
   public listOfAreas: object[] = [];
   public listOfMasters: object[] = [];
@@ -52,8 +51,6 @@ export class StorageService {
   public logStats(): void {
     console.log(
       'LOG (storage)',
-      'Total # of nodes: ',
-      this.listOfStops.length,
       'Total # of relations: ',
       this.listOfRelations.length,
       'Total # of master rel. (stop areas only): ',
@@ -73,7 +70,6 @@ export class StorageService {
       a: this.listOfAreas.length,
       m: this.listOfMasters.length,
       r: this.listOfRelations.length,
-      s: this.listOfStops.length,
     };
     this.stats.emit(stats);
   }
