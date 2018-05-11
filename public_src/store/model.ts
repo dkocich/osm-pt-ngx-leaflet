@@ -9,4 +9,6 @@ export interface IRootAppState {
 export interface IAppState {
   editing: boolean;
   selectObject: number;
+  advancedExpMode: boolean;
+  goodConnectMode: boolean;
 }
