@@ -109,7 +109,7 @@
     "optimize-js-plugin": "0.0.4",
     "osm-auth": "1.0.2",
     "osmtogeojson": "3.0.0-beta.3",
-    "protractor": "5.3.0",
+    "protractor": "5.3.2",
     "ramda": "0.25.0",
     "raven-js": "3.24.2",
     "redux": "3.7.2",
