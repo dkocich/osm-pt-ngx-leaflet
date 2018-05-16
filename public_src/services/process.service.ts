@@ -14,6 +14,7 @@ import { IOverpassResponse } from '../core/overpassResponse.interface';
 
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
+import { DataService } from './data.service';
 
 @Injectable()
 export class ProcessService {
@@ -34,6 +35,8 @@ export class ProcessService {
 
     private mapSrv: MapService,
     private storageSrv: StorageService,
+    private dataservice: DataService,
+
   ) {
     // this.mapSrv.popupBtnClick.subscribe(
     //     (data) => {
@@ -139,26 +142,24 @@ export class ProcessService {
         }
         switch (element.type) {
           case 'node':
-            // only nodes are fully downloaded
             this.storageSrv.elementsDownloaded.add(element.id);
-
             if (element.tags.bus === 'yes' || element.tags.public_transport) {
               this.storageSrv.listOfStops.push(element);
             }
             break;
           case 'relation':
+
             if (element.tags.public_transport === 'stop_area') {
               this.storageSrv.listOfAreas.push(element);
             } else {
               this.storageSrv.listOfRelations.push(element);
-              break;
             }
         }
       }
     }
     this.storageSrv.logStats();
   }
-
+  // add different elements of node response to IDB
   /**
    * Adds hash to URL hostname similarly like it is used on OSM (/#map=19/49.83933/18.29230)
    */
@@ -181,6 +182,13 @@ export class ProcessService {
         this.storageSrv.elementsDownloaded.add(element.id);
         if (element.tags.route_master) {
           this.storageSrv.listOfMasters.push(element);
+          // add to IDB table masters
+          this.dataservice.addRouteMaster(element).then(
+            (routeMasterId) => {
+              this.storageSrv.routeMastersIDB.add(routeMasterId);
+            }).catch((err) => {
+              console.log(err);
+          });
         } else {
           console.log('LOG (processing s.) WARNING: new elements? ', element);
         } // do not add other relations because they should be already added
@@ -211,7 +219,6 @@ export class ProcessService {
     response.elements.forEach((element) => {
       if (!this.storageSrv.elementsMap.has(element.id)) {
         this.storageSrv.elementsMap.set(element.id, element);
-
         switch (element.type) {
           case 'node':
             // this.storageSrv.elementsDownloaded.add(element.id);
@@ -613,4 +620,5 @@ export class ProcessService {
   public numIsBetween(num: number, min: number, max: number): boolean {
     return min < num && num < max;
   }
+
 }

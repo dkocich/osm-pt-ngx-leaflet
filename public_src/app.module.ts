@@ -60,6 +60,7 @@ import { RootEpics } from './store/epics';
 import { RavenErrorHandler } from './raven-error-handler';
 
 import { Utils } from './core/utils.class';
+import { DataService } from './services/data.service';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
@@ -134,6 +135,11 @@ const conditional_providers = [
 
     AppActions,
     RootEpics,
+    DataService,
+
   ],
 })
-export class AppModule { }
+export class AppModule {
+  public constructor() {
+  }
+}
