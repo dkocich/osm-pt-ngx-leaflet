@@ -1,67 +1,128 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "project": {
-    "name": "osm-pt-leaflet-ngx"
-  },
-  "apps": [
-    {
-      "root": "public_src",
-      "outDir": "public",
-      "assets": [
-        "assets",
-        "favicon.ico",
-        "land.html",
-        "land_single.html"
-      ],
-      "index": "index.html",
-      "main": "main.ts",
-      "polyfills": "polyfills.ts",
-      "test": "test.ts",
-      "tsconfig": "tsconfig.app.json",
-      "testTsconfig": "tsconfig.spec.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "osm-pt-leaflet-ngx": {
+      "root": "",
+      "sourceRoot": "public_src",
+      "projectType": "application",
       "prefix": "app",
-      "styles": [
-        "styles.css",
-        "../node_modules/bootstrap/dist/css/bootstrap.css",
-        "../node_modules/leaflet/dist/leaflet.css",
-        "../node_modules/font-awesome/css/font-awesome.css",
-        "../node_modules/dragula/dist/dragula.css"
-      ],
-      "scripts": [],
-      "environmentSource": "environments/environment.ts",
-      "fileReplacements": {
-        "dev": "environments/environment.ts",
-        "hmr": "environments/environment.hmr.ts",
-        "prod": "environments/environment.prod.ts"
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "public/osm-pt-leaflet-ngx",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "osm-pt-leaflet-ngx:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "osm-pt-leaflet-ngx:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "osm-pt-leaflet-ngx:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "public_src/test.ts",
+            "polyfills": "public_src/polyfills.ts",
+            "tsConfig": "public_src/tsconfig.spec.json",
+            "karmaConfig": "public_src/karma.conf.js",
+            "styles": [
+              "src/styles.css",
+              "../node_modules/bootstrap/dist/css/bootstrap.css",
+              "../node_modules/leaflet/dist/leaflet.css",
+              "../node_modules/font-awesome/css/font-awesome.css",
+              "../node_modules/dragula/dist/dragula.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "public_src/assets",
+              "public_src/favicon.ico",
+              "public_src/land.html",
+              "public_src/land_single.html"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "public_src/tsconfig.app.json",
+              "public_src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "osm-pt-leaflet-ngx-e2e": {
+      "root": "e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "osm-pt-leaflet-ngx:serve"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
       }
     }
-  ],
-  "e2e": {
-    "protractor": {
-      "config": "./protractor.conf.js"
-    }
   },
-  "lint": [
-    {
-      "project": "public_src/tsconfig.app.json",
-      "exclude": "**/node_modules/**"
-    },
-    {
-      "project": "public_src/tsconfig.spec.json",
-      "exclude": "**/node_modules/**"
-    },
-    {
-      "project": "e2e/tsconfig.e2e.json",
-      "exclude": "**/node_modules/**"
-    }
-  ],
-  "test": {
-    "karma": {
-      "config": "./karma.conf.js"
-    }
-  },
-  "defaults": {
-    "styleExt": "css",
-    "component": {}
-  }
+  "defaultProject": "osm-pt-leaflet-ngx",
 }
