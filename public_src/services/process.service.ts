@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 import * as L from 'leaflet';
 

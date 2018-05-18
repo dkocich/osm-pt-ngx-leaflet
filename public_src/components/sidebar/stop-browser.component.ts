@@ -9,7 +9,7 @@ import { DragulaService } from 'ng2-dragula';
 import { IPtRelation } from '../../core/ptRelation.interface';
 import { IPtStop } from '../../core/ptStop.interface';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
 
 @Component({

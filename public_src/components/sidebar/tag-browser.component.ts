@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { select } from '@angular-redux/store';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { EditService } from '../../services/edit.service';
 import { ProcessService } from '../../services/process.service';

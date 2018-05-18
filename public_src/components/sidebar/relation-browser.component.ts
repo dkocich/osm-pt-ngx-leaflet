@@ -6,7 +6,7 @@ import { EditService } from '../../services/edit.service';
 import { ModalDirective } from 'ngx-bootstrap';
 
 import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
 
 @Component({

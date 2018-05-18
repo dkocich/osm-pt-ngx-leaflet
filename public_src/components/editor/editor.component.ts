@@ -7,7 +7,7 @@ import { StorageService } from '../../services/storage.service';
 
 import { ModalDirective } from 'ngx-bootstrap';
 import { select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
 
 @Component({

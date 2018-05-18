@@ -84,19 +84,17 @@ export class OverpassService {
         responseType: 'json',
         headers: Utils.HTTP_HEADERS,
       })
-      .map((res) => {
-        this.loadSrv.hide();
-        console.log('LOG (overpass s.)', res);
-        return res;
-      })
       .subscribe(
         (res: IOverpassResponse) => {
+          this.loadSrv.hide();
+          console.log('LOG (overpass s.)', res);
           this.processSrv.processResponse(res);
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
         },
         (err) => {
+          this.loadSrv.hide();
           console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
           return setTimeout(() => {
               console.log('LOG (overpass) Request error - new request?');
