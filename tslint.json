@@ -21,7 +21,7 @@
         ],
         "forin": true,
         "max-classes-per-file": [false, 1],
-        "max-line-length": [true, 120],
+        "max-line-length": [true, 140],
         "member-access": false,
         "member-ordering": [
             false,
