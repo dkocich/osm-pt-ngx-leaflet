@@ -38,7 +38,7 @@
     "ngstart": "ng serve",
     "ngstart-hmr": "ng serve --hmr -e=hmr --aot=true",
     "ngstart-aot": "ng serve --aot=true",
-    "ngbuild": "ng build --prod --aot=false",
+    "ngbuild": "ng build --prod --aot=true",
     "ngtest": "ng test",
     "nglint": "ng lint",
     "nge2e": "ng e2e"
