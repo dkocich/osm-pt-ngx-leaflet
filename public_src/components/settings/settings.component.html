@@ -4,15 +4,15 @@
       Mapper experience:
       <div class="btn-group" role="group" aria-label="...">
         <button type="button" class="btn btn-default btn-xs"
-                tooltip="Enable/disable advanced features of the editor"
-                container="body" tooltipPlacement="bottom"
+                tooltip="{{ 'Enable/disable advanced features of the editor' | translate }}"
+                container="body" placement="bottom"
                 [class.btn-primary]="!(advancedExpMode$ | async)"
                 (click)="changeExpMode(false)">
           Beginner
         </button>
         <button type="button" class="btn btn-default btn-xs"
-                tooltip="Enable/disable advanced features of the editor"
-                container="body" tooltipPlacement="bottom"
+                tooltip="{{ 'Enable/disable advanced features of the editor' | translate }}"
+                container="body" placement="bottom"
                 [class.btn-primary]="advancedExpMode$ | async"
                 (click)="changeExpMode(true)">
           Advanced
@@ -25,15 +25,15 @@
       Connection speed:
       <div class="btn-group" role="group" aria-label="...">
         <button type="button" class="btn btn-default btn-xs"
-                tooltip="Enable/disable advanced features of the editor"
-                container="body" tooltipPlacement="bottom"
+                tooltip="{{ 'Enable/disable advanced features of the editor' | translate }}"
+                container="body" placement="bottom"
                 [class.btn-warning]="!(goodConnectMode$ | async)"
                 (click)="changeConnMode(false)">
           Bad
         </button>
         <button type="button" class="btn btn-default btn-xs"
-                tooltip="Enable/disable advanced features of the editor"
-                container="body" tooltipPlacement="bottom"
+                tooltip="{{ 'Enable/disable advanced features of the editor' | translate }}"
+                container="body" placement="bottom"
                 [class.btn-success]="goodConnectMode$ | async"
                 (click)="changeConnMode(true)">
           Good

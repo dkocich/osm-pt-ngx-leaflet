@@ -35,6 +35,7 @@
     "Download data from Overpass API": "Daten von der Overpass-API herunterladen",
     "Download data with current query and continue": "Daten mit aktueller Abfrage herunterladen und fortfahren",
     "Download parent (route_master) relations": "Laden Sie die übergeordneten (route_master) Beziehungen herunter",
+    "Enable/disable advanced features of the editor": "Enable/disable advanced features of the editor",
     "English": "Englisch",
     "Enter a place to go": "Geben Sie einen Ort ein, an den Sie gehen können",
     "Existence of route_master relation of a route was not checked yet": "Das Vorhandensein der route_master Relation einer Route wurde noch nicht überprüft",
