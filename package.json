@@ -45,6 +45,7 @@
   },
   "homepage": "https://github.com/dkocich/osm-pt-ngx-leaflet#readme",
   "dependencies": {
+    "@angular-devkit/build-angular": "~0.6.3",
     "@angular-redux/form": "6.7.0",
     "@angular-redux/router": "7.0.0",
     "@angular-redux/store": "7.1.1",
