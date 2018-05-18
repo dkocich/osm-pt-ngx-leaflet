@@ -61,7 +61,7 @@ export class ProcessService {
         const element = this.getElementById(featureId);
         if (!element) {
           alert(
-            'Problem occured - clicked element was not found?! Select different element please.',
+            'Problem occurred - clicked element was not found?! Select different element please.',
           );
         }
         this.appActions.actSelectElement({ element });
@@ -72,7 +72,7 @@ export class ProcessService {
   }
 
   /**
-   * Returns elemenet with specific ID directly from mapped object.
+   * Returns element with specific ID directly from mapped object.
    * @param featureId
    */
   public getElementById(featureId: number): any {
@@ -304,7 +304,7 @@ export class ProcessService {
   }
 
   /**
-   * Reinitiates a list of route's variants and refreshes relation browser window.
+   * Re-initiates a list of route's variants and refreshes relation browser window.
    * @param rel
    */
   public refreshRelationView(rel: IPtRelation): void {
@@ -372,7 +372,7 @@ export class ProcessService {
       (missingElements.length === 0 && rel.id > 0) ||
       (rel.id < 0 && rel['members'].length > 0)
     ) {
-      console.log('podminka plati', rel.id, rel['members'].length);
+      console.log('condition is valid', rel.id, rel['members'].length);
       this.downloadedMissingMembers(rel, true, zoomToElement);
     } else if (rel.id < 0) {
       this.refreshTagView(rel);
@@ -397,7 +397,7 @@ export class ProcessService {
   }
 
   /**
-   * Runs rest of the route's higlighting process after the missing members are downloaded.
+   * Runs rest of the route's highlighting process after the missing members are downloaded.
    * @param rel
    * @param zoomToElement
    * @param refreshTagView
@@ -436,7 +436,7 @@ export class ProcessService {
   public exploreMaster(rel: any): void {
     if (rel.members.length === 0) {
       return alert(
-        'Problem occured - this relation doesn\'t contain any route variants.',
+        'Problem occurred - this relation doesn\'t contain any route variants.',
       );
     }
     // if (this.mapSrv.highlightIsActive()) this.mapSrv.clearHighlight();
@@ -450,7 +450,7 @@ export class ProcessService {
     );
     if (!this.storageSrv.elementsMap.has(rel.members[0].ref)) {
       return alert(
-        'Problem occured - first route_master\'s variant isn\'t fully downloaded.',
+        'Problem occurred - first route_master\'s variant isn\'t fully downloaded.',
       );
     }
     // explore first variant and focus tag/rel. browsers on selected master rel.
@@ -520,7 +520,7 @@ export class ProcessService {
    */
   public filterStopsByRelation(rel: IPtRelation): void {
     if (rel === undefined) {
-      return alert('Problem occured - relation is undefined.');
+      return alert('Problem occurred - relation is undefined.');
     }
     this.storageSrv.listOfStopsForRoute.length = 0;
     rel.members.forEach((mem) => {
@@ -547,7 +547,7 @@ export class ProcessService {
     if (element.type === 'node') {
       if (!element['lat'] || !element['lon']) {
         return alert(
-          'Problem occured - element has no coordinates.' +
+          'Problem occurred - element has no coordinates.' +
             JSON.stringify(element),
         );
       } else {
@@ -570,11 +570,11 @@ export class ProcessService {
       if (coords.length < 2) {
         // do not zoom to point
         return alert(
-          'Problem occured - not enough coordinates to fit into their boundaries.',
+          'Problem occurred - not enough coordinates to fit into their boundaries.',
         );
       }
-      const polyline = L.polyline(coords); // zoom to coords of a relation
-      this.mapSrv.map.fitBounds(polyline.getBounds());
+      const polyLine = L.polyline(coords); // zoom to coords of a relation
+      this.mapSrv.map.fitBounds(polyLine.getBounds());
       console.log('LOG (processing s.) FitBounds to relation geometry');
     }
   }

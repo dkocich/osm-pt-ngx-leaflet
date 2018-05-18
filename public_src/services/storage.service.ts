@@ -20,7 +20,7 @@ export class StorageService {
   public listOfVariants: object[] = [];
 
   // filtering of sidebar
-  public listOfStopsForRoute: object[] = [];
+  public listOfStopsForRoute: IPtStop[] = [];
   public listOfRelationsForStop: object[] = [];
 
   public stopsForRoute: number[] = [];

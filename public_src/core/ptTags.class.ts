@@ -1,4 +1,5 @@
 export interface IPtTags {
+  aerialway?: string,
   ascent?: string;
   bench?: string;
   building?: string;
@@ -19,6 +20,12 @@ export interface IPtTags {
   railway?: string;
   ref?: string;
   roundtrip?: string;
+  ferry?: string;
+  trolleybus?: string;
+  tram?: string;
+  monorail?: string;
+  subway?: string;
+  train?: string;
   route?: string;
   route_ref?: string;
   shelter?: string;

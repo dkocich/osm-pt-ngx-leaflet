@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
@@ -17,7 +17,7 @@ import { select } from '@angular-redux/store';
   ],
   templateUrl: './route-browser.component.html',
 })
-export class RouteBrowserComponent {
+export class RouteBrowserComponent implements OnInit {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   public currentElement;
@@ -40,7 +40,7 @@ export class RouteBrowserComponent {
     //
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.processSrv.showRelationsForStop$.subscribe((data) => {
       this.filteredView = data;
     });

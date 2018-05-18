@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { AuthService } from '../../services/auth.service';
 import { MapService } from '../../services/map.service';
@@ -16,7 +16,7 @@ import { ModalDirective } from 'ngx-bootstrap';
   ],
   templateUrl: './transporter.component.html',
 })
-export class TransporterComponent {
+export class TransporterComponent implements OnInit {
   @ViewChild('downloadModal') public downloadModal: ModalDirective;
   @ViewChild('uploadModal') public uploadModal: ModalDirective;
   public favoriteQueries = [
@@ -63,7 +63,7 @@ export class TransporterComponent {
     //
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.mapSrv.disableMouseEvent('download-data');
     this.mapSrv.disableMouseEvent('upload-data');
     this.storageSrv.editsChanged.subscribe(

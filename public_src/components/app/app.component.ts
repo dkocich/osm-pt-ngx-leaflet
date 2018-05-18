@@ -1,4 +1,4 @@
-import { Component, isDevMode, ViewChild } from '@angular/core';
+import { Component, isDevMode, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
 
@@ -26,7 +26,7 @@ import { AppActions } from '../../store/app/actions';
   ],
   templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
 
   @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;

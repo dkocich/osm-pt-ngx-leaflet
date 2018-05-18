@@ -1,3 +1,5 @@
+import { IPtTags } from './ptTags.class';
+
 export interface IOsmElement {
   type: string;
   id: number;
@@ -6,5 +8,5 @@ export interface IOsmElement {
   changeset: number;
   user: string;
   uid: number;
-  tags: any;
+  tags: IPtTags;
 }

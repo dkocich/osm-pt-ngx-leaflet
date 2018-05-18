@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
+  OnInit,
 } from '@angular/core';
 import { select } from '@angular-redux/store';
 
@@ -25,7 +26,7 @@ import { PtTags } from '../../core/ptTags.class';
   ],
   templateUrl: './tag-browser.component.html',
 })
-export class TagBrowserComponent {
+export class TagBrowserComponent implements OnInit {
   @Input() public tagKey: string = '';
   @Input() public tagValue: string = '';
   public currentElement: IOsmElement;
@@ -42,7 +43,7 @@ export class TagBrowserComponent {
     //
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
       if (data === 'tag') {
         console.log(
@@ -161,7 +162,7 @@ export class TagBrowserComponent {
       this.editSrv.addChange(this.currentElement, 'remove tag', change);
     } else {
       return alert(
-        'Problem occured - unknown problem in toggle ' +
+        'Problem occurred - unknown problem in toggle ' +
           JSON.stringify(this.currentElement),
       );
     }
