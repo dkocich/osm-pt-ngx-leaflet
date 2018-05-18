@@ -14,16 +14,19 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "public/osm-pt-leaflet-ngx",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "index": "public_src/index.html",
+            "main": "public_src/main.ts",
+            "polyfills": "public_src/polyfills.ts",
+            "tsConfig": "public_src/tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "public_src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "public_src/styles.css",
+              "../node_modules/bootstrap/dist/css/bootstrap.css",
+              "../node_modules/leaflet/dist/leaflet.css",
+              "../node_modules/font-awesome/css/font-awesome.css",
+              "../node_modules/dragula/dist/dragula.css"
             ],
             "scripts": []
           },
@@ -31,8 +34,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "public_src/environments/environment.ts",
+                  "with": "public_src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -72,7 +75,7 @@
             "tsConfig": "public_src/tsconfig.spec.json",
             "karmaConfig": "public_src/karma.conf.js",
             "styles": [
-              "src/styles.css",
+              "public_src/styles.css",
               "../node_modules/bootstrap/dist/css/bootstrap.css",
               "../node_modules/leaflet/dist/leaflet.css",
               "../node_modules/font-awesome/css/font-awesome.css",
@@ -81,7 +84,6 @@
             "scripts": [],
             "assets": [
               "public_src/assets",
-              "public_src/favicon.ico",
               "public_src/land.html",
               "public_src/land_single.html"
             ]
