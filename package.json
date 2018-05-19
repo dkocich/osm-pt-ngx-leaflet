@@ -36,7 +36,7 @@
     "test": "snyk test && NODE_ENV=development karma start",
     "ng": "ng",
     "ngstart": "ng serve",
-    "ngstart-hmr": "ng serve --hmr -e=hmr --aot=true",
+    "ngstart-hmr": "ng serve --configuration hmr --hmr --aot=true",
     "ngstart-aot": "ng serve --aot=true",
     "ngbuild": "ng build --prod --aot=true",
     "ngtest": "ng test",

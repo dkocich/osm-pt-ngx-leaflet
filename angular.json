@@ -58,6 +58,9 @@
           "configurations": {
             "production": {
               "browserTarget": "osm-pt-leaflet-ngx:build:production"
+            },
+            "hmr": {
+              "hmr": true
             }
           }
         },
