@@ -14,6 +14,13 @@
         <meta name="theme-color" content="#337AB7"/>
         <meta name="mobile-web-app-capable" content="yes">
 
+      <!--FIXME - temporal fix for ngcli@6 https://github.com/aws/aws-amplify/pull/866 (1 of 2 parts - search the other one)-->
+      <script>
+        if (global === undefined) {
+          var global = window;
+        }
+      </script>
+
         <!-- Piwik -->
         <!-- TODO ENABLE WHEN IT WILL BE AVAILABLE -->
         <!--<script type="text/javascript">-->

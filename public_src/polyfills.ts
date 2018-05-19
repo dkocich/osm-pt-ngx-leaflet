@@ -77,3 +77,6 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+// FIXME - temporal fix for ngcli@6 https://github.com/aws/aws-amplify/pull/866 (1 of 2 parts - search the other one)
+(window as any).global = window;
