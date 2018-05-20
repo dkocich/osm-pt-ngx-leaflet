@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 
 // Since the root/src dir contains our index.html
-app.use(express.static(__dirname + "/public/"));
+app.use(express.static(__dirname + "/public/osm-pt-leaflet-ngx"));
 
 // Heroku bydefault set an ENV variable called PORT=443
 //  so that you can access your site with https default port.
