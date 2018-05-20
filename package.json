@@ -43,7 +43,7 @@
   },
   "homepage": "https://github.com/dkocich/osm-pt-ngx-leaflet#readme",
   "dependencies": {
-    "@angular-devkit/build-angular": "~0.6.3",
+    "@angular-devkit/build-angular": "0.6.3",
     "@angular-redux/form": "6.7.0",
     "@angular-redux/router": "7.0.0",
     "@angular-redux/store": "7.1.1",
@@ -115,7 +115,7 @@
     "redux-logger": "3.0.6",
     "redux-observable": "0.18.0",
     "reflect-metadata": "0.1.12",
-    "rxjs": "^6.1.0",
+    "rxjs": "6.1.0",
     "rxjs-compat": "6.1.0",
     "script-ext-html-webpack-plugin": "1.8.8",
     "snyk": "1.69.9",
@@ -138,7 +138,7 @@
     "webpack-jarvis": "0.3.0",
     "webpack-visualizer-plugin": "0.1.11",
     "xmlbuilder": "9.0.7",
-    "zone.js": "^0.8.26"
+    "zone.js": "0.8.26"
   },
   "devDependencies": {},
   "snyk": true
