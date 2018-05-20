@@ -26,6 +26,7 @@ import {
 
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2Piwik } from 'angulartics2/piwik';
+import { NgHttpLoaderModule } from 'ng-http-loader/ng-http-loader.module';
 
 import { AppComponent } from './components/app/app.component';
 import { AuthComponent } from './components/auth/auth.component';
@@ -103,6 +104,7 @@ const conditional_providers = [
     FormsModule,
     HttpClientModule,
     ModalModule.forRoot(),
+    NgHttpLoaderModule,
     TooltipModule.forRoot(),
     TranslateModule.forRoot({
       loader: {

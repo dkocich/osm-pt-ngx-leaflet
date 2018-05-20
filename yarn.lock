@@ -6225,6 +6225,10 @@ netmask@~1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/netmask/-/netmask-1.0.6.tgz#20297e89d86f6f6400f250d9f4f6b4c1945fcd35"
 
+ng-http-loader@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/ng-http-loader/-/ng-http-loader-1.0.2.tgz#1068d86e5f6d730c598d83321b6ff2e3a2f5ee4a"
+
 ng2-dragula@1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/ng2-dragula/-/ng2-dragula-1.5.0.tgz#12a221d7a34fc629cc74dc98efb26448290eb6e5"

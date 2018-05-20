@@ -4,6 +4,8 @@ import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
 
 import * as L from 'leaflet';
 
+import { Spinkit } from 'ng-http-loader/spinkits';
+
 import { Observable } from 'rxjs';
 
 import { EditService } from '../../services/edit.service';
@@ -27,6 +29,7 @@ import { AppActions } from '../../store/app/actions';
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
+  public spinkit = Spinkit;
   public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
 
   @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
