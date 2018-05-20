@@ -23,8 +23,6 @@
     "url": "https://github.com/dkocich/osm-pt-ngx-leaflet/issues"
   },
   "scripts": {
-    "create-analyzer": "webpack --config webpack/webpack.config.analyzer.js --colors",
-    "create-visualizer": "webpack --config webpack/webpack.config.visualizer.js --colors",
     "cypress-open": "node_modules/.bin/cypress open",
     "cypress-run": "node_modules/.bin/cypress run --record --key 5bed002a-82c7-44a6-9e99-8fee9727f7d2",
     "lint": "tslint -c tslint.json public_src/**/*.ts public_src/components/**/*.ts public_src/*.ts",
