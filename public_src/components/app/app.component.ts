@@ -10,7 +10,6 @@ import { Observable } from 'rxjs';
 
 import { EditService } from '../../services/edit.service';
 import { GeocodeService } from '../../services/geocode.service';
-import { LoadService } from '../../services/load.service';
 import { MapService } from '../../services/map.service';
 import { ProcessService } from '../../services/process.service';
 
@@ -43,7 +42,6 @@ export class AppComponent implements OnInit {
     private ngRedux: NgRedux<IAppState>,
     private editSrv: EditService,
     private geocodeSrv: GeocodeService,
-    private loadSrv: LoadService,
     private mapSrv: MapService,
     private processSrv: ProcessService,
   ) {
@@ -80,10 +78,6 @@ export class AppComponent implements OnInit {
       this.geocodeSrv.getCurrentLocation();
     }
     this.toolbarComponent.Initialize();
-  }
-
-  public isLoading(): boolean {
-    return this.loadSrv.isLoading();
   }
 
   public hideHelpModal(): void {

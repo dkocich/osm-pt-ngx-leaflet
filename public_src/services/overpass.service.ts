@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { AuthService } from './auth.service';
 import { ConfService } from './conf.service';
-import { LoadService } from './load.service';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
@@ -21,7 +20,6 @@ export class OverpassService {
   constructor(
     private authSrv: AuthService,
     private httpClient: HttpClient,
-    private loadSrv: LoadService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private mapSrv: MapService,
@@ -68,12 +66,6 @@ export class OverpassService {
    * Requests new batch of data from Overpass.
    */
   public requestNewOverpassData(): void {
-    this.loadSrv.show('Loading bus stops...');
-    setTimeout(() => {
-      if (this.loadSrv.isLoading()) {
-        this.loadSrv.hide(); // close loading window on timeout errors
-      }
-    }, 5000);
     const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
     this.mapSrv.previousCenter = [
       this.mapSrv.map.getCenter().lat,
@@ -86,7 +78,6 @@ export class OverpassService {
       })
       .subscribe(
         (res: IOverpassResponse) => {
-          this.loadSrv.hide();
           console.log('LOG (overpass s.)', res);
           this.processSrv.processResponse(res);
           // FIXME
@@ -94,7 +85,6 @@ export class OverpassService {
           // this.getRouteMasters();
         },
         (err) => {
-          this.loadSrv.hide();
           console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
           return setTimeout(() => {
               console.log('LOG (overpass) Request error - new request?');
@@ -112,21 +102,13 @@ export class OverpassService {
     if (!minNumOfRelations) {
       minNumOfRelations = 10;
     }
-    this.loadSrv.show('Loading route master relations...');
-    setTimeout(() => {
-      if (this.loadSrv.isLoading()) {
-        this.loadSrv.hide(); // close loading window on timeout errors
-      }
-    }, 7500);
     const idsArr: Array<number> = this.findRouteIdsWithoutMaster();
     if (idsArr.length <= minNumOfRelations) {
-      this.loadSrv.hide();
       return console.log(
         'LOG (overpass s.) Not enough relations to download - stop',
       );
     } else if (!idsArr.length) {
       // do not query masters if all relations are already known
-      this.loadSrv.hide();
       return;
     }
     let requestBody: string = `
@@ -145,7 +127,6 @@ export class OverpassService {
       .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
         (res) => {
-          this.loadSrv.hide();
           if (!res) {
             return alert(
               'No response from API. Try to select other master relation again please.',
@@ -164,7 +145,6 @@ export class OverpassService {
    * @param requestBody
    */
   public requestOverpassData(requestBody: string): void {
-    this.loadSrv.show();
     this.mapSrv.clearLayer();
     requestBody = this.replaceBboxString(requestBody);
     this.httpClient
@@ -220,24 +200,16 @@ export class OverpassService {
       (._;<;);
       out meta;`;
     console.log('LOG (overpass s.) Querying nodes', requestBody);
-    this.loadSrv.show('Loading clicked feature data...');
-    setTimeout(() => {
-      if (this.loadSrv.isLoading()) {
-        this.loadSrv.hide(); // close loading window on timeout errors
-      }
-    }, 5000);
     requestBody = this.replaceBboxString(requestBody.trim());
     this.httpClient
       .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
         (res) => {
           if (!res) {
-            this.loadSrv.hide();
             return alert('No response from API. Try to select element again please.');
           }
           console.log('LOG (overpass s.)', res);
           this.processSrv.processNodeResponse(res);
-          this.loadSrv.hide();
           this.getRouteMasters(10);
           // TODO this.processSrv.drawStopAreas();
         },
@@ -270,14 +242,11 @@ export class OverpassService {
       requestBody,
       missingElements,
     );
-    // FIXME loading can't be closed sometimes?
-    // this.loadSrv.show("Loading relation's missing members...");
     this.httpClient
       .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
         (res) => {
           if (!res) {
-            this.loadSrv.hide();
             return alert('No response from API. Try again please.');
           }
           this.processSrv.processNodeResponse(res);

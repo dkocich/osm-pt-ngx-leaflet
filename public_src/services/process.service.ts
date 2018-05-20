@@ -4,7 +4,6 @@ import { Subject } from 'rxjs';
 
 import * as L from 'leaflet';
 
-import { LoadService } from './load.service';
 import { MapService } from './map.service';
 import { StorageService } from './storage.service';
 
@@ -33,7 +32,6 @@ export class ProcessService {
     private ngRedux: NgRedux<IAppState>,
     private appActions: AppActions,
 
-    private loadSrv: LoadService,
     private mapSrv: MapService,
     private storageSrv: StorageService,
   ) {
@@ -126,7 +124,6 @@ export class ProcessService {
     this.storageSrv.localGeojsonStorage.set(responseId, transformedGeojson);
     this.createLists(responseId);
     this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
-    this.loadSrv.hide();
   }
 
   /**

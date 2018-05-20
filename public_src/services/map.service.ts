@@ -2,7 +2,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { ConfService } from './conf.service';
-import { LoadService } from './load.service';
 import { StorageService } from './storage.service';
 
 import * as L from 'leaflet';
@@ -36,7 +35,6 @@ export class MapService {
   constructor(
     private confSrv: ConfService,
     private httpClient: HttpClient,
-    private loadSrv: LoadService,
     private storageSrv: StorageService,
   ) {
     this.baseMaps = {
@@ -348,7 +346,6 @@ export class MapService {
       },
     });
     this.ptLayer.addTo(this.map);
-    this.loadSrv.hide();
   }
 
   /**

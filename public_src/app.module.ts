@@ -45,7 +45,6 @@ import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
 import { EditService } from './services/edit.service';
 import { GeocodeService } from './services/geocode.service';
-import { LoadService } from './services/load.service';
 import { MapService } from './services/map.service';
 import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
@@ -124,7 +123,6 @@ const conditional_providers = [
     ConfService,
     EditService,
     GeocodeService,
-    LoadService,
     MapService,
     OverpassService,
     ProcessService,
