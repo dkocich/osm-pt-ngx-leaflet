@@ -1,6 +1,6 @@
-import { EventEmitter, Injectable } from "@angular/core";
+import { EventEmitter, Injectable } from '@angular/core';
 
-import { IPtStop } from "../core/ptStop.interface";
+import { IPtStop } from '../core/ptStop.interface';
 
 @Injectable()
 export class StorageService {
@@ -20,7 +20,7 @@ export class StorageService {
   public listOfVariants: object[] = [];
 
   // filtering of sidebar
-  public listOfStopsForRoute: object[] = [];
+  public listOfStopsForRoute: IPtStop[] = [];
   public listOfRelationsForStop: object[] = [];
 
   public stopsForRoute: number[] = [];
@@ -33,8 +33,8 @@ export class StorageService {
   public currentElement: any;
   public currentElementsChange = new EventEmitter();
 
-  public displayName: string = "";
-  public imgHref: string = "";
+  public displayName: string = '';
+  public imgHref: string = '';
 
   public edits: object[] = [];
   public editsChanged: EventEmitter<boolean> = new EventEmitter();
@@ -51,22 +51,22 @@ export class StorageService {
    */
   public logStats(): void {
     console.log(
-      "LOG (storage)",
-      "Total # of nodes: ",
+      'LOG (storage)',
+      'Total # of nodes: ',
       this.listOfStops.length,
-      "Total # of relations: ",
+      'Total # of relations: ',
       this.listOfRelations.length,
-      "Total # of master rel. (stop areas only): ",
+      'Total # of master rel. (stop areas only): ',
       this.listOfAreas.length,
-      "Total # of master rel. (master rel.): ",
+      'Total # of master rel. (master rel.): ',
       this.listOfMasters.length,
-      "elDownloaded: ",
+      'elDownloaded: ',
       this.elementsDownloaded.size,
-      "elRendered: ",
+      'elRendered: ',
       this.elementsRendered.size,
-      "elMap: ",
+      'elMap: ',
       this.elementsMap.size,
-      "queriedM: ",
+      'queriedM: ',
       this.queriedMasters.size,
     );
     const stats = {
@@ -93,19 +93,19 @@ export class StorageService {
     console.log(userDetails);
     this.displayName = userDetails.displayName;
     this.imgHref = userDetails.img_href;
-    localStorage.setItem("account_created", userDetails.account_created);
-    localStorage.setItem("count", userDetails.count);
-    localStorage.setItem("description", userDetails.description);
-    localStorage.setItem("display_name", userDetails.display_name);
-    localStorage.setItem("id", userDetails.id);
-    localStorage.setItem("img_href", userDetails.img_href);
+    localStorage.setItem('account_created', userDetails.account_created);
+    localStorage.setItem('count', userDetails.count);
+    localStorage.setItem('description', userDetails.description);
+    localStorage.setItem('display_name', userDetails.display_name);
+    localStorage.setItem('id', userDetails.id);
+    localStorage.setItem('img_href', userDetails.img_href);
   }
 
   /**
    * Synchronizes localStorage edits content with current memory object array.
    */
   public syncEdits(): void {
-    localStorage.setItem("edits", JSON.stringify(this.edits));
+    localStorage.setItem('edits', JSON.stringify(this.edits));
     this.editsChanged.emit(true);
   }
 
@@ -190,7 +190,7 @@ export class StorageService {
    * @returns {string|string|null}
    */
   public getDisplayName(): string {
-    return localStorage.getItem("display_name");
+    return localStorage.getItem('display_name');
   }
 
   /**
@@ -198,7 +198,7 @@ export class StorageService {
    * @returns {string}
    */
   public getImgHref(): string {
-    return localStorage.getItem("img_href");
+    return localStorage.getItem('img_href');
   }
 
   // /**

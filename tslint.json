@@ -21,7 +21,7 @@
         ],
         "forin": true,
         "max-classes-per-file": [false, 1],
-        "max-line-length": 120,
+        "max-line-length": [true, 140],
         "member-access": false,
         "member-ordering": [
             false,
@@ -55,7 +55,18 @@
         "no-reference": false,
         "no-shadowed-variable": true,
         "no-string-literal": false,
-        "no-submodule-imports": [true, "rxjs", "@angular/platform-browser", "@angular/core/testing"],
+        "no-submodule-imports": [true,
+          "rxjs",
+          "core-js",
+          "@angular",
+          "@angular-redux",
+          "angulartics2/piwik",
+          "zone.js",
+          "bootstrap",
+          "dragula",
+          "font-awesome",
+          "leaflet"
+        ],
         "no-trailing-whitespace": true,
         "no-var-keyword": true,
         "no-var-requires": false,
@@ -75,7 +86,7 @@
         "prefer-const": false,
         "quotemark": [
             true,
-            "double"
+            "single"
         ],
         "semicolon": [
             true,

@@ -1,35 +1,43 @@
-import { Component, isDevMode, ViewChild } from "@angular/core";
-import { CarouselConfig, ModalDirective } from "ngx-bootstrap";
+import { Component, isDevMode, OnInit, ViewChild } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
 
-import * as L from "leaflet";
+import * as L from 'leaflet';
 
-import { Angulartics2Piwik } from "angulartics2/piwik";
+import { Observable } from 'rxjs';
 
-import { GeocodeService } from "../../services/geocode.service";
-import { LoadService } from "../../services/load.service";
-import { MapService } from "../../services/map.service";
-import { ProcessService } from "../../services/process.service";
+import { EditService } from '../../services/edit.service';
+import { GeocodeService } from '../../services/geocode.service';
+import { LoadService } from '../../services/load.service';
+import { MapService } from '../../services/map.service';
+import { ProcessService } from '../../services/process.service';
 
-import { AuthComponent } from "../auth/auth.component";
-import { ToolbarComponent } from "../toolbar/toolbar.component";
-import { EditService } from "../../services/edit.service";
+import { AuthComponent } from '../auth/auth.component';
+import { ToolbarComponent } from '../toolbar/toolbar.component';
+
+import { IAppState } from '../../store/model';
+import { AppActions } from '../../store/app/actions';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
-  selector: "app",
-  styles: [require<any>("./app.component.less")],
-  template: require<any>("./app.component.html"),
+  selector: 'app',
+  styleUrls: [
+    './app.component.less',
+  ],
+  templateUrl: './app.component.html',
 })
-export class AppComponent {
-  public advancedMode: boolean = Boolean(localStorage.getItem("advancedMode"));
-  private editingMode: boolean;
+export class AppComponent implements OnInit {
+  public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
 
   @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
   @ViewChild(AuthComponent) public authComponent: AuthComponent;
-  @ViewChild("helpModal") public helpModal: ModalDirective;
+  @ViewChild('helpModal') public helpModal: ModalDirective;
+
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   constructor(
-    private angulartics2GoogleAnalytics: Angulartics2Piwik,
+    public appActions: AppActions,
+    private ngRedux: NgRedux<IAppState>,
     private editSrv: EditService,
     private geocodeSrv: GeocodeService,
     private loadSrv: LoadService,
@@ -37,19 +45,12 @@ export class AppComponent {
     private processSrv: ProcessService,
   ) {
     if (isDevMode()) {
-      console.log("WARNING: Ang. development mode is ", isDevMode());
+      console.log('WARNING: Ang. development mode is ', isDevMode());
     }
   }
 
-  ngOnInit(): any {
-    this.editSrv.editingMode.subscribe((data) => {
-      console.log(
-        "LOG (relation-browser) Editing mode change in routeBrowser - ",
-        data,
-      );
-      this.editingMode = data;
-    });
-    const map = L.map("map", {
+  public ngOnInit(): any {
+    const map = L.map('map', {
       center: L.latLng(49.686, 18.351),
       layers: [this.mapSrv.baseMaps.CartoDB_light],
       maxZoom: 22,
@@ -59,47 +60,34 @@ export class AppComponent {
       zoomControl: false,
     });
 
-    L.control.zoom({ position: "topright" }).addTo(map);
+    L.control.zoom({ position: 'topright' }).addTo(map);
     L.control.layers(this.mapSrv.baseMaps).addTo(map);
     L.control.scale().addTo(map);
 
     this.mapSrv.map = map;
-    this.mapSrv.map.on("zoomend moveend", () => {
+    this.mapSrv.map.on('zoomend moveend', () => {
       this.processSrv.filterDataInBounds();
       this.processSrv.addPositionToUrlHash();
     });
     if (
-      window.location.hash !== "" && this.processSrv.hashIsValidPosition()
+      window.location.hash !== '' && this.processSrv.hashIsValidPosition()
     ) {
       this.mapSrv.zoomToHashedPosition();
     } else {
-      this.geocodeSrv
-        .getCurrentLocation()
-        .subscribe(
-          (location) => map.panTo([location.latitude, location.longitude]),
-          (err) => console.error(err),
-        );
+      this.geocodeSrv.getCurrentLocation();
     }
     this.toolbarComponent.Initialize();
   }
 
-  private showHelpModal(): void {
-    this.helpModal.show();
-  }
-
-  private hideHelpModal(): void {
-    this.helpModal.hide();
-  }
-
-  private isLoading(): boolean {
+  public isLoading(): boolean {
     return this.loadSrv.isLoading();
   }
 
-  private getStatus(): string {
-    return this.loadSrv.getStatus();
+  public hideHelpModal(): void {
+    this.helpModal.hide();
   }
 
-  private changeMode(): void {
-    localStorage.setItem("advancedMode", JSON.stringify(this.advancedMode));
+  private showHelpModal(): void {
+    this.helpModal.show();
   }
 }

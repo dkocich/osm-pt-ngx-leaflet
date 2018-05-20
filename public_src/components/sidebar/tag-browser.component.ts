@@ -3,89 +3,36 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-} from "@angular/core";
+  OnInit,
+} from '@angular/core';
+import { select } from '@angular-redux/store';
 
-import { EditService } from "../../services/edit.service";
-import { ProcessService } from "../../services/process.service";
-import { StorageService } from "../../services/storage.service";
+import { Observable } from 'rxjs';
 
-import { IOsmEntity } from "../../core/osmEntity.interface";
+import { EditService } from '../../services/edit.service';
+import { ProcessService } from '../../services/process.service';
+import { StorageService } from '../../services/storage.service';
+
+import { IOsmElement } from '../../core/osmElement.interface';
+import { PtTags } from '../../core/ptTags.class';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
   providers: [],
-  selector: "tag-browser",
-  styles: [
-    require<any>("./tag-browser.component.less"),
-    require<any>("../../styles/main.less"),
+  selector: 'tag-browser',
+  styleUrls: [
+    './tag-browser.component.less',
+    '../../styles/main.less',
   ],
-  template: require<any>("./tag-browser.component.html"),
+  templateUrl: './tag-browser.component.html',
 })
-export class TagBrowserComponent {
-  @Input() public tagKey: string = "";
-  @Input() public tagValue: string = "";
-  private currentElement: IOsmEntity;
-  private editingMode: boolean;
-
-  private expectedKeys = [
-    "ascent",
-    "bench",
-    "building",
-    "bus",
-    "colour",
-    "covered",
-    "descent",
-    "description",
-    "distance",
-    "highway",
-    "layer",
-    "level",
-    "name",
-    "network",
-    "operator",
-    "public_transport",
-    "public_transport:version",
-    "railway",
-    "ref",
-    "roundtrip",
-    "route",
-    "route_ref",
-    "shelter",
-    "surface",
-    "symbol",
-    "tactile_paving",
-    "type",
-    "uic_name",
-    "uic_ref",
-  ];
-  private expectedValues = [
-    "aerialway",
-    "backward",
-    "bus",
-    "bus_stop",
-    "coach",
-    "ferry",
-    "forward",
-    "gate",
-    "limited",
-    "monorail",
-    "no",
-    "platform",
-    "public_transport",
-    "route",
-    "route_master",
-    "share_taxi",
-    "station",
-    "stop",
-    "stop_area",
-    "stop_position",
-    "subway",
-    "taxi",
-    "train",
-    "tram",
-    "trolleybus",
-    "yes",
-  ];
+export class TagBrowserComponent implements OnInit {
+  @Input() public tagKey: string = '';
+  @Input() public tagValue: string = '';
+  public currentElement: IOsmElement;
+  public expectedKeys = PtTags.expectedKeys;
+  public expectedValues = PtTags.expectedValues;
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -96,31 +43,22 @@ export class TagBrowserComponent {
     //
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
-      if (data === "tag") {
+      if (data === 'tag') {
         console.log(
-          "LOG (tag-browser) Current selected element changed - ",
+          'LOG (tag-browser) Current selected element changed - ',
           data,
           this.currentElement,
           this.storageSrv.currentElement,
         );
         delete this.currentElement;
         this.currentElement = this.storageSrv.currentElement;
-      } else if (data === "cancel selection") {
+      } else if (data === 'cancel selection') {
         this.currentElement = undefined;
         delete this.currentElement;
       }
     });
-
-    this.editSrv.editingMode.subscribe((data) => {
-        console.log(
-          "LOG (tag-browser) Editing mode change in tagBrowser - ",
-          data,
-        );
-        this.editingMode = data;
-      },
-    );
   }
 
   private checkUnchanged(change: any): boolean {
@@ -132,10 +70,10 @@ export class TagBrowserComponent {
   private createChange(type: string, key?: string, event?: any): void {
     let change: object;
 
-    if (type === "change tag") {
+    if (type === 'change tag') {
       // handles changes from one of two input text areas
-      switch (event.target["dataset"].type) {
-        case "key":
+      switch (event.target['dataset'].type) {
+        case 'key':
           change = {
             from: {
               key,
@@ -154,7 +92,7 @@ export class TagBrowserComponent {
           ] = this.currentElement.tags[key];
           delete this.currentElement.tags[key];
           break;
-        case "value":
+        case 'value':
           change = {
             from: {
               key,
@@ -172,15 +110,15 @@ export class TagBrowserComponent {
           // delete this.currentElement.tags[key];
           break;
         default:
-          alert("form type not found");
+          alert('form type not found');
       }
       // console.log("LOG (tag-browser) Changed tags are: ", this.tagKey, this.tagValue, event);
-    } else if (type === "add tag") {
+    } else if (type === 'add tag') {
       console.log(
-        "LOG (tag-browser) Added tags are",
+        'LOG (tag-browser) Added tags are',
         key,
         this.currentElement.tags[key],
-        " for object: ",
+        ' for object: ',
         this.currentElement,
       );
       this.currentElement.tags[this.tagKey] = this.tagValue;
@@ -189,18 +127,18 @@ export class TagBrowserComponent {
         key: this.tagKey,
         value: this.tagValue,
       };
-      this.tagKey = this.tagValue = "";
-    } else if (type === "remove tag") {
+      this.tagKey = this.tagValue = '';
+    } else if (type === 'remove tag') {
       console.log(
-        "LOG (tag-browser) Removed tags are", key, this.currentElement.tags[key],
-        " for object: ", this.currentElement);
+        'LOG (tag-browser) Removed tags are', key, this.currentElement.tags[key],
+        ' for object: ', this.currentElement);
       change = {
         key,
         value: this.currentElement.tags[key],
       };
 
       delete this.currentElement.tags[key];
-      delete this.storageSrv.currentElement["tags"][key];
+      delete this.storageSrv.currentElement['tags'][key];
     }
     this.editSrv.addChange(this.currentElement, type, change);
     this.cd.detectChanges();
@@ -214,17 +152,17 @@ export class TagBrowserComponent {
   private toggleType(key: string): void {
     let change;
     if (Object.keys(this.currentElement.tags).indexOf(key) === -1) {
-      this.currentElement.tags[key] = "yes";
-      change = { key, value: "yes" };
-      this.editSrv.addChange(this.currentElement, "add tag", change);
-    } else if (this.currentElement.tags[key] === "yes") {
+      this.currentElement.tags[key] = 'yes';
+      change = { key, value: 'yes' };
+      this.editSrv.addChange(this.currentElement, 'add tag', change);
+    } else if (this.currentElement.tags[key] === 'yes') {
       change = { key, value: this.currentElement.tags[key] };
       delete this.currentElement.tags[key];
-      delete this.storageSrv.currentElement["tags"][key];
-      this.editSrv.addChange(this.currentElement, "remove tag", change);
+      delete this.storageSrv.currentElement['tags'][key];
+      this.editSrv.addChange(this.currentElement, 'remove tag', change);
     } else {
       return alert(
-        "Problem occured - unknown problem in toggle " +
+        'Problem occurred - unknown problem in toggle ' +
           JSON.stringify(this.currentElement),
       );
     }
@@ -239,10 +177,10 @@ export class TagBrowserComponent {
   }
 
   private keyChange($event: any): void {
-    console.log("LOG (tag-browser)", $event);
+    console.log('LOG (tag-browser)', $event);
   }
 
   private valueChange($event: any): void {
-    console.log("LOG (tag-browser)", $event);
+    console.log('LOG (tag-browser)', $event);
   }
 }

@@ -1,24 +1,24 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
-const p = require("../../package.json");
+const p = require('../../package.json');
 
 @Injectable()
 export class ConfService {
-  static overpassUrl = "https://overpass-api.de/api/interpreter";
-  static baseOsmUrl = "https://www.openstreetmap.org";
-  static apiUrl = "https://api.openstreetmap.org/api/0.6";
-  static apiConsumerSecret = "vFXps19FPNhWzzGmWbrhNpMv3RYiI1RFL4oK8NPz";
-  static apiConsumerKey = "rPEtcWkEykSKlLccsDS0FaZ9DpGAVPoJfQXWubXl";
-  static apiTestUrl = "https://master.apis.dev.openstreetmap.org";
-  static apiTestConsumerKey = "myPQ4WewlhUBa5zRs00zwHjWV4nEIsrg6SAF9zat";
-  static apiTestConsumerSecret = "7hAymlaBzyUqGU0ecbdUqXgYt4w59ru3t3JIM9xp";
-  static appName = "OSMPTeditor" + " v" + p["version"];
-
-  static hereAppId = "wCnyB1NFdlBOGYDZ8wvz";
-  static hereAppCode = "n8AtIn2aXHff9D-Dp_S6rA";
-  static mapboxToken = "pk.eyJ1IjoiZGtvY2ljaCIsImEiOiJjajR5ZGc5b3kxbnozMnFwZjI4eWo4N2piIn0.EizwwnWouhfRkJznDpEWCw";
+  public static readonly overpassUrl           = 'https://overpass-api.de/api/interpreter'     ;
+  public static readonly baseOsmUrl            = 'https://www.openstreetmap.org'               ;
+  public static readonly apiUrl                = 'https://api.openstreetmap.org/api/0.6'       ;
+  public static readonly apiConsumerSecret     = 'vFXps19FPNhWzzGmWbrhNpMv3RYiI1RFL4oK8NPz'    ;
+  public static readonly apiConsumerKey        = 'rPEtcWkEykSKlLccsDS0FaZ9DpGAVPoJfQXWubXl'    ;
+  public static readonly apiTestUrl            = 'https://master.apis.dev.openstreetmap.org'   ;
+  public static readonly apiTestConsumerKey    = 'myPQ4WewlhUBa5zRs00zwHjWV4nEIsrg6SAF9zat'    ;
+  public static readonly apiTestConsumerSecret = '7hAymlaBzyUqGU0ecbdUqXgYt4w59ru3t3JIM9xp'    ;
+  public static readonly appName               = `OSMPTeditor v${p['version']}`                ;
+  public static readonly hereAppId             = 'wCnyB1NFdlBOGYDZ8wvz'                        ;
+  public static readonly hereAppCode           = 'n8AtIn2aXHff9D-Dp_S6rA'                      ;
+  public static readonly mapboxToken           =
+    'pk.eyJ1IjoiZGtvY2ljaCIsImEiOiJjajR5ZGc5b3kxbnozMnFwZjI4eWo4N2piIn0.EizwwnWouhfRkJznDpEWCw';
+  public static readonly minDownloadZoom       = 15;
+  public static readonly minDownloadDistance   = 1500;
 
   public cfgFilterLines: boolean = true;
-  public minDownloadZoom = 15;
-  public minDownloadDistance = 1500;
 }

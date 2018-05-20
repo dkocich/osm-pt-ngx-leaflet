@@ -1,18 +1,20 @@
-import { Component } from "@angular/core";
-import { Map } from "leaflet";
-import { GeocodeService } from "../../services/geocode.service";
-import { MapService } from "../../services/map.service";
+import { Component, OnInit } from '@angular/core';
+
+import { Map } from 'leaflet';
+
+import { GeocodeService } from '../../services/geocode.service';
+import { MapService } from '../../services/map.service';
 
 @Component({
   providers: [],
-  selector: "navigator",
-  styles: [
-    require<any>("./navigator.component.less"),
-    require<any>("../../styles/main.less"),
+  selector: 'navigator',
+  styleUrls: [
+    './navigator.component.less',
+    '../../styles/main.less',
   ],
-  template: require<any>("./navigator.component.html"),
+  templateUrl: './navigator.component.html',
 })
-export class NavigatorComponent {
+export class NavigatorComponent implements OnInit {
   public address: string;
 
   private map: Map;
@@ -21,12 +23,12 @@ export class NavigatorComponent {
     private geocodeSrv: GeocodeService,
     private mapSrv: MapService,
   ) {
-    this.address = "";
+    this.address = '';
   }
 
-  ngOnInit(): void {
-    this.mapSrv.disableMouseEvent("goto");
-    this.mapSrv.disableMouseEvent("place-input");
+  public ngOnInit(): void {
+    this.mapSrv.disableMouseEvent('goto');
+    this.mapSrv.disableMouseEvent('place-input');
     this.map = this.mapSrv.map;
   }
 
@@ -34,13 +36,6 @@ export class NavigatorComponent {
     if (!this.address) {
       return;
     }
-
-    this.geocodeSrv.geocode(this.address).subscribe(
-      (location) => {
-        this.map.fitBounds(location.viewBounds, {});
-        this.address = location.address;
-      },
-      (error) => console.error(error),
-    );
+    this.geocodeSrv.geocode(this.address);
   }
 }

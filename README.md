@@ -1,9 +1,19 @@
 # osm-pt-ngx-leaflet
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/231206018f6e41d9bddee2b4bb4683dc)](https://www.codacy.com/app/dkocich/osm-pt-ngx-leaflet?utm_source=github.com&utm_medium=referral&utm_content=dkocich/osm-pt-ngx-leaflet&utm_campaign=badger)
+Stable release (master branch)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/231206018f6e41d9bddee2b4bb4683dc)](https://app.codacy.com/app/dkocich/osm-pt-ngx-leaflet/dashboard)
 [![codebeat badge](https://codebeat.co/badges/525de5f2-8276-4e4a-ad5f-0b8c6c854f0d)](https://codebeat.co/projects/github-com-dkocich-osm-pt-ngx-leaflet-master)
+[![BCH compliance](https://bettercodehub.com/edge/badge/dkocich/osm-pt-ngx-leaflet?branch=master)](https://bettercodehub.com/)
 [![Known Vulnerabilities](https://snyk.io/test/github/snyk/goof/badge.svg)](https://snyk.io/test/github/snyk/goof)
 [![Build Status](https://api.travis-ci.org/dkocich/osm-pt-ngx-leaflet.svg?branch=master)](https://travis-ci.org/dkocich/osm-pt-ngx-leaflet)
+
+Latest release (develop branch)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/231206018f6e41d9bddee2b4bb4683dc)](https://app.codacy.com/app/dkocich/osm-pt-ngx-leaflet/dashboard?bid=6156493)
+[![codebeat badge](https://codebeat.co/badges/525de5f2-8276-4e4a-ad5f-0b8c6c854f0d)](https://codebeat.co/projects/github-com-dkocich-osm-pt-ngx-leaflet-develop)
+[![BCH compliance](https://bettercodehub.com/edge/badge/dkocich/osm-pt-ngx-leaflet?branch=develop)](https://bettercodehub.com/)
+[![Known Vulnerabilities](https://snyk.io/test/github/snyk/goof/badge.svg)](https://snyk.io/test/github/snyk/goof)
+[![Build Status](https://api.travis-ci.org/dkocich/osm-pt-ngx-leaflet.svg?branch=develop)](https://travis-ci.org/dkocich/osm-pt-ngx-leaflet)
+
 
 <a href="https://zenhub.com"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
 
@@ -17,14 +27,14 @@ This project requires [yarn](https://yarnpkg.com/) to run locally and it is buil
  [Angular](https://angular.io/), [Leaflet](http://leafletjs.com/) and [Webpack](https://webpack.js.org/).
 
 1.	Run `yarn install` to install all dependencies.
-2.	Run `npm run wds-dev` to start local development with `webpack-dev-server`.
-3.  Open the browser at `http://localhost:8080/` to see current app build.
+2.	Run `npm start` to enable local development server.
+3.  Open the browser at `http://localhost:4200/` to see the app.
 
 Visit the [wiki page](https://github.com/dkocich/osm-pt-ngx-leaflet/wiki) for more information.
 
 ## Communication
 
-Contact me on Slack [osm-pt.slack.com](https://osm-pt.slack.com/).
+Contact me on Slack [osm-pt.slack.com](https://join.slack.com/t/osm-pt/shared_invite/enQtMjkzOTU1NTA3MTU5LWVkMWNlMTRkOTU5ZDcxMTExYzZmM2U3OTE4NDFjZTM3MmExMTQzMzRhY2VjOTYyMmI3ZjRmYjI3OWUwNDZkMWQ).
 
 ## Acknowledgment
 
@@ -36,6 +46,6 @@ Thanks to [haolingyu](https://github.com/haoliangyu) for his work on [Ngx-leafle
  and [Ngx-MapboxGL-starter](https://github.com/haoliangyu/ngx-mapboxgl-starter) example demos.
 
 ## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
 
+To support the project development please visit Beerpay
 [![Beerpay](https://beerpay.io/dkocich/osm-pt-ngx-leaflet/badge.svg?style=beer-square)](https://beerpay.io/dkocich/osm-pt-ngx-leaflet)  [![Beerpay](https://beerpay.io/dkocich/osm-pt-ngx-leaflet/make-wish.svg?style=flat-square)](https://beerpay.io/dkocich/osm-pt-ngx-leaflet?focus=wish)

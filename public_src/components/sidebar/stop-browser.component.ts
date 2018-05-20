@@ -1,29 +1,32 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 
-import { EditService } from "../../services/edit.service";
-import { MapService } from "../../services/map.service";
-import { ProcessService } from "../../services/process.service";
-import { StorageService } from "../../services/storage.service";
-import { DragulaService } from "ng2-dragula";
+import { EditService } from '../../services/edit.service';
+import { MapService } from '../../services/map.service';
+import { ProcessService } from '../../services/process.service';
+import { StorageService } from '../../services/storage.service';
+import { DragulaService } from 'ng2-dragula';
 
-import { IPtRelation } from "../../core/ptRelation.interface";
-import { IPtStop } from "../../core/ptStop.interface";
+import { IPtRelation } from '../../core/ptRelation.interface';
+import { IPtStop } from '../../core/ptStop.interface';
+
+import { Observable } from 'rxjs';
+import { select } from '@angular-redux/store';
 
 @Component({
   providers: [],
-  selector: "stop-browser",
-  styles: [
-    require<any>("./stop-browser.component.less"),
-    require<any>("../../styles/main.less"),
+  selector: 'stop-browser',
+  styleUrls: [
+    './stop-browser.component.less',
+    '../../styles/main.less',
   ],
-  template: require<any>("./stop-browser.component.html"),
+  templateUrl: './stop-browser.component.html',
 })
-export class StopBrowserComponent {
-  public listOfStopsForRoute: object[] = this.storageSrv.listOfStopsForRoute;
-  private currentElement: any;
-  private listOfStops: object[] = this.storageSrv.listOfStops;
-  private filteredView: boolean;
-  private editingMode: boolean;
+export class StopBrowserComponent implements OnInit {
+  public listOfStopsForRoute: IPtStop[] = this.storageSrv.listOfStopsForRoute;
+  public currentElement: any;
+  public listOfStops: IPtStop[] = this.storageSrv.listOfStops;
+  public filteredView: boolean;
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   constructor(
     private dragulaSrv: DragulaService,
@@ -37,19 +40,19 @@ export class StopBrowserComponent {
     });
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.processSrv.showStopsForRoute$.subscribe((data) => {
       this.filteredView = data;
     });
 
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
-      if (data === "stop") {
+      if (data === 'stop') {
         this.listOfStopsForRoute = this.storageSrv.listOfStopsForRoute;
         this.currentElement = this.storageSrv.currentElement;
         console.log(this.currentElement, this.listOfStopsForRoute);
-      } else if (data === "tag") {
+      } else if (data === 'tag') {
         this.currentElement = this.storageSrv.currentElement;
-      } else if (data === "cancel selection") {
+      } else if (data === 'cancel selection') {
         this.listOfStopsForRoute = undefined;
         delete this.listOfStopsForRoute;
         this.currentElement = undefined;
@@ -57,15 +60,14 @@ export class StopBrowserComponent {
         this.filteredView = false;
       }
     });
+  }
 
-    this.editSrv.editingMode.subscribe((data) => {
-        console.log(
-          "LOG (stop-browser) Editing mode change in stopBrowser - ",
-          data,
-        );
-        this.editingMode = data;
-      },
-    );
+  public reorderingEnabled(): boolean {
+    if (this.currentElement) {
+      return this.currentElement.type === 'relation' && this.filteredView;
+    } else {
+      return false;
+    }
   }
 
   private isDownloaded(nodeId: number): boolean {
@@ -77,12 +79,12 @@ export class StopBrowserComponent {
   }
 
   private createChange(): void {
-    const type = "change members";
-    let elementsWithoutRole = this.currentElement["members"].filter((member) => {
-      return member["role"] === "";
+    const type = 'change members';
+    let elementsWithoutRole = this.currentElement['members'].filter((member) => {
+      return member['role'] === '';
     });
     let change = {
-      from: JSON.parse(JSON.stringify(this.currentElement["members"])),
+      from: JSON.parse(JSON.stringify(this.currentElement['members'])),
       to: JSON.parse(
         JSON.stringify([...this.listOfStopsForRoute, ...elementsWithoutRole]),
       ),
@@ -91,8 +93,8 @@ export class StopBrowserComponent {
   }
 
   private onDrop(args: any): void {
-    if (this.currentElement.type !== "relation") {
-      return alert("Current element has incorrent type. Select relation one more time please.");
+    if (this.currentElement.type !== 'relation') {
+      return alert('Current element has incorrent type. Select relation one more time please.');
     }
     this.createChange();
   }
@@ -103,14 +105,6 @@ export class StopBrowserComponent {
 
   private exploreStop($event: any, stop: IPtStop): void {
     this.processSrv.exploreStop(stop, true, true, true);
-  }
-
-  private reorderingEnabled(): boolean {
-    if (this.currentElement) {
-      return this.currentElement.type === "relation" && this.filteredView;
-    } else {
-      return false;
-    }
   }
 
   private isSelected(relId: number): boolean {

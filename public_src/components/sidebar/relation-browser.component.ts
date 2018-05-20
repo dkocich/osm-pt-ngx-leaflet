@@ -1,26 +1,28 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { ProcessService } from "../../services/process.service";
-import { StorageService } from "../../services/storage.service";
-import { EditService } from "../../services/edit.service";
-import { ModalDirective } from "ngx-bootstrap";
+import { ProcessService } from '../../services/process.service';
+import { StorageService } from '../../services/storage.service';
+import { EditService } from '../../services/edit.service';
+import { ModalDirective } from 'ngx-bootstrap';
 
-import { IPtRouteMasterNew } from "../../core/ptRouteMasterNew.interface";
+import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
+import { Observable } from 'rxjs';
+import { select } from '@angular-redux/store';
 
 @Component({
   providers: [],
-  selector: "relation-browser",
-  styles: [
-    require<any>("./relation-browser.component.less"),
-    require<any>("../../styles/main.less"),
+  selector: 'relation-browser',
+  styleUrls: [
+    './relation-browser.component.less',
+    '../../styles/main.less',
   ],
-  template: require<any>("./relation-browser.component.html"),
+  templateUrl: './relation-browser.component.html',
 })
-export class RelationBrowserComponent {
+export class RelationBrowserComponent implements OnInit {
   private currentElement: IPtRouteMasterNew;
-  private listOfVariants = this.storageSrv.listOfVariants;
-  private editingMode: boolean;
-  private listOfMasters = this.storageSrv.listOfMasters;
+  public listOfVariants = this.storageSrv.listOfVariants;
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  public listOfMasters = this.storageSrv.listOfMasters;
 
   constructor(
     private editSrv: EditService,
@@ -30,15 +32,15 @@ export class RelationBrowserComponent {
     //
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
-      if (data === "tag") {
-        console.log("LOG (relation-browser) Current selected element changed - ", data);
-        if (this.storageSrv.currentElement.tags.type === "route_master") {
+      if (data === 'tag') {
+        console.log('LOG (relation-browser) Current selected element changed - ', data);
+        if (this.storageSrv.currentElement.tags.type === 'route_master') {
           // prevent showing members of everything except route_master
           this.currentElement = this.storageSrv.currentElement;
         }
-      } else if (data === "cancel selection") {
+      } else if (data === 'cancel selection') {
         this.currentElement = undefined;
         delete this.currentElement;
         this.storageSrv.listOfVariants.length = 0;
@@ -47,16 +49,27 @@ export class RelationBrowserComponent {
     });
 
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
-      if (data === "relation") {
+      if (data === 'relation') {
         this.listOfVariants = this.storageSrv.listOfVariants;
-        console.log("LOG (relation-browser) List of variants ", this.storageSrv.listOfVariants,
-          " currentElement", this.storageSrv.currentElement);
+        console.log('LOG (relation-browser) List of variants ', this.storageSrv.listOfVariants,
+          ' currentElement', this.storageSrv.currentElement);
       }
     });
-    this.editSrv.editingMode.subscribe((data) => {
-      console.log("LOG (relation-browser) Editing mode change in routeBrowser - ", data);
-      this.editingMode = data;
-    });
+  }
+
+  /**
+   * NgFor track function which helps to re-render rows faster.
+   *
+   * @param index
+   * @param item
+   * @returns {number}
+   */
+  public trackByFn(index: number, item: any): number {
+    return item.id;
+  }
+
+  public hideMasterModal(): void {
+    this.masterModal.hide();
   }
 
   private isDownloaded(relId: number): boolean {
@@ -83,14 +96,13 @@ export class RelationBrowserComponent {
     // FIXME - allow to create route_master of route_masters later
     if (
       this.currentElement &&
-      this.currentElement.tags.type !== "route_master"
+      this.currentElement.tags.type !== 'route_master'
     ) {
       this.editSrv.createMaster(this.currentElement.id);
     } else {
       this.editSrv.createMaster();
     }
   }
-
   private changeRouteMasterMembers(routeMasterId: number): void {
     this.editSrv.changeRouteMasterMembers(
       this.currentElement.id,
@@ -98,14 +110,11 @@ export class RelationBrowserComponent {
     );
   }
 
-  @ViewChild("masterModal") public masterModal: ModalDirective;
+  @ViewChild('masterModal') public masterModal: ModalDirective;
+
   public showMasterModal(): void {
     this.masterModal.show();
     // this.mapSrv.disableMouseEvent("modalDownload");
-  }
-
-  private hideMasterModal(): void {
-    this.masterModal.hide();
   }
 
   private isAlreadyAdded(relId: number): boolean {
@@ -125,16 +134,5 @@ export class RelationBrowserComponent {
 
   private isSelected(relId: number): boolean {
     return this.processSrv.haveSameIds(relId, this.currentElement.id);
-  }
-
-  /**
-   * NgFor track function which helps to re-render rows faster.
-   *
-   * @param index
-   * @param item
-   * @returns {number}
-   */
-  private trackByFn(index: number, item: any): number {
-    return item.id;
   }
 }

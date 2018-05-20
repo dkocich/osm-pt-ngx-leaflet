@@ -1,40 +1,41 @@
 <button id="toggle-edit" class="btn btn-default on-map" container="body"
         *ngIf="isAuthenticated()"
         tooltip="{{ 'Switch edit mode' | translate }}"
-        [class.btn-primary]="editing"
-        (click)="toggleEditMode()" btnCheckbox>
+        [class.btn-primary]="editing$ | async"
+        (click)="appActions.actToggleEditing()" btnCheckbox>
   <i class="fa fa-pencil" aria-hidden="true"></i>
+
 </button>
 <button id="edits-backward-btn" class="btn btn-default on-map" container="body"
-        *ngIf="editing"
+        *ngIf="editing$ | async"
         tooltip="{{ 'Step back' | translate }}"
         [disabled]="isInactive('backward')"
         (click)="stepBackward()">
   <i class="fa fa-undo" aria-hidden="true"></i>
 </button>
 <button id="edits-forward-btn" class="btn btn-default on-map" container="body"
-        *ngIf="editing"
+        *ngIf="editing$ | async"
         tooltip="{{ 'Step forward' | translate }}Step forward"
         [disabled]="isInactive('forward')"
         (click)="stepForward()">
   <i class="fa fa-repeat" aria-hidden="true"></i>
 </button>
-<span *ngIf="editing" id="edits-count" class="label label-info on-map">
+<div *ngIf="editing$ | async" id="edits-count" class="label label-info on-map">
   <h6>{{currentEditStep }}/{{totalEditSteps }}</h6>
-</span>
+</div>
 
-<div *ngIf="editing">
+<div *ngIf="editing$ | async">
   <button id="stop-btn" type="button" class="btn btn-default on-map"
           tooltip="{{ 'Create a new stop' | translate }}" container="body"
           [class.btn-primary]="creatingElementOfType === 'stop'"
           (click)="createElement('stop')" disabled>
-    <img src="/images/transport/bus.png" alt="stop">&nbsp;{{ 'Stop' | translate }}
+    <img src="/assets/transport/bus.png" alt="stop">&nbsp;{{ 'Stop' | translate }}
   </button>
   <button id="platform-btn" type="button" class="btn btn-default on-map" container="body"
           tooltip="{{ 'Create a new platform' | translate }}"
           [class.btn-primary]="creatingElementOfType === 'platform'"
           (click)="createElement('platform')">
-    <img src="/images/transport/platform.png" alt="platform">&nbsp;{{ 'Platform' | translate }}
+    <img src="/assets/transport/platform.png" alt="platform">&nbsp;{{ 'Platform' | translate }}
   </button>
 </div>
 
