@@ -4,7 +4,7 @@ import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
 
 import * as L from 'leaflet';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { EditService } from '../../services/edit.service';
 import { GeocodeService } from '../../services/geocode.service';

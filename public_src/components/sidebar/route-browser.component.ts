@@ -5,7 +5,7 @@ import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
 
 @Component({

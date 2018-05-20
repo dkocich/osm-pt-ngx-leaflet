@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
 
 @Component({
