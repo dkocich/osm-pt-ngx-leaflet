@@ -16,6 +16,8 @@ import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 
+import { HTTPStatus } from '../../services/RxJS/http.service';
+
 import { AuthComponent } from '../auth/auth.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 
@@ -42,6 +44,8 @@ export class AppComponent implements OnInit {
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
   private startEventProcessing = new Subject<L.LeafletEvent>();
 
+  HTTPActivity: boolean;
+
   constructor(
     public appActions: AppActions,
     private ngRedux: NgRedux<IAppState>,
@@ -51,7 +55,13 @@ export class AppComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
+
+    private httpStatus: HTTPStatus,
   ) {
+    this.httpStatus.getHttpStatus().subscribe((status: boolean) => {
+      this.HTTPActivity = status;
+      console.log('HTTP ACTIVITY STATUS JE', status);
+    });
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());
     }

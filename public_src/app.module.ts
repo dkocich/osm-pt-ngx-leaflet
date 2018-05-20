@@ -5,7 +5,7 @@ import 'zone.js/dist/zone';
 import 'zone.js/dist/long-stack-trace-zone';
 
 import { APP_BASE_HREF } from '@angular/common';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
@@ -80,6 +80,10 @@ const ROUTES: Routes = [
 const conditional_providers = [
   Utils.isProductionDeployment() ? { provide: ErrorHandler, useClass: RavenErrorHandler } : [],
 ];
+
+import { HTTPListener, HTTPStatus } from './services/RxJS/http.service';
+
+const RxJS_Services = [HTTPListener, HTTPStatus];
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -156,6 +160,13 @@ const conditional_providers = [
 
     AppActions,
     RootEpics,
+
+    ...RxJS_Services,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HTTPListener,
+      multi: true,
+    },
   ],
 })
 export class AppModule { }
