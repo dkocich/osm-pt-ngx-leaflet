@@ -184,7 +184,7 @@ export class EditService {
         console.log('LOG (editing s.) I should add route', editObj);
         if (!this.storageSrv.elementsMap.get(editObj.id)) {
           this.storageSrv.elementsMap.set(editObj.id, editObj.change.to);
-          this.storageSrv.listOfRelations.push(editObj.change.to); // unshift
+          this.storageSrv.listOfRelations.push(editObj.change.to); // un-shift
         } else {
           alert(
             'FIXME: this new ROUTE\'s ID already exists ' +
@@ -206,7 +206,7 @@ export class EditService {
         console.log('LOG (editing s.) I should add route_master', editObj);
         if (!this.storageSrv.elementsMap.get(editObj.id)) {
           this.storageSrv.elementsMap.set(editObj.id, editObj.change.to);
-          this.storageSrv.listOfMasters.push(editObj.change.to); // unshift
+          this.storageSrv.listOfMasters.push(editObj.change.to); // un-shift
         } else {
           alert(
             'FIXME: this new ROUTE\'s ID already exists ' +
@@ -401,7 +401,7 @@ export class EditService {
   }
 
   /**
-   * Handles process of node's membership toogle.
+   * Handles process of node's membership toggle.
    * @param featureId
    */
   private handleMarkerMembershipToggleClick(featureId: number): void {
@@ -418,7 +418,7 @@ export class EditService {
           this.storageSrv.currentElement.id,
         ),
       ),
-    ); // stringified to not influence new route edit
+    ); // string to not influence new route edit
     if (!rel || rel.type !== 'relation') {
       return alert(
         'Relation was not found ' +
@@ -430,7 +430,7 @@ export class EditService {
     } else {
       this.mapSrv.clearCircleHighlight();
       const feature = this.storageSrv.elementsMap.get(featureId);
-      let change = { from: JSON.parse(JSON.stringify(rel)), to: undefined }; // stringified to not influece toggle edits
+      let change = { from: JSON.parse(JSON.stringify(rel)), to: undefined }; // string to not influence toggle edits
 
       let shouldPush: boolean;
       let memberIds = [];
@@ -870,7 +870,7 @@ export class EditService {
       case 'create master':
         console.log('LOG (editing s.) I should add route_master', edit);
         this.storageSrv.elementsMap.set(edit.id, edit.change.to);
-        this.storageSrv.listOfMasters.push(edit.change.to); // unshift
+        this.storageSrv.listOfMasters.push(edit.change.to); // un-shift
         let masterRel = this.storageSrv.elementsMap.get(edit.id);
         this.processSrv.refreshTagView(masterRel);
         this.processSrv.refreshRelationView(masterRel);
@@ -1001,7 +1001,7 @@ export class EditService {
   }
 
   /**
-   * Deletes all unnecesary attributes from member object in a relation.
+   * Deletes all unnecessary attributes from member object in a relation.
    * @param editObj
    */
   private simplifyMembers(editObj: any): void {
@@ -1015,7 +1015,7 @@ export class EditService {
   }
 
   /**
-   * Compares strings of from/to changes in editation object.
+   * Compares strings of from/to changes in the edited object.
    * @param editObj
    * @returns {boolean}
    */

@@ -26,6 +26,7 @@ import {
 
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2Piwik } from 'angulartics2/piwik';
+import { NgHttpLoaderModule } from 'ng-http-loader/ng-http-loader.module';
 
 import { AppComponent } from './components/app/app.component';
 import { AuthComponent } from './components/auth/auth.component';
@@ -44,7 +45,6 @@ import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
 import { EditService } from './services/edit.service';
 import { GeocodeService } from './services/geocode.service';
-import { LoadService } from './services/load.service';
 import { MapService } from './services/map.service';
 import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
@@ -103,6 +103,7 @@ const conditional_providers = [
     FormsModule,
     HttpClientModule,
     ModalModule.forRoot(),
+    NgHttpLoaderModule,
     TooltipModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
@@ -122,7 +123,6 @@ const conditional_providers = [
     ConfService,
     EditService,
     GeocodeService,
-    LoadService,
     MapService,
     OverpassService,
     ProcessService,

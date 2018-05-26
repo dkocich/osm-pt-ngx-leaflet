@@ -20,9 +20,9 @@
         (click)="stepForward()">
   <i class="fa fa-repeat" aria-hidden="true"></i>
 </button>
-<span *ngIf="editing$ | async" id="edits-count" class="label label-info on-map">
+<div *ngIf="editing$ | async" id="edits-count" class="label label-info on-map">
   <h6>{{currentEditStep }}/{{totalEditSteps }}</h6>
-</span>
+</div>
 
 <div *ngIf="editing$ | async">
   <button id="stop-btn" type="button" class="btn btn-default on-map"

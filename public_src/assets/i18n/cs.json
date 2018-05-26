@@ -35,6 +35,7 @@
   "Download data from Overpass API": "Download data from Overpass API",
   "Download data with current query and continue": "Download data with current query and continue",
   "Download parent (route_master) relations": "Download parent (route_master) relations",
+  "Enable/disable advanced features of the editor": "Zapnout/vypnout pokročilé funkce editoru",
   "English": "Angličtina",
   "Enter a place to go": "Vložte místo pro hledání",
   "Existence of route_master relation of a route was not checked yet": "Existence of route_master relation of a route was not checked yet",

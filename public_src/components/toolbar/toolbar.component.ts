@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { EditorComponent } from '../editor/editor.component';
 import { TransporterComponent } from '../transporter/transporter.component';
@@ -20,7 +20,7 @@ import { IOsmElement } from '../../core/osmElement.interface';
   ],
   templateUrl: './toolbar.component.html',
 })
-export class ToolbarComponent {
+export class ToolbarComponent implements OnInit {
   public downloading: boolean;
   public htRadioModel: string;
   @ViewChild(TransporterComponent)

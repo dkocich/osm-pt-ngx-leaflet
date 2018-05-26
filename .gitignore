@@ -29,8 +29,9 @@ public/**/*
 
 .tscache
 
-# VSCode settings
+# editors settings
 .vscode
+.idea
 
 # Cypress tests
 cypress/videos

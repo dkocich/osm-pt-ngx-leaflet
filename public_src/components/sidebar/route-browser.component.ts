@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
 
 @Component({
@@ -17,7 +17,7 @@ import { select } from '@angular-redux/store';
   ],
   templateUrl: './route-browser.component.html',
 })
-export class RouteBrowserComponent {
+export class RouteBrowserComponent implements OnInit {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   public currentElement;
@@ -40,7 +40,7 @@ export class RouteBrowserComponent {
     //
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.processSrv.showRelationsForStop$.subscribe((data) => {
       this.filteredView = data;
     });

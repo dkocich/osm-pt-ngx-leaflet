@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Map } from 'leaflet';
 
@@ -14,7 +14,7 @@ import { MapService } from '../../services/map.service';
   ],
   templateUrl: './navigator.component.html',
 })
-export class NavigatorComponent {
+export class NavigatorComponent implements OnInit {
   public address: string;
 
   private map: Map;
@@ -26,7 +26,7 @@ export class NavigatorComponent {
     this.address = '';
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.mapSrv.disableMouseEvent('goto');
     this.mapSrv.disableMouseEvent('place-input');
     this.map = this.mapSrv.map;

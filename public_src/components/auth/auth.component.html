@@ -2,7 +2,7 @@
   <li id="authenticate" *ngIf="!isAuthenticated()" (click)="authenticate()"><a href="#">
     <i class="fa fa-user" aria-hidden="true"></i>&nbsp;{{ 'Login' | translate }}</a></li>
   <ng-container *ngIf="isAuthenticated()">
-    <li><img id="img_href" class="img-thumbnail user_thumbnail_tiny" src="{{imgHref}}" alt="X"></li>
+    <li *ngIf="imgHref"><img id="img_href" class="img-thumbnail user_thumbnail_tiny" [src]="imgHref"></li>
     <li><a id="display_name" href="#">
       <i class="fa fa-user" aria-hidden="true"></i>&nbsp;{{displayName}}</a>
     </li>

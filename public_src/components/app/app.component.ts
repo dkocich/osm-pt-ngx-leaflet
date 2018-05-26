@@ -1,14 +1,15 @@
-import { Component, isDevMode, ViewChild } from '@angular/core';
+import { Component, isDevMode, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
 
 import * as L from 'leaflet';
 
-import { Observable } from 'rxjs/Observable';
+import { Spinkit } from 'ng-http-loader/spinkits';
+
+import { Observable } from 'rxjs';
 
 import { EditService } from '../../services/edit.service';
 import { GeocodeService } from '../../services/geocode.service';
-import { LoadService } from '../../services/load.service';
 import { MapService } from '../../services/map.service';
 import { ProcessService } from '../../services/process.service';
 
@@ -26,7 +27,8 @@ import { AppActions } from '../../store/app/actions';
   ],
   templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  public spinkit = Spinkit;
   public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
 
   @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
@@ -40,7 +42,6 @@ export class AppComponent {
     private ngRedux: NgRedux<IAppState>,
     private editSrv: EditService,
     private geocodeSrv: GeocodeService,
-    private loadSrv: LoadService,
     private mapSrv: MapService,
     private processSrv: ProcessService,
   ) {
@@ -77,10 +78,6 @@ export class AppComponent {
       this.geocodeSrv.getCurrentLocation();
     }
     this.toolbarComponent.Initialize();
-  }
-
-  public isLoading(): boolean {
-    return this.loadSrv.isLoading();
   }
 
   public hideHelpModal(): void {

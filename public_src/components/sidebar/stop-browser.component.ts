@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
@@ -9,7 +9,7 @@ import { DragulaService } from 'ng2-dragula';
 import { IPtRelation } from '../../core/ptRelation.interface';
 import { IPtStop } from '../../core/ptStop.interface';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
 
 @Component({
@@ -21,10 +21,10 @@ import { select } from '@angular-redux/store';
   ],
   templateUrl: './stop-browser.component.html',
 })
-export class StopBrowserComponent {
-  public listOfStopsForRoute: object[] = this.storageSrv.listOfStopsForRoute;
+export class StopBrowserComponent implements OnInit {
+  public listOfStopsForRoute: IPtStop[] = this.storageSrv.listOfStopsForRoute;
   public currentElement: any;
-  public listOfStops: object[] = this.storageSrv.listOfStops;
+  public listOfStops: IPtStop[] = this.storageSrv.listOfStops;
   public filteredView: boolean;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
@@ -40,7 +40,7 @@ export class StopBrowserComponent {
     });
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.processSrv.showStopsForRoute$.subscribe((data) => {
       this.filteredView = data;
     });

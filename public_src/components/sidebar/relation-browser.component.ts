@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
@@ -6,7 +6,7 @@ import { EditService } from '../../services/edit.service';
 import { ModalDirective } from 'ngx-bootstrap';
 
 import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
 
 @Component({
@@ -18,7 +18,7 @@ import { select } from '@angular-redux/store';
   ],
   templateUrl: './relation-browser.component.html',
 })
-export class RelationBrowserComponent {
+export class RelationBrowserComponent implements OnInit {
   private currentElement: IPtRouteMasterNew;
   public listOfVariants = this.storageSrv.listOfVariants;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
@@ -32,7 +32,7 @@ export class RelationBrowserComponent {
     //
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
       if (data === 'tag') {
         console.log('LOG (relation-browser) Current selected element changed - ', data);

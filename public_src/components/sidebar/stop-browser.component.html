@@ -76,7 +76,7 @@
                tooltip="{{ 'Routes related to this stop were checked and downloaded' | translate }}"></i>
             <i class="fa fa-question-circle" aria-hidden="true" container="body"
                *ngIf="!isDownloaded(stop.id)"
-               tooltip="{{ 'Routes related to this stop weren not checked' | translate }}"></i>
+               tooltip="{{ 'Routes related to this stop were not checked' | translate }}"></i>
             {{stop.tags.name || stop.id}}
           </td>
           <td>{{stop.tags.public_transport}}</td>

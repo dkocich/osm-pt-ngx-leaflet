@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 
 import { AuthService } from '../../services/auth.service';
 import { EditService } from '../../services/edit.service';
@@ -7,8 +7,7 @@ import { StorageService } from '../../services/storage.service';
 
 import { ModalDirective } from 'ngx-bootstrap';
 import { select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
-import { ChangeDetectionStrategy } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
 
 @Component({
@@ -21,7 +20,7 @@ import { AppActions } from '../../store/app/actions';
   templateUrl: './editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditorComponent {
+export class EditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editModal') public editModal: ModalDirective;
   public totalEditSteps: number = 0;
   public currentEditStep: number = 0;
