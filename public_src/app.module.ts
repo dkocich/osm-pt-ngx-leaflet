@@ -44,6 +44,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
+import { DbService } from './services/db.service';
 import { EditService } from './services/edit.service';
 import { GeocodeService } from './services/geocode.service';
 import { MapService } from './services/map.service';
@@ -128,6 +129,7 @@ const conditional_providers = [
 
     AuthService,
     ConfService,
+    DbService,
     EditService,
     GeocodeService,
     MapService,

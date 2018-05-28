@@ -13,7 +13,6 @@ import { Utils } from '../core/utils.class';
 export class MapService {
   public map: L.Map;
   public baseMaps: any;
-  public previousCenter: [number, number] = [0.0, 0.0];
   public osmtogeojson: any = require('osmtogeojson');
   public bounds;
   public highlightStroke: any = undefined;

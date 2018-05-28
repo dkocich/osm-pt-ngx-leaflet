@@ -79,6 +79,7 @@
     "css-loader": "0.28.10",
     "cssnano": "3.10.0",
     "cypress": "2.0.4",
+    "dexie": "2.0.3",
     "eslint": "4.18.1",
     "eslint-plugin-cypress": "2.0.1",
     "express": "4.16.2",

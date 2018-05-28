@@ -1,24 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { AuthService } from './auth.service';
 import { ConfService } from './conf.service';
+import { DbService } from './db.service';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 import { WarnService } from './warn.service';
 
 import { create } from 'xmlbuilder';
+import { LatLng } from 'leaflet';
 
 import { IOverpassResponse } from '../core/overpassResponse.interface';
+import { IAreaRef } from '../core/areaRef.interface';
 import { Utils } from '../core/utils.class';
 
 @Injectable()
 export class OverpassService {
   public changeset;
   private changeset_id: string;
+  private areaReference: IAreaRef;
+
   constructor(
     private authSrv: AuthService,
+    private dbSrv: DbService,
     private httpClient: HttpClient,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
@@ -68,10 +74,6 @@ export class OverpassService {
    */
   public requestNewOverpassData(): void {
     const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
-    this.mapSrv.previousCenter = [
-      this.mapSrv.map.getCenter().lat,
-      this.mapSrv.map.getCenter().lng,
-    ];
     this.httpClient
       .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
         responseType: 'json',
@@ -81,6 +83,7 @@ export class OverpassService {
         (res: IOverpassResponse) => {
           console.log('LOG (overpass s.)', res);
           this.processSrv.processResponse(res);
+          this.dbSrv.addArea(this.areaReference.areaPseudoId);
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
@@ -104,7 +107,7 @@ export class OverpassService {
     if (!minNumOfRelations) {
       minNumOfRelations = 10;
     }
-    const idsArr: Array<number> = this.findRouteIdsWithoutMaster();
+    const idsArr: number[] = this.findRouteIdsWithoutMaster();
     if (idsArr.length <= minNumOfRelations) {
       return console.log(
         'LOG (overpass s.) Not enough relations to download - stop',
@@ -168,6 +171,13 @@ export class OverpassService {
     this.putChangeset(this.changeset, testUpload);
   }
 
+  public async initDownloader(): Promise<void> {
+    this.setupAreaReference();
+    if (this.minZoomLevelIsValid() && await this.shouldDownloadMissingArea()) {
+      this.requestNewOverpassData();
+    }
+  }
+
   /**
    * Creates new changeset on the API and returns its ID in the callback.
    * Put /api/0.6/changeset/create
@@ -189,6 +199,24 @@ export class OverpassService {
         this.createdChangeset.bind(this),
       );
     }
+  }
+
+  private setupAreaReference(): void {
+    const viewCenter: LatLng = this.mapSrv.map.getCenter();
+    const south: string = (Math.floor(viewCenter.lat / 0.05) * 0.05).toFixed(2);
+    const west: string = (Math.floor(viewCenter.lng / 0.05) * 0.05).toFixed(2);
+    const north: string = (Number(south) + 0.05).toFixed(2);
+    const east: string = (Number(west) + 0.05).toFixed(2);
+    const areaPseudoId = south + 'x' + west;
+    this.areaReference = { areaPseudoId, overpassBox: [south, west, north, east], viewCenter };
+  }
+
+  private minZoomLevelIsValid(): boolean {
+    return this.mapSrv.map.getZoom() > ConfService.minDownloadZoom;
+  }
+
+  private async shouldDownloadMissingArea(): Promise<boolean> {
+    return !await this.dbSrv.hasArea(this.areaReference.areaPseudoId);
   }
 
   /**
@@ -280,7 +308,7 @@ export class OverpassService {
   /**
    * Finds routes which were not queried to find their possible master relation.
    */
-  private findRouteIdsWithoutMaster(): Array<number> {
+  private findRouteIdsWithoutMaster(): number[] {
     const idsArr = [];
     this.storageSrv.listOfRelations.forEach((rel) => {
       if (!this.storageSrv.queriedMasters.has(rel['id'])) {
@@ -304,15 +332,8 @@ export class OverpassService {
    * @returns {string}
    */
   private replaceBboxString(requestBody: string): string {
-    const b = this.mapSrv.map.getCenter().toBounds(3000);
-    const s = b.getSouth().toString();
-    const w = b.getWest().toString();
-    const n = b.getNorth().toString();
-    const e = b.getEast().toString();
-    return requestBody.replace(
-      new RegExp('{{bbox}}', 'g'),
-      [s, w, n, e].join(', '),
-    );
+    const bboxStr: string = this.areaReference.overpassBox.join(', ');
+    return requestBody.replace(new RegExp('{{bbox}}', 'g'), bboxStr);
   }
 
   /**

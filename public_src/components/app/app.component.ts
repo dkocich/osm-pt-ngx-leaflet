@@ -8,9 +8,11 @@ import { Spinkit } from 'ng-http-loader/spinkits';
 
 import { Observable } from 'rxjs';
 
+import { DbService } from '../../services/db.service';
 import { EditService } from '../../services/edit.service';
 import { GeocodeService } from '../../services/geocode.service';
 import { MapService } from '../../services/map.service';
+import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 
 import { AuthComponent } from '../auth/auth.component';
@@ -40,9 +42,11 @@ export class AppComponent implements OnInit {
   constructor(
     public appActions: AppActions,
     private ngRedux: NgRedux<IAppState>,
+    private dbSrv: DbService,
     private editSrv: EditService,
     private geocodeSrv: GeocodeService,
     private mapSrv: MapService,
+    private overpassSrv: OverpassService,
     private processSrv: ProcessService,
   ) {
     if (isDevMode()) {
@@ -51,6 +55,7 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): any {
+    this.dbSrv.deleteExpiredDataIDB();
     const map = L.map('map', {
       center: L.latLng(49.686, 18.351),
       layers: [this.mapSrv.baseMaps.CartoDB_light],
@@ -67,8 +72,9 @@ export class AppComponent implements OnInit {
 
     this.mapSrv.map = map;
     this.mapSrv.map.on('zoomend moveend', () => {
-      this.processSrv.filterDataInBounds();
       this.processSrv.addPositionToUrlHash();
+      this.overpassSrv.initDownloader();
+      this.processSrv.filterDataInBounds();
     });
     if (
       window.location.hash !== '' && this.processSrv.hashIsValidPosition()
@@ -77,7 +83,6 @@ export class AppComponent implements OnInit {
     } else {
       this.geocodeSrv.getCurrentLocation();
     }
-    this.toolbarComponent.Initialize();
   }
 
   public hideHelpModal(): void {

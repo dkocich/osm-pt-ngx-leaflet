@@ -64,12 +64,6 @@ export class ToolbarComponent implements OnInit {
     this.mapSrv.disableMouseEvent('edits-count');
   }
 
-  public Initialize(): void {
-    this.mapSrv.map.on('zoomend moveend', () => {
-      this.initDownloader();
-    });
-  }
-
   public highlightIsActive(): boolean {
     return this.mapSrv.highlightIsActive();
   }
@@ -82,7 +76,7 @@ export class ToolbarComponent implements OnInit {
     this.downloading = !this.downloading;
     if (this.downloading) {
       this.mapSrv.map.on('zoomend moveend', () => {
-        this.initDownloader();
+        this.overpassSrv.initDownloader();
       });
     } else if (!this.downloading) {
       this.mapSrv.map.off('zoomend moveend');
@@ -114,27 +108,6 @@ export class ToolbarComponent implements OnInit {
         false,
       );
     }
-  }
-
-  private initDownloader(): void {
-    if (this.checkDownloadRules()) {
-      this.overpassSrv.requestNewOverpassData();
-    }
-  }
-
-  private checkMinZoomLevel(): boolean {
-    return this.mapSrv.map.getZoom() > ConfService.minDownloadZoom;
-  }
-
-  private checkMinDistance(): boolean {
-    const lastDownloadCenterDistance = this.mapSrv.map
-      .getCenter()
-      .distanceTo(this.mapSrv.previousCenter);
-    return lastDownloadCenterDistance > ConfService.minDownloadDistance;
-  }
-
-  private checkDownloadRules(): boolean {
-    return this.checkMinZoomLevel() && this.checkMinDistance();
   }
 
   /**
