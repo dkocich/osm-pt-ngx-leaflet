@@ -125,11 +125,7 @@ export class RelationBrowserComponent implements OnInit {
     let found = rel.members.filter((member) => {
       return member.ref === this.currentElement.id;
     });
-    if (found.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return found.length > 0;
   }
 
   private isSelected(relId: number): boolean {

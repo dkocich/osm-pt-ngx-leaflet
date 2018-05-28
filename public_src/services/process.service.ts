@@ -358,7 +358,7 @@ export class ProcessService {
     ) {
       console.log(
         'LOG (processing s.) Relation is not completely downloaded. Missing: ' +
-          missingElements.join(', '),
+        missingElements.join(', '),
       );
       this.membersToDownload.emit({
         rel,
@@ -376,12 +376,12 @@ export class ProcessService {
     } else {
       return alert(
         'FIXME: Some other problem with relation - downloaded ' +
-          this.storageSrv.elementsDownloaded.has(rel.id) +
-          ' , # of missing elements ' +
-          missingElements.length +
-          ' , # of members ' +
-          rel['members'].length +
-          JSON.stringify(rel),
+        this.storageSrv.elementsDownloaded.has(rel.id) +
+        ' , # of missing elements ' +
+        missingElements.length +
+        ' , # of members ' +
+        rel['members'].length +
+        JSON.stringify(rel),
       );
     }
     if (refreshMasterView) {
@@ -545,7 +545,7 @@ export class ProcessService {
       if (!element['lat'] || !element['lon']) {
         return alert(
           'Problem occurred - element has no coordinates.' +
-            JSON.stringify(element),
+          JSON.stringify(element),
         );
       } else {
         this.mapSrv.map.panTo([element['lat'], element['lon']]);

@@ -87,9 +87,9 @@ export class OverpassService {
         (err) => {
           console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
           return setTimeout(() => {
-              console.log('LOG (overpass) Request error - new request?');
-              this.requestNewOverpassData();
-            }, 5000);
+            console.log('LOG (overpass) Request error - new request?');
+            this.requestNewOverpassData();
+          }, 5000);
         },
       );
   }
@@ -227,7 +227,7 @@ export class OverpassService {
     if (missingElements.length === 0) {
       return alert(
         'This relation has no stops or platforms. Please add them first and repeat your action. \n' +
-          JSON.stringify(rel),
+        JSON.stringify(rel),
       );
     }
     const requestBody = `
@@ -350,7 +350,7 @@ export class OverpassService {
     if (err) {
       return alert(
         'Error while creating new changeset. Try again please. ' +
-          JSON.stringify(err),
+        JSON.stringify(err),
       );
     }
     console.log(
@@ -537,7 +537,7 @@ export class OverpassService {
     if (err) {
       return alert(
         'Error after data uploading. Changeset is not closed. It should close automatically soon. ' +
-          JSON.stringify(err),
+        JSON.stringify(err),
       );
     }
     // Upload was successful, safe to call the callback.
