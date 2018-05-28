@@ -55,12 +55,12 @@
     &nbsp;{{ 'Cancel' | translate }}
   </button>
 
-  <div id="dropdown" class="btn-group col-md-6" dropdown [dropup]=true >
+  <div id="drop-down" class="btn-group col-md-6" dropdown [dropup]=true >
     <button dropdownToggle type="button" class="btn btn-default btn-block dropdown-toggle" container="body" [disabled]="isDisabled()">
       &nbsp;{{ 'Open in ...' | translate }}
       <span class="caret"></span>
     </button>
-    <ul *dropdownMenu id="dropdownitems" class="dropdown-menu" role="menu">
+    <ul *dropdownMenu id="drop-down-items" class="dropdown-menu" role="menu">
       <li role="menuitem">
         <a class="dropdown-item" href="#" tooltip="{{ 'Open in ID' | translate }}" (click)="openInIdEditor(currentElement)">
           &nbsp;{{ 'Open in ID' | translate }}
