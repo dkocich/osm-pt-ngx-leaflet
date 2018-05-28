@@ -6,6 +6,7 @@ import * as L from 'leaflet';
 
 import { MapService } from './map.service';
 import { StorageService } from './storage.service';
+import { DbService } from './db.service';
 
 import { IOsmElement } from '../core/osmElement.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
@@ -34,6 +35,7 @@ export class ProcessService {
 
     private mapSrv: MapService,
     private storageSrv: StorageService,
+    private dbSrv: DbService,
   ) {
     // this.mapSrv.popupBtnClick.subscribe(
     //     (data) => {
@@ -174,6 +176,7 @@ export class ProcessService {
    * @param response
    */
   public processMastersResponse(response: object): void {
+    let masterRoutes = [];
     response['elements'].forEach((element) => {
       if (!this.storageSrv.elementsMap.has(element.id)) {
         console.log('LOG (processing s.) New element added:', element);
@@ -181,10 +184,16 @@ export class ProcessService {
         this.storageSrv.elementsDownloaded.add(element.id);
         if (element.tags.route_master) {
           this.storageSrv.listOfMasters.push(element);
+          masterRoutes.push(element);
         } else {
           console.log('LOG (processing s.) WARNING: new elements? ', element);
         } // do not add other relations because they should be already added
       }
+    });
+
+    this.dbSrv.addRouteMasters(masterRoutes).catch((err) => {
+      console.log('LOG (process s. )Error in adding some master routes to IDB');
+      console.log(err);
     });
     console.log(
       'LOG (processing s.) Total # of master rel. (route_master)',
@@ -354,11 +363,12 @@ export class ProcessService {
     if (
       !this.storageSrv.elementsDownloaded.has(rel.id) &&
       rel['members'].length > 0 &&
-      missingElements.length > 0
+      missingElements.length > 0 && !this.storageSrv.completelyDownloadedRoutesIDB.has(rel.id)
     ) {
+      console.log('LOG (processing s.) Route not in JS, not in IDB, has some members, and has missing members' + rel.id);
       console.log(
         'LOG (processing s.) Relation is not completely downloaded. Missing: ' +
-          missingElements.join(', '),
+        missingElements.join(', '),
       );
       this.membersToDownload.emit({
         rel,
@@ -369,19 +379,24 @@ export class ProcessService {
       (missingElements.length === 0 && rel.id > 0) ||
       (rel.id < 0 && rel['members'].length > 0)
     ) {
+      console.log('LOG (processing s.) (Route in JS) or (no missing elements &' +
+        ' old) or (new & has some members)' + rel.id);
       console.log('condition is valid', rel.id, rel['members'].length);
       this.downloadedMissingMembers(rel, true, zoomToElement);
-    } else if (rel.id < 0) {
       this.refreshTagView(rel);
+      this.storageSrv.elementsDownloaded.add(rel.id);
+    } else if (this.storageSrv.completelyDownloadedRoutesIDB.has(rel.id)) {
+      console.log('Route in IDB' + rel.id);
+      this.getRelationDataIDB(rel);
     } else {
       return alert(
         'FIXME: Some other problem with relation - downloaded ' +
-          this.storageSrv.elementsDownloaded.has(rel.id) +
-          ' , # of missing elements ' +
-          missingElements.length +
-          ' , # of members ' +
-          rel['members'].length +
-          JSON.stringify(rel),
+        this.storageSrv.elementsDownloaded.has(rel.id) +
+        ' , # of missing elements ' +
+        missingElements.length +
+        ' , # of members ' +
+        rel['members'].length +
+        JSON.stringify(rel),
       );
     }
     if (refreshMasterView) {
@@ -545,7 +560,7 @@ export class ProcessService {
       if (!element['lat'] || !element['lon']) {
         return alert(
           'Problem occurred - element has no coordinates.' +
-            JSON.stringify(element),
+          JSON.stringify(element),
         );
       } else {
         this.mapSrv.map.panTo([element['lat'], element['lon']]);
@@ -613,4 +628,19 @@ export class ProcessService {
   public numIsBetween(num: number, min: number, max: number): boolean {
     return min < num && num < max;
   }
+  public getRelationDataIDB(rel: any): any {
+    this.dbSrv.getMembersForRoute(rel.id).then((res) => {
+      this.processNodeResponse(res);
+      const transformedGeojson = this.mapSrv.osmtogeojson(res);
+      this.storageSrv.localGeojsonStorage = transformedGeojson;
+      this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
+      this.storageSrv.elementsDownloaded.add(rel.id);
+      this.downloadedMissingMembers(rel, true, true);
+    }).catch((err) => {
+      console.log('LOG (overpass s.) Error in fetching / displaying the data for route with id : '
+        + rel.id + 'from IDB');
+      console.log(err);
+    });
+  }
+
 }

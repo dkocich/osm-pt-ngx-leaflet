@@ -76,12 +76,12 @@
       <tbody>
       <tr *ngFor="let tag of currentElement['tags'] | keys;">
         <td>
-          <ng-container *ngIf="!editing$ | async">{{tag.key}}</ng-container>
+          <ng-container *ngIf="!(editing$ | async)">{{tag.key}}</ng-container>
           <input type="text" *ngIf="editing$ | async" value="{{tag.key}}" data-type="key"
                  (blur)="createChange('change tag', tag.key, $event)">
         </td>
         <td>
-          <ng-container *ngIf="!editing$ | async">{{tag.value}}</ng-container>
+          <ng-container *ngIf="!(editing$ | async)">{{tag.value}}</ng-container>
           <input type="text" *ngIf="editing$ | async" value="{{tag.value}}" data-type="value"
                  (blur)="createChange('change tag', tag.key, $event)" >
         </td>
@@ -126,3 +126,4 @@
     </table>
   </div>
 </div>
+
