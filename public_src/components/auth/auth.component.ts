@@ -24,33 +24,34 @@ export class AuthComponent {
     this.imgHref = this.storageSrv.getImgHref();
   }
 
-  public isAuthenticated(): void {
+  public isAuthenticated = (): void => {
     return this.authSrv.oauth.authenticated();
   }
 
-  private getDisplayName(): string {
+  private getDisplayName = (): string => {
     return this.storageSrv.getDisplayName();
   }
 
-  private authenticate(): void {
-    this.authSrv.oauth.authenticate(this.gotAuthenticatedCallback.bind(this));
+  private authenticate = (): void => {
+    this.authSrv.oauth.authenticate(this.gotAuthenticatedCallback);
   }
 
-  private gotAuthenticatedCallback(err: any, response: any): void {
+  private gotAuthenticatedCallback = (err: any, response: any): void => {
+    if (err) { throw new Error(err.toString()); }
     this.showDetails();
   }
 
-  private logout(): void {
+  private logout = (): void => {
     this.authSrv.oauth.logout();
     document.getElementById('display_name').innerHTML = '';
     this.storageSrv.clearLocalStorage();
   }
 
-  private done(err: any, res: any): any {
+  private done = (err: any, res: any): any => {
     if (err) {
       document.getElementById('user').innerHTML = 'error! try clearing your browser cache';
       document.getElementById('user').style.display = 'block';
-      return;
+      throw new Error(err.toString());
     }
     const u = res.getElementsByTagName('user')[0];
     const changesets = res.getElementsByTagName('changesets')[0];
@@ -68,7 +69,7 @@ export class AuthComponent {
     // document.getElementById("display_name").innerHTML = userDetails["display_name"];
   }
 
-  private showDetails(): void {
+  private showDetails = (): void => {
     this.authSrv.oauth.xhr(
       {
         method: 'GET',
@@ -80,7 +81,7 @@ export class AuthComponent {
     );
   }
 
-  private gotDetailsCallback(err: any, xmlResponse: any): void {
+  private gotDetailsCallback = (err: any, xmlResponse: any): void => {
     this.done(err, xmlResponse);
   }
 }

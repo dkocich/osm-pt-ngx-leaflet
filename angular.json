@@ -19,7 +19,9 @@
             "polyfills": "public_src/polyfills.ts",
             "tsConfig": "public_src/tsconfig.app.json",
             "assets": [
-              "public_src/assets"
+              "public_src/assets",
+              "public_src/land.html",
+              "public_src/land_single.html"
             ],
             "styles": [
               "public_src/styles.css",

@@ -136,7 +136,7 @@ export class OverpassService {
           this.processSrv.processMastersResponse(res);
         },
         (err) => {
-          throw new Error(err);
+          throw new Error(err.toString());
         },
       );
   }
@@ -154,7 +154,7 @@ export class OverpassService {
           this.mapSrv.renderData(res);
         },
         (err) => {
-          throw new Error(err);
+          throw new Error(err.toString());
         },
       );
   }
@@ -214,7 +214,7 @@ export class OverpassService {
           // TODO this.processSrv.drawStopAreas();
         },
         (err) => {
-          throw new Error(err);
+          throw new Error(err.toString());
         });
   }
 
@@ -265,7 +265,7 @@ export class OverpassService {
           this.processSrv.downloadedMissingMembers(rel, true, true);
         },
         (err) => {
-          throw new Error(err);
+          throw new Error(err.toString());
         });
   }
 
