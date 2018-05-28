@@ -132,6 +132,7 @@ export class ProcessService {
    *
    * @param response
    */
+  // FIXME? Should not be named as processnoderesponse as this is also called after overpass request for missing members of route is made
   public processNodeResponse(response: any): void {
     for (const element of response.elements) {
       if (!this.storageSrv.elementsMap.has(element.id)) {
@@ -181,7 +182,10 @@ export class ProcessService {
       if (!this.storageSrv.elementsMap.has(element.id)) {
         console.log('LOG (processing s.) New element added:', element);
         this.storageSrv.elementsMap.set(element.id, element);
-        this.storageSrv.elementsDownloaded.add(element.id);
+        // FIXME? why are we adding each relation fetched from response to element downloaded?
+        // elementsDownloaded  for stops/platforms: all parent routes  were downloaded
+        // for route: all child members were downloaded
+        // this.storageSrv.elementsDownloaded.add(element.id);
         if (element.tags.route_master) {
           this.storageSrv.listOfMasters.push(element);
           masterRoutes.push(element);
@@ -191,10 +195,6 @@ export class ProcessService {
       }
     });
 
-    this.dbSrv.addRouteMasters(masterRoutes).catch((err) => {
-      console.log('LOG (process s. )Error in adding some master routes to IDB');
-      console.log(err);
-    });
     console.log(
       'LOG (processing s.) Total # of master rel. (route_master)',
       this.storageSrv.listOfMasters.length,
@@ -207,8 +207,10 @@ export class ProcessService {
         idsHaveMaster.push(member['ref']);
       }
     });
+    this.storageSrv.idsHaveMaster.add(idsHaveMaster);
+    // FIXME , console.log wrong? these are not masters but rather routes who have masters
     this.refreshMasters.emit({ idsHaveMaster });
-    console.log('LOG (processing s.) Master IDs are:', idsHaveMaster);
+    console.log('LOG (processing s.) Routes IDs which have Master are:', idsHaveMaster);
   }
 
   /**

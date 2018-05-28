@@ -48,6 +48,7 @@ export class OverpassService {
         /*Gets the data from IDB and processes it (updates listOfStops etc.)*/
         console.log('LOG (overpass s.) Platform with id : ' + featureId + ' in IDB');
         this.getPlatformDataIDB(featureId);
+
       } else if (this.storageSrv.completelyDownloadedStopsIDB.has(featureId)) {
         /*Gets the data from IDB and processes it (updates listOfStops etc.)*/
         console.log('LOG (overpass s.) Stop with id : ' + featureId + ' in IDB');
@@ -62,26 +63,28 @@ export class OverpassService {
         }
       }
 
-      // if (!goodConnectionMode) {
-      //   for (let i = 0; i < 5; i++) {
-      //     let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
-      //     if (!this.storageSrv.completelyDownloadedNodesIDB.has(randomKey)) {
-      //       // gets the data from overpass query and adds to IDB
-      //         console.log('Downloading' + randomKey + 'in background in slow connection mode');
-      //         this.getNodeDataOverpass(randomKey, false);
-      //     }
-      //   }
-      // }
-      // else {
-      //     for (let i = 0; i < 25; i++) {
-      //       let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
-      //       if (!this.storageSrv.completelyDownloadedNodesIDB.has(randomKey)) {
-      //         // gets the data from overpass query and adds to IDB
-      //         console.log('Downloading' + randomKey + 'in background in fast connection mode');
-      //         this.getNodeDataOverpass(randomKey, false);
-      //       }
-      //     }
-      // }
+      if (!goodConnectionMode) {
+        for (let i = 0; i < 5; i++) {
+          let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
+          if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
+            !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
+            // gets the data from overpass query and adds to IDB
+              console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in slow connection mode');
+              this.getNodeDataOverpass(randomKey, false);
+          }
+        }
+      }
+      else {
+          for (let i = 0; i < 25; i++) {
+            let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
+            if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
+              !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
+            // gets the data from overpass query and adds to IDB
+              console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in fast connection mode');
+              this.getNodeDataOverpass(randomKey, false);
+            }
+          }
+      }
     });
 
     /**
@@ -145,31 +148,34 @@ export class OverpassService {
       // do not query masters if all relations are already known
       return;
     }
-
-    const routesNotInIDB:  Array<number> = [];
-    const routesInIDB:  Array<number> = [];
+    const routesQueriedInIDB:  Array<number> = [];
+    const routesNotQueriedNotInIDB:  Array<number> = [];
 
     idsArr.forEach((id) => {
       if (this.storageSrv.queriedRoutesForMastersIDB.has(id)) {
-        routesInIDB.push(id);
+        routesQueriedInIDB.push(id);
       }
       else {
-        routesNotInIDB.push(id);
+        routesNotQueriedNotInIDB.push(id);
       }
     });
-    if (routesInIDB.length !== 0) {
-      this.dbSrv.getRoutesForMasterRoute(routesInIDB).then((res) => {
-        this.markQueriedRelations(routesInIDB);
+
+    console.log('LOG (db s.) Total Routes which were not queried: ' + idsArr + ' out of which routes ' +
+    'present in IDB (already queried an all parent route masters present in IDB) :' + routesQueriedInIDB + ' , not in IDB ' +
+      'and not queried : ' + routesNotQueriedNotInIDB);
+    if (routesQueriedInIDB.length !== 0) {
+      this.dbSrv.getRoutesForMasterRoute(routesQueriedInIDB).then((res) => {
+        this.markQueriedRelations(routesQueriedInIDB);
         this.processSrv.processMastersResponse(res);
       }).catch((err) => {
-        console.log('LOG (overpass s.)Error in fetching routes from IDB');
+        console.log('LOG (overpass s.) Error in fetching routes from IDB');
         console.log(err);
       });
     }
     let requestBody: string = `
             [out:json][timeout:25][bbox:{{bbox}}];
             (
-              rel(id:${routesNotInIDB.join(', ')});
+              rel(id:${routesNotQueriedNotInIDB.join(', ')});
               <<;
             );
             out meta;`;
@@ -187,13 +193,21 @@ export class OverpassService {
               'No response from API. Try to select other master relation again please.',
             );
           }
-          this.markQueriedRelations(idsArr);
-          this.dbSrv.addToQueriedRoutesForMasters(idsArr).then(() => {
-            this.storageSrv.queriedRoutesForMastersIDB.add(idsArr);
-            console.log('LOG (overpass s.) Added routes to queried routes in IDB');
-            console.log(idsArr);
-          });
+          console.log('LOG (overpass s.) Response for route_master from Overpass API');
+          console.log(res);
+          this.markQueriedRelations(routesNotQueriedNotInIDB);
           this.processSrv.processMastersResponse(res);
+          // // FIXME should only mark as queried in IDB after adding response to IDB
+          // this.dbSrv.addToQueriedRoutesForMasters(idsArr).then(() => {
+          //   this.storageSrv.queriedRoutesForMastersIDB.add(idsArr);
+          //   console.log('LOG (overpass s.) Marked routes as queried routes in IDB');
+          //   console.log(idsArr);
+          // });
+
+          this.dbSrv.addResponseToIDB(res, 'route_master').catch((err) => {
+            console.log('LOG (overpass s.) Error in adding route_master related response to IDB');
+            console.log(err);
+          });
         },
         (err) => {
           throw new Error(err);
@@ -280,7 +294,7 @@ export class OverpassService {
             }
           }
           if (res['elements'][0]) {
-            this.dbSrv.addResponseToIDB(res, featureId, res['elements'][0].tags.public_transport).catch((err) => {
+            this.dbSrv.addResponseToIDB(res, res['elements'][0].tags.public_transport, featureId).catch((err) => {
               console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
                 ' in adding related metadata to IDB for route with id : ' + featureId);
               console.log(err);
@@ -329,7 +343,7 @@ export class OverpassService {
           // FIXME save all requests...
           // this.storageSrv.localGeojsonStorage = transformedGeojson;
           this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
-          this.dbSrv.addResponseToIDB(res, rel.id, 'route').catch((err) => {
+          this.dbSrv.addResponseToIDB(res, 'route', rel.id).catch((err) => {
             console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
               ' in adding related metadata to IDB for route with id : ' + rel.id);
           });
@@ -647,6 +661,10 @@ export class OverpassService {
     this.dbSrv.getRoutesForStop(stopId).then((relations: Array<object>[]) => {
       if (relations.length === 0) {
         console.log('LOG (overpass s.) No routes found for stop with id ' + stopId + 'in IDB');
+      } else {
+        console.log('LOG (overpass s.) Fetched routes : [ ' + relations.map((relation) => {
+          return relation['id'];
+        }) + ' ] for stop with ID: ' + stopId + ' from IDB');
       }
       for(let i = 0; i < relations.length; i++) {
         if (!this.storageSrv.elementsMap.has(relations[i]['id'])) {
@@ -662,6 +680,8 @@ export class OverpassService {
         }
         this.storageSrv.logStats();
       }
+      this.storageSrv.elementsDownloaded.add(stopId);
+      this.getRouteMasters(10);
     }).catch((err) => {
       console.log('LOG (overpass s.) Could not fetch ids of relations for a stop with id :' + stopId);
       console.log(err);
@@ -671,6 +691,10 @@ export class OverpassService {
     this.dbSrv.getRoutesForPlatform(platformId).then((relations: Array<object>[]) => {
       if (relations.length === 0) {
         console.log('LOG (overpass s.) No routes found for platform with id ' + platformId + 'in IDB');
+      } else {
+        console.log('LOG (overpass s.) Fetched routes : [ ' + relations.map((relation) => {
+          return relation['id'];
+        }) + ' ] for platform with ID: ' + platformId + ' from IDB');
       }
       for(let i = 0; i < relations.length; i++) {
         if (!this.storageSrv.elementsMap.has(relations[i]['id'])) {
@@ -686,6 +710,8 @@ export class OverpassService {
         }
         this.storageSrv.logStats();
       }
+      this.storageSrv.elementsDownloaded.add(platformId);
+      this.getRouteMasters(10);
     }).catch((err) => {
       console.log('LOG (overpass s.) Could not fetch ids of relations for a platform with id :' + platformId);
       console.log(err);

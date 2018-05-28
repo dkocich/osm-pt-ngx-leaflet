@@ -79,7 +79,8 @@ export class RouteBrowserComponent implements OnInit {
   }
 
   private hasMaster(relId: number): boolean {
-    return this.storageSrv.idsHaveMaster.has(relId);
+    // return this.storageSrv.idsHaveMaster.has(relId);
+    return this.idsHaveMaster.has(relId);
   }
 
   private isDownloaded(relId: number): boolean {

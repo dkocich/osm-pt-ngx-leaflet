@@ -9,7 +9,7 @@ export class Db extends Dexie {
   PtPlatforms: Dexie.Table<IPtStop, number>;
   PtRoutes: Dexie.Table<IPtRelationNew, number>;
   PtRouteMasters: Dexie.Table<IPtRouteMasterNew, number>;
-  PtWays: Dexie.Table<IPtWay, number>;
+  OSMWays: Dexie.Table<IPtWay, number>;
   MetaData: Dexie.Table<IMetadata, number>;
   constructor() {
     super('Database');
@@ -18,7 +18,7 @@ export class Db extends Dexie {
       PtPlatforms: 'id',
       PtRoutes: 'id',
       PtRouteMasters: 'id',
-      PtWays: 'id',
+      OSMWays: 'id',
       MetaData: 'id, isCompletelyDownloaded, type',
     });
   }

@@ -61,7 +61,7 @@
         </div>
       </ng-container>
       <ng-container *ngFor="let rel of listOfRelations; trackBy: trackByFn;">
-        <ng-container *ngIf="!hasMaster(rel.id)">
+        <ng-container >
           <div id="{{rel.id}}" *ngIf="visibleInMap(rel.id)==='visible' || visibleInMap(rel.id)==='warning'">
             <span class="explore" (click)="exploreRelation($event, rel)" (mouseover)="exploreAvailableRelation($event, rel)"
                   [class.selected]="currentElement && isSelected(rel.id)">
@@ -85,9 +85,12 @@
                 <i *ngIf="!masterWasChecked(rel.id)"
                    class="fa fa-question-circle" aria-hidden="true" container="body"
                    tooltip="{{ 'Existence of route_master relation of a route was not checked yet' | translate }}"></i>
-                <i *ngIf="masterWasChecked(rel.id)"
+                <i *ngIf="masterWasChecked(rel.id) && !hasMaster(rel.id)"
                    class="fa fa-times-circle" aria-hidden="true" container="body"
                    tooltip="{{ 'noM' | translate }}"></i>
+                <i *ngIf="masterWasChecked(rel.id) && hasMaster(rel.id)"
+                   class="fa fa-check-circle" aria-hidden="true" container="body"
+                   tooltip="{{ 'Route has master relation' | translate }}"></i>
               </span>
               <span *ngIf="visibleInMap(rel.id)==='warning'" class="text-warning">!!!</span>
               {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}

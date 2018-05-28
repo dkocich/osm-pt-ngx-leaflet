@@ -13,14 +13,11 @@ export class DbService {
   getCompletelyDownloadedElementsId(): any {
     this.db.MetaData.where('isCompletelyDownloaded').equals(1).each((element) => {
       switch (element.type) {
-        case 'position' :
+        case 'platform' :
           this.storageSrv.completelyDownloadedPlatformsIDB.add(element.id);
           break;
         case 'stop_position':
           this.storageSrv.completelyDownloadedStopsIDB.add(element.id);
-          break;
-        case 'route_master' :
-          this.storageSrv.completelyDownloadedRouteMastersIDB.add(element.id);
           break;
         case 'route' :
           this.storageSrv.completelyDownloadedRoutesIDB.add(element.id);
@@ -32,8 +29,7 @@ export class DbService {
       console.log(this.storageSrv.completelyDownloadedPlatformsIDB);
       console.log('(db s.) ids of completely downloaded  routes in IDB');
       console.log(this.storageSrv.completelyDownloadedRoutesIDB);
-      console.log('(db s.) ids of completely downloaded  route master in IDB');
-      console.log(this.storageSrv.completelyDownloadedRouteMastersIDB);
+
     }).catch((err) => {
       console.log('LOG (db s.) Error in fetching ids of completely downloaded elements in IDB');
       console.log(err);
@@ -47,68 +43,23 @@ export class DbService {
   getIdsQueriedRoutesForMaster(): any {
    this.db.MetaData.where('type').equals('route').each((route) => {
      if (route.isQueriedForMasters === 1) {
-       this.storageSrv.queriedMasters.add(route.id);
+       this.storageSrv.queriedRoutesForMastersIDB.add(route.id);
      }
    }).then(() => {
-     console.log('LOG (db s.) ids of routes for which masters have been queried and added to IDB');
-     console.log(this.storageSrv.queriedMasters);
+     console.log('LOG (db s.) IDs of routes for which masters have been queried and added to IDB');
+     console.log(this.storageSrv.queriedRoutesForMastersIDB);
    }).catch((err) => {
-     console.log('LOG (db s.) Error in fetching ids of routes for which masters have been queried and added to IDB');
+     console.log('LOG (db s.) Error in fetching IDs of routes for which masters have been queried and added to IDB');
      console.log(err);
    });
   }
-  /***
-   * Adds route masters and related metadata to IDB
-   * @param masterRoutes
-   * @returns {any}
-   */
-  addRouteMasters(masterRoutes: any): any {
-    return this.db.transaction('rw', this.db.PtRouteMasters, this.db.MetaData, () => {
-
-       this.db.PtRouteMasters.bulkPut(masterRoutes).then(() => {
-         console.log('LOG (db s.) Added route masters with id [ ' + masterRoutes.map((masterRoute) => {
-           return masterRoute.id;
-         }).join(',') + ' ] to IDB');
-       }).catch((err) => {
-           console.log('LOG (db s.) Error in adding route masters with id [ ' + masterRoutes.map((masterRoute) => {
-             return masterRoute.id;
-           }).join(',') + ' ] to IDB, all previous bulkPut addition of route masters will be rolled back');
-           throw err;
-         });
-
-    }).then(() => {
-       console.log('(db s.) Added route masters with id [ ' + masterRoutes.map((masterRoute) => {
-        return masterRoute.id;
-      }).join(',') + ' ] to IDB');
-       let metadataArr = [];
-       for (let masterRoute of masterRoutes) {
-        metadataArr.push({
-          id : masterRoute.id,
-          timestamp: Math.floor(Date.now() / 1000),
-          type : 'route_master',
-        });
-      }
-       return  this.db.MetaData.bulkAdd(metadataArr).then(() => {
-       console.log('LOG (db s.) Added metadata for route masters with id ' + masterRoutes.map((masterRoute) => {
-           return masterRoute.id;
-         }).join(',') + ' to IDB');
-       }).catch((err) => {
-         console.log('LOG (db s.) Error in adding metadata for route masters with id ' + masterRoutes.map((masterRoute) => {
-           return masterRoute.id;
-         }).join(',') + ' to IDB');
-         throw err;
-       });
-
-    });
-  }
-
   /***
    * Fetches routes for which the given stop is a member from IDB
    * @param {number} stopId
    * @returns {any}
    */
   getRoutesForStop(stopId: number): any {
-    return this.db.transaction('rw', this.db.MetaData, this.db.PtRoutes, () => {
+    return this.db.transaction('r', this.db.MetaData, this.db.PtRoutes, () => {
       let filteredRoutes = [];
       return this.db.MetaData.get(stopId).then((data) => {
         if (data) {
@@ -134,7 +85,7 @@ export class DbService {
    */
 
   getRoutesForPlatform(platformId: number): any {
-    return this.db.transaction('rw', this.db.MetaData, this.db.PtRoutes, () => {
+    return this.db.transaction('r', this.db.MetaData, this.db.PtRoutes, () => {
       let filteredRoutes = [];
       return this.db.MetaData.get(platformId).then((data) => {
         if (data) {
@@ -153,7 +104,7 @@ export class DbService {
     });
   }
   /***
-   * Routes for which parent masters have been fetched from overpass and added to IDB
+   * Markes Routes for which parent masters have been fetched from overpass and added to IDB
    * @param {Array<number>} routeIds
    * @returns {any}
    */
@@ -173,7 +124,7 @@ export class DbService {
    * @param {string} type
    * @returns {any}
    */
-  public addResponseToIDB(response: any, id: any, type: string): Promise<any> {
+  public addResponseToIDB(response: any, type: string , id?: any): Promise<any> {
     let routeIds = [];
     let routes = [];
     let platforms = [];
@@ -226,12 +177,12 @@ export class DbService {
       }
     }
     return this.db.transaction('rw', [this.db.PtRoutes, this.db.PtStops,
-      this.db.PtPlatforms, this.db.PtWays, this.db.PtRouteMasters, this.db.MetaData], () => {
+      this.db.PtPlatforms, this.db.OSMWays, this.db.PtRouteMasters, this.db.MetaData], () => {
       if (platforms.length !== 0) {
         this.db.PtPlatforms.bulkPut(platforms).then(() => {
           console.log('LOG (db s.) Added platforms : [ ' + platforms.map((platform) => {
             return platform.id;
-          }).join(',') + ' ] to IDB for Overpass API \'s response of :' + id);
+          }).join(',') + ' ] to IDB for Overpass API \'s response');
         }).catch((err) => {
           console.log('LOG (db s.) Error in adding platforms to IDB, all previous ' +
             'operations for this particular transaction (not metadata) will be rolled back');
@@ -244,7 +195,7 @@ export class DbService {
         this.db.PtStops.bulkPut(stops).then(() => {
           console.log('LOG (db s.) Added stops : [ ' + stops.map((stop) => {
             return stop.id;
-          }).join(',') + ' ] to IDB for overpass API \'s response of : ' + id);
+          }).join(',') + ' ] to IDB for Overpass API \'s response');
         }).catch((err) => {
           console.log('LOG (db s.) Error in adding stops to IDB, all previous ' +
             'operations for this particular transaction (not metadata) will be rolled back');
@@ -253,10 +204,10 @@ export class DbService {
         });
       }
       if (ways.length !== 0) {
-        this.db.PtWays.bulkPut(ways).then(() => {
+        this.db.OSMWays.bulkPut(ways).then(() => {
           console.log('LOG (db s.) Added ways : [ ' + ways.map((way) => {
             return way.id;
-          }).join(',') + ' ] to IDB for overpass API \'s Overpass API \'s response of : ' + id);
+          }).join(',') + ' ] to IDB for Overpass API \'s response');
         }).catch((err) => {
           console.log('LOG (db s.) Error in adding ways to IDB, all previous ' +
             ' operations for this particular transaction (not metadata) will be rolled back');
@@ -268,7 +219,7 @@ export class DbService {
         this.db.PtRouteMasters.bulkPut(routeMasters).then(() => {
           console.log('LOG (db s.) Added route masters : [ ' + routeMasters.map((routeMaster) => {
             return routeMaster.id;
-          }).join(',') + ' ] to IDB for overpass API \'s Overpass API \'s response of :' + id);
+          }).join(',') + ' ] to IDB for Overpass API response');
         }).catch((err) => {
           console.log('LOG (db s.) Error in adding route masters to IDB, all previous ' +
             ' operations for this particular transaction (not metadata) will be rolled back');
@@ -280,7 +231,7 @@ export class DbService {
         this.db.PtRoutes.bulkPut(routes).then(() => {
           console.log('LOG (db s.) Added routes : [ ' + routes.map((route) => {
             return route.id;
-          }).join(',') + ' ] to IDB for Overpass API \'s response of : ' + id);
+          }).join(',') + ' ] to IDB for Overpass API \'s response');
         }).catch((err) => {
           console.log('LOG (db s.) Error in adding routes to IDB, all previous ' +
             ' operations for this particular transaction (not metadata) will be rolled back');
@@ -290,10 +241,18 @@ export class DbService {
       }
 
     }).then(() => {
-      console.log('LOG (db s.) Successfully added Overpass API \'s response for id: ' + id + ' to IDB (not metadata)');
+      if (id) {
+        console.log('LOG (db s.) Successfully added Overpass API \'s response for ' + type + ' with ID ' + id + ' to IDB (not metadata)');
+      } else {
+        console.log('LOG (db s.) Successfully added Overpass API \'s response for ' + type + ' to IDB (not metadata)');
+      }
       return this.addMetaData(routeIds, id, type, stopsMetaData, platformsMetaData, routesMetaData,
         routeMastersMetaData, waysMetaData).then(() => {
-        console.log('LOG (db s.) Successfully added metadata for Overpass API \'s response for id: ' + id + ' to IDB');
+        if (id) {
+          console.log('LOG (db s.) Successfully added metadata Overpass API \'s response for ' + type + ' with ID ' + id + ' to IDB ');
+        } else {
+          console.log('LOG (db s.) Successfully added metadata Overpass API \'s response for ' + type + ' to IDB ');
+        }
         switch (type) {
           case 'stop_position':
             this.storageSrv.completelyDownloadedStopsIDB.add(id);
@@ -304,8 +263,6 @@ export class DbService {
           case 'route':
             this.storageSrv.completelyDownloadedRoutesIDB.add(id);
             break;
-          case 'route_master':
-            this.storageSrv.completelyDownloadedRouteMastersIDB.add(id);
         }
       }).catch((err) => {
         console.log('LOG (db s.) Error in adding metadata, all previous metadata addition for' +
@@ -320,12 +277,12 @@ export class DbService {
   }
 
   /***
-   * Fetches nodes for a given route from IDB
+   * Fetches stops/platform members for a given route from IDB
    * @param {number} relId
    * @returns {any}
    */
   public getMembersForRoute(relId: number): any {
-    return this.db.transaction('rw', this.db.PtStops, this.db.PtRoutes, this.db.PtPlatforms, () => {
+    return this.db.transaction('r', this.db.PtStops, this.db.PtRoutes, this.db.PtPlatforms, () => {
       let memberIds = [];
       let stops = [];
       let platforms = [];
@@ -333,22 +290,23 @@ export class DbService {
         for (let member of route.members) {
           memberIds.push(member['ref']);
         }
-        return this.db.transaction('rw', this.db.PtStops, this.db.PtRoutes, this.db.PtPlatforms, () => {
+        return this.db.transaction('r', this.db.PtStops, this.db.PtRoutes, this.db.PtPlatforms, () => {
           this.db.PtStops.where('id').anyOf(memberIds).each((stop) => {
             stops.push(stop);
           }).then(() => {
-            console.log('Matching stops from IDB : ' + stops.map((stop) => {
+            console.log('LOG (db s.) Fetched stops from IDB : [ ' + stops.map((stop) => {
               return stop.id;
-            }).join(' , '));
+            }).join(' , ') + ' ] for route with ID : ' + relId);
           });
           this.db.PtPlatforms.where('id').anyOf(memberIds).each((platform) => {
             platforms.push(platform);
           }).then(() => {
-            console.log('Matching platforms from IDB : ' + platforms.map((platform) => {
+            console.log('LOG (db s.) Fetched platforms from IDB : [ ' + platforms.map((platform) => {
               return platform.id;
-            }).join(' , '));
+            }).join(' , ') + ' ] for route with ID : ' + relId);
           });
         }).then(() => {
+          // In order to have the same format as Overpass API response and reuse the functions
           let object = {
             elements: stops.concat(platforms),
           };
@@ -387,7 +345,7 @@ export class DbService {
    */
   deleteExpiredDataIDB(): any {
     return this.db.transaction('rw', [this.db.PtStops, this.db.PtRoutes,
-      this.db.PtPlatforms, this.db.MetaData, this.db.PtWays, this.db.PtRouteMasters], () => {
+      this.db.PtPlatforms, this.db.MetaData, this.db.OSMWays, this.db.PtRouteMasters], () => {
 
       return this.db.MetaData.toCollection().modify((value, ref) => {
         if (Math.floor(Date.now() / 1000) - value['timestamp'] >= 50000) {
@@ -423,7 +381,7 @@ export class DbService {
 
           }
           if (value['type'] === 'way') {
-            return this.db.PtWays.where('id').equals(value.id).delete().then(() => {
+            return this.db.OSMWays.where('id').equals(value.id).delete().then(() => {
               console.log('LOG (db s.) Successfully deleted way with id ' + value.id + ' from IDB');
             }).catch((err) => {
               console.log('LOG (db s.) Error in deleting way with id ' + value.id + ' from IDB');
@@ -474,7 +432,7 @@ export class DbService {
               routeMastersMetaData: any, waysMetaData: any): any {
 
     return this.db.transaction('rw', [this.db.PtRoutes, this.db.PtStops,
-      this.db.PtPlatforms, this.db.PtWays, this.db.PtRouteMasters, this.db.MetaData], () => {
+      this.db.PtPlatforms, this.db.OSMWays, this.db.PtRouteMasters, this.db.MetaData], () => {
       if (type === 'stop_position') {
         for (let stop of stopsMetaData) {
           if (stop.id === id) {
@@ -501,7 +459,13 @@ export class DbService {
           }
         }
       }
-      return this.db.MetaData.bulkPut(platformsMetaData.concat(stopsMetaData, waysMetaData, routeMastersMetaData, routesMetaData));
+      if (type === 'route_master') {
+        for (let route of routesMetaData) {
+            route.isQueriedForMasters = 1;
+        }
+      }
+      return this.db.MetaData.bulkPut(platformsMetaData.concat(stopsMetaData, waysMetaData, routeMastersMetaData, routesMetaData,
+        platformsMetaData));
     });
   }
 }

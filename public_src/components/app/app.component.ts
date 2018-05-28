@@ -13,7 +13,6 @@ import { GeocodeService } from '../../services/geocode.service';
 import { MapService } from '../../services/map.service';
 import { ProcessService } from '../../services/process.service';
 import { DbService } from '../../services/db.service';
-import { StorageService } from '../../services/storage.service';
 
 import { AuthComponent } from '../auth/auth.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
@@ -47,7 +46,6 @@ export class AppComponent implements OnInit {
     private mapSrv: MapService,
     private processSrv: ProcessService,
     private dbSrv: DbService,
-    private storageSrv: StorageService,
   ) {
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());
@@ -56,44 +54,12 @@ export class AppComponent implements OnInit {
 
   public ngOnInit(): any {
     this.dbSrv.deleteExpiredDataIDB().then(() => {
-      console.log('Successfully checked and deleted expired items from IDB');
+      console.log('LOG (app component) Successfully checked and deleted old items from IDB');
     }).catch((err) => {
-      console.log('Error in deleting expired items from IDB');
+      console.log('LOG (app component) Error in deleting old items from IDB');
       console.log(err);
     });
     this.dbSrv.getCompletelyDownloadedElementsId();
-    // this.dbSrv.getIdsCompletelyDownloadedStops().then((keys) => {
-    //   this.storageSrv.completelyDownloadedStopsIDB  = new Set(keys.map((item) => item));
-    //   console.log('(app component) ids of completely downloaded  stops in IDB');
-    //   console.log(this.storageSrv.completelyDownloadedStopsIDB);
-    // }).catch((err) => {
-    //   console.log('Could not get ids of completely downloaded stops stored in IDB');
-    //   console.log(err);
-    // });
-    // this.dbSrv.getIdsCompletelyDownloadedPlatforms().then((keys) => {
-    //   this.storageSrv.completelyDownloadedPlatformsIDB  = new Set(keys.map((item) => item));
-    //   console.log('(app component) ids of completely downloaded  platforms in IDB');
-    //   console.log(this.storageSrv.completelyDownloadedPlatformsIDB);
-    // }).catch((err) => {
-    //   console.log('Could not get ids of completely downloaded platforms stored in IDB');
-    //   console.log(err);
-    // });
-    // this.dbSrv.getIdsCompletelyDownloadedRoutes().then((keys) => {
-    //   this.storageSrv.completelyDownloadedRoutesIDB  = new Set(keys.map((item) => item));
-    //   console.log('(app component) ids of completely downloaded  routes in IDB');
-    //   console.log(this.storageSrv.completelyDownloadedRoutesIDB);
-    // }).catch((err) => {
-    //   console.log('Could not get ids of completely downloaded routes stored in IDB');
-    //   console.log(err);
-    // });
-    // this.dbSrv.getIdsQueriedRoutesForMaster().then((keys) => {
-    //   this.storageSrv.getIdsQueriedRoutesForMaster  = new Set(keys.map((item) => item));
-    //   console.log('(app component) ids of completely downloaded  routes in IDB');
-    //   console.log(this.storageSrv.getIdsQueriedRoutesForMaster);
-    // }).catch((err) => {
-    //   console.log('Could not get ids of completely downloaded routes stored in IDB');
-    //   console.log(err);
-    // });
     this.dbSrv.getIdsQueriedRoutesForMaster();
 
     const map = L.map('map', {
