@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ViewContainerRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { AuthService } from './auth.service';
@@ -15,6 +15,8 @@ import { Utils } from '../core/utils.class';
 
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
+import { ToastrService } from 'ngx-toastr';
+import { SpinnerVisibilityService } from 'ng-http-loader/services/spinner-visibility.service';
 @Injectable()
 export class OverpassService {
   public changeset;
@@ -28,7 +30,10 @@ export class OverpassService {
     private mapSrv: MapService,
     private dbSrv: DbService,
     private ngRedux: NgRedux<IAppState>,
+    private toastr: ToastrService,
+    private spinner: SpinnerVisibilityService,
   ) {
+
     /**
      * @param data - string containing ID of clicked marker
      */
@@ -165,6 +170,7 @@ export class OverpassService {
       'and not queried : ' + routesNotQueriedNotInIDB);
     if (routesQueriedInIDB.length !== 0) {
       this.dbSrv.getRoutesForMasterRoute(routesQueriedInIDB).then((res) => {
+        this.toastr.success('Route Masters fetched from IDB');
         this.markQueriedRelations(routesQueriedInIDB);
         this.processSrv.processMastersResponse(res);
       }).catch((err) => {
@@ -264,8 +270,12 @@ export class OverpassService {
   /**
    * Downloads all data for currently selected node.
    * @param featureId
+   * @param process
    */
   private getNodeDataOverpass(featureId: number, process: boolean): void {
+    if (!process) {
+      this.spinner.show();
+    }
     let requestBody = `
       [out:json][timeout:25];
       (
@@ -286,12 +296,16 @@ export class OverpassService {
           if (process) {
             this.processSrv.processNodeResponse(res);
             this.getRouteMasters(10);
+            this.toastr.success('Node data downloaded for ' + featureId);
           } else {
+            this.toastr.success('Node data downloaded in background for ' + featureId);
             // Only add to elements map and not update listOfStops etc. when process is equal to false
             for (const element of res['elements']) {
               if (!this.storageSrv.elementsMap.has(element.id)) {
-                this.storageSrv.elementsMap.set(element.id, element); }
+                this.storageSrv.elementsMap.set(element.id, element);
+              }
             }
+            this.spinner.hide();
           }
           if (res['elements'][0]) {
             this.dbSrv.addResponseToIDB(res, res['elements'][0].tags.public_transport, featureId).catch((err) => {
@@ -302,6 +316,8 @@ export class OverpassService {
           }
         },
         (err) => {
+          console.log('ERROR in Overpass request');
+          this.toastr.error('Error in getting data from Overpass');
           throw new Error(err);
         });
   }
@@ -661,10 +677,15 @@ export class OverpassService {
     this.dbSrv.getRoutesForStop(stopId).then((relations: Array<object>[]) => {
       if (relations.length === 0) {
         console.log('LOG (overpass s.) No routes found for stop with id ' + stopId + 'in IDB');
+        this.toastr.success('No routes found for stop with id ' + stopId + 'in IDB');
       } else {
         console.log('LOG (overpass s.) Fetched routes : [ ' + relations.map((relation) => {
           return relation['id'];
         }) + ' ] for stop with ID: ' + stopId + ' from IDB');
+        this.toastr.success('Fetched routes : [ ' + relations.map((relation) => {
+          return relation['id'];
+        }) + ' ] for stop with ID: ' + stopId + ' from IDB');
+
       }
       for(let i = 0; i < relations.length; i++) {
         if (!this.storageSrv.elementsMap.has(relations[i]['id'])) {
@@ -690,9 +711,13 @@ export class OverpassService {
   public getPlatformDataIDB(platformId: number): any {
     this.dbSrv.getRoutesForPlatform(platformId).then((relations: Array<object>[]) => {
       if (relations.length === 0) {
+        this.toastr.success('No routes found for platform with id ' + platformId + 'in IDB');
         console.log('LOG (overpass s.) No routes found for platform with id ' + platformId + 'in IDB');
       } else {
         console.log('LOG (overpass s.) Fetched routes : [ ' + relations.map((relation) => {
+          return relation['id'];
+        }) + ' ] for platform with ID: ' + platformId + ' from IDB');
+        this.toastr.success('Fetched routes : [ ' + relations.map((relation) => {
           return relation['id'];
         }) + ' ] for platform with ID: ' + platformId + ' from IDB');
       }

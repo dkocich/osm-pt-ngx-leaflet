@@ -23,6 +23,7 @@ import {
   TooltipModule,
   TypeaheadModule,
 } from 'ngx-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
 
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2Piwik } from 'angulartics2/piwik';
@@ -116,6 +117,11 @@ const conditional_providers = [
     TypeaheadModule.forRoot(),
     RouterModule.forRoot(ROUTES),
     StoreModule,
+    ToastrModule.forRoot({
+      timeOut: 2000,
+      positionClass: 'toast-bottom-right',
+      maxOpened: 1,
+    }),
   ],
   providers: [
     ...conditional_providers,

@@ -15,6 +15,7 @@ import { IOverpassResponse } from '../core/overpassResponse.interface';
 
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class ProcessService {
@@ -36,6 +37,8 @@ export class ProcessService {
     private mapSrv: MapService,
     private storageSrv: StorageService,
     private dbSrv: DbService,
+    private toastr: ToastrService,
+
   ) {
     // this.mapSrv.popupBtnClick.subscribe(
     //     (data) => {
@@ -632,6 +635,7 @@ export class ProcessService {
   }
   public getRelationDataIDB(rel: any): any {
     this.dbSrv.getMembersForRoute(rel.id).then((res) => {
+      this.toastr.success('Members for route ' + rel + ' fetched from IDB');
       this.processNodeResponse(res);
       const transformedGeojson = this.mapSrv.osmtogeojson(res);
       this.storageSrv.localGeojsonStorage = transformedGeojson;
