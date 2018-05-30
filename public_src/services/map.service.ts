@@ -17,15 +17,15 @@ export class MapService {
   public bounds;
   public highlightStroke: any = undefined;
   public editingMode: boolean;
-  // public popupBtnClick: EventEmitter<any> = new EventEmitter();
   public markerClick: EventEmitter<any> = new EventEmitter();
+  public popUpClick: EventEmitter<any> = new EventEmitter();
   public markerEdit: EventEmitter<object> = new EventEmitter();
   public highlightTypeEmitter: EventEmitter<object> = new EventEmitter();
   public highlightType: string = 'Stops';
   public membersEditing: boolean;
   public markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
   public membersHighlightLayer: any = undefined;
-  private ptLayer: any;
+  public ptLayer: any;
   private highlightFill: any = undefined;
   private highlight: any = undefined;
   private markerFrom: any = undefined;
@@ -738,11 +738,14 @@ export class MapService {
    * Emits event when users clicks map marker.
    * @param feature
    */
-  private handleMarkerClick(feature: any): void {
+  public handleMarkerClick(feature: any): void {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     this.markerClick.emit(featureId);
     // explores leaflet element
     // this.popupBtnClick.emit([featureType, featureId]);
+  }
+  public handlePopUpClick(featureId: any): void {
+    this.popUpClick.emit(featureId);
   }
 
   /**

@@ -38,6 +38,7 @@ export class AppComponent implements OnInit {
   @ViewChild('helpModal') public helpModal: ModalDirective;
 
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<string>;
 
   constructor(
     public appActions: AppActions,

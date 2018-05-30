@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
@@ -6,7 +6,8 @@ import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 import { Observable } from 'rxjs';
-import { select } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from '../../store/model';
 
 @Component({
   providers: [],
@@ -17,7 +18,7 @@ import { select } from '@angular-redux/store';
   ],
   templateUrl: './route-browser.component.html',
 })
-export class RouteBrowserComponent implements OnInit {
+export class RouteBrowserComponent implements OnInit, OnDestroy {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   public currentElement;
@@ -26,9 +27,12 @@ export class RouteBrowserComponent implements OnInit {
   public listOfRelationsForStop: object[] = this.storageSrv.listOfRelationsForStop;
 
   public isRequesting: boolean;
-  public filteredView: boolean;
+  public filteredView: boolean = false;
   private idsHaveMaster = new Set();
   public membersEditing: boolean = false;
+  public isAdvancedSubscription: any;
+  public isAdvancedMode: any;
+  // @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
 
   constructor(
     private editSrv: EditService,
@@ -36,8 +40,18 @@ export class RouteBrowserComponent implements OnInit {
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
   ) {
-    //
+    this.isAdvancedSubscription = ngRedux.select<boolean>(['app', 'advancedExpMode']) // <- New
+      .subscribe(() => {
+        if (!(ngRedux.getState()['app']['advancedExpMode'])) {
+          this.filteredView = true;
+          this.isAdvancedMode = false;
+        } else {
+          this.isAdvancedMode = true;
+          this.filteredView = false;
+        }
+      });
   }
 
   public ngOnInit(): void {
@@ -189,5 +203,8 @@ export class RouteBrowserComponent implements OnInit {
    */
   private trackByFn(index: number, item: any): number {
     return item.id;
+  }
+  ngOnDestroy(): void {
+    this.isAdvancedSubscription.unsubscribe();
   }
 }

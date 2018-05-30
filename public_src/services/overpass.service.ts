@@ -8,6 +8,7 @@ import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 import { WarnService } from './warn.service';
+import { ErrorHighlightService } from './error-highlight.service';
 
 import { create } from 'xmlbuilder';
 import { LatLng } from 'leaflet';
@@ -15,6 +16,8 @@ import { LatLng } from 'leaflet';
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { IAreaRef } from '../core/areaRef.interface';
 import { Utils } from '../core/utils.class';
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from '../store/model';
 
 @Injectable()
 export class OverpassService {
@@ -30,13 +33,15 @@ export class OverpassService {
     private storageSrv: StorageService,
     private mapSrv: MapService,
     private warnSrv: WarnService,
+    private errorHighlightSrv: ErrorHighlightService,
+    private ngRedux: NgRedux<IAppState>,
   ) {
     /**
      * @param data - string containing ID of clicked marker
      */
     this.mapSrv.markerClick.subscribe((data) => {
       const featureId = Number(data);
-
+     // TODO Should be moved to a separate service as not related to overpass?
       if (this.storageSrv.elementsMap.has(featureId)) {
         this.processSrv.exploreStop(
           this.storageSrv.elementsMap.get(featureId),
@@ -84,6 +89,9 @@ export class OverpassService {
           console.log('LOG (overpass s.)', res);
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
+          if (!(this.ngRedux.getState()['app']['errorCorrectionMode'] !== 'missing-tag-name')) {
+            this.errorHighlightSrv.missingTagError('name');
+          }
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
@@ -245,6 +253,7 @@ export class OverpassService {
           this.getRouteMasters(10);
           // TODO this.processSrv.drawStopAreas();
           this.warnSrv.showSuccess();
+          this.processSrv.filterRelationsByStop(this.storageSrv.elementsMap.get(featureId));
         },
         (err) => {
           this.warnSrv.showError();
