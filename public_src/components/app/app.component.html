@@ -36,7 +36,10 @@
   <toolbar></toolbar>
 </div>
 
-<div id="sidebar">
+<div id="sidebar"  >
+  <div *ngIf="!advancedExpMode" >
+          <beginner-main-browser></beginner-main-browser>
+  <div *ngIf="advancedExpMode">
   <accordion>
     <accordion-group #a1 [isOpen]="false">
       <div accordion-heading class="text-center text-uppercase">
@@ -71,6 +74,7 @@
       <stop-browser></stop-browser>
     </accordion-group>
   </accordion>
+  </div>
 </div>
 
 <div class="modal fade" bsModal #helpModal="bs-modal" [config]="{backdrop: 'static'}"

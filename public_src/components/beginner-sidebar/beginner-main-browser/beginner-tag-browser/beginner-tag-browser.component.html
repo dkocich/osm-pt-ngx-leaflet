@@ -1,6 +1,5 @@
-<div class="panel-group">
-  <div class="panel panel-heading panel-default">
-    <h4 class="text-center text-danger" *ngIf="!currentElement">{{ 'Please select a feature to browse tags.' | translate }}</h4>
+<h4 class="text-center text-danger" *ngIf="!currentElement">{{ 'Please select a feature to browse tags.' | translate }}</h4>
+<button (click)="showRouteBrowser()">Routes</button>
     <div *ngIf="currentElement" class="medium">
       <div class="text-center" *ngIf="(editing$ | async) && (currentElement.tags.type === 'route_master' ||
                  ['platform', 'stop_position', 'station'].indexOf(currentElement.tags.public_transport) > -1)">
@@ -70,8 +69,7 @@
         </button>
       </div>
     </div>
-  </div>
-  <div *ngIf="currentElement" class="content panel panel-body panel-default">
+  <div *ngIf="currentElement" >
     <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
       <tbody>
       <tr *ngFor="let tag of currentElement['tags'] | keys;">
@@ -85,7 +83,7 @@
           <input type="text" *ngIf="editing$ | async" value="{{tag.value}}" data-type="value"
                  (blur)="createChange('change tag', tag.key, $event)" >
         </td>
-        <td *ngIf="editing$ | async">
+        <td *ngIf="(editing$ | async)">
           <button class="btn btn-sm btn-danger fa fa-minus"
                   aria-hidden="true" container="body"
                   tooltip="{{ 'Remove tag' | translate }}"
@@ -125,4 +123,4 @@
       </tbody>
     </table>
   </div>
-</div>
+

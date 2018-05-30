@@ -30,7 +30,7 @@ import { AppActions } from '../../store/app/actions';
 export class AppComponent implements OnInit {
   public spinkit = Spinkit;
   public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
-
+  public advancedExpMode: boolean = false;
   @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
   @ViewChild(AuthComponent) public authComponent: AuthComponent;
   @ViewChild('helpModal') public helpModal: ModalDirective;
@@ -48,6 +48,7 @@ export class AppComponent implements OnInit {
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());
     }
+    this.advancedExpMode = ngRedux.getState()['app']['advancedExpMode'];
   }
 
   public ngOnInit(): any {

@@ -212,6 +212,7 @@ export class OverpassService {
           this.processSrv.processNodeResponse(res);
           this.getRouteMasters(10);
           // TODO this.processSrv.drawStopAreas();
+          this.processSrv.filterRelationsByStop(this.storageSrv.elementsMap.get(featureId));
         },
         (err) => {
           throw new Error(err.toString());

@@ -1,0 +1,12 @@
+<div class="panel panel-default" style="height: 100%; border:0; margin:0;" xmlns="http://www.w3.org/1999/html">
+  <div class="panel-heading">
+    <h3 class="panel-title"></h3>
+    <button *ngIf="(beginnerView === 'route')" (click)="back()" id="back"> <i  class="fa fa-chevron-left" aria-hidden="true" ></i></button>
+  </div>
+  <div *ngIf="(beginnerView === 'tag')" class="panel-body">
+    <beginner-tag-browser ></beginner-tag-browser>
+  </div>
+  <div *ngIf="(beginnerView === 'route')" class="panel-body">
+    <beginner-route-browser></beginner-route-browser>
+  </div>
+</div>

@@ -40,6 +40,9 @@ import { TagBrowserComponent } from './components/sidebar/tag-browser.component'
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import { BeginnerTagBrowserComponent } from './components/beginner-sidebar/beginner-main-browser/beginner-tag-browser/beginner-tag-browser.component';
+import { BeginnerMainBrowserComponent } from './components/beginner-sidebar/beginner-main-browser/beginner-main-browser.component';
+import { BeginnerRouteBrowserComponent } from './components/beginner-sidebar/beginner-main-browser/beginner-route-browser/beginner-route-browser.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
@@ -49,6 +52,7 @@ import { MapService } from './services/map.service';
 import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
 import { StorageService } from './services/storage.service';
+import { SidebarService } from './services/sidebar.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -88,6 +92,9 @@ const conditional_providers = [
     ToolbarComponent,
     TransporterComponent,
     SettingsComponent,
+    BeginnerTagBrowserComponent,
+    BeginnerMainBrowserComponent,
+    BeginnerRouteBrowserComponent,
 
     KeysPipe,
   ],
@@ -127,6 +134,7 @@ const conditional_providers = [
     OverpassService,
     ProcessService,
     StorageService,
+    SidebarService,
 
     KeysPipe,
 
