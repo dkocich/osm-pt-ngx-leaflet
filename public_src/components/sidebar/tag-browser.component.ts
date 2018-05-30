@@ -12,9 +12,11 @@ import { Observable } from 'rxjs';
 import { EditService } from '../../services/edit.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
+import { ErrorHighlightService } from '../../services/error-highlight.service';
 
 import { IOsmElement } from '../../core/osmElement.interface';
 import { PtTags } from '../../core/ptTags.class';
+import { AppActions } from '../../store/app/actions';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -33,17 +35,22 @@ export class TagBrowserComponent implements OnInit {
   public expectedKeys = PtTags.expectedKeys;
   public expectedValues = PtTags.expectedValues;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
 
   constructor(
     private cd: ChangeDetectorRef,
     private editSrv: EditService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    private appActions: AppActions,
+    private errorHighlightSrv: ErrorHighlightService,
   ) {
     //
   }
 
   public ngOnInit(): void {
+    this.currentElement = this.storageSrv.currentElement;
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
       if (data === 'tag') {
         console.log(
@@ -182,5 +189,20 @@ export class TagBrowserComponent implements OnInit {
 
   private valueChange($event: any): void {
     console.log('LOG (tag-browser)', $event);
+  }
+
+  private save(): any {
+    this.tagKey = 'name';
+    this.createChange('add tag');
+    this.appActions.actSetBeginnerView('main-menu');
+    this.errorHighlightSrv.removeCurrentlyClickedPopUp();
+  }
+
+  private cancel(): any {
+    this.appActions.actSetBeginnerView('main-menu');
+  }
+
+  private back(): any {
+    this.appActions.actSetBeginnerView('element-selected');
   }
 }

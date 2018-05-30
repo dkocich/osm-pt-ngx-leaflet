@@ -67,6 +67,21 @@ export class ProcessService {
         this.refreshTagView(element);
       },
     );
+    this.mapSrv.popUpClick.subscribe(
+      /**
+       * @param data - string containing ID of clicked marker
+       */
+      (data) => {
+        const featureId = Number(data);
+        const element = this.getElementById(featureId);
+        if (!element) {
+          alert(
+            'Problem occurred - clicked element was not found?! Select different element please.',
+          );
+        }
+        console.log('LOG (processing s.) Selected element is ', element);
+        this.refreshTagView(element);
+      });
   }
 
   /**
