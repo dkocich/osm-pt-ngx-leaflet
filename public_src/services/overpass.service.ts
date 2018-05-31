@@ -9,6 +9,7 @@ import { StorageService } from './storage.service';
 
 import { create } from 'xmlbuilder';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { Utils } from '../core/utils.class';
@@ -17,7 +18,8 @@ import { Utils } from '../core/utils.class';
 export class OverpassService {
   public changeset;
   private changeset_id: string;
-
+  private successMessage = 'Data fetched successfully';
+  private errorMessage = 'Error in fetching data';
   constructor(
     private authSrv: AuthService,
     private httpClient: HttpClient,
@@ -25,6 +27,7 @@ export class OverpassService {
     private storageSrv: StorageService,
     private mapSrv: MapService,
     private toastrSrv: ToastrService,
+    private translateSrv: TranslateService,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -62,6 +65,14 @@ export class OverpassService {
       const missingElements = data['missingElements'];
       this.getRelationData(rel, missingElements);
     });
+
+    /***
+     * Listens to language change event and translates error and success messages
+     */
+    this.translateSrv.onLangChange.subscribe((event: TranslationChangeEvent) => {
+    this.successMessage = event.translations[this.successMessage];
+    this.errorMessage = event.translations[this.errorMessage];
+    });
   }
 
   /**
@@ -87,7 +98,7 @@ export class OverpassService {
           // this.getRouteMasters();
         },
         (err) => {
-          this.toastrSrv.error('Error in fetching data from Overpass');
+          this.toastrSrv.error(this.errorMessage);
           console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
           return setTimeout(() => {
             console.log('LOG (overpass) Request error - new request?');
@@ -135,12 +146,12 @@ export class OverpassService {
               'No response from API. Try to select other master relation again please.',
             );
           }
-          this.toastrSrv.success('Route Masters data fetched successfully');
+          this.toastrSrv.success(this.successMessage);
           this.markQueriedRelations(idsArr);
           this.processSrv.processMastersResponse(res);
         },
         (err) => {
-          this.toastrSrv.error('Error in fetching data from Overpass');
+          this.toastrSrv.error(this.errorMessage);
           throw new Error(err.toString());
         },
       );
@@ -217,10 +228,10 @@ export class OverpassService {
           this.processSrv.processNodeResponse(res);
           this.getRouteMasters(10);
           // TODO this.processSrv.drawStopAreas();
-          this.toastrSrv.success('Node data fetched successfully');
+          this.toastrSrv.success(this.successMessage);
         },
         (err) => {
-          this.toastrSrv.error('Error in fetching data from Overpass');
+          this.toastrSrv.error(this.errorMessage);
           throw new Error(err.toString());
         });
   }
@@ -270,10 +281,10 @@ export class OverpassService {
           );
           this.storageSrv.elementsDownloaded.add(rel.id);
           this.processSrv.downloadedMissingMembers(rel, true, true);
-          this.toastrSrv.success('Relation data fetched successfully');
+          this.toastrSrv.success(this.successMessage);
         },
         (err) => {
-          this.toastrSrv.error('Error in fetching data from Overpass');
+          this.toastrSrv.error(this.errorMessage);
           throw new Error(err.toString());
         });
   }
