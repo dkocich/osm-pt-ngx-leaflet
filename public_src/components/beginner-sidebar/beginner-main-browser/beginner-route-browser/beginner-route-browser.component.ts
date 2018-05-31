@@ -124,6 +124,7 @@ export class BeginnerRouteBrowserComponent implements OnInit {
       true,
       true,
     );
+    this.sidebarSrv.changeBeginnerView('main');
   }
 
   /**

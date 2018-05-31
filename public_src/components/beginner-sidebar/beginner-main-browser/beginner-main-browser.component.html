@@ -36,7 +36,7 @@
 <div class="panel panel-default " *ngIf="currentElement" style="height: 100%; margin:0;">
   <div class="panel-heading">
     <!--<div class="page-header">-->
-      <h5>Bus Stop</h5>
+      <h5>{{currentElement.tags.public_transport}}</h5>
       <small *ngIf="currentElement && currentElement.tags.name">{{currentElement.tags.name}}</small>
     <!--</div>-->
   </div>
