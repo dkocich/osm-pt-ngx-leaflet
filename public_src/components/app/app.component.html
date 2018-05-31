@@ -37,8 +37,9 @@
 </div>
 
 <div id="sidebar"  >
-  <div *ngIf="!advancedExpMode" >
+  <div *ngIf="!advancedExpMode" style="height: 100%; margin:0;" >
           <beginner-main-browser></beginner-main-browser>
+  </div>
   <div *ngIf="advancedExpMode">
   <accordion>
     <accordion-group #a1 [isOpen]="false">

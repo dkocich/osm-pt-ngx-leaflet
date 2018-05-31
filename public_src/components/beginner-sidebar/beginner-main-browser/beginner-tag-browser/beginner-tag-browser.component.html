@@ -1,5 +1,8 @@
+
+<div class="panel panel-default">
+  <div class="panel-heading">Tags</div>
+  <div class="panel-body">
 <h4 class="text-center text-danger" *ngIf="!currentElement">{{ 'Please select a feature to browse tags.' | translate }}</h4>
-<button (click)="showRouteBrowser()">Routes</button>
     <div *ngIf="currentElement" class="medium">
       <div class="text-center" *ngIf="(editing$ | async) && (currentElement.tags.type === 'route_master' ||
                  ['platform', 'stop_position', 'station'].indexOf(currentElement.tags.public_transport) > -1)">
@@ -73,6 +76,9 @@
     <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
       <tbody>
       <tr *ngFor="let tag of currentElement['tags'] | keys;">
+
+
+
         <td>
           <ng-container *ngIf="!(editing$ | async)">{{tag.key}}</ng-container>
           <input type="text" *ngIf="editing$ | async" value="{{tag.key}}" data-type="key"
@@ -122,5 +128,15 @@
       </tr>
       </tbody>
     </table>
+
   </div>
+  </div>
+
+  </div>
+
+<div class="panel panel-default">
+  <button (click)="showRouteBrowser()">Routes</button>
+
+
+</div>
 

@@ -36,4 +36,10 @@ export class BeginnerMainBrowserComponent implements OnInit {
     this.sidebarSrv.changeBeginnerView('tag');
 
   }
+  private showRouteBrowser(): any{
+    this.sidebarSrv.changeBeginnerView('route');
+  }
+  private showTagBrowser(): any{
+    this.sidebarSrv.changeBeginnerView('route');
+  }
 }

@@ -48,7 +48,7 @@ export class BeginnerTagBrowserComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.currentElement=this.storageSrv.currentElement;
+    this.currentElement = this.storageSrv.currentElement;
     console.log('initialized');
     this.processSrv.refreshSidebarView('tag');
     this.processSrv.refreshSidebarViews$.subscribe((data) => {

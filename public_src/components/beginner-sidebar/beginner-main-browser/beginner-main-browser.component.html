@@ -1,12 +1,63 @@
-<div class="panel panel-default" style="height: 100%; border:0; margin:0;" xmlns="http://www.w3.org/1999/html">
-  <div class="panel-heading">
-    <h3 class="panel-title"></h3>
-    <button *ngIf="(beginnerView === 'route')" (click)="back()" id="back"> <i  class="fa fa-chevron-left" aria-hidden="true" ></i></button>
+
+
+
+
+
+<!--&lt;!&ndash;<p class="bg-info">hello hjgeshgdfhghjgsdfjjshf.</p>&ndash;&gt;-->
+
+<!--<div class="panel panel-default" style="height: 100%; border:0; margin:0;" >-->
+  <!--<div class="page-header">-->
+    <!--<h3>Bus Stop <i class="fa fa-bus" aria-hidden="true"></i></h3>-->
+  <!--</div>-->
+  <!--<div class="panel-heading">-->
+    <!--<h3 class="panel-title"></h3>-->
+
+    <!--&lt;!&ndash;<button *ngIf="(beginnerView === 'route')" (click)="back()" id="back"> <i  class="fa fa-chevron-left" aria-hidden="true" ></i></button>&ndash;&gt;-->
+  <!--</div>-->
+  <!--<div class="panel-body">-->
+    <!--<ul class="list-group">-->
+      <!--<li class="list-group-item">Cras justo odio</li>-->
+      <!--<li class="list-group-item">Dapibus ac facilisis in</li>-->
+      <!--<li class="list-group-item">Morbi leo risus</li>-->
+      <!--<li class="list-group-item">Porta ac consectetur ac</li>-->
+      <!--<li class="list-group-item">Vestibulum at eros</li>-->
+    <!--</ul>-->
+    <!--&lt;!&ndash;<div *ngIf="(beginnerView === 'tag')" class="panel-body">&ndash;&gt;-->
+      <!--&lt;!&ndash;<beginner-tag-browser ></beginner-tag-browser>&ndash;&gt;-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--&lt;!&ndash;<div *ngIf="(beginnerView === 'route')" class="panel-body">&ndash;&gt;-->
+      <!--&lt;!&ndash;<beginner-route-browser></beginner-route-browser>&ndash;&gt;-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+  <!--</div>-->
+
+<!--</div>-->
+
+
+<div class="panel panel-default " style="height: 100%; margin:0;">
+  <!-- Default panel contents -->
+  <div class="panel-heading"> <h4>Bus Stop </h4></div>
+  <div class="panel-body">
+    <div class="page-header">
+      <h5>Tags <i class="fa fa-chevron-right" aria-hidden="true"></i></h5>
+    </div>
+    <div class="page-header">
+      <h5>Routes <i class="fa fa-chevron-right" aria-hidden="true"></i></h5>
+    </div>
   </div>
-  <div *ngIf="(beginnerView === 'tag')" class="panel-body">
-    <beginner-tag-browser ></beginner-tag-browser>
-  </div>
-  <div *ngIf="(beginnerView === 'route')" class="panel-body">
-    <beginner-route-browser></beginner-route-browser>
-  </div>
+
+  <!-- List group -->
+  <!--<ul class="list-group">-->
+    <!--<li class="list-group-item">Routes</li>-->
+    <!--<li class="list-group-item">Tags</li>-->
+
+  <!--</ul>-->
+  <table class="table table-hover">
+  <tr>
+    <td>Tags</td>
+  </tr>
+    <tr>
+  <td>Routes</td>
+    </tr>
+  </table>
 </div>
+
