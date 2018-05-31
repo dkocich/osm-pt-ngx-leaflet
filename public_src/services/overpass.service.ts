@@ -8,6 +8,7 @@ import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 
 import { create } from 'xmlbuilder';
+import { ToastrService } from 'ngx-toastr';
 
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { Utils } from '../core/utils.class';
@@ -23,6 +24,7 @@ export class OverpassService {
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private mapSrv: MapService,
+    private toastrSrv: ToastrService,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -85,6 +87,7 @@ export class OverpassService {
           // this.getRouteMasters();
         },
         (err) => {
+          this.toastrSrv.error('Error in fetching data from Overpass');
           console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
           return setTimeout(() => {
             console.log('LOG (overpass) Request error - new request?');
@@ -132,10 +135,12 @@ export class OverpassService {
               'No response from API. Try to select other master relation again please.',
             );
           }
+          this.toastrSrv.success('Route Masters data fetched successfully');
           this.markQueriedRelations(idsArr);
           this.processSrv.processMastersResponse(res);
         },
         (err) => {
+          this.toastrSrv.error('Error in fetching data from Overpass');
           throw new Error(err.toString());
         },
       );
@@ -212,8 +217,10 @@ export class OverpassService {
           this.processSrv.processNodeResponse(res);
           this.getRouteMasters(10);
           // TODO this.processSrv.drawStopAreas();
+          this.toastrSrv.success('Node data fetched successfully');
         },
         (err) => {
+          this.toastrSrv.error('Error in fetching data from Overpass');
           throw new Error(err.toString());
         });
   }
@@ -263,8 +270,10 @@ export class OverpassService {
           );
           this.storageSrv.elementsDownloaded.add(rel.id);
           this.processSrv.downloadedMissingMembers(rel, true, true);
+          this.toastrSrv.success('Relation data fetched successfully');
         },
         (err) => {
+          this.toastrSrv.error('Error in fetching data from Overpass');
           throw new Error(err.toString());
         });
   }

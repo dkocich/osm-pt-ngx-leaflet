@@ -105,6 +105,7 @@
     "ng-http-loader": "1.0.2",
     "ng2-dragula": "1.5.0",
     "ngx-bootstrap": "2.0.2",
+    "ngx-toastr": "^8.7.3",
     "optimize-css-assets-webpack-plugin": "3.2.0",
     "optimize-js-plugin": "0.0.4",
     "osm-auth": "1.0.2",

@@ -27,6 +27,7 @@ import {
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2Piwik } from 'angulartics2/piwik';
 import { NgHttpLoaderModule } from 'ng-http-loader/ng-http-loader.module';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './components/app/app.component';
 import { AuthComponent } from './components/auth/auth.component';
@@ -115,6 +116,11 @@ const conditional_providers = [
     TypeaheadModule.forRoot(),
     RouterModule.forRoot(ROUTES),
     StoreModule,
+    ToastrModule.forRoot({
+      timeOut: 2000,
+      positionClass: 'toast-bottom-right',
+      maxOpened: 1,
+}),
   ],
   providers: [
     ...conditional_providers,
