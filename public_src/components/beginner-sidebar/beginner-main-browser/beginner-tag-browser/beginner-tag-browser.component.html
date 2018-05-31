@@ -1,6 +1,6 @@
 
-<div class="panel panel-default">
-  <div class="panel-heading">Tags</div>
+
+<i  (click)="back()" class="fa fa-chevron-left " aria-hidden="true" ></i>
   <div class="panel-body">
 <h4 class="text-center text-danger" *ngIf="!currentElement">{{ 'Please select a feature to browse tags.' | translate }}</h4>
     <div *ngIf="currentElement" class="medium">
@@ -130,13 +130,6 @@
     </table>
 
   </div>
-  </div>
-
-  </div>
-
-<div class="panel panel-default">
-  <button (click)="showRouteBrowser()">Routes</button>
 
 
-</div>
 

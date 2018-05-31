@@ -196,7 +196,10 @@ export class BeginnerTagBrowserComponent implements OnInit {
     console.log('LOG (tag-browser)', $event);
   }
 
-  private showRouteBrowser(): any{
+  private showRouteBrowser(): any {
   this.sidebarSrv.changeBeginnerView('route');
+  }
+  private back(): any {
+    this.sidebarSrv.changeBeginnerView('main');
   }
 }

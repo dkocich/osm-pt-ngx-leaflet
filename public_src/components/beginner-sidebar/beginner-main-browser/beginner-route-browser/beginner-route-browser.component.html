@@ -1,5 +1,5 @@
-
-    <h4 class="text-danger" *ngIf="listOfRelations.length === 0">{{ 'There are no loaded routes (zoom map and select a feature).' | translate }}</h4>
+ <i (click)="back()" class="fa fa-chevron-left" aria-hidden="true" ></i>
+<h4 class="text-danger" *ngIf="listOfRelationsForStop.length === 0">{{ 'There are no routes for the selected platform.' | translate }}</h4>
     <span *ngIf="editing$ | async">
       <button type="button" class="btn btn-default" container="body"
               tooltip="{{ 'Create a new empty route relation' | translate }}"

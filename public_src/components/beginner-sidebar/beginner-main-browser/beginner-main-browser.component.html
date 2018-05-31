@@ -33,31 +33,29 @@
 <!--</div>-->
 
 
-<div class="panel panel-default " style="height: 100%; margin:0;">
-  <!-- Default panel contents -->
-  <div class="panel-heading"> <h4>Bus Stop </h4></div>
-  <div class="panel-body">
-    <div class="page-header">
-      <h5>Tags <i class="fa fa-chevron-right" aria-hidden="true"></i></h5>
+<div class="panel panel-default " *ngIf="currentElement" style="height: 100%; margin:0;">
+  <div class="panel-heading">
+    <!--<div class="page-header">-->
+      <h5>Bus Stop</h5>
+      <small *ngIf="currentElement && currentElement.tags.name">{{currentElement.tags.name}}</small>
+    <!--</div>-->
+  </div>
+  <div class="panel-body mainPanel">
+    <div *ngIf="(beginnerView === 'main')">
+    <div class="page-header" (click)="showTagBrowser()" >
+      <h5>Tags <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i></h5>
     </div>
-    <div class="page-header">
-      <h5>Routes <i class="fa fa-chevron-right" aria-hidden="true"></i></h5>
+    <div class="page-header" (click)="showRouteBrowser()">
+      <h5>Routes <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i></h5>
+    </div>
+    </div>
+    <div *ngIf="(beginnerView === 'tag')">
+      <beginner-tag-browser></beginner-tag-browser>
+    </div>
+    <div *ngIf="(beginnerView === 'route')">
+      <beginner-route-browser></beginner-route-browser>
     </div>
   </div>
 
-  <!-- List group -->
-  <!--<ul class="list-group">-->
-    <!--<li class="list-group-item">Routes</li>-->
-    <!--<li class="list-group-item">Tags</li>-->
-
-  <!--</ul>-->
-  <table class="table table-hover">
-  <tr>
-    <td>Tags</td>
-  </tr>
-    <tr>
-  <td>Routes</td>
-    </tr>
-  </table>
 </div>
 

@@ -23,23 +23,42 @@ import { SidebarService } from '../../../services/sidebar.service';
   templateUrl: './beginner-main-browser.component.html',
 })
 export class BeginnerMainBrowserComponent implements OnInit {
-  public beginnerView = 'tag';
-  constructor(private sidebarSrv:  SidebarService) {
+  public beginnerView = 'main';
+  public currentElement;
+  constructor(private sidebarSrv:  SidebarService,
+              private processSrv: ProcessService,
+              private storageSrv: StorageService) {
     this.sidebarSrv.beginnerView$.subscribe((data) => {
       this.beginnerView = data;
+    });
+    this.processSrv.refreshSidebarViews$.subscribe((data) => {
+      console.log('tag change');
+      if (data === 'tag') {
+        console.log('tag tag');
+        console.log(
+          'LOG (tag-browser) Current selected element changed - ',
+          data,
+          this.currentElement,
+          this.storageSrv.currentElement,
+        );
+        delete this.currentElement;
+        this.currentElement = this.storageSrv.currentElement;
+        console.log(this.currentElement);
+      } else if (data === 'cancel selection') {
+        console.log(' tag canceled');
+        this.currentElement = undefined;
+        delete this.currentElement;
+      }
+
     });
   }
 
   public ngOnInit(): void {
   }
-  public back(): any {
+  private showRouteBrowser(): any {
+    this.sidebarSrv.changeBeginnerView('route');
+  }
+  private showTagBrowser(): any {
     this.sidebarSrv.changeBeginnerView('tag');
-
-  }
-  private showRouteBrowser(): any{
-    this.sidebarSrv.changeBeginnerView('route');
-  }
-  private showTagBrowser(): any{
-    this.sidebarSrv.changeBeginnerView('route');
   }
 }

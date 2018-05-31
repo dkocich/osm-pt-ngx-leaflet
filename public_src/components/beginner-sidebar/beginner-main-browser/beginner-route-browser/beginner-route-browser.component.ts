@@ -14,6 +14,7 @@ import { ProcessService } from '../../../../services/process.service';
 import { StorageService } from '../../../../services/storage.service';
 import { OverpassService } from '../../../../services/overpass.service';
 import { MapService } from '../../../../services/map.service';
+import {SidebarService} from '../../../../services/sidebar.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -44,6 +45,7 @@ export class BeginnerRouteBrowserComponent implements OnInit {
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    private sidebarSrv: SidebarService,
   ) {
     //
   }
@@ -205,5 +207,8 @@ export class BeginnerRouteBrowserComponent implements OnInit {
    */
   private trackByFn(index: number, item: any): number {
     return item.id;
+  }
+  private back(): any {
+    this.sidebarSrv.changeBeginnerView('main');
   }
 }
