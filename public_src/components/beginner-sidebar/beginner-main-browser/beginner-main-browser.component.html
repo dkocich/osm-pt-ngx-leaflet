@@ -42,6 +42,7 @@
   </div>
   <div class="panel-body mainPanel">
     <div *ngIf="(beginnerView === 'main')">
+      <button (click)="missingNames()" > Error Highlights </button>
     <div class="page-header" (click)="showTagBrowser()" >
       <h5>Tags <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i></h5>
     </div>

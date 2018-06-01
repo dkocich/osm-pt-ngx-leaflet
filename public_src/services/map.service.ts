@@ -8,6 +8,7 @@ import * as L from 'leaflet';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
+import {featureGroup} from 'leaflet';
 
 @Injectable()
 export class MapService {
@@ -755,4 +756,12 @@ export class MapService {
     const marker: object = feature.target; // FIXME DELETE?
     this.markerMembershipToggleClick.emit({ featureId });
   }
-}
+
+  public addPopUps(): any {
+    this.ptLayer.eachLayer( (layer) => {
+      if (!layer.feature.properties.name && !layer.getPopup())
+      layer.bindPopup('no name', { autoClose: false , closeOnClick : false}).openPopup();
+    });
+
+  }
+  }

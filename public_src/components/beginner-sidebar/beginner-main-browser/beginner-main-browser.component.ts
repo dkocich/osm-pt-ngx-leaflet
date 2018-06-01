@@ -27,7 +27,8 @@ export class BeginnerMainBrowserComponent implements OnInit {
   public currentElement;
   constructor(private sidebarSrv:  SidebarService,
               private processSrv: ProcessService,
-              private storageSrv: StorageService) {
+              private storageSrv: StorageService,
+              private mapSrv: MapService) {
     this.sidebarSrv.beginnerView$.subscribe((data) => {
       this.beginnerView = data;
     });
@@ -60,5 +61,8 @@ export class BeginnerMainBrowserComponent implements OnInit {
   }
   private showTagBrowser(): any {
     this.sidebarSrv.changeBeginnerView('tag');
+  }
+  private missingNames(): any{
+    this.mapSrv.addPopUps();
   }
 }
