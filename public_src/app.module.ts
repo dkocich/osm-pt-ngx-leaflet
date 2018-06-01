@@ -27,6 +27,7 @@ import {
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2Piwik } from 'angulartics2/piwik';
 import { NgHttpLoaderModule } from 'ng-http-loader/ng-http-loader.module';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './components/app/app.component';
 import { AuthComponent } from './components/auth/auth.component';
@@ -49,6 +50,7 @@ import { MapService } from './services/map.service';
 import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
 import { StorageService } from './services/storage.service';
+import { WarnService } from './services/warn.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -115,6 +117,11 @@ const conditional_providers = [
     TypeaheadModule.forRoot(),
     RouterModule.forRoot(ROUTES),
     StoreModule,
+    ToastrModule.forRoot({
+      timeOut: 2000,
+      positionClass: 'toast-bottom-right',
+      maxOpened: 1,
+    }),
   ],
   providers: [
     ...conditional_providers,
@@ -127,6 +134,7 @@ const conditional_providers = [
     OverpassService,
     ProcessService,
     StorageService,
+    WarnService,
 
     KeysPipe,
 
