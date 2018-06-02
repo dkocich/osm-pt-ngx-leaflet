@@ -2,16 +2,15 @@ import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import { MapService } from './map.service';
 import { AppActions } from '../store/app/actions';
-import {StorageService} from './storage.service';
-import {ProcessService} from './process.service';
+
 @Injectable()
 export class ErrorHighlightService {
 
   private popUpArr = [];
   private popUpLayerGroup: any;
   private currentPopUpFeatureId: any;
-  constructor(public mapSrv: MapService, public appActions: AppActions, private storageSrv: StorageService,
-              private processSrv: ProcessService ) {}
+  constructor(public mapSrv: MapService,
+              public appActions: AppActions) {}
 
   public missingTagError(tag: string): any {
     this.mapSrv.map.eachLayer((layer) => {
@@ -20,10 +19,10 @@ export class ErrorHighlightService {
       }
     });
     this.mapSrv.map.eachLayer((layer) => {
-    if (layer['_latlng'] && layer['feature'] && !(layer['feature'].properties[tag]) && !(this.checkIfAreadyAdded(layer))) {
+    if (layer['_latlng'] && layer['feature'] && !(layer['feature'].properties[tag]) && !(this.checkIfAlreadyAdded(layer))) {
           let popupContent = this.makePopUpContent();
           let popup = L.popup({ autoClose: false, closeOnClick: false, closeButton: false,
-                                       autoPan: false, minWidth: 4, className: 'myPopUp' })
+                                autoPan: false, minWidth: 4, className: 'myPopUp' })
             .setLatLng(layer['_latlng'])
             .setContent(popupContent).openOn(this.mapSrv.map);
           this.popUpArr.push(popup);
@@ -42,7 +41,7 @@ export class ErrorHighlightService {
       }});
   }
 
-  private checkIfAreadyAdded(layer: any): any {
+  private checkIfAlreadyAdded(layer: any): any {
     for (let i = 0;  i < this.popUpArr.length ; i++) {
       if (layer['_latlng'] === this.popUpArr[i].getLatLng()) {
         return true;
@@ -54,7 +53,7 @@ export class ErrorHighlightService {
     this.popUpLayerGroup.removeLayer(this.currentPopUpFeatureId);
   }
 
-  private makePopUpContent(): any{
+  private makePopUpContent(): any {
     let popupContent = L.DomUtil.create('div', 'content');
     popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"> ';
     return popupContent;
@@ -62,12 +61,6 @@ export class ErrorHighlightService {
   private addListenersToPopUp(popUpElement: any, feature: any, popUpId: any): any {
     L.DomEvent.addListener(popUpElement.parentElement, 'click', () => {
       this.mapSrv.handlePopUpClick(feature);
-      // this.processSrv.exploreStop(
-      //   this.storageSrv.elementsMap.get(feature['_leaflet_id']),
-      //   false,
-      //   false,
-      //   false,
-      // );
       this.appActions.actSetBeginnerView('tag');
       this.currentPopUpFeatureId = popUpId;
     });
@@ -82,10 +75,5 @@ export class ErrorHighlightService {
         popUpElement.parentElement.style.backgroundColor = 'white';
         popUpElement.parentElement.parentElement.childNodes[1].childNodes[0].style.backgroundColor = 'white';
     });
-    // L.DomEvent.addListener(popUpElement.parentElement, 'mouseout', this.colorPopUp('white', popUpElement.parentElement), this);
   }
-  // private colorPopUp(colorname: string, popUp: any): any{
-  //   popUp.style.backgroundColor = colorname;
-  //   popUp.parentElement.childNodes[1].childNodes[0].style.backgroundColor = colorname;
-  // }
 }

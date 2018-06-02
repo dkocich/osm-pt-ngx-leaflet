@@ -24,7 +24,6 @@ export class AppActions {
       type: AppActions.TOGGLE_EDITING,
     });
   }
-
   // basic sync action
   public actSelectElement = (args): Action => {
     const { element } = args;
@@ -33,12 +32,10 @@ export class AppActions {
       payload: element,
     });
   }
-
   // basic sync action
   public actSetAdvancedExpMode = (payload: boolean): Action => {
     return this.ngRedux.dispatch({ type: AppActions.SET_ADVANCED_EXP_MODE, payload });
   }
-
   // basic sync action
   public actSetGoodConnectMode = (payload: boolean): Action => {
     return this.ngRedux.dispatch({ type: AppActions.SET_GOOD_CONNECT_MODE, payload });

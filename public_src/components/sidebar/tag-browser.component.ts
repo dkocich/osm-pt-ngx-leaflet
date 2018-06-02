@@ -12,11 +12,11 @@ import { Observable } from 'rxjs';
 import { EditService } from '../../services/edit.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
+import { ErrorHighlightService } from '../../services/error-highlight.service';
 
 import { IOsmElement } from '../../core/osmElement.interface';
 import { PtTags } from '../../core/ptTags.class';
-import {AppActions} from '../../store/app/actions';
-import {ErrorHighlightService} from '../../services/error-highlight.service';
+import { AppActions } from '../../store/app/actions';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -191,15 +191,17 @@ export class TagBrowserComponent implements OnInit {
     console.log('LOG (tag-browser)', $event);
   }
 
-  addTag(): any {
+  private save(): any {
     this.tagKey = 'name';
     this.createChange('add tag');
     this.appActions.actSetBeginnerView('main-menu');
     this.errorHighlightSrv.removeCurrentlyClickedPopUp();
   }
+
   private cancel(): any {
     this.appActions.actSetBeginnerView('main-menu');
   }
+
   private back(): any {
     this.appActions.actSetBeginnerView('element-selected');
   }

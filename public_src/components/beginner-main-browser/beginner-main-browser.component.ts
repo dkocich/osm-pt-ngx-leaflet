@@ -27,8 +27,6 @@ export class BeginnerMainBrowserComponent implements OnInit, OnDestroy {
   @select(['app', 'beginnerView']) public readonly beginnerView$: Observable<string>;
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-
-
   constructor(private sidebarSrv:  SidebarService,
               private processSrv: ProcessService,
               private storageSrv: StorageService,

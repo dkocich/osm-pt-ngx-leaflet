@@ -30,8 +30,8 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   public filteredView: boolean = false;
   private idsHaveMaster = new Set();
   public membersEditing: boolean = false;
-  public mysubscription: any;
-  public isadvancedMode: any;
+  public isAdvancedSubscription: any;
+  public isAdvancedMode: any;
   // @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
 
   constructor(
@@ -42,13 +42,13 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
   ) {
-    this.mysubscription = ngRedux.select<boolean>(['app', 'advancedExpMode']) // <- New
+    this.isAdvancedSubscription = ngRedux.select<boolean>(['app', 'advancedExpMode']) // <- New
       .subscribe(() => {
         if (!(ngRedux.getState()['app']['advancedExpMode'])) {
           this.filteredView = true;
-          this.isadvancedMode = false;
+          this.isAdvancedMode = false;
         } else {
-          this.isadvancedMode = true;
+          this.isAdvancedMode = true;
           this.filteredView = false;
         }
       });
@@ -75,7 +75,6 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
         this.idsHaveMaster.add(id);
       });
     });
-
   }
 
   private toggleMembersEdit(): void {
@@ -206,7 +205,6 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     return item.id;
   }
   ngOnDestroy(): void {
-
-    this.mysubscription.unsubscribe();
+    this.isAdvancedSubscription.unsubscribe();
   }
 }

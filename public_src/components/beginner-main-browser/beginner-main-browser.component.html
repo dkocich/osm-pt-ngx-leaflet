@@ -1,24 +1,24 @@
 <div class="panel panel-default "  style="height: 100%; margin:0;">
   <div class="panel-heading">
     <div *ngIf="((beginnerView$ | async) === 'main-menu' || !currentElement) && (editing$ | async)">
-      <button type="button" class="btn btn-primary btn-xs" [ngClass]="{'active': ((errorCorrectionMode$ | async) === true)}"(click)="showMissingNames()"> <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Show missing names </button>
+      <button type="button" class="btn btn-primary btn-xs" [ngClass]=" { 'active': ((errorCorrectionMode$ | async) === true) }" (click)="showMissingNames()"> <i class="fa fa-exclamation-triangle" aria-hidden="true">
+        </i> Show missing names </button>
     </div>
     <div *ngIf="(beginnerView$ | async) === 'main-menu' || !currentElement">
       <h4 class="text-danger"> Select a platform/stop from the map </h4>
     </div>
-
     <div *ngIf="!((beginnerView$ | async) === 'main-menu') && currentElement">
       <h5>{{currentElement.tags.public_transport}}</h5>
       <small *ngIf="currentElement && currentElement.tags.name">{{currentElement.tags.name}}</small>
     </div>
-    <i  *ngIf="((beginnerView$ | async) === 'tag' || (beginnerView$ | async) === 'route')&& !(errorCorrectionMode$ | async)" (click)="back()" class="fa fa-chevron-left " aria-hidden="true" ></i>
+    <i *ngIf="((beginnerView$ | async) === 'tag' || (beginnerView$ | async) === 'route')&& !(errorCorrectionMode$ | async)" (click)="back()" class="fa fa-chevron-left " aria-hidden="true" ></i>
   </div>
     <div *ngIf="((beginnerView$ | async) === 'element-selected') && currentElement ">
       <div class="page-header" (click)="showTagBrowser()" >
-      <h5>Tags <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i></h5>
+        <h5>Tags <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i></h5>
       </div>
       <div class="page-header" (click)="showRouteBrowser()">
-      <h5>Routes <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i></h5>
+        <h5>Routes <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i></h5>
       </div>
     </div>
     <div *ngIf="((beginnerView$ | async) === 'tag') && currentElement">

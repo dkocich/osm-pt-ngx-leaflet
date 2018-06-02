@@ -4576,10 +4576,6 @@ inquirer@^4.0.0:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
-install@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/install/-/install-0.11.0.tgz#e539d3c7db572ab5081d3780de20796dd3cc842e"
-
 internal-ip@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/internal-ip/-/internal-ip-1.2.0.tgz#ae9fbf93b984878785d50a8de1b356956058cf5c"
@@ -6242,6 +6238,12 @@ ng2-dragula@1.5.0:
 ngx-bootstrap@2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-2.0.2.tgz#6862b2ee4764bb6cfd34c66528873d0d050c2faa"
+
+ngx-toastr@^8.7.3:
+  version "8.7.3"
+  resolved "https://registry.yarnpkg.com/ngx-toastr/-/ngx-toastr-8.7.3.tgz#d3b7a8077ba1c860dd8a44779ccad38c5ea15c92"
+  dependencies:
+    tslib "^1.9.0"
 
 no-case@^2.2.0:
   version "2.3.2"

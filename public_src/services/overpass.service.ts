@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { AuthService } from './auth.service';
 import { ConfService } from './conf.service';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
+import { WarnService } from './warn.service';
 import { ErrorHighlightService } from './error-highlight.service';
 
 import { create } from 'xmlbuilder';
@@ -19,13 +20,13 @@ import { IAppState } from '../store/model';
 export class OverpassService {
   public changeset;
   private changeset_id: string;
-
   constructor(
     private authSrv: AuthService,
     private httpClient: HttpClient,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private mapSrv: MapService,
+    private warnSrv: WarnService,
     private errorHighlightSrv: ErrorHighlightService,
     private ngRedux: NgRedux<IAppState>,
   ) {
@@ -93,6 +94,7 @@ export class OverpassService {
           // this.getRouteMasters();
         },
         (err) => {
+          this.warnSrv.showError();
           console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
           return setTimeout(() => {
             console.log('LOG (overpass) Request error - new request?');
@@ -140,10 +142,12 @@ export class OverpassService {
               'No response from API. Try to select other master relation again please.',
             );
           }
+          this.warnSrv.showSuccess();
           this.markQueriedRelations(idsArr);
           this.processSrv.processMastersResponse(res);
         },
         (err) => {
+          this.warnSrv.showError();
           throw new Error(err.toString());
         },
       );
@@ -220,11 +224,11 @@ export class OverpassService {
           this.processSrv.processNodeResponse(res);
           this.getRouteMasters(10);
           // TODO this.processSrv.drawStopAreas();
-          // enclose the following in if (process) for IDB
-          // (following for beginner mode)
+          this.warnSrv.showSuccess();
           this.processSrv.filterRelationsByStop(this.storageSrv.elementsMap.get(featureId));
         },
         (err) => {
+          this.warnSrv.showError();
           throw new Error(err.toString());
         });
   }
@@ -274,8 +278,10 @@ export class OverpassService {
           );
           this.storageSrv.elementsDownloaded.add(rel.id);
           this.processSrv.downloadedMissingMembers(rel, true, true);
+          this.warnSrv.showSuccess();
         },
         (err) => {
+          this.warnSrv.showError();
           throw new Error(err.toString());
         });
   }
