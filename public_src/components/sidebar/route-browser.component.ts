@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
@@ -6,7 +6,8 @@ import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 import { Observable } from 'rxjs';
-import { select } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from '../../store/model';
 
 @Component({
   providers: [],
@@ -17,7 +18,7 @@ import { select } from '@angular-redux/store';
   ],
   templateUrl: './route-browser.component.html',
 })
-export class RouteBrowserComponent implements OnInit {
+export class RouteBrowserComponent implements OnInit, OnDestroy {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   public currentElement;
@@ -29,6 +30,9 @@ export class RouteBrowserComponent implements OnInit {
   public filteredView: boolean;
   private idsHaveMaster = new Set();
   public membersEditing: boolean = false;
+  public mysubscription: any;
+  public isadvancedMode: any;
+  // @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
 
   constructor(
     private editSrv: EditService,
@@ -36,11 +40,26 @@ export class RouteBrowserComponent implements OnInit {
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
   ) {
-    //
+    this.mysubscription = ngRedux.select<boolean>(['app', 'advancedExpMode']) // <- New
+      .subscribe(() => {
+        if (!(ngRedux.getState()['app']['advancedExpMode'])) {
+          this.filteredView = true;
+          this.isadvancedMode = false;
+        } else {
+          this.isadvancedMode = true;
+        }
+      });
+
+    console.log(typeof this.mysubscription);
+    console.log(this.mysubscription);
   }
 
   public ngOnInit(): void {
+    // if (!(this.ngRedux.getState()['app']['advancedExpMode'])) {
+    //   this.filteredView = true;
+    // }
     this.processSrv.showRelationsForStop$.subscribe((data) => {
       this.filteredView = data;
     });
@@ -61,6 +80,7 @@ export class RouteBrowserComponent implements OnInit {
         this.idsHaveMaster.add(id);
       });
     });
+
   }
 
   private toggleMembersEdit(): void {
@@ -189,5 +209,9 @@ export class RouteBrowserComponent implements OnInit {
    */
   private trackByFn(index: number, item: any): number {
     return item.id;
+  }
+  ngOnDestroy(): void {
+
+    this.mysubscription.unsubscribe();
   }
 }

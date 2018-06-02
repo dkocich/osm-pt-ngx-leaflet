@@ -13,4 +13,6 @@ export interface IAppState {
   selectObject: number;
   advancedExpMode: boolean;
   goodConnectMode: boolean;
+  beginnerView: string;
+  errorCorrectionMode: string;
 }

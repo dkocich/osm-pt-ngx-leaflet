@@ -1,5 +1,27 @@
+<div *ngIf="!(advancedExpMode$ |async)">
+  <!--<i  *ngIf="!(errorCorrectionMode$ | async)" (click)="back()" class="fa fa-chevron-left " aria-hidden="true" ></i>-->
+
+  <div *ngIf="(errorCorrectionMode$ |async)">
+
+    <h2>Enter name</h2>
+    <input #v class="form-control" id="inputvalue" type="text" minlength="1"
+           placeholder="{{ 'Add new value' | translate }}"
+           [ngModel]="tagValue"
+           [typeahead]="expectedValues"
+           (ngModelChange)="valueChange($event)"
+           (keyup.enter)="updateValue(v.value)"
+           (blur)="updateValue(v.value)"
+           required>
+
+     <button (click) = "addTag()" >Save</button>
+    <button (click)="cancel()">Cancel</button>
+  </div>
+
+  </div>
+<div *ngIf="!(errorCorrectionMode$ |async)">
+
 <div class="panel-group">
-  <div class="panel panel-heading panel-default">
+  <div class="panel panel-heading panel-default" >
     <h4 class="text-center text-danger" *ngIf="!currentElement">{{ 'Please select a feature to browse tags.' | translate }}</h4>
     <div *ngIf="currentElement" class="medium">
       <div class="text-center" *ngIf="(editing$ | async) && (currentElement.tags.type === 'route_master' ||
@@ -125,4 +147,5 @@
       </tbody>
     </table>
   </div>
+</div>
 </div>

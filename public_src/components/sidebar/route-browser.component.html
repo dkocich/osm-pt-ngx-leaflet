@@ -1,15 +1,19 @@
+
 <div class="panel-group">
-  <div class="panel panel-heading panel-default text-center">
+  <div class="panel panel-heading panel-default text-center" *ngIf="!isadvancedMode && listOfRelationsForStop.length === 0 ">
+    <h4 class="text-danger" *ngIf="listOfRelationsForStop.length === 0 && !isadvancedMode">No routes for the selected platform</h4>
+  </div>
+  <div class="panel panel-heading panel-default text-center" *ngIf="isadvancedMode">
     <h4 class="text-danger" *ngIf="listOfRelations.length === 0">{{ 'There are no loaded routes (zoom map and select a feature).' | translate }}</h4>
-    <span>
-      <button *ngIf="filteredView" class="btn btn-warning" container="body"
+    <span *ngIf="filteredView " >
+      <button class="btn btn-warning" container="body"
               tooltip="{{ 'Cancel filter showing only routes related to selected node' | translate }}"
               (click)="cancelFilter()">
         <i class="fa fa-times" aria-hidden="true"></i>
         &nbsp;{{ 'Cancel filter' | translate }}
       </button>
     </span>
-    <span *ngIf="editing$ | async">
+    <span *ngIf="(editing$ | async) ">
       <button type="button" class="btn btn-default" container="body"
               tooltip="{{ 'Create a new empty route relation' | translate }}"
               (click)="createRoute()">
@@ -25,7 +29,7 @@
         &nbsp;{{ 'Change members' | translate }}
       </button>
     </span>
-    <span *ngIf="listOfRelations.length > 0" class="text-center medium">
+    <span *ngIf="(listOfRelations.length > 0) && isadvancedMode" class="text-center medium">
       <button type="button" class="btn btn-default" container="body"
               tooltip="{{ 'Verify existence and download route_master relations for all currently available routes' | translate }}"
               [disabled]="isRequesting"

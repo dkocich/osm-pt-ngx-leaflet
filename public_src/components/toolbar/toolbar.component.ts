@@ -10,6 +10,8 @@ import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 
 import { IOsmElement } from '../../core/osmElement.interface';
+import { select } from '@angular-redux/store';
+import { Observable } from 'rxjs/index';
 
 @Component({
   providers: [],
@@ -30,6 +32,8 @@ export class ToolbarComponent implements OnInit {
 
   public currentElement: IOsmElement;
   public stats = { s: 0, r: 0, a: 0, m: 0 };
+  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
+  @select(['app', 'beginnerView']) public readonly beginnerView$: Observable<string>;
 
   constructor(
     private confSrv: ConfService,

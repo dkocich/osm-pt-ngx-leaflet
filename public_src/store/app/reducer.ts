@@ -7,6 +7,8 @@ export const INITIAL_STATE: IAppState = {
   selectObject: null,
   advancedExpMode: false,
   goodConnectMode: false,
+  beginnerView: 'main-menu',
+  errorCorrectionMode: null,
 };
 
 export function appReducer(state: IAppState = INITIAL_STATE, action: AnyAction): any {
@@ -30,6 +32,16 @@ export function appReducer(state: IAppState = INITIAL_STATE, action: AnyAction):
       return {
         ...state,
         goodConnectMode: action.payload,
+      };
+    case AppActions.SET_BEGINNER_VIEW:
+      return {
+        ...state,
+        beginnerView: action.payload,
+      };
+    case AppActions.SET_ERROR_CORRECTION_MODE:
+      return {
+        ...state,
+        errorCorrectionMode: action.payload,
       };
     default:
       // We don't care about any other actions right now.

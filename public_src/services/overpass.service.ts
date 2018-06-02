@@ -6,11 +6,14 @@ import { ConfService } from './conf.service';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
+import { ErrorHighlightService } from './error-highlight.service';
 
 import { create } from 'xmlbuilder';
 
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { Utils } from '../core/utils.class';
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from '../store/model';
 
 @Injectable()
 export class OverpassService {
@@ -23,13 +26,15 @@ export class OverpassService {
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private mapSrv: MapService,
+    private errorHighlightSrv: ErrorHighlightService,
+    private ngRedux: NgRedux<IAppState>,
   ) {
     /**
      * @param data - string containing ID of clicked marker
      */
     this.mapSrv.markerClick.subscribe((data) => {
       const featureId = Number(data);
-
+     // TODO Should be moved to a separate service as not related to overpass?
       if (this.storageSrv.elementsMap.has(featureId)) {
         this.processSrv.exploreStop(
           this.storageSrv.elementsMap.get(featureId),
@@ -80,6 +85,9 @@ export class OverpassService {
         (res: IOverpassResponse) => {
           console.log('LOG (overpass s.)', res);
           this.processSrv.processResponse(res);
+          if (!(this.ngRedux.getState()['app']['errorCorrectionMode'] !== 'missing-tag-name')) {
+            this.errorHighlightSrv.missingTagError('name');
+          }
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
@@ -87,9 +95,9 @@ export class OverpassService {
         (err) => {
           console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
           return setTimeout(() => {
-              console.log('LOG (overpass) Request error - new request?');
-              this.requestNewOverpassData();
-            }, 5000);
+            console.log('LOG (overpass) Request error - new request?');
+            this.requestNewOverpassData();
+          }, 5000);
         },
       );
   }
@@ -230,7 +238,7 @@ export class OverpassService {
     if (missingElements.length === 0) {
       return alert(
         'This relation has no stops or platforms. Please add them first and repeat your action. \n' +
-          JSON.stringify(rel),
+        JSON.stringify(rel),
       );
     }
     const requestBody = `
@@ -353,7 +361,7 @@ export class OverpassService {
     if (err) {
       return alert(
         'Error while creating new changeset. Try again please. ' +
-          JSON.stringify(err),
+        JSON.stringify(err),
       );
     }
     console.log(
@@ -540,7 +548,7 @@ export class OverpassService {
     if (err) {
       return alert(
         'Error after data uploading. Changeset is not closed. It should close automatically soon. ' +
-          JSON.stringify(err),
+        JSON.stringify(err),
       );
     }
     // Upload was successful, safe to call the callback.

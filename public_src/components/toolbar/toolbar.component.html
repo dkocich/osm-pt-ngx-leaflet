@@ -46,7 +46,7 @@
   stops: {{stats.s}}, relations: {{stats.r}}, areas: {{stats.a}} masters: {{stats.m}}
 </div>
 
-<div id="selection" class="text-center" *ngIf="currentElement">
+<div id="selection" class="text-center" *ngIf="currentElement && !(errorCorrectionMode$ | async) && !((beginnerView$| async) === 'main-menu')">
   <p class="medium">{{currentElement.tags.name || currentElement.tags.public_transport || ""}} (id: {{currentElement.id || ""}}, type: {{currentElement.type || ""}})</p>
   <button type="button" class="btn btn-default col-md-6" container="body"
           tooltip="{{ 'Cancel selection' | translate }}"
