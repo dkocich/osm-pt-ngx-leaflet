@@ -27,7 +27,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   public listOfRelationsForStop: object[] = this.storageSrv.listOfRelationsForStop;
 
   public isRequesting: boolean;
-  public filteredView: boolean;
+  public filteredView: boolean = false;
   private idsHaveMaster = new Set();
   public membersEditing: boolean = false;
   public mysubscription: any;
@@ -49,17 +49,12 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
           this.isadvancedMode = false;
         } else {
           this.isadvancedMode = true;
+          this.filteredView = false;
         }
       });
-
-    console.log(typeof this.mysubscription);
-    console.log(this.mysubscription);
   }
 
   public ngOnInit(): void {
-    // if (!(this.ngRedux.getState()['app']['advancedExpMode'])) {
-    //   this.filteredView = true;
-    // }
     this.processSrv.showRelationsForStop$.subscribe((data) => {
       this.filteredView = data;
     });

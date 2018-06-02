@@ -1,8 +1,12 @@
-<div *ngIf="((beginnerView$ | async) === 'main-menu' || !currentElement) && (editing$ | async)">
-  <button (click)="missingNames()" > Error Highlights </button>
-</div>
 <div class="panel panel-default "  style="height: 100%; margin:0;">
   <div class="panel-heading">
+    <div *ngIf="((beginnerView$ | async) === 'main-menu' || !currentElement) && (editing$ | async)">
+      <button type="button" class="btn btn-primary btn-xs" [ngClass]="{'active': ((errorCorrectionMode$ | async) === true)}"(click)="showMissingNames()"> <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Show missing names </button>
+    </div>
+    <div *ngIf="(beginnerView$ | async) === 'main-menu' || !currentElement">
+      <h4 class="text-danger"> Select a platform/stop from the map </h4>
+    </div>
+
     <div *ngIf="!((beginnerView$ | async) === 'main-menu') && currentElement">
       <h5>{{currentElement.tags.public_transport}}</h5>
       <small *ngIf="currentElement && currentElement.tags.name">{{currentElement.tags.name}}</small>

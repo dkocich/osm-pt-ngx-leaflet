@@ -195,16 +195,10 @@ export class TagBrowserComponent implements OnInit {
     this.tagKey = 'name';
     this.createChange('add tag');
     this.appActions.actSetBeginnerView('main-menu');
-    // remove popup
-    this.errorHighlightSrv.removeaPopUp();
+    this.errorHighlightSrv.removeCurrentlyClickedPopUp();
   }
   private cancel(): any {
     this.appActions.actSetBeginnerView('main-menu');
-    // this.appActions.actSetErrorCorrectionMode(null);
-    // delete this.currentElement;
-    // this.currentElement = undefined;
-    // this.processSrv.cancelSelection();
-    // this.processSrv.refreshSidebarView('cancel selection');
   }
   private back(): any {
     this.appActions.actSetBeginnerView('element-selected');

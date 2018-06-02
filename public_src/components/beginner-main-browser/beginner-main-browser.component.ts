@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { MapService } from '../../services/map.service';
 import { ProcessService } from '../../services/process.service';
@@ -20,13 +20,14 @@ import { IAppState } from '../../store/model';
   ],
   templateUrl: './beginner-main-browser.component.html',
 })
-export class BeginnerMainBrowserComponent implements OnInit {
+export class BeginnerMainBrowserComponent implements OnInit, OnDestroy {
   public currentElement;
   public popUps: boolean =  false;
-  public mysubscription: any;
+  public errorCorrectionSubscription: any;
   @select(['app', 'beginnerView']) public readonly beginnerView$: Observable<string>;
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+
 
   constructor(private sidebarSrv:  SidebarService,
               private processSrv: ProcessService,
@@ -53,12 +54,12 @@ export class BeginnerMainBrowserComponent implements OnInit {
       }
 
     });
-    this.mysubscription = ngRedux.select<boolean>(['app', 'errorCorrectionMode']) // <- New
+    this.errorCorrectionSubscription = ngRedux.select<boolean>(['app', 'errorCorrectionMode']) // <- New
       .subscribe(() => {
-        if (this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing-tag-name'){
+        if (this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing-tag-name') {
           this.errorHighlightsSrv.missingTagError('name');
         }
-        if (!this.ngRedux.getState()['app']['errorCorrectionMode']){
+        if (!this.ngRedux.getState()['app']['errorCorrectionMode']) {
           this.errorHighlightsSrv.removePopUps();
         }
       });
@@ -73,7 +74,7 @@ export class BeginnerMainBrowserComponent implements OnInit {
   private showTagBrowser(): any {
     this.appActions.actSetBeginnerView('tag');
   }
-  private missingNames(): any {
+  private showMissingNames(): any {
     if (this.popUps ===  false) {
       this.appActions.actSetErrorCorrectionMode('missing-tag-name');
       this.popUps = true;
@@ -85,5 +86,8 @@ export class BeginnerMainBrowserComponent implements OnInit {
   private back(): any {
     this.appActions.actSetBeginnerView('element-selected');
 }
+  ngOnDestroy(): any {
+   this.errorCorrectionSubscription.unsubscribe();
+  }
 
 }
