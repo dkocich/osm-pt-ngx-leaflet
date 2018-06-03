@@ -3,22 +3,22 @@
     <button type="button" class="btn btn-primary btn-xs"
             [ngClass]=" { 'active': ((errorCorrectionMode$ | async) === true) }" (click)="showMissingNames()"><i
       class="fa fa-exclamation-triangle" aria-hidden="true">
-    </i> Show missing names
+    </i> {{ 'Show missing names' | translate }}
     </button>
   </div>
   <div class="panel-heading" *ngIf="(beginnerView$ | async) === 'main-menu' || !currentElement">
-    <h4 class="text-danger"> Select a platform/stop from the map </h4>
+    <h4 class="text-danger"> {{'Select a platform/stop from the map' | translate}} </h4>
   </div>
   <div *ngIf="((beginnerView$ | async) === 'element-selected') && currentElement ">
     <div class="panel panel-default tabs">
       <div class="panel-heading" (click)="showTagBrowser()">
-        Tags
+        {{'Tags' | translate}}
         <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i>
       </div>
     </div>
     <div class="panel panel-default tabs" (click)="showRouteBrowser()">
       <div class="panel-heading">
-        Routes
+        {{ 'Routes' | translate}}
         <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i>
       </div>
     </div>

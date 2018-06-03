@@ -1,6 +1,6 @@
 <div *ngIf="!(advancedExpMode$ |async)">
   <div *ngIf="(errorCorrectionMode$ |async)">
-    <h4>Enter name</h4>
+    <h4>{{'Enter name' | translate}}</h4>
     <input #v class="form-control"  type="text" minlength="1"
            [ngModel]="tagValue"
            [typeahead]="expectedValues"
