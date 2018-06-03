@@ -28,11 +28,11 @@ export class ErrorHighlightService {
         let popup = L.popup({
           autoClose: false, closeOnClick: false, closeButton: false,
           autoPan: false, minWidth: 4,
-        })
-          .setLatLng(latlongObj)
+        }).setLatLng(latlongObj)
           .setContent(popupContent).openOn(this.mapSrv.map);
         this.popUpArr.push(popup);
-        this.addListenersToPopUp(popupContent['parentElement'], stop.id, popup['_leaflet_id']);
+        this.addClickListenersToPopUp(popup.getElement(), stop.id, popup['_leaflet_id']);
+        this.addHoverListenersToPopUp(popup.getElement());
       }}
     this.popUpLayerGroup = L.layerGroup(this.popUpArr).addTo(this.mapSrv.map);
   }
@@ -57,6 +57,9 @@ export class ErrorHighlightService {
   }
 
   public removeCurrentlyClickedPopUp(): any {
+    let popUpElement = this.getPopUpFromArray(this.currentPopUpFeatureId);
+    L.DomEvent.addListener(popUpElement, 'mouseover', this.colorPopUpByEvent);
+    L.DomEvent.addListener(popUpElement, 'mouseout', this.colorPopUpByEvent);
     this.popUpArr = this.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.currentPopUpFeatureId);
     this.popUpLayerGroup.removeLayer(this.currentPopUpFeatureId);
   }
@@ -67,19 +70,50 @@ export class ErrorHighlightService {
     return popupContent;
   }
 
-  private addListenersToPopUp(popUpElement: any, markerFeatureid: any, popUpId: any): any {
-    L.DomEvent.addListener(popUpElement.parentElement, 'click', () => {
+  private addClickListenersToPopUp(popUpElement: any, markerFeatureid: any, popUpId: any): any {
+    L.DomEvent.addListener(popUpElement, 'click', (e) => {
       this.mapSrv.handlePopUpClick(markerFeatureid);
       this.appActions.actSetBeginnerView('tag');
+      if (this.currentPopUpFeatureId && this.currentPopUpFeatureId !== popUpId) {
+        let previousPopUpElement = this.getPopUpFromArray(this.currentPopUpFeatureId);
+        this.colorPopUpByColorName('white', previousPopUpElement);
+        this.addHoverListenersToPopUp(previousPopUpElement);
+      }
       this.currentPopUpFeatureId = popUpId;
+      this.removeHoverListenersToPopUp(popUpElement);
+      this.colorPopUpByEvent(e);
     });
-    L.DomEvent.addListener(popUpElement.parentElement, 'mouseover', () => {
-      popUpElement.parentElement.style.backgroundColor = 'lightblue';
-      popUpElement.parentElement.parentElement.childNodes[1].childNodes[0].style.backgroundColor = 'lightblue';
-    });
-    L.DomEvent.addListener(popUpElement.parentElement, 'mouseout', () => {
-      popUpElement.parentElement.style.backgroundColor = 'white';
-      popUpElement.parentElement.parentElement.childNodes[1].childNodes[0].style.backgroundColor = 'white';
-    });
+  }
+  private addHoverListenersToPopUp(popUpElement: any): any{
+    L.DomEvent.addListener(popUpElement, 'mouseout', this.colorPopUpByEvent);
+    L.DomEvent.addListener(popUpElement, 'mouseover', this.colorPopUpByEvent);
+  }
+  private removeHoverListenersToPopUp(popUpElement: any): any{
+    L.DomEvent.removeListener(popUpElement, 'mouseout', this.colorPopUpByEvent);
+    L.DomEvent.removeListener(popUpElement, 'mouseover', this.colorPopUpByEvent);
+  }
+  private colorPopUpByEvent (e: any): any{
+    let colorString = '';
+    if (e.type === 'click' || e.type === 'mouseover') {
+      colorString = 'lightblue';
+    }
+    if (e.type === 'mouseout') {
+      colorString = 'white';
+    }
+    if (e.target.className === 'leaflet-popup-content-wrapper') {
+      e.target.style.backgroundColor = colorString;
+      e.target.parentElement.lastElementChild.lastElementChild.style.backgroundColor = colorString;
+    }
+  }
+  private colorPopUpByColorName(colorName: string, element: any): any {
+    element.children[0].style.backgroundColor = colorName;
+    element.lastElementChild.lastElementChild.style.backgroundColor = colorName;
+  }
+  private getPopUpFromArray(popUpId: any): any {
+    for (let popUp of this.popUpArr) {
+      if (popUp['_leaflet_id'] === popUpId) {
+        return popUp.getElement();
+      }
+    }
   }
 }
