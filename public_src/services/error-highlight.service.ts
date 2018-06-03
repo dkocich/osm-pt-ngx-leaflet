@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import { MapService } from './map.service';
 import { AppActions } from '../store/app/actions';
+import { StorageService } from './storage.service';
 
 @Injectable()
 export class ErrorHighlightService {
@@ -10,7 +11,8 @@ export class ErrorHighlightService {
   private popUpLayerGroup: any;
   private currentPopUpFeatureId: any;
   constructor(public mapSrv: MapService,
-              public appActions: AppActions) {}
+              public appActions: AppActions,
+              public storageSrv: StorageService) {}
 
   public missingTagError(tag: string): any {
     this.mapSrv.map.eachLayer((layer) => {
@@ -18,19 +20,23 @@ export class ErrorHighlightService {
         layer.off('click');
       }
     });
-    this.mapSrv.map.eachLayer((layer) => {
-    if (layer['_latlng'] && layer['feature'] && !(layer['feature'].properties[tag]) && !(this.checkIfAlreadyAdded(layer))) {
-          let popupContent = this.makePopUpContent();
-          let popup = L.popup({ autoClose: false, closeOnClick: false, closeButton: false,
-                                autoPan: false, minWidth: 4, className: 'myPopUp' })
-            .setLatLng(layer['_latlng'])
-            .setContent(popupContent).openOn(this.mapSrv.map);
-          this.popUpArr.push(popup);
-          this.addListenersToPopUp(popupContent['parentElement'], layer['feature'], popup['_leaflet_id']);
-    }
-});
+
+    for (let stop of this.storageSrv.listOfStops) {
+      let latlongObj = { lat: stop.lat, lng: stop.lon };
+      if (!(this.storageSrv.elementsMap.get(stop.id).tags[tag]) && !this.checkIfAlreadyAdded(latlongObj)) {
+        let popupContent = this.makePopUpContent();
+        let popup = L.popup({
+          autoClose: false, closeOnClick: false, closeButton: false,
+          autoPan: false, minWidth: 4,
+        })
+          .setLatLng(latlongObj)
+          .setContent(popupContent).openOn(this.mapSrv.map);
+        this.popUpArr.push(popup);
+        this.addListenersToPopUp(popupContent['parentElement'], stop.id, popup['_leaflet_id']);
+      }}
     this.popUpLayerGroup = L.layerGroup(this.popUpArr).addTo(this.mapSrv.map);
   }
+
   public removePopUps(): any {
     if (this.popUpLayerGroup) {
       this.popUpLayerGroup.remove();
@@ -41,15 +47,17 @@ export class ErrorHighlightService {
       }});
   }
 
-  private checkIfAlreadyAdded(layer: any): any {
+  private checkIfAlreadyAdded(latlongObj: any): any {
     for (let i = 0;  i < this.popUpArr.length ; i++) {
-      if (layer['_latlng'] === this.popUpArr[i].getLatLng()) {
+      if (JSON.stringify(latlongObj) === JSON.stringify(this.popUpArr[i].getLatLng())) {
         return true;
       }
     }
     return false;
   }
+
   public removeCurrentlyClickedPopUp(): any {
+    this.popUpArr = this.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.currentPopUpFeatureId);
     this.popUpLayerGroup.removeLayer(this.currentPopUpFeatureId);
   }
 
@@ -58,22 +66,20 @@ export class ErrorHighlightService {
     popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"> ';
     return popupContent;
   }
-  private addListenersToPopUp(popUpElement: any, feature: any, popUpId: any): any {
+
+  private addListenersToPopUp(popUpElement: any, markerFeatureid: any, popUpId: any): any {
     L.DomEvent.addListener(popUpElement.parentElement, 'click', () => {
-      this.mapSrv.handlePopUpClick(feature);
+      this.mapSrv.handlePopUpClick(markerFeatureid);
       this.appActions.actSetBeginnerView('tag');
       this.currentPopUpFeatureId = popUpId;
     });
-
     L.DomEvent.addListener(popUpElement.parentElement, 'mouseover', () => {
-
-        popUpElement.parentElement.style.backgroundColor = 'lightblue';
-        popUpElement.parentElement.parentElement.childNodes[1].childNodes[0].style.backgroundColor = 'lightblue';
-
+      popUpElement.parentElement.style.backgroundColor = 'lightblue';
+      popUpElement.parentElement.parentElement.childNodes[1].childNodes[0].style.backgroundColor = 'lightblue';
     });
     L.DomEvent.addListener(popUpElement.parentElement, 'mouseout', () => {
-        popUpElement.parentElement.style.backgroundColor = 'white';
-        popUpElement.parentElement.parentElement.childNodes[1].childNodes[0].style.backgroundColor = 'white';
+      popUpElement.parentElement.style.backgroundColor = 'white';
+      popUpElement.parentElement.parentElement.childNodes[1].childNodes[0].style.backgroundColor = 'white';
     });
   }
 }

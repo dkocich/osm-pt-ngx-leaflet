@@ -79,7 +79,6 @@ export class ProcessService {
             'Problem occurred - clicked element was not found?! Select different element please.',
           );
         }
-        this.appActions.actSelectElement({ element });
         console.log('LOG (processing s.) Selected element is ', element);
         this.refreshTagView(element);
       });

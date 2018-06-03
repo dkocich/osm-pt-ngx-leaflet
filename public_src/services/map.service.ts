@@ -745,8 +745,7 @@ export class MapService {
     // explores leaflet element
     // this.popupBtnClick.emit([featureType, featureId]);
   }
-  public handlePopUpClick(feature: any): void {
-    const featureId: number = this.getFeatureIdFromMarker(feature);
+  public handlePopUpClick(featureId: any): void {
     this.popUpClick.emit(featureId);
   }
 
