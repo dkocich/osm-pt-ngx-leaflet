@@ -1,8 +1,7 @@
 <div *ngIf="!(advancedExpMode$ |async)">
   <div *ngIf="(errorCorrectionMode$ |async)">
-    <h3>Enter name</h3>
+    <h4>Enter name</h4>
     <input #v class="form-control"  type="text" minlength="1"
-           placeholder="{{ 'Add new value' | translate }}"
            [ngModel]="tagValue"
            [typeahead]="expectedValues"
            (ngModelChange)="valueChange($event)"

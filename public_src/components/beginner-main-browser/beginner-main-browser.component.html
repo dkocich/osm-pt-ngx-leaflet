@@ -1,31 +1,51 @@
-<div class="panel panel-default mainPanel" >
-  <div class="panel-heading">
-    <div *ngIf="((beginnerView$ | async) === 'main-menu' || !currentElement) && (editing$ | async)">
-      <button type="button" class="btn btn-primary btn-xs" [ngClass]=" { 'active': ((errorCorrectionMode$ | async) === true) }" (click)="showMissingNames()"> <i class="fa fa-exclamation-triangle" aria-hidden="true">
-        </i> Show missing names </button>
-    </div>
-    <div *ngIf="(beginnerView$ | async) === 'main-menu' || !currentElement">
-      <h4 class="text-danger"> Select a platform/stop from the map </h4>
-    </div>
-    <div *ngIf="!((beginnerView$ | async) === 'main-menu') && currentElement">
-      <h5>{{currentElement.tags.public_transport}}</h5>
-      <small *ngIf="currentElement && currentElement.tags.name">{{currentElement.tags.name}}</small>
-    </div>
-    <i *ngIf="((beginnerView$ | async) === 'tag' || (beginnerView$ | async) === 'route')&& !(errorCorrectionMode$ | async)" (click)="back()" class="fa fa-chevron-left " aria-hidden="true" ></i>
+<div class="panel panel-default mainPanel">
+  <div class="panel-heading" *ngIf="((beginnerView$ | async) === 'main-menu' || !currentElement) && (editing$ | async)">
+    <button type="button" class="btn btn-primary btn-xs"
+            [ngClass]=" { 'active': ((errorCorrectionMode$ | async) === true) }" (click)="showMissingNames()"><i
+      class="fa fa-exclamation-triangle" aria-hidden="true">
+    </i> Show missing names
+    </button>
   </div>
-    <div *ngIf="((beginnerView$ | async) === 'element-selected') && currentElement ">
-      <div class="page-header header" (click)="showTagBrowser()" >
-        <h5>Tags <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i></h5>
+  <div class="panel-heading" *ngIf="(beginnerView$ | async) === 'main-menu' || !currentElement">
+    <h4 class="text-danger"> Select a platform/stop from the map </h4>
+  </div>
+  <div *ngIf="((beginnerView$ | async) === 'element-selected') && currentElement ">
+    <div class="panel panel-default tabs">
+      <div class="panel-heading" (click)="showTagBrowser()">
+        Tags
+        <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i>
       </div>
-      <div class="page-header header" (click)="showRouteBrowser()">
-        <h5>Routes <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i></h5>
+    </div>
+    <div class="panel panel-default tabs" (click)="showRouteBrowser()">
+      <div class="panel-heading">
+        Routes
+        <i class="fa fa-chevron-right pull-right" aria-hidden="true"></i>
       </div>
     </div>
-    <div *ngIf="((beginnerView$ | async) === 'tag') && currentElement">
-      <tag-browser></tag-browser>
+  </div>
+  <div *ngIf="((beginnerView$ | async) === 'tag') && currentElement">
+    <div class="panel panel-default tabs">
+      <div class="panel-heading"
+           *ngIf="((beginnerView$ | async) === 'tag' || (beginnerView$ | async) === 'route')&& !(errorCorrectionMode$ | async)">
+        <i (click)="back()" class="fa fa-chevron-left " aria-hidden="true"></i>
+      </div>
+      <div class="panel-body">
+        <tag-browser></tag-browser>
+      </div>
     </div>
-    <div *ngIf="((beginnerView$ | async) === 'route') && currentElement">
-      <route-browser></route-browser>
+  </div>
+  <div *ngIf="((beginnerView$ | async) === 'route') && currentElement">
+    <div class="panel panel-default tabs">
+      <div class="panel-heading"
+           *ngIf="((beginnerView$ | async) === 'tag' || (beginnerView$ | async) === 'route')&& !(errorCorrectionMode$ | async)">
+        <i
+          *ngIf="((beginnerView$ | async) === 'tag' || (beginnerView$ | async) === 'route')&& !(errorCorrectionMode$ | async)"
+          (click)="back()" class="fa fa-chevron-left " aria-hidden="true"></i>
+      </div>
+      <div class="panel-body">
+        <route-browser></route-browser>
+      </div>
     </div>
+  </div>
 </div>
 
