@@ -6,6 +6,7 @@ import * as L from 'leaflet';
 
 import { MapService } from './map.service';
 import { StorageService } from './storage.service';
+import { DbService } from './db.service';
 
 import { IOsmElement } from '../core/osmElement.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
@@ -34,6 +35,7 @@ export class ProcessService {
 
     private mapSrv: MapService,
     private storageSrv: StorageService,
+    private dbSrv: DbService,
   ) {
     // this.mapSrv.popupBtnClick.subscribe(
     //     (data) => {
@@ -354,8 +356,9 @@ export class ProcessService {
     if (
       !this.storageSrv.elementsDownloaded.has(rel.id) &&
       rel['members'].length > 0 &&
-      missingElements.length > 0
+      missingElements.length > 0 && !this.storageSrv.completelyDownloadedRoutesIDB.has(rel.id)
     ) {
+      console.log('LOG (processing s.) Route not in JS, not in IDB, has some members, and has missing members' + rel.id);
       console.log(
         'LOG (processing s.) Relation is not completely downloaded. Missing: ' +
         missingElements.join(', '),
@@ -369,10 +372,17 @@ export class ProcessService {
       (missingElements.length === 0 && rel.id > 0) ||
       (rel.id < 0 && rel['members'].length > 0)
     ) {
+      console.log('LOG (processing s.) (Route in JS) or (no missing elements &' +
+        ' old) or (new & has some members)' + rel.id);
       console.log('condition is valid', rel.id, rel['members'].length);
       this.downloadedMissingMembers(rel, true, zoomToElement);
+      this.refreshTagView(rel);
+      this.storageSrv.elementsDownloaded.add(rel.id);
     } else if (rel.id < 0) {
       this.refreshTagView(rel);
+    } else if (this.storageSrv.completelyDownloadedRoutesIDB.has(rel.id)) {
+      console.log('Route in IDB' + rel.id);
+      this.getRelationDataIDB(rel);
     } else {
       return alert(
         'FIXME: Some other problem with relation - downloaded ' +
@@ -613,4 +623,19 @@ export class ProcessService {
   public numIsBetween(num: number, min: number, max: number): boolean {
     return min < num && num < max;
   }
+  public getRelationDataIDB(rel: any): any {
+    this.dbSrv.getMembersForRoute(rel.id).then((res) => {
+      this.processNodeResponse(res);
+      const transformedGeojson = this.mapSrv.osmtogeojson(res);
+      this.storageSrv.localGeojsonStorage = transformedGeojson;
+      this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
+      this.storageSrv.elementsDownloaded.add(rel.id);
+      this.downloadedMissingMembers(rel, true, true);
+    }).catch((err) => {
+      console.log('LOG (overpass s.) Error in fetching / displaying the data for route with id : '
+        + rel.id + 'from IDB');
+      console.log(err);
+    });
+  }
+
 }
