@@ -58,6 +58,14 @@ export class AppComponent implements OnInit {
 
   public ngOnInit(): any {
     this.dbSrv.deleteExpiredDataIDB();
+    this.dbSrv.deleteExpiredMainDataIDB().then(() => {
+      console.log('LOG (app component) Successfully checked and deleted old items from IDB');
+    }).catch((err) => {
+      console.log('LOG (app component) Error in deleting old items from IDB');
+      console.log(err);
+    });
+    this.dbSrv.getCompletelyDownloadedElementsId();
+    this.dbSrv.getIdsQueriedRoutesForMaster();
     const map = L.map('map', {
       center: L.latLng(49.686, 18.351),
       layers: [this.mapSrv.baseMaps.CartoDB_light],
