@@ -84,6 +84,7 @@ export class OverpassService {
           console.log('LOG (overpass s.)', res);
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
+          this.warnSrv.showSuccess();
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
@@ -91,10 +92,6 @@ export class OverpassService {
         (err) => {
           this.warnSrv.showError();
           console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
-          return setTimeout(() => {
-            console.log('LOG (overpass) Request error - new request?');
-            this.requestNewOverpassData();
-          }, 5000);
         },
       );
   }

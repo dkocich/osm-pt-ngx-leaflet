@@ -7,6 +7,7 @@ import * as L from 'leaflet';
 import { Spinkit } from 'ng-http-loader/spinkits';
 
 import { Observable } from 'rxjs';
+import { Subject } from 'rxjs/Rx';
 
 import { DbService } from '../../services/db.service';
 import { EditService } from '../../services/edit.service';
@@ -38,6 +39,7 @@ export class AppComponent implements OnInit {
   @ViewChild('helpModal') public helpModal: ModalDirective;
 
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  private startEventProcessing = new Subject<L.LeafletEvent>();
 
   constructor(
     public appActions: AppActions,
@@ -71,11 +73,18 @@ export class AppComponent implements OnInit {
     L.control.scale().addTo(map);
 
     this.mapSrv.map = map;
-    this.mapSrv.map.on('zoomend moveend', () => {
-      this.processSrv.addPositionToUrlHash();
-      this.overpassSrv.initDownloader();
-      this.processSrv.filterDataInBounds();
+    this.mapSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
+      this.startEventProcessing.next(event);
     });
+    this.startEventProcessing
+      .debounceTime(500)
+      .distinctUntilChanged()
+      .subscribe((event: L.LeafletEvent) => {
+        this.processSrv.addPositionToUrlHash();
+        this.overpassSrv.initDownloader();
+        this.processSrv.filterDataInBounds();
+      });
+
     if (
       window.location.hash !== '' && this.processSrv.hashIsValidPosition()
     ) {
