@@ -32,6 +32,9 @@ This project requires [yarn](https://yarnpkg.com/) to run locally and it is buil
 
 Visit the [wiki page](https://github.com/dkocich/osm-pt-ngx-leaflet/wiki) for more information.
 
+## Dev environment
+Project is tested and developed with node v10.2.1+, npm v6.1.0+, yarn v1.7.0+.
+
 ## Communication
 
 Contact me on Slack [osm-pt.slack.com](https://join.slack.com/t/osm-pt/shared_invite/enQtMjkzOTU1NTA3MTU5LWVkMWNlMTRkOTU5ZDcxMTExYzZmM2U3OTE4NDFjZTM3MmExMTQzMzRhY2VjOTYyMmI3ZjRmYjI3OWUwNDZkMWQ).
