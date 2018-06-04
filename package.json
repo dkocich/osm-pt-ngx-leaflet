@@ -1,11 +1,6 @@
 {
   "name": "osm-pt-ngx-leaflet",
   "version": "0.0.1",
-  "engines": {
-    "node": ">=10.2.1",
-    "npm": ">=6.1.0",
-    "yarn": ">=1.7.0"
-  },
   "description": "An OpenStreetMap public transport editor built with Leaflet and Angular.",
   "repository": {
     "type": "git",
