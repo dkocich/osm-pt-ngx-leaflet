@@ -1,7 +1,8 @@
 <div class="panel-group">
   <div class="panel panel-heading panel-default text-center">
-    <h4 class="text-danger" *ngIf="listOfRelations.length === 0">{{ 'There are no loaded routes (zoom map and select a feature).' | translate }}</h4>
-    <span>
+    <h4 class="text-danger" *ngIf="listOfRelations.length === 0&& (advancedExpMode$ | async)">{{ 'There are no loaded routes (zoom map and select a feature).' | translate }}</h4>
+    <h4 class="text-danger" *ngIf="listOfRelations.length === 0 && !(advancedExpMode$ | async)" >{{  'No available routes for selected feature.' | translate }}</h4>
+    <span *ngIf="routeBrowserOptions.toggleFilteredView" >
       <button *ngIf="filteredView" class="btn btn-warning" container="body"
               tooltip="{{ 'Cancel filter showing only routes related to selected node' | translate }}"
               (click)="cancelFilter()">
@@ -10,13 +11,13 @@
       </button>
     </span>
     <span *ngIf="editing$ | async">
-      <button type="button" class="btn btn-default" container="body"
+      <button *ngIf="routeBrowserOptions.createRoute" type="button" class="btn btn-default" container="body"
               tooltip="{{ 'Create a new empty route relation' | translate }}"
               (click)="createRoute()">
         <i class="fa fa-road" aria-hidden="true"></i>
         &nbsp;{{ 'Create a route' | translate }}
       </button>
-      <button type="button" class="btn btn-default" container="body"
+      <button  *ngIf="routeBrowserOptions.membersEditing" type="button" class="btn btn-default" container="body"
               tooltip="{{ 'Toggle members editing for a route in a map' | translate }}"
               [class.btn-primary]="membersEditing" [disabled]="!elementShouldBeEditable()"
               (click)="toggleMembersEdit()"
@@ -25,7 +26,7 @@
         &nbsp;{{ 'Change members' | translate }}
       </button>
     </span>
-    <span *ngIf="listOfRelations.length > 0" class="text-center medium">
+    <span *ngIf="listOfRelations.length > 0 && routeBrowserOptions.membersEditing" class="text-center medium">
       <button type="button" class="btn btn-default" container="body"
               tooltip="{{ 'Verify existence and download route_master relations for all currently available routes' | translate }}"
               [disabled]="isRequesting"
@@ -44,7 +45,7 @@
     <div *ngIf="listOfRelationsForStop.length !== 0 && filteredView" class="medium">
       <div *ngFor="let rel of listOfRelationsForStop; trackBy: trackByFn;">
         <span class="explore" [class.selected]="currentElement && isSelected(rel.id)"
-              (mouseover)="exploreAvailableRelation($event, rel)" (click)="exploreRelation($event, rel)">
+              (mouseout)="exploreStop()" (mouseover)="exploreAvailableRelation($event, rel)" (click)="exploreRelation($event, rel)">
           {{rel.tags.route || "#TYPE" }} Route {{rel.tags.ref || "#REF"}}: {{rel.tags.from || "#FROM"}} => {{rel.tags.to || "#TO"}}, {{rel.tags.name || "#NAME"}}
         </span>
       </div>

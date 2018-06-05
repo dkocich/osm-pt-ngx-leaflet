@@ -37,40 +37,12 @@
 </div>
 
 <div id="sidebar">
-  <accordion>
-    <accordion-group #a1 [isOpen]="false">
-      <div accordion-heading class="text-center text-uppercase">
-        <i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp;{{ 'Relations' | translate }}
-        <i class="pull-right float-xs-right fa"
-           [ngClass]="{'fa-chevron-down': a1?.isOpen, 'fa-chevron-right': !a1?.isOpen}"></i>
-      </div>
-      <relation-browser></relation-browser>
-    </accordion-group>
-    <accordion-group #a2 [isOpen]="">
-      <div accordion-heading class="text-center text-uppercase">
-        <i class="fa fa-tags" aria-hidden="true"></i>&nbsp;{{ 'Tags' | translate }}
-        <i class="pull-right float-xs-right fa"
-           [ngClass]="{'fa-chevron-down': a2?.isOpen, 'fa-chevron-right': !a2?.isOpen}"></i>
-      </div>
-      <tag-browser></tag-browser>
-    </accordion-group>
-    <accordion-group #a3 [isOpen]="true">
-      <div accordion-heading class="text-center text-uppercase">
-        <i class="fa fa-road" aria-hidden="true"></i>&nbsp;{{ 'Routes' | translate }}
-        <i class="pull-right float-xs-right fa"
-           [ngClass]="{'fa-chevron-down': a3?.isOpen, 'fa-chevron-right': !a3?.isOpen}"></i>
-      </div>
-      <route-browser></route-browser>
-    </accordion-group>
-    <accordion-group #a4 [isOpen]="true">
-      <div accordion-heading class="text-center text-uppercase">
-        <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{ 'Stops/platforms' | translate }}
-        <i class="pull-right float-xs-right fa"
-           [ngClass]="{'fa-chevron-down': a4?.isOpen, 'fa-chevron-right': !a4?.isOpen}"></i>
-      </div>
-      <stop-browser></stop-browser>
-    </accordion-group>
-  </accordion>
+  <div *ngIf="!(advancedExpMode$ |async)" >
+    <beginner></beginner>
+  </div>
+  <div *ngIf="(advancedExpMode$| async)">
+    <expert></expert>
+  </div>
 </div>
 
 <div class="modal fade" bsModal #helpModal="bs-modal" [config]="{backdrop: 'static'}"
