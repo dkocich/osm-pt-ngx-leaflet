@@ -1,0 +1,26 @@
+<button type="button" class="btn btn-link" *ngIf="(beginnerView$ | async) === 'route'" (click)="back()">
+  <i class="fa fa-caret-left  icon-2x" aria-hidden="true"> Back </i>
+</button>
+<accordion>
+  <accordion-group #a1 [isOpen]="true">
+    <div accordion-heading class="text-center text-uppercase">
+      <i class="fa fa-tags" aria-hidden="true"></i>
+      <ng-container *ngIf="(beginnerView$ | async) === 'stop'"> {{ 'Tags' | translate }}</ng-container>
+      <ng-container *ngIf="(beginnerView$ | async) === 'route'"> {{ 'Route Tags' | translate }}</ng-container>
+      <i class="pull-right float-xs-right fa"
+         [ngClass]="{'fa-chevron-down': a1?.isOpen, 'fa-chevron-right': !a1?.isOpen}"></i>
+    </div>
+    <tag-browser
+      [tagBrowserOptions]="(beginnerView$| async) === 'stop'? stopTagBrowserOptions : routeTagBrowserOptions">
+    </tag-browser>
+  </accordion-group>
+  <accordion-group #a2 [isOpen]="true" *ngIf="(beginnerView$ | async) === 'stop'">
+    <div accordion-heading class="text-center text-uppercase">
+      <i class="fa fa-road" aria-hidden="true"></i>&nbsp;{{ 'Parent Routes' | translate }}
+      <i class="pull-right float-xs-right fa"
+         [ngClass]="{'fa-chevron-down': a2?.isOpen, 'fa-chevron-right': !a2?.isOpen}"></i>
+    </div>
+    <route-browser [routeBrowserOptions]='routeBrowserOptions'>
+    </route-browser>
+  </accordion-group>
+</accordion>

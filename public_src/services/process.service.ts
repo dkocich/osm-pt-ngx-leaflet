@@ -67,6 +67,11 @@ export class ProcessService {
         this.appActions.actSelectElement({ element });
         console.log('LOG (processing s.) Selected element is ', element);
         this.refreshTagView(element);
+        if (!(this.ngRedux.getState()['app']['advancedExpMode'])) {
+          this.storageSrv.selectedStopBeginnerMode = element;
+          this.filterRelationsByStop(element);
+          this.appActions.actSetBeginnerView('stop');
+        }
       },
     );
   }

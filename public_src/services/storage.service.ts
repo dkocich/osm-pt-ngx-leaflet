@@ -32,6 +32,7 @@ export class StorageService {
 
   public currentElement: any;
   public currentElementsChange = new EventEmitter();
+  public selectedStopBeginnerMode: any;
 
   public displayName: string = '';
   public imgHref: string = '';

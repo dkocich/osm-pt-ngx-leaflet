@@ -1,12 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
+
 import { Observable } from 'rxjs';
-import { select } from '@angular-redux/store';
+
+import { IRouteBrowserOptions } from '../../core/editingOptions.interfaces';
+
+import { NgRedux, select } from '@angular-redux/store';
+
+import { IAppState } from '../../store/model';
+import { AppActions } from '../../store/app/actions';
 
 @Component({
   providers: [],
@@ -17,7 +24,7 @@ import { select } from '@angular-redux/store';
   ],
   templateUrl: './route-browser.component.html',
 })
-export class RouteBrowserComponent implements OnInit {
+export class RouteBrowserComponent implements OnInit, OnDestroy {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   public currentElement;
@@ -29,18 +36,27 @@ export class RouteBrowserComponent implements OnInit {
   public filteredView: boolean;
   private idsHaveMaster = new Set();
   public membersEditing: boolean = false;
-
+  @Input() routeBrowserOptions: IRouteBrowserOptions;
+  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  private advancedExpModeSubscription: any;
+  private advancedExpMode: boolean;
   constructor(
     private editSrv: EditService,
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
+    private appActions: AppActions,
   ) {
-    //
+    this.advancedExpModeSubscription = ngRedux.select<boolean>(['app', 'advancedExpMode']) // <- New
+      .subscribe((data) => this.advancedExpMode = data);
   }
 
   public ngOnInit(): void {
+    if (!this.routeBrowserOptions.toggleFilteredView) {
+      this.filteredView = true;
+    }
     this.processSrv.showRelationsForStop$.subscribe((data) => {
       this.filteredView = data;
     });
@@ -100,12 +116,24 @@ export class RouteBrowserComponent implements OnInit {
    * @param rel
    */
   private exploreRelation($event: any, rel: any): void {
-    this.processSrv.exploreRelation(
+    if (!this.advancedExpMode) {
+      this.processSrv.refreshTagView(rel);
+      this.appActions.actSetBeginnerView('route');
+      this.processSrv.exploreRelation(
       this.storageSrv.elementsMap.get(rel.id),
-      true,
-      true,
-      true,
-    );
+        true,
+        false,
+        false,
+      );
+    }
+    else {
+      this.processSrv.exploreRelation(
+        this.storageSrv.elementsMap.get(rel.id),
+        true,
+        true,
+        true,
+      );
+    }
   }
 
   /**
@@ -114,7 +142,7 @@ export class RouteBrowserComponent implements OnInit {
    * @param rel
    */
   private exploreAvailableRelation($event: any, rel: any): void {
-    if (this.storageSrv.elementsDownloaded.has(rel.id)) {
+    if (this.storageSrv.elementsDownloaded.has(rel.id) && this.advancedExpMode) {
       this.processSrv.exploreRelation(
         this.storageSrv.elementsMap.get(rel.id),
         true,
@@ -189,5 +217,19 @@ export class RouteBrowserComponent implements OnInit {
    */
   private trackByFn(index: number, item: any): number {
     return item.id;
+  }
+
+  /***
+   * explores stop for beginner view (used for mouseout event for route list)
+   * @returns {void}
+   */
+  private exploreStop(): void {
+    if (!this.advancedExpMode) {
+      this.processSrv.exploreStop(this.storageSrv.currentElement, false, false, true);
+    }
+  }
+
+  ngOnDestroy(): void {
+  this.advancedExpModeSubscription.unsubscribe();
   }
 }
