@@ -16,6 +16,9 @@ import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { IAreaRef } from '../core/areaRef.interface';
 import { Utils } from '../core/utils.class';
 
+import { IAppState } from '../store/model';
+import { NgRedux } from '@angular-redux/store';
+
 @Injectable()
 export class OverpassService {
   public changeset;
@@ -30,6 +33,7 @@ export class OverpassService {
     private storageSrv: StorageService,
     private mapSrv: MapService,
     private warnSrv: WarnService,
+    private ngRedux: NgRedux<IAppState>,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -239,7 +243,11 @@ export class OverpassService {
           }
           console.log('LOG (overpass s.)', res);
           this.processSrv.processNodeResponse(res);
+          if (!(this.ngRedux.getState()['app']['advancedExpMode'])) {
+            this.processSrv.filterRelationsByStop(this.storageSrv.elementsMap.get(featureId));
+          } else {
           this.getRouteMasters(10);
+          }
           // TODO this.processSrv.drawStopAreas();
           this.warnSrv.showSuccess();
         },
