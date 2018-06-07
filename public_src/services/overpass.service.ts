@@ -17,14 +17,20 @@ import { IAreaRef } from '../core/areaRef.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { Utils } from '../core/utils.class';
 
-import { NgRedux } from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import { IAppState } from '../store/model';
+import { BsModalService } from 'ngx-bootstrap';
+import { ModalComponent } from '../components/modal/modal.component';
+import { ErrorHighlightService } from './error-highlight.service';
+import {CorrectService} from './correct.service';
+import {Observable} from 'rxjs/index';
 
 @Injectable()
 export class OverpassService {
   public changeset;
   private changeset_id: string;
   private areaReference: IAreaRef;
+  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
 
   constructor(
     private authSrv: AuthService,
@@ -35,6 +41,9 @@ export class OverpassService {
     private mapSrv: MapService,
     private warnSrv: WarnService,
     private ngRedux: NgRedux<IAppState>,
+    private modalService: BsModalService,
+    private correctSrv: CorrectService,
+    private errorHighlightSrv: ErrorHighlightService,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -124,6 +133,16 @@ export class OverpassService {
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
+          console.log('mpde', this.ngRedux.getState()['app']['errorCorrectionMode']);
+          if ((this.ngRedux.getState()['app']['errorCorrectionMode']) !== null) {
+
+            if ((this.errorHighlightSrv.isMobileDevice())) {
+              this.errorHighlightSrv.isDataDownloaded.emit(true);
+            } else {
+              let inBounds = this.errorHighlightSrv.getAllStopsInCurrentBounds();
+              this.download(inBounds);
+            }
+          }
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
@@ -323,6 +342,7 @@ export class OverpassService {
               this.getRouteMasters(10);
             }
           } else {
+            // TODO add to elements downloaded
             // Only add to elements map and not update listOfStops etc. when process is equal to false
             for (const element of res['elements']) {
               if (!this.storageSrv.elementsMap.has(element.id)) {
@@ -752,4 +772,99 @@ export class OverpassService {
       throw new Error(err.toString());
     });
   }
+
+  downloadNodeDataForError(data: any): any {
+    const featureId = Number(data);
+    if (!this.storageSrv.elementsDownloaded.has(featureId) && featureId > 0) {
+    let requestBody = `
+      [out:json][timeout:25];
+      (
+        node(${featureId})({{bbox}});
+      );
+      (._;<;);
+      out meta;`;
+    console.log('LOG (overpass s.) Querying nodes', requestBody);
+    requestBody = this.replaceBboxString(requestBody.trim());
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          let arr = new Map();
+          if (!res) {
+            return alert('No response from API. Try to select element again please.');
+          }
+          console.log('res', res);
+          for (const element of res['elements']) {
+            if (element.type === 'relation' && element.tags.type === 'route') {
+              if (element.tags.ref) {
+                arr.set(element.tags.ref, element.tags.name);
+              }
+            }
+
+            if (!this.storageSrv.elementsMap.has(element.id)) {
+              this.storageSrv.elementsMap.set(element.id, element);
+              console.log('element downloaded', element);
+            }
+          }
+          const initialState = {
+            error: 'missing ref tag',
+            refArr: arr,
+            // errorObject:
+          };
+          console.log('refarra',  arr);
+          this.modalService.show(ModalComponent, { initialState });
+          this.storageSrv.elementsDownloaded.add(featureId);
+         },
+      (err) => {
+        this.warnSrv.showError();
+        throw new Error(err.toString());
+       });
+      }
+  }
+
+  // move query to the
+  download(nearbyStops: any): any {
+    let requestBody = `
+      [out:json][timeout:25];
+      (
+         node(id:${nearbyStops.join(', ')});
+      );
+      (._;<;);
+      out meta;`;
+    console.log('query', requestBody);
+    requestBody = this.replaceBboxString(requestBody.trim());
+    this.httpClient
+        .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+        .subscribe(
+          (res) => {
+            if (!res) {
+              return alert('No response from API. Try to select element again please.');
+            }
+
+            console.log('res', res);
+            for (const element of nearbyStops) {
+              this.storageSrv.elementsDownloaded.add(element);
+            }
+
+            for (const element of res['elements']) {
+              if (!this.storageSrv.elementsMap.has(element.id)) {
+                this.storageSrv.elementsMap.set(element.id, element); }
+            }
+
+            let relations = [];
+            for (const element of res['elements']) {
+              if (element.type === 'relation' && element.tags.type === 'route') {
+                relations.push(element);
+              }
+              // if (!this.storageSrv.elementsMap.has(element.id)) {
+              //   this.storageSrv.elementsMap.set(element.id, element);
+              // }
+            }
+            this.errorHighlightSrv.isDataDownloaded.emit(true);
+          },
+          (err) => {
+            this.warnSrv.showError();
+            throw new Error(err.toString());
+          });
+    }
 }

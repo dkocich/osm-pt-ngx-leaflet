@@ -3,7 +3,13 @@ import 'leaflet.vectorgrid';
 import 'reflect-metadata';
 import 'zone.js/dist/zone';
 import 'zone.js/dist/long-stack-trace-zone';
+// import 'leaflet-area-select';
+// import 'leaflet.path.drag';
+// import 'leaflet-editable';
+// import 'leaflet-shades';
 
+import { SwitchLocationService } from './services/switch-location.service';
+import { SwitchLocationComponent } from './components/switch-location/switch-location.component';
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
@@ -31,8 +37,8 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './components/app/app.component';
 import { AuthComponent } from './components/auth/auth.component';
-import { BeginnerComponent } from './components/beginner/beginner.component';
 import { EditorComponent } from './components/editor/editor.component';
+import { BeginnerComponent } from './components/beginner/beginner.component';
 import { ExpertComponent } from './components/expert/expert.component';
 import { LangComponent } from './components/lang/lang.component';
 import { NavigatorComponent } from './components/navigator/navigator.component';
@@ -41,8 +47,11 @@ import { RouteBrowserComponent } from './components/sidebar/route-browser.compon
 import { SettingsComponent } from './components/settings/settings.component';
 import { StopBrowserComponent } from './components/sidebar/stop-browser.component';
 import { TagBrowserComponent } from './components/sidebar/tag-browser.component';
+import { ValidationBrowserComponent } from './components/sidebar/validation-browser.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
+import { ModalComponent } from './components/modal/modal.component';
+import { Modal2Component } from './components/modal2/modal2.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
@@ -54,6 +63,7 @@ import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
 import { StorageService } from './services/storage.service';
 import { WarnService } from './services/warn.service';
+import { ErrorHighlightService } from './services/error-highlight.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -65,6 +75,7 @@ import { RootEpics } from './store/epics';
 import { RavenErrorHandler } from './raven-error-handler';
 
 import { Utils } from './core/utils.class';
+import {CorrectService} from './services/correct.service';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
@@ -80,6 +91,7 @@ const conditional_providers = [
 
 @NgModule({
   bootstrap: [AppComponent],
+  entryComponents: [ModalComponent, Modal2Component],
   declarations: [
     AppComponent,
     AuthComponent,
@@ -95,8 +107,13 @@ const conditional_providers = [
     ToolbarComponent,
     TransporterComponent,
     SettingsComponent,
+    ModalComponent,
+    ValidationBrowserComponent,
+    SwitchLocationComponent,
 
     KeysPipe,
+
+    Modal2Component,
   ],
   imports: [
     AccordionModule.forRoot(),
@@ -141,6 +158,9 @@ const conditional_providers = [
     ProcessService,
     StorageService,
     WarnService,
+    ErrorHighlightService,
+    SwitchLocationService,
+    CorrectService,
 
     KeysPipe,
 
