@@ -8,6 +8,7 @@ import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 import { WarnService } from './warn.service';
+import { ErrorHighlightService } from './error-highlight.service';
 
 import { create } from 'xmlbuilder';
 import { LatLng } from 'leaflet';
@@ -35,6 +36,7 @@ export class OverpassService {
     private mapSrv: MapService,
     private warnSrv: WarnService,
     private ngRedux: NgRedux<IAppState>,
+    private errorHighlightSrv: ErrorHighlightService,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -124,6 +126,8 @@ export class OverpassService {
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
+          if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'name tag')) {
+                       this.errorHighlightSrv.missingTagError('name'); }
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
