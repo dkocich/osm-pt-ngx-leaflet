@@ -31,8 +31,8 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './components/app/app.component';
 import { AuthComponent } from './components/auth/auth.component';
-import { BeginnerComponent } from './components/beginner/beginner.component';
 import { EditorComponent } from './components/editor/editor.component';
+import { BeginnerComponent } from './components/beginner/beginner.component';
 import { ExpertComponent } from './components/expert/expert.component';
 import { LangComponent } from './components/lang/lang.component';
 import { NavigatorComponent } from './components/navigator/navigator.component';
@@ -41,8 +41,10 @@ import { RouteBrowserComponent } from './components/sidebar/route-browser.compon
 import { SettingsComponent } from './components/settings/settings.component';
 import { StopBrowserComponent } from './components/sidebar/stop-browser.component';
 import { TagBrowserComponent } from './components/sidebar/tag-browser.component';
+import { ValidationBrowserComponent } from './components/sidebar/validation-browser.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
+import { ModalComponent } from './components/modal/modal.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
@@ -54,6 +56,7 @@ import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
 import { StorageService } from './services/storage.service';
 import { WarnService } from './services/warn.service';
+import { ErrorHighlightService } from './services/error-highlight.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -80,6 +83,7 @@ const conditional_providers = [
 
 @NgModule({
   bootstrap: [AppComponent],
+  entryComponents: [ModalComponent],
   declarations: [
     AppComponent,
     AuthComponent,
@@ -95,8 +99,11 @@ const conditional_providers = [
     ToolbarComponent,
     TransporterComponent,
     SettingsComponent,
+    ModalComponent,
+    ValidationBrowserComponent,
 
     KeysPipe,
+
   ],
   imports: [
     AccordionModule.forRoot(),
@@ -141,6 +148,7 @@ const conditional_providers = [
     ProcessService,
     StorageService,
     WarnService,
+    ErrorHighlightService,
 
     KeysPipe,
 

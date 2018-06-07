@@ -22,6 +22,8 @@ import { StorageService } from '../../services/storage.service';
 })
 export class BeginnerComponent {
   @select(['app', 'beginnerView']) public readonly beginnerView$: Observable<string>;
+  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   public expectedKeys                               = PtTags.expectedKeys;
   public routeBrowserOptions: IRouteBrowserOptions  = {
     createRoute       : false,
@@ -38,6 +40,10 @@ export class BeginnerComponent {
     limitedKeys     : true,
     allowedKeys     : this.expectedKeys.filter(this.filterRouteKeysForBeginner),
     makeKeysReadOnly: true,
+  };
+  public validationOptions : any = {
+    missingNameTag : true,
+    missingRefTag : true,
   };
 
   constructor(private appActions: AppActions,

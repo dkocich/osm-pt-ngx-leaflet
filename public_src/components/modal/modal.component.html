@@ -1,0 +1,32 @@
+<ng-container *ngIf="error === 'missing name tag'">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{'Enter name' | translate }}</h4>
+  </div>
+  <div class="modal-body text-center">
+    <h4 *ngIf="errorObject.isCorrected">
+      {{'Already entered name' | translate }} : {{errorObject.tags.name}}
+    </h4>
+    <form>
+      <div class="form-group">
+        <input class="form-control" type="text" #v>
+      </div>
+    </form>
+    <h4 *ngIf="suggestedNames.length !== 0">{{'Suggested Names' | translate }}</h4>
+    <table *ngIf="suggestedNames.length !== 0" class="table table-condensed">
+    <tr *ngFor="let name of suggestedNames">
+    <td>
+      <p class="pull-left">{{name}}</p>
+    </td>
+      <td>
+        <button (click)="v.value = name">{{'Use' | translate }}</button>
+      </td>
+    </tr>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <p>
+      <button type="button" class="btn btn-default" (click)="close()">{{'Cancel' | translate }}</button>
+      <button type="button" class="btn btn-primary" (click)="saveNameTag(v.value)">{{'Save' | translate}}</button>
+    </p>
+  </div>
+</ng-container>
