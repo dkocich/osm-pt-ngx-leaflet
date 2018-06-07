@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">Enter name</h4>
+</div>
+<div class="modal-body text-center">
+  <div class="input-group">
+    <input type="text" #v>
+  </div>
+</div>
+<div class="modal-footer">
+  <p>
+    <button type="button" class="btn btn-default" (click)="close()">{{'Cancel' | translate }}</button>
+    <button type="button" class="btn btn-primary" (click)="save(v.value)">{{'Save' | translate}}</button>
+  </p>
+</div>

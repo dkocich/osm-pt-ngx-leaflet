@@ -8,6 +8,7 @@ import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 import { WarnService } from './warn.service';
+import { ErrorHighlightService } from './error-highlight.service';
 
 import { create } from 'xmlbuilder';
 import { LatLng } from 'leaflet';
@@ -16,12 +17,14 @@ import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { IAreaRef } from '../core/areaRef.interface';
 import { Utils } from '../core/utils.class';
 
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from '../store/model';
+
 @Injectable()
 export class OverpassService {
   public changeset;
   private changeset_id: string;
   private areaReference: IAreaRef;
-
   constructor(
     private authSrv: AuthService,
     private dbSrv: DbService,
@@ -30,6 +33,8 @@ export class OverpassService {
     private storageSrv: StorageService,
     private mapSrv: MapService,
     private warnSrv: WarnService,
+    private errorHighlightSrv: ErrorHighlightService,
+    private ngRedux: NgRedux<IAppState>,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -85,6 +90,8 @@ export class OverpassService {
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
+          if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'name tag')) {
+                       this.errorHighlightSrv.missingTagError('name'); }
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
