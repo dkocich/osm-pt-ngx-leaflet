@@ -24,22 +24,23 @@ export class BeginnerComponent {
   @select(['app', 'beginnerView']) public readonly beginnerView$: Observable<string>;
   public expectedKeys = PtTags.expectedKeys;
   public routeBrowserOptions: IRouteBrowserOptions = {
-    createRoute :  false,
-    changeMembers : false,
-    membersEditing : false,
-    toggleFilteredView :  false,
+    createRoute: false,
+    changeMembers: false,
+    membersEditing: false,
+    toggleFilteredView: false,
   };
   public stopTagBrowserOptions: ITagBrowserOptions = {
     limitedKeys: true,
-    allowedKeys :  this.expectedKeys.filter(this.filterKeysForBeginner),
-    makeKeysReadOnly : true,
+    allowedKeys: this.expectedKeys.filter(this.filterKeysForBeginner),
+    makeKeysReadOnly: true,
   };
   public routeTagBrowserOptions: ITagBrowserOptions = {
     limitedKeys: false,
-    makeKeysReadOnly : true,
+    makeKeysReadOnly: true,
   };
 
-  constructor(private appActions: AppActions, private processSrv: ProcessService, private storageSrv: StorageService) {}
+  constructor(private appActions: AppActions, private processSrv: ProcessService, private storageSrv: StorageService) {
+  }
 
   /***
    * Returns allowed keys (for tags) for beginner mode
@@ -51,7 +52,7 @@ export class BeginnerComponent {
       key === 'train' || key === 'subway' ||
       key === 'monorail' || key === 'tram' ||
       key === 'trolleybus' || key === 'bus' ||
-      key ===  'aerialway' || key ===  'ferry';
+      key === 'aerialway' || key === 'ferry';
   }
 
   /***
