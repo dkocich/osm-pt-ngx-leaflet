@@ -15,6 +15,7 @@ export class AppActions {
   static readonly SELECT_ELEMENT = 'SELECT_ELEMENT';
   static readonly SET_ADVANCED_EXP_MODE = 'SET_ADVANCED_EXP_MODE';
   static readonly SET_GOOD_CONNECT_MODE = 'SET_GOOD_CONNECT_MODE';
+  static readonly SET_BEGINNER_VIEW = 'SET_BEGINNER_VIEW';
 
   // basic sync action
   public actToggleEditing = (): Action => {
@@ -42,4 +43,7 @@ export class AppActions {
     return this.ngRedux.dispatch({ type: AppActions.SET_GOOD_CONNECT_MODE, payload });
   }
 
+  public actSetBeginnerView = (payload: string): Action => {
+    return this.ngRedux.dispatch({ type: AppActions.SET_BEGINNER_VIEW, payload });
+  }
 }

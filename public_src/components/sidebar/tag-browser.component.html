@@ -75,14 +75,15 @@
     <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
       <tbody>
       <tr *ngFor="let tag of currentElement['tags'] | keys;">
+          <ng-container *ngIf="!tagBrowserOptions.limitedKeys || tagBrowserOptions.allowedKeys.includes(tag.key)">
         <td>
-          <ng-container *ngIf="!editing$ | async">{{tag.key}}</ng-container>
+          <ng-container *ngIf="!(editing$ | async)">{{tag.key}}</ng-container>
           <input type="text" *ngIf="editing$ | async" value="{{tag.key}}" data-type="key"
-                 (blur)="createChange('change tag', tag.key, $event)">
+                 (blur)="createChange('change tag', tag.key, $event)" [readonly]="tagBrowserOptions.makeKeysReadOnly" >
         </td>
         <td>
-          <ng-container *ngIf="!editing$ | async">{{tag.value}}</ng-container>
-          <input type="text" *ngIf="editing$ | async" value="{{tag.value}}" data-type="value"
+          <ng-container *ngIf="!(editing$ | async)">{{tag.value}}</ng-container>
+         <input type="text" *ngIf="editing$ | async" value="{{tag.value}}" data-type="value"
                  (blur)="createChange('change tag', tag.key, $event)" >
         </td>
         <td *ngIf="editing$ | async">
@@ -92,8 +93,9 @@
                   (click)="createChange('remove tag', tag.key)">
           </button>
         </td>
+      </ng-container>
       </tr>
-      <tr *ngIf="editing$ | async">
+      <tr *ngIf="(editing$ | async) && !(tagBrowserOptions.limitedKeys)">
         <td>
           <input #k class="form-control" id="inputkey" type="text" minlength="1"
                  placeholder="{{ 'Add new tag' | translate }}"
@@ -122,6 +124,29 @@
           </button>
         </td>
       </tr>
+     <ng-container *ngIf="(editing$ | async) && tagBrowserOptions.limitedKeys">
+      <tr *ngFor="let key of unfilledKeys">
+          <td>
+          <input #k type="text" value = {{key}} readonly>
+        </td>
+       <td>
+          <input #v class="form-control" type="text" minlength="1"
+                placeholder="{{ 'Add new value' | translate }}"
+                 [ngModel]="tagValue"
+                 [typeahead]="expectedValues"
+                 (ngModelChange)="valueChange($event)"
+                 (keyup.enter)="updateValue(v.value)"
+                 (blur)="updateValue(v.value)"
+                 required>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-primary fa fa-plus" aria-hidden="true" container="body"
+                  tooltip="{{ 'Create a new tag' | translate }}"
+                  (click)="addChangeBeginnerMode(key)">
+          </button>
+        </td>
+      </tr>
+      </ng-container>
       </tbody>
     </table>
   </div>

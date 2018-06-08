@@ -14,7 +14,9 @@ import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 
 import { IOsmElement } from '../../core/osmElement.interface';
+
 import { PtTags } from '../../core/ptTags.class';
+import { ITagBrowserOptions } from '../../core/editingOptions.interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -29,10 +31,13 @@ import { PtTags } from '../../core/ptTags.class';
 export class TagBrowserComponent implements OnInit {
   @Input() public tagKey: string = '';
   @Input() public tagValue: string = '';
-  public currentElement: IOsmElement;
+  public currentElement: IOsmElement =  this.storageSrv.currentElement;
   public expectedKeys = PtTags.expectedKeys;
   public expectedValues = PtTags.expectedValues;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  @Input() tagBrowserOptions: ITagBrowserOptions;
+  public unfilledKeys = [];
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -54,11 +59,17 @@ export class TagBrowserComponent implements OnInit {
         );
         delete this.currentElement;
         this.currentElement = this.storageSrv.currentElement;
+        if (this.tagBrowserOptions.limitedKeys) {
+          this.unfilledKeys = this.getUnfilledKeys();
+        }
       } else if (data === 'cancel selection') {
         this.currentElement = undefined;
         delete this.currentElement;
       }
     });
+    if (this.tagBrowserOptions.limitedKeys) {
+      this.unfilledKeys = this.getUnfilledKeys();
+    }
   }
 
   private checkUnchanged(change: any): boolean {
@@ -183,4 +194,26 @@ export class TagBrowserComponent implements OnInit {
   private valueChange($event: any): void {
     console.log('LOG (tag-browser)', $event);
   }
+
+  /***
+   * Gets missing keys from allowed keys in beginnerMode
+   * @returns {any}
+   */
+  private getUnfilledKeys(): string[] {
+    if (this.currentElement) {
+      let existingKeys = Object.keys(this.currentElement.tags);
+      return this.tagBrowserOptions.allowedKeys.filter((key) => !existingKeys.includes(key));
+    }
+  }
+
+  /***
+   * Adds tag for beginnerMode
+   * @param {string} key
+   * @returns {any}
+   */
+  private addChangeBeginnerMode(key: string): any {
+    this.tagKey = key;
+    this.createChange('add tag');
+  }
+
 }
