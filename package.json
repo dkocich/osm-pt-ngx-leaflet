@@ -83,6 +83,7 @@
     "jasmine-spec-reporter": "4.2.1",
     "karma": "2.0.2",
     "karma-chrome-launcher": "2.2.0",
+    "karma-phantomjs-launcher": "1.0.4",
     "karma-coverage-istanbul-reporter": "2.0.1",
     "karma-jasmine": "1.1.2",
     "karma-jasmine-html-reporter": "1.1.0",
@@ -113,6 +114,5 @@
     "xmlbuilder": "10.0.0",
     "zone.js": "0.8.26"
   },
-  "devDependencies": {},
   "snyk": true
 }

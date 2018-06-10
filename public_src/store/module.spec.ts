@@ -11,12 +11,14 @@ describe('Store Module', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ NgReduxTestingModule ],
+      imports: [NgReduxTestingModule],
     }).compileComponents().then(() => {
       const testbed = getTestBed();
 
       mockEpics = {
-        createEpics(): any { return []; },
+        createEpics(): any {
+          return [];
+        },
       } as RootEpics;
 
       devTools = testbed.get(DevToolsExtension);
