@@ -1,0 +1,207 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.12.0
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  'npm:adm-zip:20180415':
+    - protractor > webdriver-js-extender > selenium-webdriver > adm-zip:
+        reason: None given
+        expires: '2018-07-10T18:44:02.069Z'
+  'npm:atob:20180429':
+    - webpack-dev-middleware > webpack > micromatch > braces > snapdragon > source-map-resolve > atob:
+        reason: None given
+        expires: '2018-07-10T18:44:02.070Z'
+    - webpack-dev-middleware > webpack > micromatch > extglob > snapdragon > source-map-resolve > atob:
+        reason: None given
+        expires: '2018-07-10T18:44:02.070Z'
+    - webpack-dev-middleware > webpack > micromatch > extglob > expand-brackets > snapdragon > source-map-resolve > atob:
+        reason: None given
+        expires: '2018-07-10T18:44:02.070Z'
+    - webpack-dev-middleware > webpack > micromatch > snapdragon > source-map-resolve > atob:
+        reason: None given
+        expires: '2018-07-10T18:44:02.070Z'
+    - webpack-dev-middleware > webpack > micromatch > nanomatch > snapdragon > source-map-resolve > atob:
+        reason: None given
+        expires: '2018-07-10T18:44:02.070Z'
+    - webpack-dev-middleware > webpack > watchpack > chokidar > braces > snapdragon > source-map-resolve > atob:
+        reason: None given
+        expires: '2018-07-10T18:44:02.070Z'
+    - webpack-dev-middleware > webpack > watchpack > chokidar > anymatch > micromatch > braces > snapdragon > source-map-resolve > atob:
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+    - webpack-dev-middleware > webpack > watchpack > chokidar > anymatch > micromatch > extglob > snapdragon > source-map-resolve > atob:
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+    - webpack-dev-middleware > webpack > watchpack > chokidar > anymatch > micromatch > extglob > expand-brackets > snapdragon > source-map-resolve > atob:
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+    - webpack-dev-middleware > webpack > watchpack > chokidar > anymatch > micromatch > snapdragon > source-map-resolve > atob:
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+    - webpack-dev-middleware > webpack > watchpack > chokidar > anymatch > micromatch > nanomatch > snapdragon > source-map-resolve > atob:
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+  'npm:braces:20180219':
+    - '@angular/compiler-cli > chokidar > anymatch > micromatch > braces':
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+    - karma > chokidar > anymatch > micromatch > braces:
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+    - karma-jasmine > karma > chokidar > anymatch > micromatch > braces:
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+    - karma-jasmine-html-reporter > karma > chokidar > anymatch > micromatch > braces:
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+    - karma-jasmine-html-reporter > karma-jasmine > karma > chokidar > anymatch > micromatch > braces:
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+    - stylelint > micromatch > braces:
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+    - stylelint-config-standard > stylelint > micromatch > braces:
+        reason: None given
+        expires: '2018-07-10T18:44:02.071Z'
+    - stylelint-config-standard > stylelint-config-recommended > stylelint > micromatch > braces:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - karma > expand-braces > braces:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - karma-jasmine > karma > expand-braces > braces:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - karma-jasmine-html-reporter > karma > expand-braces > braces:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - karma-jasmine-html-reporter > karma-jasmine > karma > expand-braces > braces:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+  'npm:concat-stream:20160901':
+    - osmtogeojson > concat-stream:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - osmtogeojson > geojson-numeric > concat-stream:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - concat-stream:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - osmtogeojson > geojson-rewind > concat-stream:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+  'npm:hoek:20180212':
+    - cypress > request > hawk > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - cypress > request > hawk > boom > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - cypress > request > hawk > sntp > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - cypress > request > hawk > cryptiles > boom > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - karma > log4js > loggly > request > hawk > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - karma > log4js > loggly > request > hawk > boom > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.072Z'
+    - karma > log4js > loggly > request > hawk > sntp > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.073Z'
+    - karma > log4js > loggly > request > hawk > cryptiles > boom > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.073Z'
+    - karma-jasmine > karma > log4js > loggly > request > hawk > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.073Z'
+    - karma-jasmine > karma > log4js > loggly > request > hawk > boom > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.073Z'
+    - karma-jasmine > karma > log4js > loggly > request > hawk > sntp > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.073Z'
+    - karma-jasmine > karma > log4js > loggly > request > hawk > cryptiles > boom > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.073Z'
+    - karma-jasmine-html-reporter > karma > log4js > loggly > request > hawk > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.073Z'
+    - karma-jasmine-html-reporter > karma > log4js > loggly > request > hawk > boom > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.073Z'
+    - karma-jasmine-html-reporter > karma > log4js > loggly > request > hawk > sntp > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.073Z'
+    - karma-jasmine-html-reporter > karma > log4js > loggly > request > hawk > cryptiles > boom > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.073Z'
+    - karma-jasmine-html-reporter > karma-jasmine > karma > log4js > loggly > request > hawk > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+    - karma-jasmine-html-reporter > karma-jasmine > karma > log4js > loggly > request > hawk > boom > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+    - karma-jasmine-html-reporter > karma-jasmine > karma > log4js > loggly > request > hawk > sntp > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+    - karma-jasmine-html-reporter > karma-jasmine > karma > log4js > loggly > request > hawk > cryptiles > boom > hoek:
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+    - '@angular-devkit/build-angular > node-sass > request > hawk > hoek':
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+    - '@angular-devkit/build-angular > node-sass > request > hawk > boom > hoek':
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+    - '@angular-devkit/build-angular > node-sass > request > hawk > sntp > hoek':
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+    - '@angular-devkit/build-angular > node-sass > request > hawk > cryptiles > boom > hoek':
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+  'npm:jasmine-core:20180216':
+    - protractor > jasmine > jasmine-core:
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+  'npm:lodash:20180130':
+    - cypress > lodash:
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+  'npm:open:20180512':
+    - snyk > open:
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+  'npm:timespan:20170907':
+    - karma > log4js > loggly > timespan:
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+    - karma-jasmine > karma > log4js > loggly > timespan:
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+    - karma-jasmine-html-reporter > karma > log4js > loggly > timespan:
+        reason: None given
+        expires: '2018-07-10T18:44:02.074Z'
+    - karma-jasmine-html-reporter > karma-jasmine > karma > log4js > loggly > timespan:
+        reason: None given
+        expires: '2018-07-10T18:44:02.075Z'
+  'npm:tunnel-agent:20170305':
+    - karma > log4js > loggly > request > tunnel-agent:
+        reason: None given
+        expires: '2018-07-10T18:44:02.075Z'
+    - karma-jasmine > karma > log4js > loggly > request > tunnel-agent:
+        reason: None given
+        expires: '2018-07-10T18:44:02.075Z'
+    - karma-jasmine-html-reporter > karma > log4js > loggly > request > tunnel-agent:
+        reason: None given
+        expires: '2018-07-10T18:44:02.075Z'
+    - karma-jasmine-html-reporter > karma-jasmine > karma > log4js > loggly > request > tunnel-agent:
+        reason: None given
+        expires: '2018-07-10T18:44:02.075Z'
+    - '@angular-devkit/build-angular > node-sass > request > tunnel-agent':
+        reason: None given
+        expires: '2018-07-10T18:44:02.075Z'
+patch: {}
