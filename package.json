@@ -2,10 +2,9 @@
   "name": "osm-pt-ngx-leaflet",
   "version": "0.0.1",
   "engines": {
-    "node": ">=8.9.3",
-    "npm": ">=6.1.0",
-    "yarn": ">=1.7.0"
-},
+    "node": "10.4.0",
+    "npm": "6.1.0"
+  },
   "description": "An OpenStreetMap public transport editor built with Leaflet and Angular.",
   "repository": {
     "type": "git",
@@ -36,7 +35,7 @@
     "ngstart": "ng serve",
     "ngstart-hmr": "ng serve --configuration hmr --hmr --aot=true",
     "ngstart-aot": "ng serve --aot=true",
-    "ngbuild": "ng build --progress --verbose --prod --aot=true",
+    "ngbuild": "ng build --progress --verbose --aot=true",
     "ngtest": "ng test",
     "nglint": "ng lint",
     "nge2e": "ng e2e"
