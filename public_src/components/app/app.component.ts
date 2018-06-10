@@ -4,7 +4,7 @@ import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
 
 import * as L from 'leaflet';
 
-import { Spinkit } from 'ng-http-loader/spinkits';
+import { Spinkit } from 'ng-http-loader';
 
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Rx';

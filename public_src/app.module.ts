@@ -26,7 +26,7 @@ import {
 
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2Piwik } from 'angulartics2/piwik';
-import { NgHttpLoaderModule } from 'ng-http-loader/ng-http-loader.module';
+import { NgHttpLoaderModule } from 'ng-http-loader';
 import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './components/app/app.component';
