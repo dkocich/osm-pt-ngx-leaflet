@@ -14,6 +14,7 @@ import { LatLng } from 'leaflet';
 
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { IAreaRef } from '../core/areaRef.interface';
+import { IPtRelation } from '../core/ptRelation.interface';
 import { Utils } from '../core/utils.class';
 
 import { NgRedux } from '@angular-redux/store';
@@ -151,8 +152,8 @@ export class OverpassService {
       // do not query masters if all relations are already known
       return;
     }
-    const routesQueriedInIDB:  Array<number> = [];
-    const routesNotQueriedNotInIDB:  Array<number> = [];
+    const routesQueriedInIDB:       number[] = [];
+    const routesNotQueriedNotInIDB: number[] = [];
 
     idsArr.forEach((id) => {
       if (this.storageSrv.queriedRoutesForMastersIDB.has(id)) {
@@ -172,7 +173,8 @@ export class OverpassService {
         this.processSrv.processMastersResponse(res);
       }).catch((err) => {
         console.log('LOG (overpass s.) Error in fetching routes from IDB');
-        console.log(err);
+        console.error(err);
+        throw new Error(err.toString());
       });
     }
     let requestBody: string = `
@@ -209,7 +211,8 @@ export class OverpassService {
           // });
           this.dbSrv.addResponseToIDB(res, 'route_master').catch((err) => {
             console.log('LOG (overpass s.) Error in adding route_master related response to IDB');
-            console.log(err);
+            console.error(err);
+            throw new Error(err.toString());
           });
         },
         (err) => {
@@ -327,7 +330,8 @@ export class OverpassService {
             this.dbSrv.addResponseToIDB(res, res['elements'][0].tags.public_transport, featureId).catch((err) => {
               console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
                 ' in adding related metadata to IDB for route with id : ' + featureId);
-              console.log(err);
+              console.error(err);
+              throw new Error(err.toString());
             });
           }
           this.warnSrv.showSuccess();
@@ -684,7 +688,7 @@ export class OverpassService {
     return keys[Math.floor(Math.random() * keys.length)];
   }
   public getStopDataIDB(stopId: number): any {
-    this.dbSrv.getRoutesForStop(stopId).then((relations: Array<object>[]) => {
+    this.dbSrv.getRoutesForStop(stopId).then((relations: IPtRelation[]) => {
       if (relations.length === 0) {
         console.log('LOG (overpass s.) No routes found for stop with id ' + stopId + 'in IDB');
       } else {
@@ -692,16 +696,16 @@ export class OverpassService {
           return relation['id'];
         }) + ' ] for stop with ID: ' + stopId + ' from IDB');
       }
-      for(let i = 0; i < relations.length; i++) {
-        if (!this.storageSrv.elementsMap.has(relations[i]['id'])) {
-          this.storageSrv.elementsMap.set(relations[i]['id'], relations[i]);
-          if (!relations[i]['tags']) {
+      for (const relation of relations) {
+        if (!this.storageSrv.elementsMap.has(relation.id)) {
+          this.storageSrv.elementsMap.set(relation.id, relation);
+          if (!relation.tags) {
             continue;
           }
-          if (relations[i]['tags']['public_transport'] === 'stop_area') {
-            this.storageSrv.listOfAreas.push(relations[i]);
+          if (relation.tags.public_transport === 'stop_area') {
+            this.storageSrv.listOfAreas.push(relation);
           } else {
-            this.storageSrv.listOfRelations.push(relations[i]);
+            this.storageSrv.listOfRelations.push(relation);
           }
         }
         this.storageSrv.logStats();
@@ -710,11 +714,12 @@ export class OverpassService {
       this.getRouteMasters(10);
     }).catch((err) => {
       console.log('LOG (overpass s.) Could not fetch ids of relations for a stop with id :' + stopId);
-      console.log(err);
+      console.error(err);
+      throw new Error(err.toString());
     });
   }
   public getPlatformDataIDB(platformId: number): any {
-    this.dbSrv.getRoutesForPlatform(platformId).then((relations: Array<object>[]) => {
+    this.dbSrv.getRoutesForPlatform(platformId).then((relations: IPtRelation[]) => {
       if (relations.length === 0) {
         console.log('LOG (overpass s.) No routes found for platform with id ' + platformId + 'in IDB');
       } else {
@@ -722,16 +727,16 @@ export class OverpassService {
           return relation['id'];
         }) + ' ] for platform with ID: ' + platformId + ' from IDB');
       }
-      for(let i = 0; i < relations.length; i++) {
-        if (!this.storageSrv.elementsMap.has(relations[i]['id'])) {
-          this.storageSrv.elementsMap.set(relations[i]['id'], relations[i]);
-          if (!relations[i]['tags']) {
+      for (const relation of relations) {
+        if (!this.storageSrv.elementsMap.has(relation.id)) {
+          this.storageSrv.elementsMap.set(relation.id, relation);
+          if (!relation.tags) {
             continue;
           }
-          if (relations[i]['tags']['public_transport'] === 'stop_area') {
-            this.storageSrv.listOfAreas.push(relations[i]);
+          if (relation.tags.public_transport === 'stop_area') {
+            this.storageSrv.listOfAreas.push(relation);
           } else {
-            this.storageSrv.listOfRelations.push(relations[i]);
+            this.storageSrv.listOfRelations.push(relation);
           }
         }
         this.storageSrv.logStats();
@@ -740,7 +745,8 @@ export class OverpassService {
       this.getRouteMasters(10);
     }).catch((err) => {
       console.log('LOG (overpass s.) Could not fetch ids of relations for a platform with id :' + platformId);
-      console.log(err);
+      console.error(err);
+      throw new Error(err.toString());
     });
   }
 }

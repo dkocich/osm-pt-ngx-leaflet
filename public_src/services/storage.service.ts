@@ -40,10 +40,10 @@ export class StorageService {
   public editsChanged: EventEmitter<boolean> = new EventEmitter();
   public stats: EventEmitter<object> = new EventEmitter();
 
-  public completelyDownloadedRoutesIDB = new Set();
-  public completelyDownloadedStopsIDB = new Set();
+  public completelyDownloadedRoutesIDB    = new Set();
+  public completelyDownloadedStopsIDB     = new Set();
   public completelyDownloadedPlatformsIDB = new Set();
-  public queriedRoutesForMastersIDB = new Set();
+  public queriedRoutesForMastersIDB       = new Set();
 
   constructor() {
     this.currentElementsChange.subscribe((data) => {

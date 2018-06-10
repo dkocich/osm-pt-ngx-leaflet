@@ -42,6 +42,7 @@ export class DbService {
         throw new Error(err.toString());
       });
   }
+
   getCompletelyDownloadedElementsId(): any {
     this.db.MetaData.where('isCompletelyDownloaded').equals(1).each((element) => {
       switch (element.type) {
@@ -64,7 +65,8 @@ export class DbService {
 
     }).catch((err) => {
       console.log('LOG (db s.) Error in fetching ids of completely downloaded elements in IDB');
-      console.log(err);
+      console.error(err);
+      throw new Error(err.toString());
     });
   }
 
@@ -82,9 +84,11 @@ export class DbService {
       console.log(this.storageSrv.queriedRoutesForMastersIDB);
     }).catch((err) => {
       console.log('LOG (db s.) Error in fetching IDs of routes for which masters have been queried and added to IDB');
-      console.log(err);
+      console.error(err);
+      throw new Error(err.toString());
     });
   }
+
   /***
    * Fetches routes for which the given stop is a member from IDB
    * @param {number} stopId
@@ -135,20 +139,22 @@ export class DbService {
       });
     });
   }
+
   /***
    * Markes Routes for which parent masters have been fetched from overpass and added to IDB
-   * @param {Array<number>} routeIds
+   * @param {number[]} routeIds
    * @returns {any}
    */
-  addToQueriedRoutesForMasters(routeIds: Array<number>): any {
+  addToQueriedRoutesForMasters(routeIds: number[]): any {
     return this.db.transaction('rw', this.db.MetaData, () => {
-      return this.db.MetaData.where('id').anyOf(routeIds).modify({ isQueriedForMasters : 1 }).then(() => {
+      return this.db.MetaData.where('id').anyOf(routeIds).modify({ isQueriedForMasters: 1 }).then(() => {
         console.log('LOG (db s.) Successfully marked QueriedMasters: true for routes  : [ ' + routeIds.map((routeId) => {
           return routeId;
         }).join(',') + ' ] in IDB');
       });
     });
   }
+
   /**
    * Adds Overpass API 's response to IndexedDb
    * @param response
@@ -156,37 +162,53 @@ export class DbService {
    * @param {string} type
    * @returns {any}
    */
-  public addResponseToIDB(response: any, type: string , id?: any): Promise<any> {
-    let routeIds = [];
-    let routes = [];
-    let platforms = [];
-    let stops = [];
-    let routeMasters = [];
-    let ways = [];
-    let platformsMetaData = [];
-    let stopsMetaData = [];
-    let routesMetaData = [];
+  public addResponseToIDB(response: any, type: string, id?: any): Promise<any> {
+    let routeIds             = [];
+    let routes               = [];
+    let platforms            = [];
+    let stops                = [];
+    let routeMasters         = [];
+    let ways                 = [];
+    let platformsMetaData    = [];
+    let stopsMetaData        = [];
+    let routesMetaData       = [];
     let routeMastersMetaData = [];
-    let waysMetaData = [];
+    let waysMetaData         = [];
     for (let element of response.elements) {
       switch (element.type) {
         case 'node':
           if (element.tags.public_transport === 'platform') {
             platforms.push(element);
-            platformsMetaData.push({ id: element.id, timestamp: Math.floor(Date.now() / 1000),
-              type: 'platform', parentRoutes : [], isCompletelyDownloaded : 0});
+            platformsMetaData.push({
+              id: element.id,
+              timestamp: Math.floor(Date.now() / 1000),
+              type: 'platform',
+              parentRoutes: [],
+              isCompletelyDownloaded: 0,
+            });
           }
           if (element.tags.public_transport === 'stop_position') {
             stops.push(element);
-            stopsMetaData.push({ id: element.id, timestamp: Math.floor(Date.now() / 1000),
-              type: 'stop_position', parentRoutes : [], isCompletelyDownloaded : 0});
+            stopsMetaData.push({
+              id: element.id,
+              timestamp: Math.floor(Date.now() / 1000),
+              type: 'stop_position',
+              parentRoutes: [],
+              isCompletelyDownloaded: 0,
+            });
           }
           break;
         case 'relation':
           if (element.tags.type === 'route') {
             routes.push(element);
-            routesMetaData.push({ id: element.id, timestamp: Math.floor(Date.now() / 1000),
-              type: 'route', memberStops : [], memberPlatforms : [] , isCompletelyDownloaded : 0});
+            routesMetaData.push({
+              id: element.id,
+              timestamp: Math.floor(Date.now() / 1000),
+              type: 'route',
+              memberStops: [],
+              memberPlatforms: [],
+              isCompletelyDownloaded: 0,
+            });
             if (type === 'stop_position') {
               routeIds.push(element.id);
             }
@@ -196,14 +218,22 @@ export class DbService {
           }
           if (element.tags.type === 'route_master') {
             routeMasters.push(element);
-            routeMastersMetaData.push({ id: element.id, timestamp: Math.floor(Date.now() / 1000),
-              type: 'route_master', isCompletelyDownloaded : 0});
+            routeMastersMetaData.push({
+              id: element.id,
+              timestamp: Math.floor(Date.now() / 1000),
+              type: 'route_master',
+              isCompletelyDownloaded: 0,
+            });
           }
           break;
         case 'way':
           ways.push(element);
-          waysMetaData.push({ id: element.id, timestamp: Math.floor(Date.now() / 1000),
-            type: 'way', isCompletelyDownloaded : 0});
+          waysMetaData.push({
+            id: element.id,
+            timestamp: Math.floor(Date.now() / 1000),
+            type: 'way',
+            isCompletelyDownloaded: 0,
+          });
 
           break;
       }
@@ -218,8 +248,8 @@ export class DbService {
         }).catch((err) => {
           console.log('LOG (db s.) Error in adding platforms to IDB, all previous ' +
             'operations for this particular transaction (not metadata) will be rolled back');
-          console.log(err);
-          throw err;
+          console.error(err);
+          throw new Error(err.toString());
         });
 
       }
@@ -231,8 +261,8 @@ export class DbService {
         }).catch((err) => {
           console.log('LOG (db s.) Error in adding stops to IDB, all previous ' +
             'operations for this particular transaction (not metadata) will be rolled back');
-          console.log(err);
-          throw err;
+          console.error(err);
+          throw new Error(err.toString());
         });
       }
       if (ways.length !== 0) {
@@ -243,8 +273,8 @@ export class DbService {
         }).catch((err) => {
           console.log('LOG (db s.) Error in adding ways to IDB, all previous ' +
             ' operations for this particular transaction (not metadata) will be rolled back');
-          console.log(err);
-          throw err;
+          console.error(err);
+          throw new Error(err.toString());
         });
       }
       if (routeMasters.length !== 0) {
@@ -255,8 +285,8 @@ export class DbService {
         }).catch((err) => {
           console.log('LOG (db s.) Error in adding route masters to IDB, all previous ' +
             ' operations for this particular transaction (not metadata) will be rolled back');
-          console.log(err);
-          throw err;
+          console.error(err);
+          throw new Error(err.toString());
         });
       }
       if (routes.length !== 0) {
@@ -267,8 +297,8 @@ export class DbService {
         }).catch((err) => {
           console.log('LOG (db s.) Error in adding routes to IDB, all previous ' +
             ' operations for this particular transaction (not metadata) will be rolled back');
-          console.log(err);
-          throw err;
+          console.error(err);
+          throw new Error(err.toString());
         });
       }
 
@@ -302,8 +332,8 @@ export class DbService {
         this.storageSrv.completelyDownloadedStopsIDB.delete(id);
         this.storageSrv.completelyDownloadedRoutesIDB.delete(id);
         this.storageSrv.completelyDownloadedPlatformsIDB.delete(id);
-        console.log(err);
-        throw err;
+        console.error(err);
+        throw new Error(err.toString());
       });
     });
   }
@@ -350,11 +380,11 @@ export class DbService {
 
   /***
    * Gets all parent route_masters for given routeIDs
-   * @param {Array<number>} routeIds
+   * @param {number[]} routeIds
    * @returns {any}
    */
 
-  getRoutesForMasterRoute(routeIds: Array<number>): any {
+  getRoutesForMasterRoute(routeIds: number[]): any {
     let filteredMasters = [];
     return this.db.PtRouteMasters.each((routeMaster) => {
       routeMaster['members'].forEach((element) => {
@@ -387,8 +417,8 @@ export class DbService {
               console.log('LOG (db s.) Successfully deleted platform with id ' + value.id + ' from IDB');
             }).catch((err) => {
               console.log('LOG (db s.) Error in deleting platform with id ' + value.id + ' from IDB');
-              console.log(err);
-              throw err;
+              console.error(err);
+              throw new Error(err.toString());
             });
 
           }
@@ -397,8 +427,8 @@ export class DbService {
               console.log('LOG (db s.) Successfully deleted stop with id ' + value.id + ' from IDB');
             }).catch((err) => {
               console.log('LOG (db s.) Error in deleting stop with id ' + value.id + ' from IDB');
-              console.log(err);
-              throw err;
+              console.error(err);
+              throw new Error(err.toString());
             });
 
           }
@@ -407,8 +437,8 @@ export class DbService {
               console.log('LOG (db s.) Successfully deleted route master with id ' + value.id + ' from IDB');
             }).catch((err) => {
               console.log('LOG (db s.) Error in deleting route master with id ' + value.id + ' from IDB');
-              console.log(err);
-              throw err;
+              console.error(err);
+              throw new Error(err.toString());
             });
 
           }
@@ -417,8 +447,8 @@ export class DbService {
               console.log('LOG (db s.) Successfully deleted way with id ' + value.id + ' from IDB');
             }).catch((err) => {
               console.log('LOG (db s.) Error in deleting way with id ' + value.id + ' from IDB');
-              console.log(err);
-              throw err;
+              console.error(err);
+              throw new Error(err.toString());
             });
           }
           if (value['type'] === 'route') {
@@ -434,13 +464,13 @@ export class DbService {
                 console.log('LOG (db s.) Successfully deleted route from parentRoutes with id' + value.id + ' from IDB');
               }).catch((err) => {
                 console.log('LOG (db s.) Error in deleting route from parentRoutes with id ' + value.id + ' in metadata from IDB');
-                console.log(err);
-                throw err;
+                console.error(err);
+                throw new Error(err.toString());
               });
             }).catch((err) => {
               console.log('LOG (db s.) Error in deleting route with id ' + value.id + ' from IDB');
-              console.log(err);
-              throw err;
+              console.error(err);
+              throw new Error(err.toString());
             });
           }
         }
@@ -450,7 +480,7 @@ export class DbService {
 
   /***
    * Adds metadata to IDB
-   * @param {Array<number>} routeIds
+   * @param {number[]} routeIds
    * @param {number} id
    * @param {string} type
    * @param stopsMetaData
@@ -460,8 +490,16 @@ export class DbService {
    * @param waysMetaData
    * @returns {any}
    */
-  addMetaData(routeIds: Array<number>, id: number, type: string, stopsMetaData: any, platformsMetaData: any, routesMetaData: any,
-              routeMastersMetaData: any, waysMetaData: any): any {
+  addMetaData(
+    routeIds:             number[],
+    id:                   number,
+    type:                 string,
+    stopsMetaData:        any,
+    platformsMetaData:    any,
+    routesMetaData:       any,
+    routeMastersMetaData: any,
+    waysMetaData:         any,
+  ): any {
 
     return this.db.transaction('rw', [this.db.PtRoutes, this.db.PtStops,
       this.db.PtPlatforms, this.db.OSMWays, this.db.PtRouteMasters, this.db.MetaData], () => {
