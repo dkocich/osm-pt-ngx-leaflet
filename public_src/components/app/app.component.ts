@@ -22,6 +22,8 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
 
+import streetView from './StreetViewButtons';
+
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
   selector: 'app',
@@ -85,6 +87,12 @@ export class AppComponent implements OnInit {
     this.mapSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
       this.startEventProcessing.next(event);
     });
+
+    streetView({
+      position: 'topleft',
+      mapillaryId: 'RC1ZRTBfaVlhWmJmUGVqRk5CYnAxQTpmMGE3OTU0MzM0MTljZTA4',
+    }).addTo(this.mapSrv.map);
+
     this.startEventProcessing
       .debounceTime(500)
       .distinctUntilChanged()
