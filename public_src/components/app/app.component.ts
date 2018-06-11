@@ -22,7 +22,7 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
 
-import streetView from './StreetViewButtons';
+import { streetView } from './StreetViewButtons';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],

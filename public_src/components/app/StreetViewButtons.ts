@@ -130,9 +130,9 @@ const StreetView = L.Control.extend({
   },
 
   _ajaxRequest: (url, callback): any => {
-    if (window.XMLHttpRequest === undefined) {
-      return;
-    }
+    // if (window.XMLHttpRequest === undefined) {
+    //   return;
+    // }
     const req = new XMLHttpRequest();
     req.open('GET', url);
     req.onreadystatechange = () => {
