@@ -41,4 +41,17 @@
       </div>
     </a>
   </li>
+  <li *ngIf="(editing$ | async)">
+    <a href="#">
+      <div class="btn-group" dropdown>
+        <button dropdownToggle type="button" class="btn btn-default dropdown-toggle btn-xs"
+                [class.btn-success]="(errorCorrectionMode$ | async)"> {{'Highlight Modes' | translate}}
+          <span class="caret"></span>
+        </button>
+        <ul *dropdownMenu class="dropdown-menu" role="menu">
+          <li role="menuitem"><a class="dropdown-item" (click)="toggleErrorMode('missing tag')">{{'Show missing names' | translate}}</a></li>
+        </ul>
+      </div>
+    </a>
+  </li>
 </ul>

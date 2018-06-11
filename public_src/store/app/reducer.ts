@@ -7,6 +7,7 @@ export const INITIAL_STATE: IAppState = {
   selectObject: null,
   advancedExpMode: false,
   goodConnectMode: false,
+  errorCorrectionMode: null,
 };
 
 export function appReducer(state: IAppState = INITIAL_STATE, action: AnyAction): any {
@@ -31,6 +32,11 @@ export function appReducer(state: IAppState = INITIAL_STATE, action: AnyAction):
         ...state,
         goodConnectMode: action.payload,
       };
+    case AppActions.SET_ERROR_CORRECTION_MODE:
+      return {
+         ...state,
+         errorCorrectionMode: action.payload,
+       };
     default:
       // We don't care about any other actions right now.
       return state;

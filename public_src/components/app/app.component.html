@@ -36,7 +36,7 @@
   <toolbar></toolbar>
 </div>
 
-<div id="sidebar">
+<div id="sidebar" *ngIf="!(errorCorrectionMode$ |async)">
   <accordion>
     <accordion-group #a1 [isOpen]="false">
       <div accordion-heading class="text-center text-uppercase">
