@@ -402,10 +402,10 @@ export class DbService {
   }
 
   /***
-   * Deletes old data from IDB
+   * Deletes old data from IDB (everything except areas grid)
    * @returns {any}
    */
-  deleteExpiredMainDataIDB(): any {
+  deleteExpiredPTDataIDB(): any {
     return this.db.transaction('rw', [this.db.PtStops, this.db.PtRoutes,
       this.db.PtPlatforms, this.db.MetaData, this.db.OSMWays, this.db.PtRouteMasters], () => {
 

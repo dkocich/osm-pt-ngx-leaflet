@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
 
   public ngOnInit(): any {
     this.dbSrv.deleteExpiredDataIDB();
-    this.dbSrv.deleteExpiredMainDataIDB().then(() => {
+    this.dbSrv.deleteExpiredPTDataIDB().then(() => {
       console.log('LOG (app component) Successfully checked and deleted old items from IDB');
     }).catch((err) => {
       console.log('LOG (app component) Error in deleting old items from IDB');

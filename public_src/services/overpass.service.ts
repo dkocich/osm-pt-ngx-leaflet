@@ -40,7 +40,7 @@ export class OverpassService {
      * @param data - string containing ID of clicked marker
      */
     this.mapSrv.markerClick.subscribe((data) => {
-      let goodConnectionMode = ngRedux.getState()['app']['goodConnectMode'];
+      // let goodConnectionMode = ngRedux.getState()['app']['goodConnectMode'];
       const featureId = Number(data);
 
       if (this.storageSrv.elementsMap.has(featureId)) {
@@ -72,28 +72,28 @@ export class OverpassService {
         }
       }
 
-      if (!goodConnectionMode) {
-        for (let i = 0; i < 5; i++) {
-          let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
-          if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
-            !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
-            // gets the data from overpass query and adds to IDB
-            console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in slow connection mode');
-            this.getNodeDataOverpass(randomKey, false);
-          }
-        }
-      }
-      else {
-        for (let i = 0; i < 25; i++) {
-          let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
-          if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
-            !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
-            // gets the data from overpass query and adds to IDB
-            console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in fast connection mode');
-            this.getNodeDataOverpass(randomKey, false);
-          }
-        }
-      }
+      // if (!goodConnectionMode) {
+      //   for (let i = 0; i < 5; i++) {
+      //     let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
+      //     if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
+      //       !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
+      //       // gets the data from overpass query and adds to IDB
+      //       console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in slow connection mode');
+      //       this.getNodeDataOverpass(randomKey, false);
+      //     }
+      //   }
+      // }
+      // else {
+      //   for (let i = 0; i < 25; i++) {
+      //     let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
+      //     if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
+      //       !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
+      //       // gets the data from overpass query and adds to IDB
+      //       console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in fast connection mode');
+      //       this.getNodeDataOverpass(randomKey, false);
+      //     }
+      //   }
+      // }
     });
 
     /**
