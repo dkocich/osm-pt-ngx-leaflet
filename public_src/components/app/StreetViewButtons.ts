@@ -29,7 +29,6 @@ const StreetView = L.Control.extend({
   onAdd: (map): any => {
     this._container = L.DomUtil.create('div', 'leaflet-bar');
     this._buttons = [];
-    debugger;
     for (let provider of this.providers) {
       this._addProvider(provider);
     }
@@ -102,8 +101,8 @@ const StreetView = L.Control.extend({
       return;
     }
     let last;
-    for (let i = 0; i < this._buttons.length; i++) {
-      const b = this._buttons[i];
+    for (let button of this._buttons) {
+      const b = button;
       let show = !b._bounds || b._bounds.contains(center);
       let vis = this._container.contains(b);
 
@@ -146,5 +145,6 @@ const StreetView = L.Control.extend({
 });
 
 export const streetView = (options) => {
+  debugger;
   return new StreetView(options);
 };

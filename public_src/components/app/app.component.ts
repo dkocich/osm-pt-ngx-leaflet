@@ -22,7 +22,7 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
 
-import { streetView } from './StreetViewButtons';
+import * as streetView from './StreetViewButtons';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -88,12 +88,14 @@ export class AppComponent implements OnInit {
       this.startEventProcessing.next(event);
     });
 
+    console.log('before add street');
     streetView({
       position: 'topleft',
       mapillaryId: 'RC1ZRTBfaVlhWmJmUGVqRk5CYnAxQTpmMGE3OTU0MzM0MTljZTA4',
     }).addTo(this.mapSrv.map);
+    console.log('after add street');
 
-    this.startEventProcessing
+    thims.startEventProcessing
       .debounceTime(500)
       .distinctUntilChanged()
       .subscribe((event: L.LeafletEvent) => {
