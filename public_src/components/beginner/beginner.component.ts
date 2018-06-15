@@ -12,9 +12,9 @@ import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 
 @Component({
-  providers: [],
-  selector: 'beginner',
-  styleUrls: [
+  providers  : [],
+  selector   : 'beginner',
+  styleUrls  : [
     './beginner.component.less',
     '../../styles/main.less',
   ],
@@ -22,25 +22,28 @@ import { StorageService } from '../../services/storage.service';
 })
 export class BeginnerComponent {
   @select(['app', 'beginnerView']) public readonly beginnerView$: Observable<string>;
-  public expectedKeys = PtTags.expectedKeys;
-  public routeBrowserOptions: IRouteBrowserOptions = {
-    createRoute :  false,
-    changeMembers : false,
-    membersEditing : false,
-    toggleFilteredView :  false,
+  public expectedKeys                               = PtTags.expectedKeys;
+  public routeBrowserOptions: IRouteBrowserOptions  = {
+    createRoute       : false,
+    changeMembers     : false,
+    membersEditing    : false,
+    toggleFilteredView: false,
   };
-  public stopTagBrowserOptions: ITagBrowserOptions = {
-    limitedKeys: true,
-    allowedKeys :  this.expectedKeys.filter(this.filterStopKeysForBeginner),
-    makeKeysReadOnly : true,
+  public stopTagBrowserOptions: ITagBrowserOptions  = {
+    limitedKeys     : true,
+    allowedKeys     : this.expectedKeys.filter(this.filterStopKeysForBeginner),
+    makeKeysReadOnly: true,
   };
   public routeTagBrowserOptions: ITagBrowserOptions = {
-    limitedKeys: true,
-    allowedKeys :  this.expectedKeys.filter(this.filterRouteKeysForBeginner),
-    makeKeysReadOnly : true,
+    limitedKeys     : true,
+    allowedKeys     : this.expectedKeys.filter(this.filterRouteKeysForBeginner),
+    makeKeysReadOnly: true,
   };
 
-  constructor(private appActions: AppActions, private processSrv: ProcessService, private storageSrv: StorageService) {}
+  constructor(private appActions: AppActions,
+              private processSrv: ProcessService,
+              private storageSrv: StorageService) {
+  }
 
   /***
    * Returns allowed keys (for tags) for beginner mode stops
@@ -48,7 +51,7 @@ export class BeginnerComponent {
    * @returns {boolean}
    */
   private filterStopKeysForBeginner(key: string): boolean {
-    return key === 'name' || key === 'ref' ;
+    return key === 'name' || key === 'ref';
   }
 
   /***
@@ -57,7 +60,7 @@ export class BeginnerComponent {
    * @returns {boolean}
    */
   private filterRouteKeysForBeginner(key: string): boolean {
-    return key === 'name' || key === 'ref' ;
+    return key === 'name' || key === 'ref';
   }
 
   /***

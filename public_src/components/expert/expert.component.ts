@@ -3,9 +3,9 @@ import { Component } from '@angular/core';
 import { IRouteBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interfaces';
 
 @Component({
-  providers: [],
-  selector: 'expert',
-  styleUrls: [
+  providers  : [],
+  selector   : 'expert',
+  styleUrls  : [
     './expert.component.less',
     '../../styles/main.less',
   ],
@@ -14,14 +14,14 @@ import { IRouteBrowserOptions, ITagBrowserOptions } from '../../core/editingOpti
 export class ExpertComponent {
 
   public routeBrowserOptions: IRouteBrowserOptions = {
-    createRoute:  true,
-    changeMembers : true,
-    membersEditing : true,
-    toggleFilteredView :  true,
+    createRoute       : true,
+    changeMembers     : true,
+    membersEditing    : true,
+    toggleFilteredView: true,
   };
 
   public tagBrowserOptions: ITagBrowserOptions = {
-    limitedKeys: false,
-    makeKeysReadOnly : false,
+    limitedKeys     : false,
+    makeKeysReadOnly: false,
   };
 }
