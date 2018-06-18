@@ -63,6 +63,7 @@ import { RootEpics } from './store/epics';
 import { RavenErrorHandler } from './raven-error-handler';
 
 import { Utils } from './core/utils.class';
+import {ErrorHighlight2Service} from './services/error-highlight2.service';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
@@ -137,6 +138,7 @@ const conditional_providers = [
     ProcessService,
     StorageService,
     WarnService,
+    ErrorHighlight2Service,
 
     KeysPipe,
 

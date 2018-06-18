@@ -8,6 +8,7 @@ import * as L from 'leaflet';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
+// import 'leaflet-editable';
 
 @Injectable()
 export class MapService {
@@ -253,6 +254,7 @@ export class MapService {
     });
     console.log('LOG (map s.) Adding PTlayer to map again', this.ptLayer);
     this.ptLayer.addTo(this.map);
+    this.search();
   }
 
   /**
@@ -728,7 +730,7 @@ export class MapService {
    * @param feature
    * @returns {number}
    */
-  private getFeatureIdFromMarker(feature: any): number {
+  public getFeatureIdFromMarker(feature: any): number {
     const featureTypeId = feature.id.split('/');
     const featureType = featureTypeId[0];
     return Number(featureTypeId[1]); // featureId
@@ -753,5 +755,24 @@ export class MapService {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     const marker: object = feature.target; // FIXME DELETE?
     this.markerMembershipToggleClick.emit({ featureId });
+  }
+
+
+  public search(): any {
+   let mylatlng = { lat: 49.6817254, lng: 18.3496316 };
+   let inRangeArray = [];
+    this.map.eachLayer((layer) => {
+      // if (layer instanceof L.Marker) {
+      //   let marker: L.Marker = layer;
+      //   marker.getLatLng();
+      //   console.log(marker.getLatLng());
+      //   if (layer.getLatLng().distanceTo(mylatlng) < 80.4672) {
+      //   console.log('nearby');
+      //   marker.bindPopup('<p>Hello world!<br />I am nearby :P</p>')
+      //   }
+      //   //   inRangeArray.push(location);
+      //   console.log('XXXX', layer);
+      // }
+    });
   }
 }

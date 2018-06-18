@@ -21,6 +21,7 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
+import {ErrorHighlight2Service} from '../../services/error-highlight2.service';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -50,6 +51,7 @@ export class AppComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
+    private eh2 : ErrorHighlight2Service,
   ) {
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());

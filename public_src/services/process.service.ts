@@ -67,6 +67,8 @@ export class ProcessService {
         this.appActions.actSelectElement({ element });
         console.log('LOG (processing s.) Selected element is ', element);
         this.refreshTagView(element);
+        this.mapSrv.search();
+
       },
     );
   }
