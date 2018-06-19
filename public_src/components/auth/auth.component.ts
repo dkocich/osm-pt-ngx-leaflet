@@ -9,6 +9,7 @@ import { StorageService } from '../../services/storage.service';
   selector: 'auth',
   styleUrls: [
     './auth.component.less',
+    '../../styles/main.less',
   ],
   templateUrl: './auth.component.html',
 })

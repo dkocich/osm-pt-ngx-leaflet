@@ -5,7 +5,10 @@ import { AppActions } from '../../store/app/actions';
 
 @Component({
   selector: 'settings',
-  styleUrls: ['./settings.component.less'],
+  styleUrls: [
+    './settings.component.less',
+    '../../styles/main.less',
+  ],
   templateUrl: './settings.component.html',
 })
 export class SettingsComponent {

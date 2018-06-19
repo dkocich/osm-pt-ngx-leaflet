@@ -8,6 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'lang',
   styleUrls: [
     './lang.component.less',
+    '../../styles/main.less',
   ],
   templateUrl: './lang.component.html',
 })

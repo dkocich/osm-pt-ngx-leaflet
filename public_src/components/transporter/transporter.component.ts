@@ -13,6 +13,7 @@ import { ModalDirective } from 'ngx-bootstrap';
   styleUrls: [
     '../toolbar/toolbar.component.less',
     './transporter.component.less',
+    '../../styles/main.less',
   ],
   templateUrl: './transporter.component.html',
 })
