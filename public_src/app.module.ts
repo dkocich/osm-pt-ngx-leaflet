@@ -31,16 +31,18 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './components/app/app.component';
 import { AuthComponent } from './components/auth/auth.component';
-import { LangComponent } from './components/lang/lang.component';
+import { BeginnerComponent } from './components/beginner/beginner.component';
 import { EditorComponent } from './components/editor/editor.component';
+import { ExpertComponent } from './components/expert/expert.component';
+import { LangComponent } from './components/lang/lang.component';
 import { NavigatorComponent } from './components/navigator/navigator.component';
 import { RelationBrowserComponent } from './components/sidebar/relation-browser.component';
 import { RouteBrowserComponent } from './components/sidebar/route-browser.component';
+import { SettingsComponent } from './components/settings/settings.component';
 import { StopBrowserComponent } from './components/sidebar/stop-browser.component';
 import { TagBrowserComponent } from './components/sidebar/tag-browser.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
-import { SettingsComponent } from './components/settings/settings.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
@@ -81,7 +83,9 @@ const conditional_providers = [
   declarations: [
     AppComponent,
     AuthComponent,
+    BeginnerComponent,
     EditorComponent,
+    ExpertComponent,
     LangComponent,
     NavigatorComponent,
     RelationBrowserComponent,
