@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
 import { IPtStop } from '../core/ptStop.interface';
+import { IOsmElement } from '../core/osmElement.interface';
 
 @Injectable()
 export class StorageService {
@@ -30,9 +31,9 @@ export class StorageService {
 
   public idsHaveMaster = new Set();
 
-  public currentElement: any;
+  public currentElement: IOsmElement | undefined;
   public currentElementsChange = new EventEmitter();
-  public selectedStopBeginnerMode: any;
+  public selectedStopBeginnerMode: IOsmElement | undefined;
 
   public displayName: string = '';
   public imgHref: string = '';

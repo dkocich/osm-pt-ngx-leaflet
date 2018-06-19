@@ -8,7 +8,7 @@ import { StorageService } from '../../services/storage.service';
 
 import { Observable } from 'rxjs';
 
-import { IRouteBrowserOptions } from '../../core/editingOptions.interfaces';
+import { IRouteBrowserOptions } from '../../core/editingOptions.interface';
 
 import { NgRedux, select } from '@angular-redux/store';
 
@@ -49,7 +49,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     private ngRedux: NgRedux<IAppState>,
     private appActions: AppActions,
   ) {
-    this.advancedExpModeSubscription = ngRedux.select<boolean>(['app', 'advancedExpMode']) // <- New
+    this.advancedExpModeSubscription = ngRedux.select<boolean>(['app', 'advancedExpMode'])
       .subscribe((data) => this.advancedExpMode = data);
   }
 
@@ -219,8 +219,8 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     return item.id;
   }
 
-  /***
-   * explores stop for beginner view (used for mouseout event for route list)
+  /**
+   * Explores stop for beginner view (used for mouseout event for route list).
    * @returns {void}
    */
   private exploreStop(): void {

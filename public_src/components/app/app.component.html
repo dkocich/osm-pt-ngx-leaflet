@@ -37,10 +37,10 @@
 </div>
 
 <div id="sidebar">
-  <div *ngIf="!(advancedExpMode$ |async)">
+  <div *ngIf="!(advancedExpMode$ | async)">
     <beginner></beginner>
   </div>
-  <div *ngIf="(advancedExpMode$| async)">
+  <div *ngIf="(advancedExpMode$ | async)">
     <expert></expert>
   </div>
 </div>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { IRouteBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interfaces';
+import { IRouteBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interface';
 
 @Component({
   providers  : [],
@@ -14,8 +14,8 @@ import { IRouteBrowserOptions, ITagBrowserOptions } from '../../core/editingOpti
 export class ExpertComponent {
 
   public routeBrowserOptions: IRouteBrowserOptions = {
-    createRoute       : true,
     changeMembers     : true,
+    createRoute       : true,
     membersEditing    : true,
     toggleFilteredView: true,
   };

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { PtTags } from '../../core/ptTags.class';
-import { IRouteBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interfaces';
+import { IRouteBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interface';
 
 import { Observable } from 'rxjs';
 
@@ -66,7 +66,7 @@ export class BeginnerComponent {
   /***
    * Refreshes view for back button functionality
    */
-  private back(): void {
+  public back(): void {
     this.appActions.actSetBeginnerView('stop');
     this.storageSrv.currentElement = this.storageSrv.selectedStopBeginnerMode;
     this.processSrv.refreshSidebarView('tag');

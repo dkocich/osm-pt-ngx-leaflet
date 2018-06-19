@@ -17,8 +17,8 @@ import { StorageService } from '../../services/storage.service';
 import { IOsmElement } from '../../core/osmElement.interface';
 
 import { PtTags } from '../../core/ptTags.class';
-import { ITagBrowserOptions } from '../../core/editingOptions.interfaces';
-import {IAppState} from '../../store/model';
+import { ITagBrowserOptions } from '../../core/editingOptions.interface';
+import { IAppState } from '../../store/model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,

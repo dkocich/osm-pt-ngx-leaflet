@@ -6,6 +6,7 @@ import { EditService } from '../../services/edit.service';
 import { ModalDirective } from 'ngx-bootstrap';
 
 import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
+import { IOsmElement } from '../../core/osmElement.interface';
 import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
 
@@ -19,7 +20,7 @@ import { select } from '@angular-redux/store';
   templateUrl: './relation-browser.component.html',
 })
 export class RelationBrowserComponent implements OnInit {
-  private currentElement: IPtRouteMasterNew;
+  private currentElement: IOsmElement | IPtRouteMasterNew;
   public listOfVariants = this.storageSrv.listOfVariants;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   public listOfMasters = this.storageSrv.listOfMasters;

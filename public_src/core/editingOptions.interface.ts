@@ -1,12 +1,12 @@
 export interface IRouteBrowserOptions {
-  createRoute: boolean;
   changeMembers: boolean;
+  createRoute: boolean;
   membersEditing: boolean;
   toggleFilteredView: boolean;
 }
 
 export interface ITagBrowserOptions {
-  limitedKeys: boolean;
   allowedKeys?: string[];
+  limitedKeys: boolean;
   makeKeysReadOnly: boolean;
 }
