@@ -3,6 +3,11 @@ import 'leaflet.vectorgrid';
 import 'reflect-metadata';
 import 'zone.js/dist/zone';
 import 'zone.js/dist/long-stack-trace-zone';
+// import 'leaflet-area-select';
+// import 'leaflet.path.drag';
+// import 'leaflet-editable';
+// import 'leaflet-shades';
+
 
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -41,10 +46,11 @@ import { RouteBrowserComponent } from './components/sidebar/route-browser.compon
 import { SettingsComponent } from './components/settings/settings.component';
 import { StopBrowserComponent } from './components/sidebar/stop-browser.component';
 import { TagBrowserComponent } from './components/sidebar/tag-browser.component';
+import { ValidationBrowserComponent } from './components/sidebar/validation-browser.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
-import { SettingsComponent } from './components/settings/settings.component';
 import { ModalComponent } from './components/modal/modal.component';
+import { Modal2Component } from './components/modal2/modal2.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
@@ -69,6 +75,7 @@ import { RavenErrorHandler } from './raven-error-handler';
 
 import { Utils } from './core/utils.class';
 
+
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
 }
@@ -83,7 +90,7 @@ const conditional_providers = [
 
 @NgModule({
   bootstrap: [AppComponent],
-  entryComponents: [ModalComponent],
+  entryComponents: [ModalComponent, Modal2Component],
   declarations: [
     AppComponent,
     AuthComponent,
@@ -100,8 +107,11 @@ const conditional_providers = [
     TransporterComponent,
     SettingsComponent,
     ModalComponent,
+    ValidationBrowserComponent,
 
     KeysPipe,
+
+    Modal2Component,
   ],
   imports: [
     AccordionModule.forRoot(),

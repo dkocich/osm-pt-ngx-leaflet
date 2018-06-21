@@ -39,6 +39,10 @@ export class BeginnerComponent {
     allowedKeys     : this.expectedKeys.filter(this.filterRouteKeysForBeginner),
     makeKeysReadOnly: true,
   };
+  public validationOptions : any = {
+    missingNameTag : true,
+    missingRefTag : true,
+  };
 
   constructor(private appActions: AppActions,
               private processSrv: ProcessService,

@@ -1,0 +1,22 @@
+<p>Zoom into the area where you want to run the validation.</p>
+<button (click)="startValidation(template)">Start Validation</button>
+
+<ul class="list-group">
+  <ng-container *ngFor="let error of errorList">
+    <li class="list-group-item">{{error['name']}} missing name tags <button (click)="startCorrection()" > Start Correction </button></li>
+    <li class="list-group-item">{{error['ref']}} missing ref tags <button (click)="startCorrection()" > Start Correction </button></li>
+  </ng-container>
+</ul>
+
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Modal</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef2.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Not sufficient zoom level
+  </div>
+</ng-template>

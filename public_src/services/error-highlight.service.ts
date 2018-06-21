@@ -17,6 +17,9 @@ import { ModalComponent } from '../components/modal/modal.component';
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
+  public nameErrors: number = 0;
+  public refErrors: number = 0;
+  errorList = [];
   constructor(public mapSrv: MapService,
               public appActions: AppActions,
               public storageSrv: StorageService,
@@ -43,7 +46,7 @@ export class ErrorHighlightService {
 
       if (!(this.storageSrv.elementsMap.get(stop.id).tags[tag]) &&
           !this.mapSrv.checkIfAlreadyAdded(latLongObj)) {
-
+        this.nameErrors++;
         let popupContent = ErrorHighlightService.makePopUpContent();
         let popup = L.popup({
           autoClose: false,
@@ -114,5 +117,25 @@ export class ErrorHighlightService {
    */
   private openModalWithComponent(): void {
     this.modalRef = this.modalService.show(ModalComponent);
+  }
+
+  public countErrors(): void  {
+    for (let stop of this.storageSrv.listOfStops) {
+      let latLongObj = { lat: stop.lat, lng: stop.lon };
+
+      if (!(this.storageSrv.elementsMap.get(stop.id).tags['name']) &&
+        !this.mapSrv.checkIfAlreadyAdded(latLongObj) &&
+        this.mapSrv.map.getBounds().contains(latLongObj)) {
+        this.nameErrors++;
+      }
+
+      if (!(this.storageSrv.elementsMap.get(stop.id).tags['ref']) &&
+        !this.mapSrv.checkIfAlreadyAdded(latLongObj)
+        && this.mapSrv.map.getBounds().contains(latLongObj)) {
+        this.refErrors++;
+      }
+    }
+    this.errorList.push({ ref: this.refErrors, name: this.nameErrors });
+    // this.errorList.push({ name : this.nameErrors });
   }
 }

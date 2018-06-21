@@ -23,4 +23,12 @@
     <route-browser [routeBrowserOptions]='routeBrowserOptions'>
     </route-browser>
   </accordion-group>
+  <accordion-group #a3 [isOpen]="false" *ngIf="(beginnerView$ | async) === 'stop'">
+    <div accordion-heading class="text-center text-uppercase">
+      <i class="fa fa-road" aria-hidden="true"></i>&nbsp;{{ 'Validation' | translate }}
+      <i class="pull-right float-xs-right fa"
+         [ngClass]="{'fa-chevron-down': a2?.isOpen, 'fa-chevron-right': !a2?.isOpen}"></i>
+    </div>
+    <validation-browser></validation-browser>
+  </accordion-group>
 </accordion>
