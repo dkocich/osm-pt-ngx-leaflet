@@ -756,4 +756,13 @@ export class OverpassService {
       throw new Error(err.toString());
     });
   }
+
+  downloadMultipleNodeData(): any {
+
+
+
+
+
+
+  }
 }

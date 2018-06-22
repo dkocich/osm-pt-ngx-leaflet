@@ -8,7 +8,8 @@ import 'zone.js/dist/long-stack-trace-zone';
 // import 'leaflet-editable';
 // import 'leaflet-shades';
 
-
+import { SwitchLocationService } from './services/switch-location.service';
+import { SwitchLocationComponent } from './components/switch-location/switch-location.component';
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
@@ -75,7 +76,6 @@ import { RavenErrorHandler } from './raven-error-handler';
 
 import { Utils } from './core/utils.class';
 
-
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
 }
@@ -108,6 +108,7 @@ const conditional_providers = [
     SettingsComponent,
     ModalComponent,
     ValidationBrowserComponent,
+    SwitchLocationComponent,
 
     KeysPipe,
 
@@ -157,6 +158,7 @@ const conditional_providers = [
     StorageService,
     WarnService,
     ErrorHighlightService,
+    SwitchLocationService,
 
     KeysPipe,
 

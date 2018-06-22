@@ -17,7 +17,7 @@ export class AppActions {
   static readonly SET_GOOD_CONNECT_MODE = 'SET_GOOD_CONNECT_MODE';
   static readonly SET_ERROR_CORRECTION_MODE = 'SET_ERROR_CORRECTION_MODE';
   static readonly SET_BEGINNER_VIEW = 'SET_BEGINNER_VIEW';
-
+  static readonly TOGGLE_SWITCH_MODE = 'TOGGLE_SWITCH_MODE';
   // basic sync action
   public actToggleEditing = (): Action => {
     return this.ngRedux.dispatch({
@@ -50,4 +50,8 @@ export class AppActions {
   public actSetBeginnerView = (payload: string): Action => {
     return this.ngRedux.dispatch({ type: AppActions.SET_BEGINNER_VIEW, payload });
   }
+  // basic sync action
+  public actToggleSwitchMode = (payload: boolean): Action => {
+        return this.ngRedux.dispatch({ type: AppActions.TOGGLE_SWITCH_MODE, payload });
+     }
 }

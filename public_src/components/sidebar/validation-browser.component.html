@@ -3,11 +3,12 @@
 
 <ul class="list-group">
   <ng-container *ngFor="let error of errorList">
-    <li class="list-group-item">{{error['name']}} missing name tags <button (click)="startCorrection()" > Start Correction </button></li>
-    <li class="list-group-item">{{error['ref']}} missing ref tags <button (click)="startCorrection()" > Start Correction </button></li>
+    <li class="list-group-item">{{error['name']}} missing name tags <button (click)="startNameCorrection()" > Start Correction </button></li>
+    <li class="list-group-item">{{error['ref']}} missing ref tags <button (click)="startRefCorrection()" > Start Correction </button></li>
   </ng-container>
 </ul>
 
+<button (click)="startCorrection()" > Start Correction </button>
 
 <ng-template #template>
   <div class="modal-header">

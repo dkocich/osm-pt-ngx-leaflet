@@ -13,4 +13,5 @@ export interface IAppState {
   goodConnectMode: boolean;
   errorCorrectionMode: string;
   beginnerView: string;
+  switchMode: boolean;
 }

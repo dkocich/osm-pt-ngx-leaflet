@@ -21,7 +21,7 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
-
+import {SwitchLocationService} from '../../services/switch-location.service';
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
   selector: 'app',
@@ -41,6 +41,8 @@ export class AppComponent implements OnInit {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<boolean>;
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  // @select(['app', 'editing']) public readonly editing$: Observable<boolean>
+  @select(['app', 'switchMode']) public readonly switchMode$: Observable<boolean>;
   private startEventProcessing = new Subject<L.LeafletEvent>();
 
   constructor(
@@ -52,6 +54,7 @@ export class AppComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
+    private switchLocationSrv: SwitchLocationService,
   ) {
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());
@@ -111,4 +114,7 @@ export class AppComponent implements OnInit {
   private showHelpModal(): void {
     this.helpModal.show();
   }
+  private toggleSwitch(): void {
+        // this.switchLocationSrv.switchlocationModeOn();
+      }
 }

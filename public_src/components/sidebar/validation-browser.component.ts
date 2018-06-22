@@ -52,7 +52,14 @@ export class ValidationBrowserComponent implements OnInit {
       this.modalRef2 = this.modalService.show(template);
     }
   }
-  startCorrection(): any {
 
+  startNameCorrection(): any {
+    console.log('eh');
+    this.errorHighlightSrv.startCorrection('name');
+  }
+
+  startRefCorrection(): any {
+    console.log('eh');
+    this.errorHighlightSrv.startCorrection('ref');
   }
 }

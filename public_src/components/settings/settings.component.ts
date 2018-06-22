@@ -10,7 +10,7 @@ import { ProcessService } from '../../services/process.service';
 
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
-
+import { SwitchLocationService } from '../../services/switch-location.service';
 @Component({
   selector: 'settings',
   styleUrls: [
@@ -33,6 +33,7 @@ export class SettingsComponent {
     private ngRedux: NgRedux<IAppState>,
     private mapSrv: MapService,
     private processSrv: ProcessService,
+    private switchLocationSrv: SwitchLocationService,
     ) {
     //
     this.subscription = ngRedux.select<string>(['app', 'errorCorrectionMode'])
@@ -74,5 +75,8 @@ export class SettingsComponent {
       this.isErrorMode = true;
     }
 
+  }
+  private toggleSwitch() : void {
+        // this.switchLocationSrv.switchlocationModeOn();
   }
 }

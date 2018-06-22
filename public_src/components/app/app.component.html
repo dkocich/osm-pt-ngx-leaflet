@@ -83,4 +83,4 @@
     </div>
   </div>
 </div>
-<div id="map2"></div>
+<switch-location *ngIf="(switchMode$ | async)"></switch-location>
