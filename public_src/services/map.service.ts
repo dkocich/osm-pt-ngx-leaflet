@@ -33,6 +33,7 @@ export class MapService {
   public popUpArr = [];
   public popUpLayerGroup: L.LayerGroup;
   public currentPopUpFeatureId: number;
+  public errorLocations: L.LatLngExpression [] = [];
 
   constructor(
     private confSrv: ConfService,
@@ -820,6 +821,7 @@ export class MapService {
    * @returns {void}
    */
   public removePopUps(): void {
+    this.map.closePopup();
     if (this.popUpLayerGroup) {
       this.popUpLayerGroup.remove();
     }
@@ -829,9 +831,32 @@ export class MapService {
       }
     });
   }
-
+  // public newremovePopUps(): void {
+  //   if (this.popUpLayerGroup) {
+  //     this.map.closePopup();
+  //     this.map.removeLayer(this.popUpLayerGroup);
+  //     this.popUpLayerGroup.remove();
+  //     this.map.removeLayer(this.popUpArr[0]);
+  //     this.popUpLayerGroup.eachLayer((layer) => {
+  //       console.log('to remove', layer);
+  //       // this.map.closePopup(layer);
+  //       console.log(layer['_leaflet_id']);
+  //       this.map.removeLayer(layer);
+  //       console.log('true or false', this.map.hasLayer(layer));
+  //
+  //     });
+  //   }
+  //
+  //   // this.map.eachLayer((layer) => {
+  //   //   // console.log('each', layer);
+  //   //   if (layer instanceof L.popup) {
+  //   //     console.log('to reove', layer);
+  //   //    this.map.removeLayer(layer);
+  //   //   }
+  //   // });
+  // }
   /***
-   * Adds mouseover and mouseout listners from popup
+   * Adds mouseover and mouseout listeners from popup
    * @param popUpElement
    * @returns {void}
    */

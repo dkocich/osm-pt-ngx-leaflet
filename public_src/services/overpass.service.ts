@@ -20,6 +20,8 @@ import { Utils } from '../core/utils.class';
 
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
+import {BsModalService} from 'ngx-bootstrap';
+import {ModalComponent} from '../components/modal/modal.component';
 
 @Injectable()
 export class OverpassService {
@@ -36,7 +38,8 @@ export class OverpassService {
     private mapSrv: MapService,
     private warnSrv: WarnService,
     private ngRedux: NgRedux<IAppState>,
-    private errorHighlightSrv: ErrorHighlightService,
+    private modalService: BsModalService,
+    // private errorHighlightSrv: ErrorHighlightService,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -126,8 +129,10 @@ export class OverpassService {
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
-          if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'name tag')) {
-                       this.errorHighlightSrv.missingTagError('name'); }
+          // if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing name tag')) {
+          //              this.errorHighlightSrv.missingTagError('name'); }
+          // if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing ref tag')) {
+          //   this.errorHighlightSrv.missingTagError('ref'); }
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
@@ -757,12 +762,56 @@ export class OverpassService {
     });
   }
 
-  downloadMultipleNodeData(): any {
+  downloadNodeDataForError(data: any): any {
+
+    // let goodConnectionMode = ngRedux.getState()['app']['goodConnectMode'];
+    const featureId = Number(data);
+    if (!this.storageSrv.elementsDownloaded.has(featureId) && featureId > 0) {
+    let requestBody = `
+      [out:json][timeout:25];
+      (
+        node(${featureId})({{bbox}});
+      );
+      (._;<;);
+      out meta;`;
+    console.log('LOG (overpass s.) Querying nodes', requestBody);
+    requestBody = this.replaceBboxString(requestBody.trim());
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          let arr = new Map();
+          if (!res) {
+            return alert('No response from API. Try to select element again please.');
+          }
+          console.log('res', res);
+          for (const element of res['elements']) {
+            if (element.type === 'relation' && element.tags.type === 'route') {
+              // console.log()
+              if (element.tags.ref) {
+                arr.set(element.tags.ref, element.tags.name);
+              }
+            }
+
+            if (!this.storageSrv.elementsMap.has(element.id)) {
+              this.storageSrv.elementsMap.set(element.id, element);
+              console.log('element downloaded', element);
+            }
+          }
+          const initialState = {
+            error: 'missing ref tag',
+            refArr: arr,
+          };
+          console.log('refarra',  arr);
+          this.modalService.show(ModalComponent, { initialState });
+          this.storageSrv.elementsDownloaded.add(featureId);
+         },
+      (err) => {
+        this.warnSrv.showError();
+        throw new Error(err.toString());
+      });
 
 
-
-
-
-
+      }
   }
 }

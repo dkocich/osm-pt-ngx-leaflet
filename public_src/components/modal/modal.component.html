@@ -1,14 +1,108 @@
-<div class="modal-header">
-  <h4 class="modal-title pull-left">Enter name</h4>
-</div>
-<div class="modal-body text-center">
-  <div class="input-group">
-    <input type="text" #v>
+<ng-container *ngIf="error === 'missing name tag'">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Enter name</h4>
   </div>
-</div>
-<div class="modal-footer">
-  <p>
-    <button type="button" class="btn btn-default" (click)="close()">{{'Cancel' | translate }}</button>
-    <button type="button" class="btn btn-primary" (click)="save(v.value)">{{'Save' | translate}}</button>
-  </p>
-</div>
+  <div class="modal-body text-center">
+    <form>
+      <div class="form-group">
+        <input class="form-control" type="text" #v>
+      </div>
+    </form>
+    <h4 class="pull left"> Suggested name : {{name}}</h4>
+    <button (click)="v.value = name">Use</button>
+  </div>
+  <div class="modal-footer">
+    <p>
+      <button type="button" class="btn btn-default" (click)="close()">{{'Cancel' | translate }}</button>
+      <button type="button" class="btn btn-primary" (click)="saveNameTag(v.value)">{{'Save' | translate}}</button>
+    </p>
+  </div>
+</ng-container>
+
+
+<ng-container *ngIf="error === 'missing ref tag'">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Enter ref</h4>
+  </div>
+
+  <div class="modal-body text-center">
+    <table class="table-responsive table-condensed table-bordered table-striped wide-table">
+      <tbody>
+      <tr *ngFor="let x of addedRef">
+        <td>
+          <input class="form-control" type="number" value="{{x}}" readonly>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-danger fa fa-minus"
+                  aria-hidden="true" container="body"
+                  (click)="removeAddedNewRefValue(x)">
+          </button>
+        </td>
+      </tr>
+      <!--suggestions-->
+      <tr class="info" *ngFor="let x of addedSuggestions">
+        <td>
+          <form>
+            <div class="form-group">
+              <input class="form-control" type="number" value="{{x}}" readonly>
+            </div>
+          </form>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-danger fa fa-minus"
+                  aria-hidden="true" container="body"
+                  (click)="removeAddedSuggestedRefValue(x)">
+          </button>
+        </td>
+      </tr>
+
+
+      <hr>
+      <h5 class="pull-left"> Add new ref </h5>
+      <tr>
+        <td>
+          <form>
+            <div class="form-group">
+              <input type="number" class="form-control" #v>
+            </div>
+          </form>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-success fa fa-plus"
+                  aria-hidden="true" container="body"
+                  (click)="addNewRefValue(v.value)">
+          </button>
+        </td>
+      </tr>
+      <hr>
+      <ng-container *ngIf="(arr.length === 0)">
+        <h5> No suggestions available </h5>
+      </ng-container>
+      <ng-container *ngIf="!(arr.length === 0)">
+        <h5 class="pull-left"> Suggested routes </h5>
+      </ng-container>
+      <tr *ngFor="let key of arr">
+        <td>
+          <form>
+            <div class="form-group">
+              <input class="form-control" type="number" value="{{key[0]}}" readonly #x>
+            </div>
+          </form>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-success fa fa-check"
+                  aria-hidden="true" container="body"
+                  (click)="addSuggestedRefValue(x.value)">
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <p>
+      <button type="button" class="btn btn-default" (click)="close()">{{'Cancel' | translate }}</button>
+      <button type="button" class="btn btn-primary" (click)="saveRefTag()">{{'Save' | translate}}</button>
+    </p>
+  </div>
+</ng-container>

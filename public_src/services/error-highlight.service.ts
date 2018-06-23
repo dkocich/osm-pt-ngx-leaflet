@@ -4,6 +4,8 @@ import * as L from 'leaflet';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
+import { SwitchLocationService} from './switch-location.service';
+import { OverpassService } from './overpass.service';
 
 import { AppActions } from '../store/app/actions';
 import { IAppState } from '../store/model';
@@ -13,24 +15,21 @@ import { NgRedux } from '@angular-redux/store';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 import { ModalComponent } from '../components/modal/modal.component';
-import { SwitchLocationService } from './switch-location.service';
-import {marker} from 'leaflet';
-// import { LatLngExpression } from 'leaflet';
 
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
-  public nameErrors: number = 0;
-  public refErrors: number = 0;
-  public nameErrorsO: object[] = [];
-  public refErrorsO: object[] = [];
+  public nameErrors: number                         = 0;
+  public refErrors: number                          = 0;
+  public nameErrorsO: object[]                      = [];
+  public refErrorsO: object[]                       = [];
   public nameErrorsOwithoutId: L.LatLngExpression[] = [];
-  public refErrorsOwithoutId: L.LatLngExpression[] = [];
-  public arr: L.LatLngExpression[] = [];
-  public currentLoc: L.LatLngExpression;
-  public currentIndex = 0;
-  public modeon: boolean = false;
-  errorList = [];
+  public refErrorsOwithoutId: L.LatLngExpression[]  = [];
+  public arr: L.LatLngExpression[]                  = [];
+  public currentIndex                               = 0;
+  public currentMode: string;
+  public errorList                                  = [];
+
   constructor(public mapSrv: MapService,
               public appActions: AppActions,
               public storageSrv: StorageService,
@@ -38,27 +37,25 @@ export class ErrorHighlightService {
               private modalService: BsModalService,
               private processSrv: ProcessService,
               private switchLocationSrv: SwitchLocationService,
-              ) {}
+              private overpassSrv: OverpassService,
+  ) {
+  }
 
   /***
-   * Adds new layer of popups for missing tag
+   * Turns of marker click and starts switch location mode on
    * @param {string} tag
    * @returns {void}
    */
   public missingTagError(tag: string): void {
-
     this.mapSrv.map.eachLayer((layer) => {
       if (layer['_latlng'] && layer['feature']) {
         layer.off('click');
       }
     });
-    console.log('error,object', this.nameErrorsOwithoutId);
-    this.addPopUps(this.nameErrorsO);
     if (tag === 'name') {
-      this.switchlocationModeOn(true, this.nameErrorsOwithoutId);
+      this.switchlocationModeOn(true, this.nameErrorsO);
     } else {
-      this.switchlocationModeOn(true, this.refErrorsOwithoutId);
-
+      this.switchlocationModeOn(true, this.refErrorsO);
     }
   }
 
@@ -66,9 +63,8 @@ export class ErrorHighlightService {
    * Generates the popup content
    * @returns {object}
    */
-
   private static makePopUpContent(): HTMLElement {
-    let popupContent = L.DomUtil.create('div', 'content');
+    let popupContent       = L.DomUtil.create('div', 'content');
     popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true">';
     return popupContent;
   }
@@ -82,27 +78,33 @@ export class ErrorHighlightService {
    */
 
   private addClickListenerToPopUp(popUpElement: HTMLElement, markerFeatureid: number, popUpId: number): void {
-
     L.DomEvent.addListener(popUpElement, 'click', (e) => {
-      this.openModalWithComponent();
-      console.log(markerFeatureid);
       const featureId = Number(markerFeatureid);
-      const element = this.processSrv.getElementById(featureId);
-      console.log('element', element);
+      const element   = this.processSrv.getElementById(featureId);
       if (element) {
-        console.log('sent data', element);
+        if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing name tag')) {
+          let latlng = { lat: element.lat, lng: element.lon };
+          let arr    = this.getNearbyNodeNames(latlng);
+          let name   = this.getMostUsedName(arr);
+          this.openModalWithComponent(name);
+        }
+        if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing ref tag')) {
+          if (!this.isMobileDevice) {
+            this.openModalWithComponent();
+          } else {
+            this.overpassSrv.downloadNodeDataForError(featureId);
+          }
+        }
         this.storageSrv.currentElementsChange.emit(
           JSON.parse(JSON.stringify(element)),
         );
       }
-
       if (this.mapSrv.currentPopUpFeatureId && this.mapSrv.currentPopUpFeatureId !== popUpId &&
         this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId)) {
         let previousPopUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
         MapService.colorPopUpByColorName('white', previousPopUpElement);
         MapService.addHoverListenersToPopUp(previousPopUpElement);
       }
-
       this.mapSrv.currentPopUpFeatureId = popUpId;
       MapService.removeHoverListenersToPopUp(popUpElement);
       MapService.colorPopUpByEvent(e);
@@ -113,13 +115,30 @@ export class ErrorHighlightService {
    * Opens up modal
    * @returns {void}
    */
-  private openModalWithComponent(): void {
-    this.modalRef = this.modalService.show(ModalComponent);
+  public openModalWithComponent(name?: string): void {
+    if (name) {
+      const initialState = {
+        error: 'missing name tag',
+        name,
+      };
+      this.modalRef      = this.modalService.show(ModalComponent, { initialState });
+    }
+    else {
+      const initialState = {
+        error: 'missing name tag',
+      };
+      this.modalRef      = this.modalService.show(ModalComponent, { initialState });
+    }
   }
 
-  public countErrors(): void  {
+  /***
+   * Counts errors
+   */
+  public countErrors(): void {
+    this.nameErrors = 0;
+    this.refErrors  = 0;
     for (let stop of this.storageSrv.listOfStops) {
-      let stopObj = { lat: stop.lat, lng: stop.lon, id: stop.id };
+      let stopObj          = { lat: stop.lat, lng: stop.lon, id: stop.id };
       let stopObjwithoutId = { lat: stop.lat, lng: stop.lon };
       if (!(this.storageSrv.elementsMap.get(stop.id).tags['name']) &&
         !this.mapSrv.checkIfAlreadyAdded(stopObj) &&
@@ -128,7 +147,6 @@ export class ErrorHighlightService {
         this.nameErrorsO.push(stopObj);
         this.nameErrorsOwithoutId.push(stopObjwithoutId);
       }
-
       if (!(this.storageSrv.elementsMap.get(stop.id).tags['ref']) &&
         !this.mapSrv.checkIfAlreadyAdded(stopObj)
         && this.mapSrv.map.getBounds().contains(stopObj)) {
@@ -137,29 +155,42 @@ export class ErrorHighlightService {
         this.refErrorsOwithoutId.push(stopObjwithoutId);
       }
     }
+    this.errorList = [];
     this.errorList.push({ ref: this.refErrors, name: this.nameErrors });
   }
 
-  isMobileDevice(): any {
+  /***
+   * Checks whether on Mobile/Desktop
+   * @returns {boolean}
+   */
+  isMobileDevice(): boolean {
     return (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1);
   }
 
-  public startCorrection(tag: string): any {
-
+  /***
+   * Starts correction based on error correction mode
+   * @param {string} tag
+   * @returns {void}
+   */
+  public startCorrection(tag: string): void {
     if (!this.isMobileDevice) {
-      console.log('not mobile');
       this.missingTagError(tag);
+      this.currentMode = tag;
     } else {
-      console.log('mobile');
+      this.currentMode = tag;
       this.missingTagError(tag);
     }
   }
 
+  /***
+   * Adds all popups at once
+   * @param {any[]} stopArray
+   * @returns {any}
+   */
   addPopUps(stopArray: any[]): any {
     this.mapSrv.removePopUps();
     for (let stop of stopArray) {
-      console.log(stop);
-      let latlng = { lat : stop.lat , lng: stop.lng };
+      let latlng       = { lat: stop.lat, lng: stop.lng };
       let popupContent = ErrorHighlightService.makePopUpContent();
       let popup        = L.popup({
         autoClose   : false,
@@ -178,67 +209,178 @@ export class ErrorHighlightService {
     this.mapSrv.popUpLayerGroup = L.layerGroup(this.mapSrv.popUpArr).addTo(this.mapSrv.map);
   }
 
-  switchlocationModeOn(bool: boolean, arr?: L.LatLngExpression[]): any {
-    if (this.ngRedux.getState().switchMode) {
-      console.log('yes');
-      document.getElementById('map').style.width = '65%' ;
-      document.getElementById('sidebar').style.width = '35%' ;
+  /***
+   * Turns on error location mode
+   * @param {boolean} bool
+   * @param arr
+   * @returns {any}
+   */
+  switchlocationModeOn(bool: boolean, arr?: any): any {
 
+    if (this.ngRedux.getState().switchMode) {
+      document.getElementById('map').style.width     = '65%';
+      document.getElementById('sidebar').style.width = '35%';
       this.appActions.actToggleSwitchMode(bool);
     }
     else {
-      console.log('not');
-      document.getElementById('map').style.width = '100%' ;
-      document.getElementById('sidebar').style.width = '0%' ;
-
-      this.arr = arr;
+      document.getElementById('map').style.width     = '100%';
+      document.getElementById('sidebar').style.width = '0%';
+      if (this.currentMode === 'name') {
+        this.addSinglePopUp(this.nameErrorsO[0]);
+      } else {
+        this.addSinglePopUp(this.refErrorsO[0]);
+      }
+      // let stopObjwithoutId = { lat: firstError.lat, lng: firstError.lon };
+      // add first popup
+      // just an array of error locations
+      this.mapSrv.errorLocations = arr;
       this.appActions.actToggleSwitchMode(bool);
     }
     this.mapSrv.map.invalidateSize();
   }
 
+  /***
+   * Moves to next location
+   * @returns {any}
+   */
   nextLocation(): any {
-    console.log('arr', this.arr);
-    if (this.currentIndex === (this.arr.length - 1))  {
+    if (this.currentIndex === (this.mapSrv.errorLocations.length - 1)) {
       this.currentIndex = 0;
-      let ltlngarr =  [this.arr[this.currentIndex]];
-      // this.mapSrv.map.panTo(this.arr[this.currentIndex]);
-      let markerBounds = L.latLngBounds(ltlngarr);
-      this.mapSrv.map.fitBounds(markerBounds);
+      if (this.currentMode === 'name') {
+        this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+      } else {
+        this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
+      }
+      this.mapSrv.map.setView(this.mapSrv.errorLocations[this.currentIndex], 15);
+
     }
     else {
-      this.mapSrv.map.panTo(this.arr[this.currentIndex + 1]);
-      let ltlngarr =  [this.arr[this.currentIndex + 1]];
-      let markerBounds = L.latLngBounds(ltlngarr);
-      this.mapSrv.map.fitBounds(markerBounds);
-      // this.mapSrv.map.setZoom(20);
-      // this.mapSrv.map.invalidateSize();
-      let pop = this.currentIndex + 1 ;
-      // L.marker(this.arr[this.currentIndex + 1]).addTo(this.mapSrv.map).bindPopup(pop.toString()).openPopup();
+      if (this.currentMode === 'name') {
+        this.addSinglePopUp(this.nameErrorsO[this.currentIndex + 1]);
+      } else {
+        this.addSinglePopUp(this.refErrorsO[this.currentIndex + 1]);
+      }
+      this.mapSrv.map.setView(this.mapSrv.errorLocations[this.currentIndex + 1], 15);
       this.currentIndex++;
+      this.mapSrv.popUpLayerGroup.getLayers().forEach((layer) => {
+        if (layer['_latlng'].lat === this.mapSrv.errorLocations[this.currentIndex]['lat'] &&
+          layer['_latlng'].lng === this.mapSrv.errorLocations[this.currentIndex]['lng']
+        ) {
+          this.mapSrv.map.addLayer(layer);
+        }
+      });
     }
   }
 
+  /***
+   * Moves to previous location
+   * @returns {any}
+   */
   previousLocation(): any {
     if (this.currentIndex === 0) {
-      this.currentIndex = this.arr.length - 1;
-      this.mapSrv.map.panTo(this.arr[this.currentIndex]);
-      // L.marker(this.arr[this.currentIndex]).addTo(this.mapSrv.map).bindPopup(this.currentIndex.toString()).openPopup();
+      this.currentIndex = this.mapSrv.errorLocations.length - 1;
+      if (this.currentMode === 'name') {
+        this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+      } else {
+        this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
+      }
+      this.mapSrv.map.panTo(this.mapSrv.errorLocations[this.currentIndex]);
     } else {
-      this.mapSrv.map.panTo(this.arr[this.currentIndex - 1]);
-      let pop =  this.currentIndex - 1;
-      // L.marker(this.arr[this.currentIndex - 1 ]).addTo(this.mapSrv.map).bindPopup(pop.toString()).openPopup();
-      this.currentIndex --;
+      if (this.currentMode === 'name') {
+        this.addSinglePopUp(this.nameErrorsO[this.currentIndex - 1]);
+      } else {
+        this.addSinglePopUp(this.refErrorsO[this.currentIndex - 1]);
+      }
+      this.mapSrv.map.panTo(this.mapSrv.errorLocations[this.currentIndex - 1]);
+      this.currentIndex--;
     }
   }
 
+  /***
+   * Quits correction mode
+   */
   public quit(): void {
-    document.getElementById('map').style.width = '65%';
+    document.getElementById('map').style.width     = '65%';
     document.getElementById('sidebar').style.width = '35%';
     this.mapSrv.map.invalidateSize();
     this.appActions.actSetErrorCorrectionMode(null);
     this.appActions.actToggleSwitchMode(false);
     this.processSrv.refreshSidebarView('cancel selection');
     this.mapSrv.removePopUps();
+  }
+
+  /***
+   * returns names of nearby nodes
+   * @param latlngm
+   * @returns {any[]}
+   */
+  public getNearbyNodeNames(latlngm: any): any[] {
+    let inRangeNameArray = [];
+    this.mapSrv.map.eachLayer((layer) => {
+      if (layer instanceof L.Marker) {
+        let m: L.Marker = layer;
+        m.getLatLng();
+        if (m.getLatLng().distanceTo(latlngm) < 200 && m.feature.properties.name) {
+          inRangeNameArray.push(m.feature.properties.name);
+        }
+      }
+    });
+    return inRangeNameArray;
+  }
+
+  /***
+   * Returns most occurred name
+   * @param {any[]} array
+   * @returns {any}
+   */
+  public getMostUsedName(array: any[]): any {
+    if (array.length === 0) {
+      return null;
+    }
+    let modeMap  = {};
+    let maxEl    = array[0];
+    let maxCount = 1;
+    for (let item of  array) {
+      let el = item;
+      if (modeMap[el] == null) {
+        modeMap[el] = 1;
+      }
+      else {
+        modeMap[el]++;
+      }
+      if (modeMap[el] > maxCount) {
+        maxEl    = el;
+        maxCount = modeMap[el];
+      }
+    }
+    return maxEl;
+  }
+
+  /***
+   * Adds popup
+   * @param stop
+   * @returns {any}
+   */
+  addSinglePopUp(stop: any): any {
+
+    this.mapSrv.removePopUps();
+    let latlng = { lat: stop.lat, lng: stop.lng };
+    if (!this.mapSrv.checkIfAlreadyAdded(latlng)) {
+      let popupContent = ErrorHighlightService.makePopUpContent();
+      let popup        = L.popup({
+        closeOnClick: false,
+        closeButton : false,
+        autoPan     : false,
+        minWidth    : 4,
+      }).setLatLng(latlng)
+        .setContent(popupContent).openOn(this.mapSrv.map);
+
+      this.mapSrv.popUpArr.push(popup);
+      this.addClickListenerToPopUp(popup.getElement(), stop.id, popup['_leaflet_id']);
+      MapService.addHoverListenersToPopUp(popup.getElement());
+
+    }
+    // this.mapSrv.popUpLayerGroup = L.layerGroup(this.mapSrv.popUpArr).addTo(this.mapSrv.map);
+
   }
 }
