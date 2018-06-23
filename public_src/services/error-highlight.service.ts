@@ -15,7 +15,7 @@ import { NgRedux } from '@angular-redux/store';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 import { ModalComponent } from '../components/modal/modal.component';
-
+import * as MobileDetect from 'mobile-detect';
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
@@ -89,7 +89,8 @@ export class ErrorHighlightService {
           this.openModalWithComponent(name);
         }
         if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing ref tag')) {
-          if (!this.isMobileDevice) {
+          console.log('got value',this.isMobileDevice());
+          if (this.isMobileDevice()) {
             this.openModalWithComponent();
           } else {
             this.overpassSrv.downloadNodeDataForError(featureId);
@@ -164,7 +165,13 @@ export class ErrorHighlightService {
    * @returns {boolean}
    */
   isMobileDevice(): boolean {
-    return (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1);
+    let md = new MobileDetect(window.navigator.userAgent);
+    if (md.mobile()) {
+      return true;
+    } else {
+      return false;
+    }
+    // return (typeof window.orientation !== 'undefined') || (navigator.userAgent.indexOf('IEMobile') !== -1);
   }
 
   /***
@@ -173,13 +180,8 @@ export class ErrorHighlightService {
    * @returns {void}
    */
   public startCorrection(tag: string): void {
-    if (!this.isMobileDevice) {
-      this.missingTagError(tag);
-      this.currentMode = tag;
-    } else {
-      this.currentMode = tag;
-      this.missingTagError(tag);
-    }
+    this.missingTagError(tag);
+    this.currentMode = tag;
   }
 
   /***
