@@ -20,8 +20,7 @@
   <ul class="list-group">
     <ng-container *ngFor="let error of nameErrorsO; let i = index" >
       <li id ='{{error.id}}' class="list-group-item" [style.background-color]="i===0 ? 'lightblue':'white'">
-        {{error.lat}}, {{error.id}}, {{error.isCorrected}}
-        {{error.lng}}
+        Location {{i}} ({{error.lat}}, {{error.lng}})
       </li>
     </ng-container>
   </ul>
@@ -31,8 +30,7 @@
     <ul class="list-group">
       <ng-container *ngFor="let refError of refErrorsO; let i = index">
         <li  id ='{{refError.id}}' class="list-group-item" [style.background-color]="i===0? 'lightblue':'white'">
-          {{refError.lat}}, {{refError.id}}, {{refError.isCorrected}}
-          {{refError.lng}}
+          Location {{i}} ({{refError.lat}}, {{refError.lng}})
         </li>
       </ng-container>
     </ul>
