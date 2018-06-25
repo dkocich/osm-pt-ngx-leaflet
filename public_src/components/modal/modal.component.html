@@ -21,83 +21,96 @@
 
 
 <ng-container *ngIf="error === 'missing ref tag'">
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Enter ref</h4>
-  </div>
 
   <div class="modal-body text-center">
-    <table class="table-responsive table-condensed table-bordered table-striped wide-table">
-      <tbody>
-      <tr *ngFor="let x of addedRef">
-        <td>
-          <input class="form-control" type="number" value="{{x}}" readonly>
-        </td>
-        <td>
-          <button class="btn btn-sm btn-danger fa fa-minus"
-                  aria-hidden="true" container="body"
-                  (click)="removeAddedNewRefValue(x)">
-          </button>
-        </td>
-      </tr>
-      <!--suggestions-->
-      <tr class="info" *ngFor="let x of addedSuggestions">
-        <td>
-          <form>
-            <div class="form-group">
+    <div class="panel-group">
+      <ng-container  class="content panel panel-body panel-default">
+
+        <table class="table-responsive table-condensed table-bordered  wide-table">
+          <tbody>
+          <h5 > Added refs </h5>
+          <tr *ngFor="let x of addedRef">
+            <td>
               <input class="form-control" type="number" value="{{x}}" readonly>
-            </div>
-          </form>
-        </td>
-        <td>
-          <button class="btn btn-sm btn-danger fa fa-minus"
-                  aria-hidden="true" container="body"
-                  (click)="removeAddedSuggestedRefValue(x)">
-          </button>
-        </td>
-      </tr>
-
-
-      <hr>
-      <h5 class="pull-left"> Add new ref </h5>
-      <tr>
-        <td>
-          <form>
-            <div class="form-group">
-              <input type="number" class="form-control" #v>
-            </div>
-          </form>
-        </td>
-        <td>
-          <button class="btn btn-sm btn-success fa fa-plus"
-                  aria-hidden="true" container="body"
-                  (click)="addNewRefValue(v.value)">
-          </button>
-        </td>
-      </tr>
-      <hr>
-      <ng-container *ngIf="(arr.length === 0)">
-        <h5> No suggestions available </h5>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-danger fa fa-minus"
+                      aria-hidden="true" container="body"
+                      (click)="removeAddedNewRefValue(x)">
+              </button>
+            </td>
+          </tr>
+          <tr *ngFor="let x of addedSuggestions">
+            <td>
+              <form>
+                <div class="form-group">
+                  <input class="form-control" type="number" value="{{x}}" readonly>
+                </div>
+              </form>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-danger fa fa-minus"
+                      aria-hidden="true" container="body"
+                      (click)="removeAddedSuggestedRefValue(x)">
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </ng-container>
-      <ng-container *ngIf="!(arr.length === 0)">
-        <h5 class="pull-left"> Suggested routes </h5>
+<hr>
+      <ng-container  class="content panel panel-body panel-default">
+        <table class="table-responsive table-condensed table-bordered  wide-table">
+          <tbody>
+        <h5 > Add new ref </h5>
+        <tr>
+          <td>
+            <form>
+              <div class="form-group">
+                <input type="number" class="form-control" #v>
+              </div>
+            </form>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-success fa fa-plus"
+                    aria-hidden="true" container="body"
+                    (click)="addNewRefValue(v.value)">
+            </button>
+          </td>
+        </tr>
+          </tbody>
+        </table>
       </ng-container>
-      <tr *ngFor="let key of arr">
-        <td>
-          <form>
-            <div class="form-group">
-              <input class="form-control" type="number" value="{{key[0]}}" readonly #x>
-            </div>
-          </form>
-        </td>
-        <td>
-          <button class="btn btn-sm btn-success fa fa-check"
-                  aria-hidden="true" container="body"
-                  (click)="addSuggestedRefValue(x.value)">
-          </button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+<hr>
+      <ng-container  class="content panel panel-body panel-default">
+
+        <table class="table-responsive table-condensed table-bordered  wide-table">
+          <tbody>
+          <ng-container *ngIf="(arr.length === 0)">
+            <h5> No suggestions available </h5>
+          </ng-container>
+          <ng-container *ngIf="!(arr.length === 0)">
+            <h5 class="pull-left"> Suggested routes </h5>
+          </ng-container>
+        <tr *ngFor="let key of arr">
+          <td>
+            <form>
+              <div class="form-group">
+                <input class="form-control" type="number" value="{{key[0]}}" readonly #x>
+              </div>
+            </form>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-success fa fa-check"
+                    aria-hidden="true" container="body"
+                    (click)="addSuggestedRefValue(x.value)">
+            </button>
+          </td>
+        </tr>
+          </tbody>
+        </table>
+      </ng-container>
+    </div>
   </div>
   <div class="modal-footer">
     <p>
