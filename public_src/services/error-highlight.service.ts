@@ -179,6 +179,7 @@ export class ErrorHighlightService {
    * @returns {void}
    */
   public startCorrection(tag: string): void {
+    this.currentIndex = 0;
     this.currentMode = tag;
     this.mapSrv.popUpLayerGroup = null;
     this.mapSrv.popUpArr = [];
@@ -271,72 +272,26 @@ export class ErrorHighlightService {
         this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex + 1], 15);
         document.getElementById(this.nameErrorsO[this.currentIndex].id).style.backgroundColor = 'white';
         document.getElementById(this.nameErrorsO[this.currentIndex + 1].id).style.backgroundColor = 'lightblue';
-
         this.currentIndex++;
-
-        // what is this?
-        // this.mapSrv.popUpLayerGroup.getLayers().forEach((layer) => {
-        //   if (layer['_latlng'].lat === this.nameErrorsO[this.currentIndex]['lat'] &&
-        //     layer['_latlng'].lng === this.nameErrorsO[this.currentIndex]['lng']
-        //   ) {
-        //     this.mapSrv.map.addLayer(layer);
-        //   }
-        // });
-    }
-
+      }
     }
     if (this.currentMode === 'ref') {
       if (this.currentIndex === (this.refErrorsO.length - 1)) {
-          this.currentIndex = 0;
-          this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
-          this.mapSrv.map.setView(this.refErrorsO[this.currentIndex], 15);
+        this.currentIndex = 0;
+        this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
+        this.mapSrv.map.setView(this.refErrorsO[this.currentIndex], 15);
         document.getElementById(this.refErrorsO[this.refErrorsO.length - 1].id).style.backgroundColor = 'white';
         document.getElementById(this.refErrorsO[this.currentIndex].id).style.backgroundColor = 'lightblue';
-        } else {
-          this.addSinglePopUp(this.refErrorsO[this.currentIndex + 1]);
-          this.mapSrv.map.setView(this.refErrorsO[this.currentIndex + 1], 15);
-          this.currentIndex++;
-        document.getElementById(this.refErrorsO[this.currentIndex - 1 ].id).style.backgroundColor = 'white';
-        document.getElementById(this.refErrorsO[this.currentIndex].id).style.backgroundColor = 'lightblue';
-        //   this.mapSrv.popUpLayerGroup.getLayers().forEach((layer) => {
-        //    if (layer['_latlng'].lat === this.refErrorsO[this.currentIndex]['lat'] &&
-        //     layer['_latlng'].lng === this.refErrorsO[this.currentIndex]['lng']
-        //   ) {
-        //     this.mapSrv.map.addLayer(layer);
-        //   }
-        // });
-      }
 
+      } else {
+        this.addSinglePopUp(this.refErrorsO[this.currentIndex + 1]);
+        this.mapSrv.map.setView(this.refErrorsO[this.currentIndex + 1], 15);
+        document.getElementById(this.refErrorsO[this.currentIndex].id).style.backgroundColor = 'white';
+        document.getElementById(this.refErrorsO[this.currentIndex + 1].id).style.backgroundColor = 'lightblue';
+        this.currentIndex++;
       }
+     }
     }
-    // if (this.currentIndex === (this.mapSrv.errorLocations.length - 1)) {
-    //   this.currentIndex = 0;
-    //   if (this.currentMode === 'name') {
-    //     this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
-    //     this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex], 15);
-    //   } else {
-    //     this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
-    //     this.mapSrv.map.setView(this.refErrorsO[this.currentIndex], 15);
-    //   }
-    //
-    // }
-    // else {
-    //   if (this.currentMode === 'name') {
-    //     this.addSinglePopUp(this.nameErrorsO[this.currentIndex + 1]);
-    //   } else {
-    //     this.addSinglePopUp(this.refErrorsO[this.currentIndex + 1]);
-    //   }
-    //   this.mapSrv.map.setView(this.mapSrv.errorLocations[this.currentIndex + 1], 15);
-    //   this.currentIndex++;
-    //   this.mapSrv.popUpLayerGroup.getLayers().forEach((layer) => {
-    //     if (layer['_latlng'].lat === this.mapSrv.errorLocations[this.currentIndex]['lat'] &&
-    //       layer['_latlng'].lng === this.mapSrv.errorLocations[this.currentIndex]['lng']
-    //     ) {
-    //       this.mapSrv.map.addLayer(layer);
-    //     }
-    //   });
-    // }
-  // }
 
   /***
    * Moves to previous location

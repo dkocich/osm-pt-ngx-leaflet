@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { SwitchLocationService } from '../../services/switch-location.service';
 import { MapService } from '../../services/map.service';
 import { NgRedux } from '@angular-redux/store';
