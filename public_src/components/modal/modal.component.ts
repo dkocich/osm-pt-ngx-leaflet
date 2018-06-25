@@ -32,10 +32,13 @@ export class ModalComponent implements OnInit {
   @ViewChildren('chosenRef') chosenRefS ;
   @ViewChildren('v') newlyAddedValue ;
 
+  public errorObject: any;
+
   public ngOnInit(): void {
     if (this.error === 'missing ref tag') {
       this.arr = Array.from(this.refArr);
     }
+    console.log('current error object');
   }
 
    /***
@@ -81,6 +84,9 @@ export class ModalComponent implements OnInit {
     let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
     MapService.addHoverListenersToPopUp(popUpElement);
     this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
+    // console.log()
+    // set error object is corrected true
+    this.mapSrv.popUpLayerGroup.removeLayer(this.mapSrv.currentPopUpFeatureId);
     this.warnSrv.showGenericSuccess();
   }
 
@@ -102,11 +108,18 @@ export class ModalComponent implements OnInit {
    resultArr.forEach((item, index) => {
    refString = (index !== resultArr.length - 1) ? refString + item + ', ' : refString + item;
    });
-   this.createChangeForRefTag(name);
+   this.createChangeForRefTag(refString);
    this.bsModalRef.hide();
    let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
    MapService.addHoverListenersToPopUp(popUpElement);
    this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
+   // this.mapSrv.map.eachLayer((layer) => {
+   //   if (layer['_leaflet_id'] === this.mapSrv.currentPopUpFeatureId) {
+   //     this.mapSrv.map.removeLayer(layer);
+   //   }
+   // });
+   this.mapSrv.popUpLayerGroup.removeLayer(this.mapSrv.currentPopUpFeatureId);
+   // this.mapSrv.map.remove(this.mapSrv.currentPopUpFeatureId);
    this.warnSrv.showGenericSuccess();
   }
 

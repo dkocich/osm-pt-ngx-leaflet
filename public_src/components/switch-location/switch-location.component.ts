@@ -4,6 +4,7 @@ import { MapService } from '../../services/map.service';
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../../store/model';
 import { ErrorHighlightService } from '../../services/error-highlight.service';
+import { AppActions } from '../../store/app/actions';
 
 @Component({
   providers: [],
@@ -18,7 +19,8 @@ export class SwitchLocationComponent  {
   constructor(private mapSrv: MapService,
               private ngRedux: NgRedux<IAppState>,
               private switchLocationSrv: SwitchLocationService,
-              private errorHighlightSrv: ErrorHighlightService) {
+              private errorHighlightSrv: ErrorHighlightService,
+              public appActions: AppActions) {
   }
 
   /***

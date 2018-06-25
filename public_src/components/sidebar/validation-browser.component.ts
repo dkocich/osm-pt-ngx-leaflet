@@ -1,6 +1,8 @@
-import { Component, TemplateRef } from '@angular/core';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { Component } from '@angular/core';
+
+import { BsModalService } from 'ngx-bootstrap';
 import { MapService } from '../../services/map.service';
+
 import { ErrorHighlightService } from '../../services/error-highlight.service';
 import { Observable } from 'rxjs';
 import {  select } from '@angular-redux/store';
@@ -15,6 +17,8 @@ export class ValidationBrowserComponent {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
   public errorList: object[] = [];
+  public refErrorsO;
+  public nameErrorsO;
   constructor(private modalService: BsModalService,
               private mapSrv: MapService,
               private errorHighlightSrv: ErrorHighlightService,
@@ -25,9 +29,12 @@ export class ValidationBrowserComponent {
    * @returns {void}
    */
   startValidation(): void {
+    this.refErrorsO = [];
+    this.nameErrorsO = [];
     if (this.mapSrv.map.getZoom() > 11) {
     this.errorHighlightSrv.countErrors();
-    this.errorList = this.errorHighlightSrv.errorList;
+    this.refErrorsO = this.errorHighlightSrv.refErrorsO;
+    this.nameErrorsO = this.errorHighlightSrv.nameErrorsO;
     } else {
       alert('Not sufficient zoom level');
     }
@@ -49,5 +56,15 @@ export class ValidationBrowserComponent {
   startRefCorrection(): any {
     this.appActions.actSetErrorCorrectionMode('missing ref tag');
     this.errorHighlightSrv.startCorrection('ref');
+  }
+
+  checkMapCenter(latlng: any): boolean {
+    if (JSON.stringify(latlng) === JSON.stringify(this.mapSrv.map.getCenter())) {
+      console.log('true');
+      return true;
+    } else {
+      console.log('false');
+      return false;
+    }
   }
 }

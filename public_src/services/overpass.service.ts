@@ -8,7 +8,6 @@ import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 import { WarnService } from './warn.service';
-import { ErrorHighlightService } from './error-highlight.service';
 
 import { create } from 'xmlbuilder';
 import { LatLng } from 'leaflet';
@@ -763,8 +762,6 @@ export class OverpassService {
   }
 
   downloadNodeDataForError(data: any): any {
-
-    // let goodConnectionMode = ngRedux.getState()['app']['goodConnectMode'];
     const featureId = Number(data);
     if (!this.storageSrv.elementsDownloaded.has(featureId) && featureId > 0) {
     let requestBody = `
@@ -787,7 +784,6 @@ export class OverpassService {
           console.log('res', res);
           for (const element of res['elements']) {
             if (element.type === 'relation' && element.tags.type === 'route') {
-              // console.log()
               if (element.tags.ref) {
                 arr.set(element.tags.ref, element.tags.name);
               }
@@ -801,6 +797,7 @@ export class OverpassService {
           const initialState = {
             error: 'missing ref tag',
             refArr: arr,
+            // errorObject:
           };
           console.log('refarra',  arr);
           this.modalService.show(ModalComponent, { initialState });
@@ -810,8 +807,6 @@ export class OverpassService {
         this.warnSrv.showError();
         throw new Error(err.toString());
       });
-
-
       }
   }
 }

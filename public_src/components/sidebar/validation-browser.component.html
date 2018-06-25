@@ -1,13 +1,39 @@
-<p>Zoom into the area where you want to run the validation.</p>
-<button (click)="startValidation()">Start Validation</button>
+<ng-container *ngIf="!(errorCorrectionMode$ | async)">
+  <p>Zoom into the area where you want to run the validation.</p>
+  <button class="btn btn-default" (click)="startValidation()">Find Errors</button>
+</ng-container>
 
-<ul class="list-group">
-  <ng-container *ngFor="let error of errorList">
-    <li class="list-group-item">{{error['name']}} missing name tags
-      <button (click)="startNameCorrection()"> Start Correction</button>
-    </li>
-    <li class="list-group-item">{{error['ref']}} missing ref tags
-      <button (click)="startRefCorrection()"> Start Correction</button>
-    </li>
-  </ng-container>
-</ul>
+<ng-container *ngIf="!(errorCorrectionMode$ | async)">
+  <ul class="list-group">
+      <li class="list-group-item" *ngIf="nameErrorsO"> Missing name tags
+        {{nameErrorsO.length}}
+        <button  (click)="startNameCorrection()"> Start Correction</button>
+      </li>
+      <li class="list-group-item" *ngIf="refErrorsO"> Missing ref tags
+        {{refErrorsO.length}}
+        <button (click)="startRefCorrection()"> Start Correction</button>
+      </li>
+  </ul>
+</ng-container>
+
+<ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing name tag'">
+  <ul class="list-group">
+    <ng-container *ngFor="let error of nameErrorsO; let i = index" >
+      <li id ='{{error.id}}' class="list-group-item" [style.background-color]="i===0 ? 'lightblue':'white'">
+        {{error.lat}}, {{error.id}}, {{error.isCorrected}}
+        {{error.lng}}
+      </li>
+    </ng-container>
+  </ul>
+</ng-container>
+
+<ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing ref tag'">
+    <ul class="list-group">
+      <ng-container *ngFor="let refError of refErrorsO; let i = index">
+        <li  id ='{{refError.id}}' class="list-group-item" [style.background-color]="i===0? 'lightblue':'white'">
+          {{refError.lat}}, {{refError.id}}, {{refError.isCorrected}}
+          {{refError.lng}}
+        </li>
+      </ng-container>
+    </ul>
+</ng-container>

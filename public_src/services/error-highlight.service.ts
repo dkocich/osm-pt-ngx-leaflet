@@ -4,7 +4,7 @@ import * as L from 'leaflet';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
-import { SwitchLocationService} from './switch-location.service';
+import { SwitchLocationService } from './switch-location.service';
 import { OverpassService } from './overpass.service';
 
 import { AppActions } from '../store/app/actions';
@@ -19,16 +19,10 @@ import * as MobileDetect from 'mobile-detect';
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
-  public nameErrors: number                         = 0;
-  public refErrors: number                          = 0;
-  public nameErrorsO: object[]                      = [];
-  public refErrorsO: object[]                       = [];
-  public nameErrorsOwithoutId: L.LatLngExpression[] = [];
-  public refErrorsOwithoutId: L.LatLngExpression[]  = [];
-  public arr: L.LatLngExpression[]                  = [];
+  public nameErrorsO: any[]                      = [];
+  public refErrorsO: any[]                       = [];
   public currentIndex                               = 0;
   public currentMode: string;
-  public errorList                                  = [];
 
   constructor(public mapSrv: MapService,
               public appActions: AppActions,
@@ -77,7 +71,7 @@ export class ErrorHighlightService {
    * @returns {void}
    */
 
-  private addClickListenerToPopUp(popUpElement: HTMLElement, markerFeatureid: number, popUpId: number): void {
+  private addClickListenerToPopUp(popUpElement: HTMLElement, markerFeatureid: number, popUpId: number, stop: any): void {
     L.DomEvent.addListener(popUpElement, 'click', (e) => {
       const featureId = Number(markerFeatureid);
       const element   = this.processSrv.getElementById(featureId);
@@ -86,12 +80,12 @@ export class ErrorHighlightService {
           let latlng = { lat: element.lat, lng: element.lon };
           let arr    = this.getNearbyNodeNames(latlng);
           let name   = this.getMostUsedName(arr);
-          this.openModalWithComponent(name);
+          this.openModalWithComponent(stop, name);
         }
         if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing ref tag')) {
-          console.log('got value',this.isMobileDevice());
+          console.log('got value', this.isMobileDevice());
           if (this.isMobileDevice()) {
-            this.openModalWithComponent();
+            this.openModalWithComponent(stop);
           } else {
             this.overpassSrv.downloadNodeDataForError(featureId);
           }
@@ -116,17 +110,20 @@ export class ErrorHighlightService {
    * Opens up modal
    * @returns {void}
    */
-  public openModalWithComponent(name?: string): void {
+  public openModalWithComponent(stop: any, name?: string): void {
+    // name is suggested name
     if (name) {
       const initialState = {
         error: 'missing name tag',
         name,
+        errorObject: stop,
       };
       this.modalRef      = this.modalService.show(ModalComponent, { initialState });
     }
     else {
       const initialState = {
         error: 'missing name tag',
+        errorObject: stop,
       };
       this.modalRef      = this.modalService.show(ModalComponent, { initialState });
     }
@@ -136,28 +133,30 @@ export class ErrorHighlightService {
    * Counts errors
    */
   public countErrors(): void {
-    this.nameErrors = 0;
-    this.refErrors  = 0;
+    // this.nameErrors = 0;
+    // this.refErrors  = 0;
+    this.refErrorsO = [];
+    this.nameErrorsO = [];
     for (let stop of this.storageSrv.listOfStops) {
-      let stopObj          = { lat: stop.lat, lng: stop.lon, id: stop.id };
-      let stopObjwithoutId = { lat: stop.lat, lng: stop.lon };
+      let stopObj          = { lat: stop.lat, lng: stop.lon, id: stop.id, isCorrected : false };
+      // let stopObjwithoutId = { lat: stop.lat, lng: stop.lon };
       if (!(this.storageSrv.elementsMap.get(stop.id).tags['name']) &&
         !this.mapSrv.checkIfAlreadyAdded(stopObj) &&
         this.mapSrv.map.getBounds().contains(stopObj)) {
-        this.nameErrors++;
+        // this.nameErrors++;
         this.nameErrorsO.push(stopObj);
-        this.nameErrorsOwithoutId.push(stopObjwithoutId);
+        // this.nameErrorsOwithoutId.push(stopObjwithoutId);
       }
       if (!(this.storageSrv.elementsMap.get(stop.id).tags['ref']) &&
         !this.mapSrv.checkIfAlreadyAdded(stopObj)
         && this.mapSrv.map.getBounds().contains(stopObj)) {
-        this.refErrors++;
+        // this.refErrors++;
         this.refErrorsO.push(stopObj);
-        this.refErrorsOwithoutId.push(stopObjwithoutId);
+        // this.refErrorsOwithoutId.push(stopObjwithoutId);
       }
     }
-    this.errorList = [];
-    this.errorList.push({ ref: this.refErrors, name: this.nameErrors });
+    // this.errorList = [];
+    // this.errorList.push({ ref: this.refErrors, name: this.nameErrors });
   }
 
   /***
@@ -180,8 +179,11 @@ export class ErrorHighlightService {
    * @returns {void}
    */
   public startCorrection(tag: string): void {
-    this.missingTagError(tag);
     this.currentMode = tag;
+    this.mapSrv.popUpLayerGroup = null;
+    this.mapSrv.popUpArr = [];
+    this.missingTagError(tag);
+    console.log('start correction mode set', this.currentMode);
   }
 
   /***
@@ -205,7 +207,7 @@ export class ErrorHighlightService {
         .openOn(this.mapSrv.map);
 
       this.mapSrv.popUpArr.push(popup);
-      this.addClickListenerToPopUp(popup.getElement(), stop.id, popup['_leaflet_id']);
+      // this.addClickListenerToPopUp(popup.getElement(), stop.id, popup['_leaflet_id']);
       MapService.addHoverListenersToPopUp(popup.getElement());
     }
     this.mapSrv.popUpLayerGroup = L.layerGroup(this.mapSrv.popUpArr).addTo(this.mapSrv.map);
@@ -225,17 +227,25 @@ export class ErrorHighlightService {
       this.appActions.actToggleSwitchMode(bool);
     }
     else {
-      document.getElementById('map').style.width     = '100%';
-      document.getElementById('sidebar').style.width = '0%';
+      // document.getElementById('map').style.width     = '100%';
+      // document.getElementById('sidebar').style.width = '0%';
+      console.log('run' ,this.currentMode );
       if (this.currentMode === 'name') {
+        console.log('name error' ,this.nameErrorsO[0]);
         this.addSinglePopUp(this.nameErrorsO[0]);
-      } else {
-        this.addSinglePopUp(this.refErrorsO[0]);
+        // setTimeout(() => {
+        //   document.getElementById(this.nameErrorsO[0].id).style.backgroundColor = 'red';
+        // }, 1000);
       }
-      // let stopObjwithoutId = { lat: firstError.lat, lng: firstError.lon };
-      // add first popup
-      // just an array of error locations
-      this.mapSrv.errorLocations = arr;
+      if (this.currentMode === 'ref') {
+        console.log('ref');
+
+        this.addSinglePopUp(this.refErrorsO[0]);
+        // document.getElementById(this.refErrorsO[0].id).style.backgroundColor = 'red';
+        // setTimeout(() => {
+        //   document.getElementById(this.refErrorsO[0].id).style.backgroundColor = 'red';
+        // }, 1000);
+      }
       this.appActions.actToggleSwitchMode(bool);
     }
     this.mapSrv.map.invalidateSize();
@@ -246,62 +256,152 @@ export class ErrorHighlightService {
    * @returns {any}
    */
   nextLocation(): any {
-    if (this.currentIndex === (this.mapSrv.errorLocations.length - 1)) {
-      this.currentIndex = 0;
-      if (this.currentMode === 'name') {
-        this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+    // console.log('whole', this.nameErrorsO, 'current index', this.currentIndex, 'prev', this.nameErrorsO[this.currentIndex - 1]);
+    // console.log('arr object', this.mapSrv.errorLocations[this.currentIndex]);
+    if (this.currentMode === 'name') {
+      if (this.currentIndex === (this.nameErrorsO.length - 1)) {
+          this.currentIndex = 0;
+          this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+          this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex], 15);
+          document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1].id).style.backgroundColor = 'white';
+          document.getElementById(this.nameErrorsO[this.currentIndex].id).style.backgroundColor = 'lightblue';
+
       } else {
-        this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
-      }
-      this.mapSrv.map.setView(this.mapSrv.errorLocations[this.currentIndex], 15);
+        this.addSinglePopUp(this.nameErrorsO[this.currentIndex + 1]);
+        this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex + 1], 15);
+        document.getElementById(this.nameErrorsO[this.currentIndex].id).style.backgroundColor = 'white';
+        document.getElementById(this.nameErrorsO[this.currentIndex + 1].id).style.backgroundColor = 'lightblue';
+
+        this.currentIndex++;
+
+        // what is this?
+        // this.mapSrv.popUpLayerGroup.getLayers().forEach((layer) => {
+        //   if (layer['_latlng'].lat === this.nameErrorsO[this.currentIndex]['lat'] &&
+        //     layer['_latlng'].lng === this.nameErrorsO[this.currentIndex]['lng']
+        //   ) {
+        //     this.mapSrv.map.addLayer(layer);
+        //   }
+        // });
+    }
 
     }
-    else {
-      if (this.currentMode === 'name') {
-        this.addSinglePopUp(this.nameErrorsO[this.currentIndex + 1]);
-      } else {
-        this.addSinglePopUp(this.refErrorsO[this.currentIndex + 1]);
+    if (this.currentMode === 'ref') {
+      if (this.currentIndex === (this.refErrorsO.length - 1)) {
+          this.currentIndex = 0;
+          this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
+          this.mapSrv.map.setView(this.refErrorsO[this.currentIndex], 15);
+        document.getElementById(this.refErrorsO[this.refErrorsO.length - 1].id).style.backgroundColor = 'white';
+        document.getElementById(this.refErrorsO[this.currentIndex].id).style.backgroundColor = 'lightblue';
+        } else {
+          this.addSinglePopUp(this.refErrorsO[this.currentIndex + 1]);
+          this.mapSrv.map.setView(this.refErrorsO[this.currentIndex + 1], 15);
+          this.currentIndex++;
+        document.getElementById(this.refErrorsO[this.currentIndex - 1 ].id).style.backgroundColor = 'white';
+        document.getElementById(this.refErrorsO[this.currentIndex].id).style.backgroundColor = 'lightblue';
+        //   this.mapSrv.popUpLayerGroup.getLayers().forEach((layer) => {
+        //    if (layer['_latlng'].lat === this.refErrorsO[this.currentIndex]['lat'] &&
+        //     layer['_latlng'].lng === this.refErrorsO[this.currentIndex]['lng']
+        //   ) {
+        //     this.mapSrv.map.addLayer(layer);
+        //   }
+        // });
       }
-      this.mapSrv.map.setView(this.mapSrv.errorLocations[this.currentIndex + 1], 15);
-      this.currentIndex++;
-      this.mapSrv.popUpLayerGroup.getLayers().forEach((layer) => {
-        if (layer['_latlng'].lat === this.mapSrv.errorLocations[this.currentIndex]['lat'] &&
-          layer['_latlng'].lng === this.mapSrv.errorLocations[this.currentIndex]['lng']
-        ) {
-          this.mapSrv.map.addLayer(layer);
-        }
-      });
+
+      }
     }
-  }
+    // if (this.currentIndex === (this.mapSrv.errorLocations.length - 1)) {
+    //   this.currentIndex = 0;
+    //   if (this.currentMode === 'name') {
+    //     this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+    //     this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex], 15);
+    //   } else {
+    //     this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
+    //     this.mapSrv.map.setView(this.refErrorsO[this.currentIndex], 15);
+    //   }
+    //
+    // }
+    // else {
+    //   if (this.currentMode === 'name') {
+    //     this.addSinglePopUp(this.nameErrorsO[this.currentIndex + 1]);
+    //   } else {
+    //     this.addSinglePopUp(this.refErrorsO[this.currentIndex + 1]);
+    //   }
+    //   this.mapSrv.map.setView(this.mapSrv.errorLocations[this.currentIndex + 1], 15);
+    //   this.currentIndex++;
+    //   this.mapSrv.popUpLayerGroup.getLayers().forEach((layer) => {
+    //     if (layer['_latlng'].lat === this.mapSrv.errorLocations[this.currentIndex]['lat'] &&
+    //       layer['_latlng'].lng === this.mapSrv.errorLocations[this.currentIndex]['lng']
+    //     ) {
+    //       this.mapSrv.map.addLayer(layer);
+    //     }
+    //   });
+    // }
+  // }
 
   /***
    * Moves to previous location
    * @returns {any}
    */
   previousLocation(): any {
-    if (this.currentIndex === 0) {
-      this.currentIndex = this.mapSrv.errorLocations.length - 1;
-      if (this.currentMode === 'name') {
-        this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+    // console.log('whole', this.nameErrorsO, 'current index', this.currentIndex);
+
+    if (this.currentMode === 'name') {
+      if (this.currentIndex === 0) {
+          this.currentIndex = this.nameErrorsO.length - 1;
+          this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+          this.mapSrv.map.panTo(this.nameErrorsO[this.currentIndex]);
+
+          document.getElementById(this.nameErrorsO[0].id).style.backgroundColor = 'white';
+          document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1].id).style.backgroundColor = 'lightblue';
       } else {
-        this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
-      }
-      this.mapSrv.map.panTo(this.mapSrv.errorLocations[this.currentIndex]);
-    } else {
-      if (this.currentMode === 'name') {
         this.addSinglePopUp(this.nameErrorsO[this.currentIndex - 1]);
+        this.mapSrv.map.panTo(this.nameErrorsO[this.currentIndex - 1]);
+        document.getElementById(this.nameErrorsO[this.currentIndex].id).style.backgroundColor = 'white';
+        document.getElementById(this.nameErrorsO[this.currentIndex - 1].id).style.backgroundColor = 'lightblue';
+        this.currentIndex--;
+      }
+    }
+    if (this.currentMode === 'ref') {
+      if (this.currentIndex === 0) {
+        this.currentIndex = this.refErrorsO.length - 1;
+        this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
+        this.mapSrv.map.panTo(this.refErrorsO[this.currentIndex]);
+        document.getElementById(this.refErrorsO[0].id).style.backgroundColor = 'white';
+        document.getElementById(this.refErrorsO[this.currentIndex].id).style.backgroundColor = 'lightblue';
       } else {
         this.addSinglePopUp(this.refErrorsO[this.currentIndex - 1]);
+        this.mapSrv.map.panTo(this.refErrorsO[this.currentIndex - 1]);
+        this.currentIndex--;
+        console.log( 'this is it element',document.getElementById(this.refErrorsO[this.currentIndex + 1 ].id));
+        document.getElementById(this.refErrorsO[this.currentIndex + 1].id).style.backgroundColor = 'white';
+        document.getElementById(this.refErrorsO[this.currentIndex].id).style.backgroundColor = 'lightblue';
       }
-      this.mapSrv.map.panTo(this.mapSrv.errorLocations[this.currentIndex - 1]);
-      this.currentIndex--;
     }
+    // if (this.currentIndex === 0) {
+    //   this.currentIndex = this.mapSrv.errorLocations.length - 1;
+    //   if (this.currentMode === 'name') {
+    //     this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+    //   } else {
+    //     this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
+    //   }
+    //   this.mapSrv.map.panTo(this.mapSrv.errorLocations[this.currentIndex]);
+    // } else {
+    //   if (this.currentMode === 'name') {
+    //     this.addSinglePopUp(this.nameErrorsO[this.currentIndex - 1]);
+    //   } else {
+    //     this.addSinglePopUp(this.refErrorsO[this.currentIndex - 1]);
+    //   }
+    //   this.mapSrv.map.panTo(this.mapSrv.errorLocations[this.currentIndex - 1]);
+    //   this.currentIndex--;
+    // }
   }
 
   /***
    * Quits correction mode
    */
   public quit(): void {
+    // this.nameErrorsO = null;
+    // this.refErrorsO = null;
     document.getElementById('map').style.width     = '65%';
     document.getElementById('sidebar').style.width = '35%';
     this.mapSrv.map.invalidateSize();
@@ -367,7 +467,7 @@ export class ErrorHighlightService {
 
     this.mapSrv.removePopUps();
     let latlng = { lat: stop.lat, lng: stop.lng };
-    if (!this.mapSrv.checkIfAlreadyAdded(latlng)) {
+    // if (!this.mapSrv.checkIfAlreadyAdded(latlng)) {
       let popupContent = ErrorHighlightService.makePopUpContent();
       let popup        = L.popup({
         closeOnClick: false,
@@ -378,11 +478,9 @@ export class ErrorHighlightService {
         .setContent(popupContent).openOn(this.mapSrv.map);
 
       this.mapSrv.popUpArr.push(popup);
-      this.addClickListenerToPopUp(popup.getElement(), stop.id, popup['_leaflet_id']);
+      this.addClickListenerToPopUp(popup.getElement(), stop.id, popup['_leaflet_id'], stop);
       MapService.addHoverListenersToPopUp(popup.getElement());
-
-    }
-    // this.mapSrv.popUpLayerGroup = L.layerGroup(this.mapSrv.popUpArr).addTo(this.mapSrv.map);
-
+      this.mapSrv.popUpLayerGroup = L.layerGroup().addTo(this.mapSrv.map);
+      this.mapSrv.popUpLayerGroup.addLayer(popup);
   }
 }
