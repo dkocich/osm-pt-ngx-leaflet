@@ -732,7 +732,7 @@ export class MapService {
    * @param feature
    * @returns {number}
    */
-  private getFeatureIdFromMarker(feature: any): number {
+  public getFeatureIdFromMarker(feature: any): number {
     const featureTypeId = feature.id.split('/');
     const featureType = featureTypeId[0];
     return Number(featureTypeId[1]); // featureId

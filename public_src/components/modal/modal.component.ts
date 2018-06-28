@@ -4,6 +4,9 @@ import { EditService } from '../../services/edit.service';
 import { StorageService } from '../../services/storage.service';
 import { MapService } from '../../services/map.service';
 import { WarnService } from '../../services/warn.service';
+import * as L from "leaflet";
+import {ErrorHighlightService} from '../../services/error-highlight.service';
+import {OverpassService} from '../../services/overpass.service';
 
 @Component({
   selector: 'modal-content',
@@ -19,7 +22,10 @@ export class ModalComponent implements OnInit {
               private editSrv: EditService,
               private storageSrv: StorageService,
               private mapSrv: MapService,
-              private warnSrv: WarnService) {}
+              private warnSrv: WarnService,
+              // private errorHighlightSrv: ErrorHighlightService
+              // private overpassSrv: OverpassService,
+              ) {}
 
   public name: string ;
   public refArr: Map <any, any>;
@@ -33,7 +39,7 @@ export class ModalComponent implements OnInit {
   @ViewChildren('v') newlyAddedValue ;
 
   public errorObject: any;
-
+  public nearbyRouteSuggestions = [];
   public ngOnInit(): void {
     if (this.error === 'missing ref tag') {
       this.arr = Array.from(this.refArr);
@@ -81,12 +87,16 @@ export class ModalComponent implements OnInit {
   private saveNameTag(name: string): void {
     this.createChangeForNameTag(name);
     this.bsModalRef.hide();
+    // add hover listener
     let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
     MapService.addHoverListenersToPopUp(popUpElement);
     this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
-    // console.log()
-    // set error object is corrected true
-    this.mapSrv.popUpLayerGroup.removeLayer(this.mapSrv.currentPopUpFeatureId);
+    let popupContent       = L.DomUtil.create('div', 'content');
+    popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+    let popupArr: any = this.mapSrv.popUpLayerGroup.getLayers();
+    let popUp = popupArr[0];
+    popupArr[0].setContent(popupContent);
+    this.errorObject.isCorrected = true;
     this.warnSrv.showGenericSuccess();
   }
 
@@ -113,11 +123,6 @@ export class ModalComponent implements OnInit {
    let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
    MapService.addHoverListenersToPopUp(popUpElement);
    this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
-   // this.mapSrv.map.eachLayer((layer) => {
-   //   if (layer['_leaflet_id'] === this.mapSrv.currentPopUpFeatureId) {
-   //     this.mapSrv.map.removeLayer(layer);
-   //   }
-   // });
    this.mapSrv.popUpLayerGroup.removeLayer(this.mapSrv.currentPopUpFeatureId);
    // this.mapSrv.map.remove(this.mapSrv.currentPopUpFeatureId);
    this.warnSrv.showGenericSuccess();
@@ -177,4 +182,24 @@ export class ModalComponent implements OnInit {
       }
     }
   }
+
+  private showNearbyRouteSuggestions(latlngm: any): any {
+
+    let nearbyStopArr = [];
+    this.mapSrv.map.eachLayer((layer) => {
+      if (layer instanceof L.Marker) {
+        let m: L.Marker = layer;
+        console.log('m ltltng', m.getLatLng());
+        if (m.getLatLng().distanceTo(latlngm) < 500) {
+          console.log(layer);
+          let id = this.mapSrv.getFeatureIdFromMarker(layer.feature);
+          nearbyStopArr.push(id);
+        }
+      }
+    });
+    // can use async await here
+    // this.overpassSrv.download(nearbyStopArr);
+
+  }
+
 }

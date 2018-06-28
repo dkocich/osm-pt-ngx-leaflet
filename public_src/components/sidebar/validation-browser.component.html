@@ -1,37 +1,119 @@
-<ng-container *ngIf="!(errorCorrectionMode$ | async)">
-  <p>Zoom into the area where you want to run the validation.</p>
-  <button class="btn btn-default" (click)="startValidation()">Find Errors</button>
-</ng-container>
-
-<ng-container *ngIf="!(errorCorrectionMode$ | async)">
-  <ul class="list-group">
-      <li class="list-group-item" *ngIf="nameErrorsO"> Missing name tags
-        {{nameErrorsO.length}}
-        <button  (click)="startNameCorrection()"> Start Correction</button>
-      </li>
-      <li class="list-group-item" *ngIf="refErrorsO"> Missing ref tags
-        {{refErrorsO.length}}
-        <button (click)="startRefCorrection()">Start Correction</button>
-      </li>
-  </ul>
-</ng-container>
-
-<ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing name tag'">
-  <ul class="list-group">
-    <ng-container *ngFor="let error of nameErrorsO; let i = index" >
-      <li id ='{{error.id}}' class="list-group-item" [style.background-color]="i===0 ? 'lightblue':'white'">
-        Location {{i}} ({{error.lat}}, {{error.lng}})
-      </li>
+<div class="panel-group">
+  <div class="panel panel-heading panel-default">
+    <ng-container *ngIf="!(errorCorrectionMode$ | async)">
+      <p> Zoom into the area where you want to run the validation.</p>
+      <button class="btn btn-default" (click)="startValidation()">Find Errors</button>
     </ng-container>
-  </ul>
-</ng-container>
+    <ng-container *ngIf="(switchMode$ | async)">
+      <button id='prevLoc' (click)="previousLocation()"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+      <button id='nextLoc' (click)="nextLocation()"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+      <button id='quit' (click)="quit()">Quit</button>
+    </ng-container>
 
-<ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing ref tag'">
-    <ul class="list-group">
-      <ng-container *ngFor="let refError of refErrorsO; let i = index">
-        <li  id ='{{refError.id}}' class="list-group-item" [style.background-color]="i===0? 'lightblue':'white'">
-          Location {{i}} ({{refError.lat}}, {{refError.lng}})
+
+  </div>
+  <div class="content panel panel-body panel-default scrollable-panel">
+    <ng-container *ngIf="!(errorCorrectionMode$ | async)">
+      <ul class="list-group">
+        <li class="list-group-item" *ngIf="nameErrorsO"> Missing name tags
+          {{nameErrorsO.length}}
+          <button (click)="startNameCorrection()"> Start Correction</button>
         </li>
-      </ng-container>
-    </ul>
-</ng-container>
+        <li class="list-group-item" *ngIf="refErrorsO"> Missing ref tags
+          {{refErrorsO.length}}
+          <button (click)="startRefCorrection()">Start Correction</button>
+        </li>
+      </ul>
+    </ng-container>
+
+
+    <ng-container *ngIf="!(errorCorrectionMode$ | async)">
+      <ul class="list-group">
+        <li class="list-group-item"> Missing name tags (no downloading needed)
+          <button (click)="missingNameTag()"> Start Correction</button>
+        </li>
+        <li class="list-group-item" > Missing ref tags (suggestions need downloading of additional data)
+          <button (click)="missingRefTag()"> Start Correction</button>
+        </li>
+        <li class="list-group-item" > Incomplete ref tags (check & suggestions need downloading of additional data)
+          <button (click)="incompleteRefTag()"> Start Correction</button>
+        </li>
+      </ul>
+    </ng-container>
+
+    <ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing name tag'">
+      <ul class="list-group">
+        <ng-container *ngFor="let error of nameErrorsO; let i = index">
+          <li id='{{ error.stop.id }}' class="list-group-item" [style.background-color]="i===0 ? 'lightblue':'white'">
+            Location {{i + 1}} ({{error['stop'].lat}}, {{error['stop'].lon}})
+            <i *ngIf="error['stop'].isCorrected" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="!error['stop'].isCorrected" class="fa fa-times pull-right" aria-hidden="true"></i>
+          </li>
+        </ng-container>
+      </ul>
+    </ng-container>
+
+    <ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing ref tag'">
+      <ul class="list-group">
+        <ng-container *ngFor="let refError of refErrorsO; let i = index">
+          <li id='{{refError.stop.id}}' class="list-group-item" [style.background-color]="i===0? 'lightblue':'white'">
+            Location {{i + 1}} ({{refError['stop'].lat}}, {{refError['stop'].lng}})
+          </li>
+        </ng-container>
+      </ul>
+    </ng-container>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<ng-container *ngIf="!(errorCorrectionMode$ | async)">-->
+  <!--<p>Zoom into the area where you want to run the validation.</p>-->
+  <!--<button class="btn btn-default" (click)="startValidation()">Find Errors</button>-->
+<!--</ng-container>-->
+
+<!--<ng-container *ngIf="!(errorCorrectionMode$ | async)">-->
+  <!--<ul class="list-group">-->
+      <!--<li class="list-group-item" *ngIf="nameErrorsO"> Missing name tags-->
+        <!--{{nameErrorsO.length}}-->
+        <!--<button  (click)="startNameCorrection()"> Start Correction</button>-->
+      <!--</li>-->
+      <!--<li class="list-group-item" *ngIf="refErrorsO"> Missing ref tags-->
+        <!--{{refErrorsO.length}}-->
+        <!--<button (click)="startRefCorrection()">Start Correction</button>-->
+      <!--</li>-->
+  <!--</ul>-->
+<!--</ng-container>-->
+
+<!--<ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing name tag'">-->
+  <!--<ul class="list-group">-->
+    <!--<ng-container *ngFor="let error of nameErrorsO; let i = index" >-->
+      <!--<li id ='{{error.id}}' class="list-group-item" [style.background-color]="i===0 ? 'lightblue':'white'">-->
+        <!--Location {{i}} ({{error.lat}}, {{error.lng}})-->
+      <!--</li>-->
+    <!--</ng-container>-->
+  <!--</ul>-->
+<!--</ng-container>-->
+
+<!--<ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing ref tag'">-->
+    <!--<ul class="list-group">-->
+      <!--<ng-container *ngFor="let refError of refErrorsO; let i = index">-->
+        <!--<li  id ='{{refError.id}}' class="list-group-item" [style.background-color]="i===0? 'lightblue':'white'">-->
+          <!--Location {{i}} ({{refError.lat}}, {{refError.lng}})-->
+        <!--</li>-->
+      <!--</ng-container>-->
+    <!--</ul>-->
+<!--</ng-container>-->

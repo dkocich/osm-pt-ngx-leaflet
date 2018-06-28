@@ -47,6 +47,9 @@ export class StorageService {
   public completelyDownloadedPlatformsIDB = new Set();
   public queriedRoutesForMastersIDB       = new Set();
 
+  public nameErrorsO: any[]                      = [];
+  public refErrorsO: any[]                       = [];
+  public currentIndex                            = 0;
   constructor() {
     this.currentElementsChange.subscribe((data) => {
       this.currentElement = data;

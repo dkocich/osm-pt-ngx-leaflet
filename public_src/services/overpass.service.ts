@@ -19,8 +19,10 @@ import { Utils } from '../core/utils.class';
 
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
-import {BsModalService} from 'ngx-bootstrap';
-import {ModalComponent} from '../components/modal/modal.component';
+import { BsModalService } from 'ngx-bootstrap';
+import { ModalComponent } from '../components/modal/modal.component';
+import { ErrorHighlightService } from './error-highlight.service';
+import {CorrectService} from './correct.service';
 
 @Injectable()
 export class OverpassService {
@@ -38,6 +40,7 @@ export class OverpassService {
     private warnSrv: WarnService,
     private ngRedux: NgRedux<IAppState>,
     private modalService: BsModalService,
+    private correctSrv: CorrectService,
     // private errorHighlightSrv: ErrorHighlightService,
   ) {
     /**
@@ -809,4 +812,40 @@ export class OverpassService {
       });
       }
   }
+
+  // move query to the
+  download(nearbyStops: any): any {
+    let requestBody = `
+      [out:json][timeout:25];
+      (
+         node(id:${nearbyStops.join(', ')});
+      );
+      (._;<;);
+      out meta;`;
+    console.log('query', requestBody);
+    requestBody = this.replaceBboxString(requestBody.trim());
+    this.httpClient
+        .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+        .subscribe(
+          (res) => {
+            if (!res) {
+              return alert('No response from API. Try to select element again please.');
+            }
+            console.log('res', res);
+            let relations = [];
+            for (const element of res['elements']) {
+              if (element.type === 'relation' && element.tags.type === 'route') {
+                relations.push(element);
+              }
+              if (!this.storageSrv.elementsMap.has(element.id)) {
+                this.storageSrv.elementsMap.set(element.id, element);
+              }
+            }
+
+          },
+          (err) => {
+            this.warnSrv.showError();
+            throw new Error(err.toString());
+          });
+    }
 }
