@@ -112,6 +112,7 @@ export class OverpassService {
    * Requests new batch of data from Overpass.
    */
   public requestNewOverpassData(): void {
+    console.log('bounds', this.mapSrv.map.getBounds());
     const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
     this.httpClient
       .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
@@ -751,5 +752,53 @@ export class OverpassService {
       console.error(err);
       throw new Error(err.toString());
     });
+  }
+
+  public downloadMultipleNodes(idsArr: any[]): any {
+    let refArr = [];
+
+   // TODO : around query
+    for (let ref of refArr) {
+
+    }
+
+    // TODO search in current area
+    let requestBody: string = `
+            [out:json][timeout:25][bbox:{{bbox}}];
+            (
+              rel( (around:1000));
+              <<;
+            );
+            out meta;`;
+    console.log(
+      'LOG (overpass s.) Querying rel.\'s route masters with query:',
+      requestBody,
+    );
+    requestBody = this.replaceBboxString(requestBody);
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          if (!res) {
+            return alert(
+              'No response from API. Try to select other master relation again please.',
+            );
+          }
+          this.processSrv.processNodeResponse(res);
+          let relations = [];
+          let refs = [];
+          for (const element of res['elements']) {
+              switch (element.type) {
+                case 'relation':
+                   relations.push(element);
+                   refs.push(element.tags.route_ref);
+              }
+            }
+        },
+        (err) => {
+          this.warnSrv.showError();
+          throw new Error(err.toString());
+        },
+      );
   }
 }
