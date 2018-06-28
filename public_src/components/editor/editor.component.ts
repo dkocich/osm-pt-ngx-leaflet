@@ -147,6 +147,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
    * Activates editing mode (locally/globally).
    */
   private toggleEditMode(): void {
+    this.appActions.actToggleEditing();
     this.editing = !this.editing;
     this.editSrv.editingMode.emit(this.editing);
     this.mapSrv.editingMode = this.editing;
@@ -160,4 +161,9 @@ export class EditorComponent implements OnInit, AfterViewInit {
       }, 250);
     }
   }
+
+  private createAutomaticRoute(): any {
+    this.editSrv.createAutomaticRoute();
+  }
+
 }

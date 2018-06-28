@@ -83,7 +83,7 @@ export class ToolbarComponent implements OnInit {
     this.downloading = !this.downloading;
     if (this.downloading) {
       this.mapSrv.map.on('zoomend moveend', () => {
-        this.overpassSrv.initDownloader();
+        this.overpassSrv.initDownloader(this.mapSrv.map);
       });
     } else if (!this.downloading) {
       this.mapSrv.map.off('zoomend moveend');

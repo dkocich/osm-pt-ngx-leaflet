@@ -1,0 +1,28 @@
+<div id="container">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Automatic Route Creation</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body text-center ">
+    <div class="row full-height">
+      <div class="col-md-7 full-height">
+        <div id="auto-route-modal-map">
+        </div>
+      </div>
+      <div class="col-md-5 full-height">
+        <button (click)="findMissingRoutes()">Find missing Routes</button>
+        <p>{{message}}</p>
+        <ul class="list-group" *ngIf="newRoutesRefs.length !== 0">
+          <li class="list-group-item" *ngFor="let ref of newRoutesRefs" (click)="highlightRoute(ref)">Route Ref: {{ref}}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button (click)="save()">Save</button>
+    <button (click)="cancel()">Cancel</button>
+  </div>
+</div>
+

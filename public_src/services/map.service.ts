@@ -228,7 +228,8 @@ export class MapService {
    * Renders GeoJson data on the map.
    * @param transformedGeojson
    */
-  public renderTransformedGeojsonData(transformedGeojson: any): void {
+  public renderTransformedGeojsonData(transformedGeojson: any, map: L.Map): void {
+    console.log('transformed geojson', transformedGeojson);
     this.ptLayer = L.geoJSON(transformedGeojson, {
       filter: (feature) => {
         // filter away already rendered elements
@@ -256,7 +257,8 @@ export class MapService {
       },
     });
     console.log('LOG (map s.) Adding PTlayer to map again', this.ptLayer);
-    this.ptLayer.addTo(this.map);
+
+    this.ptLayer.addTo(map);
   }
 
   /**
@@ -484,19 +486,31 @@ export class MapService {
    * @param rel
    * @returns {boolean}
    */
-  public showRoute(rel: any): boolean {
+  public showRoute(rel: any, map: L.Map): boolean {
     for (const member of rel.members) {
       if (
         member.type === 'node' &&
         ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
-        this.storageSrv.stopsForRoute.push(member.ref);
+
+        if (member.ref) {
+          this.storageSrv.stopsForRoute.push(member.ref);
+        }
+        if (member.id) {
+          this.storageSrv.stopsForRoute.push(member.id);
+        }
       } else if (
         member.type === 'node' &&
         ['platform', 'platform_entry_only', 'platform_exit_only']
           .indexOf(member.role) > -1
       ) {
-        this.storageSrv.platformsForRoute.push(member.ref);
+        if (member.ref) {
+          this.storageSrv.platformsForRoute.push(member.ref);
+        }
+        if (member.id) {
+          this.storageSrv.platformsForRoute.push(member.id);
+        }
+
       } else if (member.type === 'way') {
         this.storageSrv.waysForRoute.push(member.ref);
       } else if (member.type === 'relation') {
@@ -546,7 +560,7 @@ export class MapService {
       this.highlight = L.layerGroup([
         this.highlightStroke,
         this.highlightFill,
-      ]).addTo(this.map);
+      ]).addTo(map);
       return true;
     } else {
       if (rel.members.length <= 1) {
@@ -836,4 +850,18 @@ export class MapService {
     L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
 
+
+  /**
+   * Renders GeoJson data on the map.
+   * @param transformedGeojson
+   */
+  public renderTransformedGeojsonData2(transformedGeojson: any, map:L.Map): void {
+    this.ptLayer = L.geoJSON(transformedGeojson, {
+      pointToLayer: (feature, latlng) => {
+        return this.stylePoint(feature, latlng);
+      },
+    });
+    console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayer);
+    this.ptLayer.addTo(map);
+  }
 }

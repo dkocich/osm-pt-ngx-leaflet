@@ -57,6 +57,7 @@ import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
 import { StorageService } from './services/storage.service';
 import { WarnService } from './services/warn.service';
+import { AutoTasksService } from './services/auto-tasks.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -68,6 +69,7 @@ import { RootEpics } from './store/epics';
 import { RavenErrorHandler } from './raven-error-handler';
 
 import { Utils } from './core/utils.class';
+import { RouteModalComponent } from './components/route-modal/route-modal.component';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
@@ -83,7 +85,7 @@ const conditional_providers = [
 
 @NgModule({
   bootstrap: [AppComponent],
-  entryComponents: [ModalComponent],
+  entryComponents: [RouteModalComponent, AppComponent, ModalComponent],
   declarations: [
     AppComponent,
     AuthComponent,
@@ -95,15 +97,15 @@ const conditional_providers = [
     NavigatorComponent,
     RelationBrowserComponent,
     RouteBrowserComponent,
-    SettingsComponent,
     StopBrowserComponent,
     TagBrowserComponent,
     ToolbarComponent,
     TransporterComponent,
+    SettingsComponent,
+    RouteModalComponent,
     ValidationBrowserComponent,
 
     KeysPipe,
-
   ],
   imports: [
     AccordionModule.forRoot(),
@@ -149,6 +151,7 @@ const conditional_providers = [
     ProcessService,
     StorageService,
     WarnService,
+    AutoTasksService,
 
     KeysPipe,
 

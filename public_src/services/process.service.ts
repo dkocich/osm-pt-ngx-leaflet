@@ -130,7 +130,8 @@ export class ProcessService {
     this.storageSrv.localJsonStorage.set(responseId, response);
     this.storageSrv.localGeojsonStorage.set(responseId, transformedGeojson);
     this.createLists(responseId);
-    this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
+    console.log('response', response);
+    this.mapSrv.renderTransformedGeojsonData(transformedGeojson, this.mapSrv.map);
   }
 
   /**
@@ -423,7 +424,7 @@ export class ProcessService {
       this.mapSrv.clearHighlight();
     }
     this.storageSrv.clearRouteData();
-    if (this.mapSrv.showRoute(rel)) {
+    if (this.mapSrv.showRoute(rel, this.mapSrv.map)) {
       this.mapSrv.drawTooltipFromTo(rel);
       this.filterStopsByRelation(rel);
       if (zoomToElement) {
@@ -633,7 +634,7 @@ export class ProcessService {
       this.processNodeResponse(res);
       const transformedGeojson = this.mapSrv.osmtogeojson(res);
       this.storageSrv.localGeojsonStorage = transformedGeojson;
-      this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
+      this.mapSrv.renderTransformedGeojsonData(transformedGeojson, this.mapSrv.map);
       this.storageSrv.elementsDownloaded.add(rel.id);
       this.downloadedMissingMembers(rel, true, true);
     }).catch((err) => {

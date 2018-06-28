@@ -8,10 +8,12 @@ import { ErrorHighlightService } from './error-highlight.service';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
+import { AutoTasksService } from './auto-tasks.service';
+
 import { WarnService } from './warn.service';
 
 import { create } from 'xmlbuilder';
-import { LatLng } from 'leaflet';
+import * as L from 'leaflet';
 
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { IAreaRef } from '../core/areaRef.interface';
@@ -21,24 +23,28 @@ import { Utils } from '../core/utils.class';
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
+import {AutoTasksService} from './auto-tasks.service';
+
 
 @Injectable()
 export class OverpassService {
   public changeset;
   private changeset_id: string;
   private areaReference: IAreaRef;
+  public osmtogeojson: any = require('osmtogeojson');
 
   constructor(
     private authSrv: AuthService,
     private dbSrv: DbService,
     private errorHighlightSrv: ErrorHighlightService,
     private httpClient: HttpClient,
-    private mapSrv: MapService,
-    private ngRedux: NgRedux<IAppState>,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    private mapSrv: MapService,
     private warnSrv: WarnService,
+    private ngRedux: NgRedux<IAppState>,
     public appActions: AppActions,
+    private autoTaskSrv: AutoTasksService,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -116,6 +122,7 @@ export class OverpassService {
    * Requests new batch of data from Overpass.
    */
   public requestNewOverpassData(): void {
+    console.log('bounds', this.mapSrv.map.getBounds());
     const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
     this.httpClient
       .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
@@ -279,10 +286,17 @@ export class OverpassService {
     this.putChangeset(this.changeset, testUpload);
   }
 
-  public async initDownloader(): Promise<void> {
-    this.setupAreaReference();
-    if (this.minZoomLevelIsValid() && await this.shouldDownloadMissingArea()) {
+  public async initDownloader(map: L.Map): Promise<void> {
+    this.setupAreaReference(map);
+    if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
       this.requestNewOverpassData();
+    }
+  }
+
+  public async initDownloaderForModalMap(map: L.Map): Promise<void> {
+    this.setupAreaReference(map);
+    if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
+      this.requestNewOverpassDataForModalMap(false);
     }
   }
 
@@ -309,8 +323,8 @@ export class OverpassService {
     }
   }
 
-  private setupAreaReference(): void {
-    const viewCenter: LatLng = this.mapSrv.map.getCenter();
+  private setupAreaReference(map: L.Map): void {
+    const viewCenter: L.LatLng = map.getCenter();
     const south: string = (Math.floor(viewCenter.lat / 0.05) * 0.05).toFixed(2);
     const west: string = (Math.floor(viewCenter.lng / 0.05) * 0.05).toFixed(2);
     const north: string = (Number(south) + 0.05).toFixed(2);
@@ -319,8 +333,8 @@ export class OverpassService {
     this.areaReference = { areaPseudoId, overpassBox: [south, west, north, east], viewCenter };
   }
 
-  private minZoomLevelIsValid(): boolean {
-    return this.mapSrv.map.getZoom() > ConfService.minDownloadZoom;
+  private minZoomLevelIsValid(map: L.Map): boolean {
+    return map.getZoom() > ConfService.minDownloadZoom;
   }
 
   private async shouldDownloadMissingArea(): Promise<boolean> {
@@ -415,7 +429,7 @@ export class OverpassService {
           const transformedGeojson = this.mapSrv.osmtogeojson(res);
           // FIXME save all requests...
           // this.storageSrv.localGeojsonStorage = transformedGeojson;
-          this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
+          this.mapSrv.renderTransformedGeojsonData(transformedGeojson, this.mapSrv.map);
           this.dbSrv.addResponseToIDB(res, 'route', rel.id).catch((err) => {
             console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
               ' in adding related metadata to IDB for route with id : ' + rel.id);
@@ -832,5 +846,263 @@ export class OverpassService {
           this.warnSrv.showError();
           throw new Error(JSON.stringify(err));
         });
+  }
+
+  public downloadMultipleNodes(idsArr: any[], center: any): any {
+    let refArr = [];
+    // search for all relations which are routes around a center
+    // TODO : around query
+    for (let ref of refArr) {
+
+    }
+    // TODO  is not equal to areas
+    // TODO search in current area
+    let requestBody: string = `
+            [out:json][timeout:25][bbox:{{bbox}}];
+            (
+              rel([stop_area!=yes](around:1000, ${center}));
+              <<;
+            );
+            out meta;`;
+    console.log(
+      'LOG (overpass s.) Querying rel.\'s route masters with query:',
+      requestBody,
+    );
+    requestBody = this.replaceBboxString(requestBody);
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          if (!res) {
+            return alert(
+              'No response from API. Try to select other master relation again please.',
+            );
+          }
+          this.processSrv.processNodeResponse(res);
+          let relations = [];
+          let refs = [];
+          for (const element of res['elements']) {
+              switch (element.type) {
+                case 'relation':
+                   relations.push(element);
+                   refs.push(element.tags.route_ref);
+              }
+            }
+
+            // this.compareWithNodeRefs(refs);
+        },
+        (err) => {
+          this.warnSrv.showError();
+          throw new Error(err.toString());
+        },
+      );
+  }
+
+  // public downloadMultipleNodes(idsArr: any[], center: any): any {
+  //   let refArr = [];
+  //   // search for all relations which are routes around a center
+  //
+  //   for (let ref of refArr) {
+  //
+  //   }
+  //
+  //
+  //   let requestBody: string = `
+  //           [out:json][timeout:25][bbox:{{bbox}}];
+  //           (
+  //             rel([stop_area!=yes](around:1000, ${center}));
+  //             <<;
+  //           );
+  //           out meta;`;
+  //   console.log(
+  //     'LOG (overpass s.) Querying rel.\'s route masters with query:',
+  //     requestBody,
+  //   );
+  //   requestBody = this.replaceBboxString(requestBody);
+  //   this.httpClient
+  //     .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+  //     .subscribe(
+  //       (res) => {
+  //         if (!res) {
+  //           return alert(
+  //             'No response from API. Try to select other master relation again please.',
+  //           );
+  //         }
+  //         this.processSrv.processNodeResponse(res);
+  //         let relations = [];
+  //         let refs = [];
+  //         for (const element of res['elements']) {
+  //             switch (element.type) {
+  //               case 'relation':
+  //                  relations.push(element);
+  //                  refs.push(element.tags.route_ref);
+  //             }
+  //           }
+  //       },
+  //       (err) => {
+  //         this.warnSrv.showError();
+  //         throw new Error(err.toString());
+  //       },
+  //     );
+  // }
+
+  public requestNewOverpassDataForModalMap(findRoutes: boolean): void {
+    const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
+    this.httpClient
+      .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
+        responseType: 'json',
+        headers: Utils.HTTP_HEADERS,
+      })
+      .subscribe(
+        (res: IOverpassResponse) => {
+          console.log('query', requestBody);
+          console.log('LOG (overpass s.)', res);
+          this.processSrv.processResponse(res);
+          this.dbSrv.addArea(this.areaReference.areaPseudoId);
+          let transformed = this.osmtogeojson(res);
+          this.mapSrv.renderTransformedGeojsonData2(transformed, this.autoTaskSrv.map);
+          this.warnSrv.showSuccess();
+          if (findRoutes) {
+            let stopsInBounds = this.autoTaskSrv.findStopsInBounds();
+            let values = this.autoTaskSrv.findRefsFromNodes();
+            if (stopsInBounds.length !== 0 && values.length !== 0) {
+                this.getMultipleNodeData(stopsInBounds, values);
+              } else {
+              alert('no stops in bound with rr tag');
+            }
+          }
+        },
+        (err) => {
+          this.warnSrv.showError();
+          console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
+        },
+      );
+  }
+
+  private getIndividualRouteRefs(refs: any[]): any {
+    let ref_map = new Map();
+    for (let routeRefs of refs) {
+      let singleRefs = routeRefs.split(';');
+      for (let ref of singleRefs) {
+        if (ref_map.has(ref)) {
+          let val = ref_map.get(ref);
+          val++;
+          ref_map.set(ref, val);
+        } else {
+          ref_map.set(ref, 1);
+        }
+      }
+    }
+    console.log('map', ref_map);
+    return ref_map;
+  }
+
+
+  private getMultipleNodeData(idsArr: any, nodeRefs: any): any {
+    let requestBody = `
+      [out:json][timeout:25];
+      (
+       node(id:${idsArr});
+      );
+      (._;<;);
+      out meta;`;
+    console.log('LOG (overpass s.) Querying multiple nodes', requestBody);
+    requestBody = this.replaceBboxString(requestBody.trim());
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          if (!res) {
+            return alert('No response from API. Try to select element again please.');
+          }
+          console.log('LOG (overpass s.) multiple node data', res);
+          this.processMultipleNodeDataResponse(res, nodeRefs);
+
+          this.warnSrv.showSuccess();
+        },
+        (err) => {
+          this.warnSrv.showError();
+          throw new Error(err.toString());
+        });
+  }
+
+  private processMultipleNodeDataResponse(response: any, nodeRefs: any): any{
+    let refs: any[] = [];
+    for (const element of response.elements) {
+      if (!this.storageSrv.elementsMap.has(element.id)) {
+        this.storageSrv.elementsMap.set(element.id, element);
+        if (!element.tags) {
+          continue;
+        }
+        switch (element.type) {
+          case 'node':
+            this.storageSrv.elementsDownloaded.add(element.id);
+            if (element.tags.bus === 'yes' || element.tags.public_transport) {
+              this.storageSrv.listOfStops.push(element);
+            }
+            break;
+          case 'relation':
+            if (element.tags.public_transport === 'stop_area') {
+              this.storageSrv.listOfAreas.push(element);
+            } else {
+              // console.log('relation', element);
+              if (element.tags.ref) {
+                console.log('element', element);
+                refs.push(element.tags.ref);
+              }
+              this.storageSrv.listOfRelations.push(element);
+              break;
+            }
+        }
+      }
+    }
+    console.log('downloaded ref', refs);
+    console.log('type', typeof refs[0]);
+    let unique = this.removeDuplicatefromArray(refs);
+    let refnodes = this.compareArrays(nodeRefs, unique);
+    if (refnodes.length !== 0){
+      let newRoutes = [];
+
+      this.storageSrv.elementsMap.forEach((stop) => {
+        if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+          if (refnodes.includes(stop.tags.route_ref) && this.autoTaskSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
+            newRoutes.push(stop);
+          }
+        }
+      });
+
+      this.autoTaskSrv.newRoutes(newRoutes);
+    }
+
+
+  }
+
+  private removeDuplicatefromArray(arr: any[]): any{
+
+    let unique = arr.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
+    return unique;
+    // console.log('filter', unique);
+  }
+
+  private compareArrays(nodeRefs: any, routeRefs: any): any{
+   console.log('to compare', nodeRefs, routeRefs);
+   let arr = [];
+
+   for (let itemA of nodeRefs) {
+     let flag = false;
+     for (let itemB of routeRefs) {
+        console.log('type', typeof itemA);
+        if (itemA === itemB) {
+          flag = true;
+          }
+      }
+
+     if (flag === false) {
+        arr.push(itemA);
+      }
+    }
+    return arr;
   }
 }
