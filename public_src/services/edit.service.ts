@@ -5,10 +5,12 @@ import * as L from 'leaflet';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtRelationNew } from '../core/ptRelationNew.interface';
+import { RouteModalComponent } from '../components/route-modal/route-modal.component';
 
 @Injectable()
 export class EditService {
@@ -18,11 +20,13 @@ export class EditService {
   public currentTotalSteps: EventEmitter<object> = new EventEmitter();
   public elementChanges: any                     = [];
   private editing: boolean;
+  modalRef: BsModalRef;
 
   constructor(
     private mapSrv: MapService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    private modalService: BsModalService,
   ) {
     // local events
     this.currentTotalSteps.subscribe(
@@ -1030,17 +1034,7 @@ export class EditService {
   }
 
   public createAutomaticRoute(): any {
-    let filteredRoutes = [];
-    let routeRefs      = [];
-    for (let stop of this.storageSrv.listOfStops) {
-      let latlng = {lat: stop.lat, lng: stop.lon};
-      if ((this.storageSrv.elementsMap.get(stop.id).tags['route_ref']) &&
-        this.mapSrv.map.getBounds().contains(latlng)) {
-        filteredRoutes.push(stop);
-      }
-    }
-
+    this.modalRef = this.modalService.show(RouteModalComponent);
     console.log('stops in bounds and having route ref tag');
-
   }
 }

@@ -754,19 +754,19 @@ export class OverpassService {
     });
   }
 
-  public downloadMultipleNodes(idsArr: any[]): any {
+  public downloadMultipleNodes(idsArr: any[], center: any): any {
     let refArr = [];
-
-   // TODO : around query
+    // search for all relations which are routes around a center
+    // TODO : around query
     for (let ref of refArr) {
 
     }
-
+    // TODO  is not equal to areas
     // TODO search in current area
     let requestBody: string = `
             [out:json][timeout:25][bbox:{{bbox}}];
             (
-              rel( (around:1000));
+              rel([stop_area!=yes](around:1000, ${center}));
               <<;
             );
             out meta;`;
@@ -794,11 +794,17 @@ export class OverpassService {
                    refs.push(element.tags.route_ref);
               }
             }
+
+            // this.compareWithNodeRefs(refs);
         },
         (err) => {
           this.warnSrv.showError();
           throw new Error(err.toString());
         },
       );
+  }
+
+  public compareWithNodeRefs(relRefs: any, nodeRefs) : any {
+
   }
 }

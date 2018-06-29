@@ -65,6 +65,7 @@ import { RootEpics } from './store/epics';
 import { RavenErrorHandler } from './raven-error-handler';
 
 import { Utils } from './core/utils.class';
+import { RouteModalComponent } from './components/route-modal/route-modal.component';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
@@ -80,6 +81,7 @@ const conditional_providers = [
 
 @NgModule({
   bootstrap: [AppComponent],
+  entryComponents: [RouteModalComponent, AppComponent],
   declarations: [
     AppComponent,
     AuthComponent,
@@ -95,8 +97,10 @@ const conditional_providers = [
     ToolbarComponent,
     TransporterComponent,
     SettingsComponent,
+    RouteModalComponent,
 
     KeysPipe,
+
   ],
   imports: [
     AccordionModule.forRoot(),
