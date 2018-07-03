@@ -804,7 +804,176 @@ export class OverpassService {
       );
   }
 
-  public compareWithNodeRefs(relRefs: any, nodeRefs) : any {
+  public compareWithNodeRefs(relRefs: any, nodeRefs: any): any {
 
+  }
+
+
+  public requestNewOverpassData2(): void {
+    console.log('bounds', this.mapSrv.map.getBounds());
+    const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
+    this.httpClient
+      .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
+        responseType: 'json',
+        headers: Utils.HTTP_HEADERS,
+      })
+      .subscribe(
+        (res: IOverpassResponse) => {
+          console.log('LOG (overpass s.)', res);
+          this.processSrv.processResponse(res);
+          this.dbSrv.addArea(this.areaReference.areaPseudoId);
+          this.warnSrv.showSuccess();
+          let route_refs = [];
+          let inBounds = [];
+          for (let stop of this.storageSrv.listOfStops) {
+            if (this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
+              inBounds.push(stop.tags.route_ref);
+            }
+          }
+          console.log('downloaded elements', res.elements.length);
+          console.log('stops in bounds', inBounds.length);
+
+          for (let stop of this.storageSrv.listOfStops) {
+            if (stop.tags.route_ref && this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })){
+              route_refs.push(stop.tags.route_ref);
+            }
+          }
+          console.log('node route refs' , route_refs);
+          let ref_map = this.getIndividualRouteRefs(route_refs);
+          console.log('map', ref_map);
+          let values = [];
+          Array.from(ref_map).map( ([key, value]) => { values.push(key); });
+          // let ref_Data = JSON.stringify([...ref_map]);
+          // let values = JSON.parse(ref_Data).map((item) => item[1]);
+          console.log('vslues', values);
+          let stopsInBounds = [];
+          for (let stop of this.storageSrv.listOfStops) {
+            if (this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
+              stopsInBounds.push(stop.id);
+            }
+          }
+          console.log('multiple nodes nmber', stopsInBounds.length);
+          if(stopsInBounds.length!== 0){
+
+
+          this.getMultipleNodeData(stopsInBounds, values); }
+        },
+        (err) => {
+          this.warnSrv.showError();
+          console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
+        },
+      );
+  }
+
+  private getIndividualRouteRefs(refs: any[]): any {
+    let ref_map = new Map();
+    for (let routeRefs of refs) {
+      let singleRefs = routeRefs.split(';');
+      for (let ref of singleRefs) {
+        if (ref_map.has(ref)) {
+          let val = ref_map.get(ref);
+          val++;
+          ref_map.set(ref, val);
+        } else {
+          ref_map.set(ref, 1);
+        }
+      }
+    }
+    console.log('map', ref_map);
+    return ref_map;
+  }
+
+
+  private getMultipleNodeData(idsArr: any, nodeRefs: any): any {
+    let requestBody = `
+      [out:json][timeout:25];
+      (
+       node(id:${idsArr});
+      );
+      (._;<;);
+      out meta;`;
+    console.log('LOG (overpass s.) Querying multiple nodes', requestBody);
+    requestBody = this.replaceBboxString(requestBody.trim());
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          if (!res) {
+            return alert('No response from API. Try to select element again please.');
+          }
+          console.log('LOG (overpass s.) multiple node data', res);
+          this.processMultipleNodeDataResponse(res,nodeRefs);
+
+          this.warnSrv.showSuccess();
+        },
+        (err) => {
+          this.warnSrv.showError();
+          throw new Error(err.toString());
+        });
+  }
+
+  private processMultipleNodeDataResponse(response: any, nodeRefs: any): any{
+    let refs: any[] = [];
+    for (const element of response.elements) {
+      if (!this.storageSrv.elementsMap.has(element.id)) {
+        this.storageSrv.elementsMap.set(element.id, element);
+        if (!element.tags) {
+          continue;
+        }
+        switch (element.type) {
+          case 'node':
+            this.storageSrv.elementsDownloaded.add(element.id);
+            if (element.tags.bus === 'yes' || element.tags.public_transport) {
+              this.storageSrv.listOfStops.push(element);
+            }
+            break;
+          case 'relation':
+            if (element.tags.public_transport === 'stop_area') {
+              this.storageSrv.listOfAreas.push(element);
+            } else {
+              // console.log('relation', element);
+              if (element.tags.ref) {
+                console.log('element', element);
+                refs.push(element.tags.ref);
+              }
+              this.storageSrv.listOfRelations.push(element);
+              break;
+            }
+        }
+      }
+    }
+    console.log('downloaded ref', refs);
+    console.log('type', typeof refs[0]);
+    let unique = this.removeDuplicatefromArray(refs);
+    this.compareArrays(nodeRefs, unique);
+  }
+
+  private removeDuplicatefromArray(arr: any[]): any{
+
+    let unique = arr.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
+    return unique;
+    // console.log('filter', unique);
+  }
+
+  private compareArrays(nodeRefs: any, routeRefs: any): any{
+   console.log('to compare', nodeRefs, routeRefs);
+   let arr = [];
+
+   for (let itemA of nodeRefs) {
+     let flag = false;
+      for (let itemB of routeRefs) {
+        console.log('tyoe', typeof itemA);
+        if (itemA === itemB) {
+          flag = true;
+          }
+      }
+
+      if (flag === false) {
+        arr.push(itemA);
+      }
+    }
+    console.log('arr', arr);
   }
 }

@@ -31,16 +31,7 @@ export class RouteModalComponent implements OnInit {
     // document.getElementById('map').remove();
     let x = this.mapSrv.map.getContainer();
     document.getElementById('map2').appendChild(x);
-    // $('#x').append(mapNode);
-    // const map2 = L.map('map2', {
-    //   center: L.latLng(49.686, 18.351),
-    //   layers: [this.mapSrv.baseMaps.CartoDB_light],
-    //   maxZoom: 22,
-    //   minZoom: 4,
-    //   zoom: 14,
-    //   zoomAnimation: false,
-    //   zoomControl: false,
-    // });
+
     //
     // L.control.zoom({ position: 'topright' }).addTo(map2);
     // L.control.layers(this.mapSrv.baseMaps).addTo(map2);
@@ -53,20 +44,17 @@ export class RouteModalComponent implements OnInit {
 
   }
 
-
   private close(): any {
   this.bsModalRef.hide();
   let x = this.mapSrv.map.getContainer();
   document.getElementById('map-c').appendChild(x);
   }
 
-  private findMissingRoutes(): any{
-
-    if (this.mapSrv.map.getZoom() > 10) {
-      this.overpassSrv.requestNewOverpassData();
+  private findMissingRoutes(): any {
+    if (this.mapSrv.map.getZoom() > 8) {
+      this.overpassSrv.requestNewOverpassData2();
     } else {
       alert('Not sufficient zoom level');
     }
-    
   }
 }
