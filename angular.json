@@ -33,7 +33,6 @@
             ],
             "scripts": [
               "node_modules/leaflet/src/Leaflet.js",
-              "node_modules/leaflet-editable/src/Leaflet.Editable.js"
             ]
           },
           "configurations": {

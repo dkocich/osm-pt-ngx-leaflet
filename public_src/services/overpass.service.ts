@@ -41,7 +41,7 @@ export class OverpassService {
     private ngRedux: NgRedux<IAppState>,
     private modalService: BsModalService,
     private correctSrv: CorrectService,
-    // private errorHighlightSrv: ErrorHighlightService,
+    private errorHighlightSrv: ErrorHighlightService,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -831,17 +831,25 @@ export class OverpassService {
             if (!res) {
               return alert('No response from API. Try to select element again please.');
             }
+
             console.log('res', res);
+
+            for (const element of res['elements']) {
+              if (!this.storageSrv.elementsMap.has(element.id)) {
+                this.storageSrv.elementsMap.set(element.id, element); }
+            }
+
+
             let relations = [];
             for (const element of res['elements']) {
               if (element.type === 'relation' && element.tags.type === 'route') {
                 relations.push(element);
               }
-              if (!this.storageSrv.elementsMap.has(element.id)) {
-                this.storageSrv.elementsMap.set(element.id, element);
-              }
+              // if (!this.storageSrv.elementsMap.has(element.id)) {
+              //   this.storageSrv.elementsMap.set(element.id, element);
+              // }
             }
-
+            this.errorHighlightSrv.isDataDownloaded.emit(true);
           },
           (err) => {
             this.warnSrv.showError();

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import * as L from 'leaflet';
 
 import { MapService } from './map.service';
@@ -16,6 +16,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 import { ModalComponent } from '../components/modal/modal.component';
 import * as MobileDetect from 'mobile-detect';
+import {element} from 'protractor';
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
@@ -23,6 +24,9 @@ export class ErrorHighlightService {
   public refErrorsO: any[]                       = [];
   public currentIndex                            = 0;
   public currentMode: string;
+  public isDataDownloaded: EventEmitter<boolean> = new EventEmitter();
+  public refreshErrorObjects: EventEmitter<string> = new EventEmitter();
+
   constructor(public mapSrv: MapService,
               public appActions: AppActions,
               public storageSrv: StorageService,
@@ -30,8 +34,13 @@ export class ErrorHighlightService {
               private modalService: BsModalService,
               private processSrv: ProcessService,
               private switchLocationSrv: SwitchLocationService,
-              private overpassSrv: OverpassService,
+              // private overpassSrv: OverpassService,
   ) {
+    this.isDataDownloaded.subscribe((data) => {
+      if (data) {
+        this.countErrors();
+      }
+    });
   }
 
   /***
@@ -86,7 +95,7 @@ export class ErrorHighlightService {
           if (this.isMobileDevice()) {
             this.openModalWithComponent(stop);
           } else {
-            this.overpassSrv.downloadNodeDataForError(featureId);
+            // this.overpassSrv.downloadNodeDataForError(featureId);
           }
         }
         // changing current element
@@ -136,10 +145,11 @@ export class ErrorHighlightService {
    * Counts errors
    */
   public countErrors(): void {
+    console.log('count errors called');
     // this.nameErrors = 0;
     // this.refErrors  = 0;
-    // this.refErrorsO = [];
-    // this.nameErrorsO = [];
+    this.refErrorsO = [];
+    this.nameErrorsO = [];
     //
     // let stopsInBounds = this.getAllStopsInCurrentBounds(this.storageSrv.listOfStops);
     //
@@ -165,8 +175,21 @@ export class ErrorHighlightService {
     //
     // }
 
-
     // download first
+
+
+    // for (let elementID in this.storageSrv.elementsMap) {
+    //   if (this.storageSrv.elementsMap.hasOwnProperty(elementID)) {
+    //     let stop = this.storageSrv.elementsMap.get(elementID);
+    //     if (stop.tags.bus === 'yes' || stop.tags.public_transport) {
+    //       if (!stop.tags['name'] && this.mapSrv.map.getBounds().contains(stop)) {
+    //         let errorObj          = { stop, isCorrected: false };
+    //         this.nameErrorsO.push(errorObj);
+    //       }
+    //     }
+    //   }
+    // }
+
 
     for (let stop of this.storageSrv.listOfStops) {
       let stopObj2 = { stop, isCorrected: false };
@@ -174,11 +197,13 @@ export class ErrorHighlightService {
 
       // find all in bounds
 
-      console.log('stop', stop);
-      if (!(this.storageSrv.elementsMap.get(stop.id).tags['name']) &&
-        this.mapSrv.map.getBounds().contains(stopObj)) {
-        this.nameErrorsO.push(stopObj2);
-      }
+      // console.log('stop', stop);
+      // if (!(this.storageSrv.elementsMap.get(stop.id).tags['name']) &&
+      //   this.mapSrv.map.getBounds().contains(stopObj)) {
+      //   this.nameErrorsO.push(stopObj2);
+      // }
+
+
       if (!(this.storageSrv.elementsMap.get(stop.id).tags['ref']) &&
         this.mapSrv.map.getBounds().contains(stopObj)) {
 
@@ -190,6 +215,8 @@ export class ErrorHighlightService {
 
       }
     }
+    this.refreshErrorObjects.emit('missing name');
+    console.log('name e', this.nameErrorsO);
     // this.errorList = [];
   }
 
@@ -471,7 +498,7 @@ export class ErrorHighlightService {
        }
      });
     // can use async await here
-    this.overpassSrv.download(nearbyStopArr);
+    // this.overpassSrv.download(nearbyStopArr);
 
     }
 
@@ -500,3 +527,4 @@ export class ErrorHighlightService {
   //
   // }
 }
+

@@ -9,9 +9,8 @@
       <button id='nextLoc' (click)="nextLocation()"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
       <button id='quit' (click)="quit()">Quit</button>
     </ng-container>
-
-
   </div>
+
   <div class="content panel panel-body panel-default scrollable-panel">
     <ng-container *ngIf="!(errorCorrectionMode$ | async)">
       <ul class="list-group">
@@ -30,7 +29,7 @@
     <ng-container *ngIf="!(errorCorrectionMode$ | async)">
       <ul class="list-group">
         <li class="list-group-item"> Missing name tags (no downloading needed)
-          <button (click)="missingNameTag()"> Start Correction</button>
+          <button (click)="startNameCorrection2()"> Start Correction</button>
         </li>
         <li class="list-group-item" > Missing ref tags (suggestions need downloading of additional data)
           <button (click)="missingRefTag()"> Start Correction</button>

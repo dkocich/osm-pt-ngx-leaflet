@@ -41,7 +41,6 @@ export class AppComponent implements OnInit {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<boolean>;
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
-  // @select(['app', 'editing']) public readonly editing$: Observable<boolean>
   @select(['app', 'switchMode']) public readonly switchMode$: Observable<boolean>;
   private startEventProcessing = new Subject<L.LeafletEvent>();
 
