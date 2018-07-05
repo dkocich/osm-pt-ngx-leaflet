@@ -17,18 +17,20 @@ import { IAreaRef } from '../core/areaRef.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { Utils } from '../core/utils.class';
 
-import { NgRedux } from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import { IAppState } from '../store/model';
 import { BsModalService } from 'ngx-bootstrap';
 import { ModalComponent } from '../components/modal/modal.component';
 import { ErrorHighlightService } from './error-highlight.service';
 import {CorrectService} from './correct.service';
+import {Observable} from 'rxjs/index';
 
 @Injectable()
 export class OverpassService {
   public changeset;
   private changeset_id: string;
   private areaReference: IAreaRef;
+  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
 
   constructor(
     private authSrv: AuthService,
@@ -131,10 +133,16 @@ export class OverpassService {
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
-          // if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing name tag')) {
-          //              this.errorHighlightSrv.missingTagError('name'); }
-          // if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing ref tag')) {
-          //   this.errorHighlightSrv.missingTagError('ref'); }
+          console.log('mpde', this.ngRedux.getState()['app']['errorCorrectionMode']);
+          if ((this.ngRedux.getState()['app']['errorCorrectionMode']) !== null) {
+
+            if ((this.errorHighlightSrv.isMobileDevice())) {
+              this.errorHighlightSrv.isDataDownloaded.emit(true);
+            } else {
+              let inBounds = this.errorHighlightSrv.getAllStopsInCurrentBounds();
+              this.download(inBounds);
+            }
+          }
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
@@ -334,6 +342,7 @@ export class OverpassService {
               this.getRouteMasters(10);
             }
           } else {
+            // TODO add to elements downloaded
             // Only add to elements map and not update listOfStops etc. when process is equal to false
             for (const element of res['elements']) {
               if (!this.storageSrv.elementsMap.has(element.id)) {
@@ -809,7 +818,7 @@ export class OverpassService {
       (err) => {
         this.warnSrv.showError();
         throw new Error(err.toString());
-      });
+       });
       }
   }
 
@@ -833,12 +842,14 @@ export class OverpassService {
             }
 
             console.log('res', res);
+            for (const element of nearbyStops) {
+              this.storageSrv.elementsDownloaded.add(element);
+            }
 
             for (const element of res['elements']) {
               if (!this.storageSrv.elementsMap.has(element.id)) {
                 this.storageSrv.elementsMap.set(element.id, element); }
             }
-
 
             let relations = [];
             for (const element of res['elements']) {

@@ -33,10 +33,12 @@ export class ValidationBrowserComponent {
               public storageSrv: StorageService) {
 
 
-    this.errorHighlightSrv.refreshErrorObjects.subscribe((data) =>{
-      if(data === 'missing name') {
-        console.log('s');
-        this.nameErrorsO = this.errorHighlightSrv.nameErrorsO;
+    this.storageSrv.refreshErrorObjects.subscribe((data) =>{
+      if (data === 'missing name') {
+        this.nameErrorsO = this.storageSrv.nameErrorsO;
+      }
+      if (data === 'missing ref') {
+        this.refErrorsO = this.storageSrv.refErrorsO;
       }
     });
 
@@ -50,27 +52,24 @@ export class ValidationBrowserComponent {
     this.refErrorsO = [];
     this.nameErrorsO = [];
     if (this.mapSrv.map.getZoom() > 11) {
-    let inBounds = this.errorHighlightSrv.getAllStopsInCurrentBounds(this.storageSrv.listOfStops);
-    this.overpassSrv.download(inBounds);
+      this.appActions.actSetErrorCorrectionMode('general');
+      this.overpassSrv.requestNewOverpassData();
     } else {
       alert('Not sufficient zoom level');
     }
   }
+
+
 
   /***
    * Starts name correction mode
    * @returns {void}
    */
   startNameCorrection(): void {
-
-    if (this.mapSrv.map.getZoom() > 11) {
-      let inBounds = this.errorHighlightSrv.getAllStopsInCurrentBounds(this.storageSrv.listOfStops);
-      this.overpassSrv.download(inBounds);
+      // let inBounds = this.errorHighlightSrv.getAllStopsInCurrentBounds(this.storageSrv.listOfStops);
+      // this.overpassSrv.download(inBounds);
       this.appActions.actSetErrorCorrectionMode('missing name tag');
-      this.errorHighlightSrv.startCorrection('name');
-    } else {
-      alert('Not sufficient zoom level');
-    }
+      this.errorHighlightSrv.missingTagError('name');
   }
 
   /***
@@ -79,7 +78,7 @@ export class ValidationBrowserComponent {
    */
   startRefCorrection(): any {
     this.appActions.actSetErrorCorrectionMode('missing ref tag');
-    this.errorHighlightSrv.startCorrection('ref');
+    this.errorHighlightSrv.missingTagError('ref');
   }
 
   checkMapCenter(latlng: any): boolean {
@@ -117,14 +116,19 @@ export class ValidationBrowserComponent {
 
    }
 
-  startNameCorrection2(): void {
-    if (this.mapSrv.map.getZoom() > 11) {
-      let inBounds = this.errorHighlightSrv.getAllStopsInCurrentBounds(this.storageSrv.listOfStops);
-      this.overpassSrv.download(inBounds);
-      this.appActions.actSetErrorCorrectionMode('missing name tag');
-      this.errorHighlightSrv.startCorrection('name');
-    } else {
-      alert('Not sufficient zoom level');
-    }
-   }
+  // startNameCorrection2(): void {
+  //   if (this.mapSrv.map.getZoom() > 11) {
+  //     let inBounds = this.errorHighlightSrv.getAllStopsInCurrentBounds(this.storageSrv.listOfStops);
+  //     this.overpassSrv.download(inBounds);
+  //     this.appActions.actSetErrorCorrectionMode('missing name tag');
+  //     this.errorHighlightSrv.startCorrection('name');
+  //   } else {
+  //     alert('Not sufficient zoom level');
+  //   }
+  //  }
+
+  jumpToLocation(index: number): void {
+    console.log('sad');
+    this.errorHighlightSrv.jumpToLocation(index);
+  }
   }

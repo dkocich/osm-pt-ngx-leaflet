@@ -5,14 +5,20 @@
   <div class="modal-body text-center">
     <div *ngIf="errorObject.isCorrected">
       Already corrected
+      <p>{{errorObject.tags.name}}</p>
     </div>
     <form>
       <div class="form-group">
         <input class="form-control" type="text" #v>
       </div>
     </form>
-    <h4 class="pull left"> Suggested name : {{name}}</h4>
-    <button (click)="v.value = name">Use</button>
+    <ul>
+      <li *ngFor="let name of suggestedNames">
+        {{name}}
+        <button (click)="v.value = name">Use</button>
+
+      </li>
+    </ul>
   </div>
   <div class="modal-footer">
     <p>

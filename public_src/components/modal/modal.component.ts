@@ -25,9 +25,18 @@ export class ModalComponent implements OnInit {
               private warnSrv: WarnService,
               // private errorHighlightSrv: ErrorHighlightService
               // private overpassSrv: OverpassService,
-              ) {}
+              ) {
 
-  public name: string ;
+    // this.errorHighlightSrv.refreshErrorObjects.subscribe((data) =>{
+    //   if(data === 'missing name') {
+    //     console.log('s');
+    //     this.nameErrorsO = this.errorHighlightSrv.nameErrorsO;
+    //   }
+    // });
+
+  }
+
+  public suggestedNames: string[] ;
   public refArr: Map <any, any>;
   public arr = [];
   public error: string;
@@ -97,6 +106,11 @@ export class ModalComponent implements OnInit {
     let popUp = popupArr[0];
     popupArr[0].setContent(popupContent);
     this.errorObject.isCorrected = true;
+    console.log('name', this.storageSrv.nameErrorsO[this.storageSrv.currentIndex]);
+    this.storageSrv.nameErrorsO[this.storageSrv.currentIndex].isCorrected = true;
+    console.log('after name', this.storageSrv.nameErrorsO[this.storageSrv.currentIndex]);
+
+    this.storageSrv.refreshErrorObjects.emit('missing name');
     this.warnSrv.showGenericSuccess();
   }
 

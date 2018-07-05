@@ -1,11 +1,9 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import * as L from 'leaflet';
 
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
-import { SwitchLocationService } from './switch-location.service';
-import { OverpassService } from './overpass.service';
 
 import { AppActions } from '../store/app/actions';
 import { IAppState } from '../store/model';
@@ -15,8 +13,9 @@ import { NgRedux } from '@angular-redux/store';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 import { ModalComponent } from '../components/modal/modal.component';
+
 import * as MobileDetect from 'mobile-detect';
-import {element} from 'protractor';
+
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
@@ -25,7 +24,6 @@ export class ErrorHighlightService {
   public currentIndex                            = 0;
   public currentMode: string;
   public isDataDownloaded: EventEmitter<boolean> = new EventEmitter();
-  public refreshErrorObjects: EventEmitter<string> = new EventEmitter();
 
   constructor(public mapSrv: MapService,
               public appActions: AppActions,
@@ -33,13 +31,23 @@ export class ErrorHighlightService {
               private ngRedux: NgRedux<IAppState>,
               private modalService: BsModalService,
               private processSrv: ProcessService,
-              private switchLocationSrv: SwitchLocationService,
-              // private overpassSrv: OverpassService,
   ) {
     this.isDataDownloaded.subscribe((data) => {
       if (data) {
         this.countErrors();
       }
+    });
+
+    this.storageSrv.refreshErrorObjects.subscribe((data) => {
+      if (data === 'missing name') {
+        this.currentIndex =  this.storageSrv.currentIndex;
+        this.nameErrorsO = this.storageSrv.nameErrorsO;
+      }
+      if (data === 'missing ref') {
+        this.currentIndex =  this.storageSrv.currentIndex;
+        this.nameErrorsO = this.storageSrv.nameErrorsO;
+      }
+
     });
   }
 
@@ -49,6 +57,12 @@ export class ErrorHighlightService {
    * @returns {void}
    */
   public missingTagError(tag: string): void {
+    this.storageSrv.currentIndex = 0;
+    this.storageSrv.refreshErrorObjects.emit('missing ' + tag);
+    console.log('emitted' + 'missing ' + tag);
+    this.currentMode = tag;
+    this.mapSrv.popUpLayerGroup = null;
+    this.mapSrv.popUpArr = [];
     this.mapSrv.map.eachLayer((layer) => {
       if (layer['_latlng'] && layer['feature']) {
         layer.off('click');
@@ -76,6 +90,7 @@ export class ErrorHighlightService {
    * @param popUpElement
    * @param markerFeatureid
    * @param popUpId
+   * @param stop
    * @returns {void}
    */
 
@@ -87,14 +102,20 @@ export class ErrorHighlightService {
         let latlng = { lat: element.lat, lng: element.lon };
         if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing name tag')) {
           let arr    = this.getNearbyNodeNames(latlng);
-          let suggestedName   = this.getMostUsedName(arr);
-          this.openModalWithComponent(stop, suggestedName);
+          let suggestedNames   = this.getMostUsedName(arr);
+          this.openModalWithComponent(stop, suggestedNames);
         }
         if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing ref tag')) {
           console.log('got value', this.isMobileDevice());
+
+
+          // get suggestions
+
           if (this.isMobileDevice()) {
+            // data was not completely download
             this.openModalWithComponent(stop);
           } else {
+            this.openModalWithComponent(stop);
             // this.overpassSrv.downloadNodeDataForError(featureId);
           }
         }
@@ -122,22 +143,32 @@ export class ErrorHighlightService {
    * Opens up modal
    * @returns {void}
    */
-  public openModalWithComponent(stop: any, name?: string): void {
+  public openModalWithComponent(stop: any, suggestedNames?: string): void {
     // name is suggested name
-    if (name) {
+    if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing name tag')) {
+
+      if (suggestedNames) {
+        const initialState = {
+          error      : 'missing name tag',
+          suggestedNames,
+          errorObject: stop,
+        };
+        this.modalRef      = this.modalService.show(ModalComponent, {initialState});
+      }
+      else {
+        const initialState = {
+          error      : 'missing name tag',
+          errorObject: stop,
+        };
+        this.modalRef      = this.modalService.show(ModalComponent, {initialState});
+      }
+    } else
+    {
       const initialState = {
-        error: 'missing name tag',
-        name,
+        error      : 'missing ref tag',
         errorObject: stop,
       };
-      this.modalRef      = this.modalService.show(ModalComponent, { initialState });
-    }
-    else {
-      const initialState = {
-        error: 'missing name tag',
-        errorObject: stop,
-      };
-      this.modalRef      = this.modalService.show(ModalComponent, { initialState });
+      this.modalRef      = this.modalService.show(ModalComponent, {initialState});
     }
   }
 
@@ -146,78 +177,93 @@ export class ErrorHighlightService {
    */
   public countErrors(): void {
     console.log('count errors called');
-    // this.nameErrors = 0;
-    // this.refErrors  = 0;
     this.refErrorsO = [];
     this.nameErrorsO = [];
-    //
-    // let stopsInBounds = this.getAllStopsInCurrentBounds(this.storageSrv.listOfStops);
-    //
-    //
-    //
-    //
-    // for (let stop of stopsInBounds) {
-    //   let stopObj = { stop, isCorrected: false };
-    //
-    //   // check for missing name tag
-    //
-    //   if (!(this.storageSrv.elementsMap.get(stop.id).tags['name'])) {
-    //     this.nameErrorsO.push(stopObj);
-    //   }
-    //
-    //   // check for missing route_ref tag, suggestions need complete downloading of node
-    //   if (stop.tags.route_ref) {
-    //     let refs = this.getAlreadyAddedRefsInTag(stop.tags.route_ref);
-    //   }
-    //
-    //   // check for incomplete route_ref tag (suggestions needs downloading,
-    //   // check needs downloading, )
-    //
-    // }
+    let count = 0;
+    this.storageSrv.elementsMap.forEach((stop) => {
+      // console.log('next stop', stop);
 
-    // download first
-
-
-    // for (let elementID in this.storageSrv.elementsMap) {
-    //   if (this.storageSrv.elementsMap.hasOwnProperty(elementID)) {
-    //     let stop = this.storageSrv.elementsMap.get(elementID);
-    //     if (stop.tags.bus === 'yes' || stop.tags.public_transport) {
-    //       if (!stop.tags['name'] && this.mapSrv.map.getBounds().contains(stop)) {
-    //         let errorObj          = { stop, isCorrected: false };
-    //         this.nameErrorsO.push(errorObj);
-    //       }
-    //     }
-    //   }
-    // }
-
-
-    for (let stop of this.storageSrv.listOfStops) {
-      let stopObj2 = { stop, isCorrected: false };
-      let stopObj          = { lat: stop.lat, lng: stop.lon, id: stop.id, isCorrected : false };
-
-      // find all in bounds
-
-      // console.log('stop', stop);
-      // if (!(this.storageSrv.elementsMap.get(stop.id).tags['name']) &&
-      //   this.mapSrv.map.getBounds().contains(stopObj)) {
-      //   this.nameErrorsO.push(stopObj2);
+      // if (this.mapSrv.map.getBounds().contains(stop)){
+      //   count++;
       // }
 
+      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+        count ++;
+        let errorObj = { stop, isCorrected: false };
+        if (!stop.tags['name'] && this.mapSrv.map.getBounds().contains(stop)) {
+          // console.log('no name');
+          this.nameErrorsO.push(errorObj);
+        }
 
-      if (!(this.storageSrv.elementsMap.get(stop.id).tags['ref']) &&
-        this.mapSrv.map.getBounds().contains(stopObj)) {
+        if (this.mapSrv.map.getBounds().contains(stop)) {
 
-        // let refs = this.getAlreadyAddedRefsInTag(this.storageSrv.elementsMap.get(stop.id).tags['route_ref']);
-        // download everything
-        // this.overpassSrv.download()
-        this.refErrorsO.push(stopObj);
+          if (this.isMobileDevice()) {
+            let refErrorObj          = { stop, isCorrected: false };
 
+            if (!stop.tags['route_ref']) {
+              this.refErrorsO.push(refErrorObj);
+            }
+          } else {
 
+            if (stop.tags['route_ref']) {
+              console.log('stop', stop);
+              let parentRels = this.getParentRelations(stop.id);
+              console.log('parents', parentRels);
+              let addedRefs = this.getAlreadyAddedRefsInTag(stop.tags['route_ref']);
+              let missingRefs = this.compareRefs(parentRels, addedRefs);
+              // get missing refs
+              // and send them as suggestions
+              let refErrorObj          = { stop, isCorrected: false, missingRefs };
+
+              if (missingRefs.length !== 0) {
+                this.refErrorsO.push(refErrorObj);
+              }
+
+              this.getNearbyRefs()
+
+            } else {
+              let refErrorObj          = { stop, isCorrected: false };
+              this.refErrorsO.push(refErrorObj);
+            }
+          }
+          // if (stop.tags['route_ref']){
+          //   console.log('stop', stop);
+          //
+          //   let parentRels = this.getParentRelations(stop.id);
+          //   console.log('parents', parentRels);
+          //   let addedRefs = this.getAlreadyAddedRefsInTag(stop.tags['route_ref']);
+          //   let bool = this.compareRefs(parentRels, addedRefs);
+          //   if (!bool) {
+          //     this.refErrorsO.push(refErrorObj);
+          //   }
+          // } else {
+          //   this.refErrorsO.push(refErrorObj);
+          // }
+        }
       }
-    }
-    this.refreshErrorObjects.emit('missing name');
-    console.log('name e', this.nameErrorsO);
-    // this.errorList = [];
+
+      // console.log('stop', stop);
+    });
+
+   //  console.log('ref errors', this.refErrorsO);
+   // console.log('in bounds', count);
+    // for (let stop of this.storageSrv.listOfStops) {
+    //   let stopObj2 = { stop, isCorrected: false };
+    //   let stopObj          = { lat: stop.lat, lng: stop.lon, id: stop.id, isCorrected : false };
+    //   if (!(this.storageSrv.elementsMap.get(stop.id).tags['ref']) &&
+    //     this.mapSrv.map.getBounds().contains(stopObj)) {
+    //
+    //     // let refs = this.getAlreadyAddedRefsInTag(this.storageSrv.elementsMap.get(stop.id).tags['route_ref']);
+    //     // download everything
+    //     // this.overpassSrv.download()
+    //     this.refErrorsO.push(stopObj);
+    //
+    //   }
+    // }
+    this.storageSrv.refErrorsO = this.refErrorsO;
+    this.storageSrv.nameErrorsO =  this.nameErrorsO;
+    this.storageSrv.refreshErrorObjects.emit('missing name');
+    this.storageSrv.refreshErrorObjects.emit('missing ref');
   }
 
   /***
@@ -282,13 +328,11 @@ export class ErrorHighlightService {
    * @returns {any}
    */
   switchlocationModeOn(bool: boolean, arr?: any): any {
-
     if (this.ngRedux.getState().switchMode) {
       document.getElementById('map').style.width     = '65%';
       document.getElementById('sidebar').style.width = '35%';
       this.appActions.actToggleSwitchMode(bool);
-    }
-    else {
+    } else {
       console.log('run' , this.currentMode);
       if (this.currentMode === 'name') {
         this.addSinglePopUp(this.nameErrorsO[0]);
@@ -296,7 +340,7 @@ export class ErrorHighlightService {
       }
       if (this.currentMode === 'ref') {
         this.addSinglePopUp(this.refErrorsO[0]);
-        this.mapSrv.map.setView(this.nameErrorsO[0]['stop'], 15);
+        this.mapSrv.map.setView(this.refErrorsO[0]['stop'], 15);
       }
       this.appActions.actToggleSwitchMode(bool);
     }
@@ -310,34 +354,50 @@ export class ErrorHighlightService {
   nextLocation(): any {
     if (this.currentMode === 'name') {
       if (this.currentIndex === (this.nameErrorsO.length - 1)) {
+        // p dont need below line
           this.currentIndex = 0;
+
+          this.storageSrv.currentIndex = 0;
+          this.storageSrv.refreshErrorObjects.emit('missing name');
           this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
           this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex]['stop'], 15);
           document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1]['stop'].id).style.backgroundColor = 'white';
           document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
 
       } else {
-        this.addSinglePopUp(this.nameErrorsO[this.currentIndex + 1]);
-        this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex + 1]['stop'], 15);
-        document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.nameErrorsO[this.currentIndex + 1]['stop'].id).style.backgroundColor = 'lightblue';
+        // p dont need below line
+
         this.currentIndex++;
+
+        this.storageSrv.currentIndex ++;
+        this.storageSrv.refreshErrorObjects.emit('missing name');
+        this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+        this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex]['stop'], 15);
+        document.getElementById(this.nameErrorsO[this.currentIndex - 1 ]['stop'].id).style.backgroundColor = 'white';
+        document.getElementById(this.nameErrorsO[this.currentIndex ]['stop'].id).style.backgroundColor = 'lightblue';
       }
     }
     if (this.currentMode === 'ref') {
       if (this.currentIndex === (this.refErrorsO.length - 1)) {
         this.currentIndex = 0;
-        this.addSinglePopUp(this.refErrorsO[this.currentIndex]['stop']);
+
+        this.storageSrv.currentIndex = 0;
+        this.storageSrv.refreshErrorObjects.emit('missing ref');
+        this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
         this.mapSrv.map.setView(this.refErrorsO[this.currentIndex]['stop'], 15);
         document.getElementById(this.refErrorsO[this.refErrorsO.length - 1]['stop'].id).style.backgroundColor = 'white';
         document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
 
       } else {
-        this.addSinglePopUp(this.refErrorsO[this.currentIndex + 1]);
-        this.mapSrv.map.setView(this.refErrorsO[this.currentIndex + 1]['stop'], 15);
-        document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.refErrorsO[this.currentIndex + 1]['stop'].id).style.backgroundColor = 'lightblue';
+
         this.currentIndex++;
+
+        this.storageSrv.currentIndex ++;
+        this.storageSrv.refreshErrorObjects.emit('missing ref');
+        this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
+        this.mapSrv.map.setView(this.refErrorsO[this.currentIndex]['stop'], 15);
+        document.getElementById(this.refErrorsO[this.currentIndex - 1 ]['stop'].id).style.backgroundColor = 'white';
+        document.getElementById(this.refErrorsO[this.currentIndex ]['stop'].id).style.backgroundColor = 'lightblue';
       }
      }
     }
@@ -350,32 +410,50 @@ export class ErrorHighlightService {
 
     if (this.currentMode === 'name') {
       if (this.currentIndex === 0) {
+
           this.currentIndex = this.nameErrorsO.length - 1;
+
+          this.storageSrv.currentIndex = this.nameErrorsO.length - 1;
+          this.storageSrv.refreshErrorObjects.emit('missing name');
           this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
           this.mapSrv.map.panTo(this.nameErrorsO[this.currentIndex]['stop']);
 
           document.getElementById(this.nameErrorsO[0]['stop'].id).style.backgroundColor = 'white';
           document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1]['stop'].id).style.backgroundColor = 'lightblue';
       } else {
-        this.addSinglePopUp(this.nameErrorsO[this.currentIndex - 1]);
-        this.mapSrv.map.panTo(this.nameErrorsO[this.currentIndex - 1]['stop']);
-        document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.nameErrorsO[this.currentIndex - 1]['stop'].id).style.backgroundColor = 'lightblue';
         this.currentIndex--;
+
+        this.storageSrv.currentIndex--;
+
+        this.storageSrv.refreshErrorObjects.emit('missing name');
+
+        this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+        console.log('index', this.nameErrorsO[this.currentIndex]);
+        this.mapSrv.map.panTo(this.nameErrorsO[this.currentIndex]['stop']);
+        document.getElementById(this.nameErrorsO[this.currentIndex + 1]['stop'].id).style.backgroundColor = 'white';
+        document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+
       }
     }
     if (this.currentMode === 'ref') {
       if (this.currentIndex === 0) {
         this.currentIndex = this.refErrorsO.length - 1;
-        this.addSinglePopUp(this.refErrorsO[this.currentIndex]['stop']);
+        this.storageSrv.currentIndex = this.refErrorsO.length - 1;
+        this.storageSrv.refreshErrorObjects.emit('missing ref');
+        this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
         this.mapSrv.map.panTo(this.refErrorsO[this.currentIndex]['stop']);
         document.getElementById(this.refErrorsO[0]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+        document.getElementById(this.refErrorsO[this.refErrorsO.length - 1]['stop'].id).style.backgroundColor = 'lightblue';
       } else {
-        this.addSinglePopUp(this.refErrorsO[this.currentIndex - 1]['stop']);
-        this.mapSrv.map.panTo(this.refErrorsO[this.currentIndex - 1]['stop']);
         this.currentIndex--;
-        console.log('this is it element', document.getElementById(this.refErrorsO[this.currentIndex + 1 ]['stop'].id));
+
+        this.storageSrv.currentIndex--;
+
+        this.storageSrv.refreshErrorObjects.emit('missing ref');
+
+        this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
+        // console.log('index',this.refErrorsO[this.currentIndex]);
+        this.mapSrv.map.panTo(this.refErrorsO[this.currentIndex]['stop']);
         document.getElementById(this.refErrorsO[this.currentIndex + 1]['stop'].id).style.backgroundColor = 'white';
         document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
       }
@@ -408,7 +486,7 @@ export class ErrorHighlightService {
       if (layer instanceof L.Marker) {
         let m: L.Marker = layer;
         m.getLatLng();
-        if (m.getLatLng().distanceTo(latlngm) < 200 && m.feature.properties.name) {
+        if (m.getLatLng().distanceTo(latlngm) < 1000 && m.feature.properties.name) {
           inRangeNameArray.push(m.feature.properties.name);
         }
       }
@@ -417,7 +495,7 @@ export class ErrorHighlightService {
   }
 
   /***
-   * Returns most occurred name
+   * Returns most occurred name (top 5 most used names)
    * @param {any[]} array
    * @returns {any}
    */
@@ -441,7 +519,19 @@ export class ErrorHighlightService {
         maxCount = modeMap[el];
       }
     }
-    return maxEl;
+
+   console.log('wholearr', array);
+    const arr = [];
+    arr[0] = modeMap;
+    let sorted = Object.keys(arr[0]).sort((a, b) => arr[0][b] - arr[0][a]);
+    sorted.forEach((x) => console.log(x + ': ' + arr[0][x]));
+
+    if (sorted.length > 5){
+      sorted =  sorted.slice(0, 5);
+    }
+
+    return sorted;
+    // return maxEl;
   }
 
   /***
@@ -451,7 +541,7 @@ export class ErrorHighlightService {
    */
   addSinglePopUp(errorObj: any): any {
      let stop =  errorObj['stop'];
-     console.log('sd', errorObj['stop']);
+     // console.log('sd', errorObj['stop']);
      this.mapSrv.removePopUps();
      let latlng = { lat: stop.lat, lng: stop.lon };
      let popupContent;
@@ -489,9 +579,7 @@ export class ErrorHighlightService {
     this.mapSrv.map.eachLayer((layer) => {
        if (layer instanceof L.Marker) {
          let m: L.Marker = layer;
-         console.log('m ltltng', m.getLatLng());
          if (m.getLatLng().distanceTo(latlngm) < 500) {
-           console.log(layer);
            let id = this.mapSrv.getFeatureIdFromMarker(layer.feature);
            nearbyStopArr.push(id);
          }
@@ -503,21 +591,31 @@ export class ErrorHighlightService {
     }
 
   public getAlreadyAddedRefsInTag(routeRefTag: string): string[] {
+    console.log('tag',routeRefTag);
     return  routeRefTag.split(';');
   }
 
   /***
-   * Returns all stops in current map bounds
+   * Returns all stops in current map bounds and which are not downloaded
    * @param listOfStops
    * @returns {any[]}
    */
-  public getAllStopsInCurrentBounds(listOfStops: any[]): any[] {
+  public getAllStopsInCurrentBounds(): any[] {
     let inBounds = [];
-    for (let stopObj of listOfStops) {
-      if (this.mapSrv.map.getBounds().contains(stopObj)) {
-      inBounds.push(stopObj.id);
+    this.storageSrv.elementsMap.forEach((element) => {
+      if (element.type === 'node' &&
+        (element.tags.bus === 'yes' || element.tags.public_transport) &&
+        this.mapSrv.map.getBounds().contains(element) &&
+        !this.storageSrv.elementsDownloaded.has(element.id)) {
+        inBounds.push(element.id);
       }
-    }
+    });
+    console.log('in bounds', inBounds.length);
+      //   for (let stopObj of listOfStops) {
+      // if (this.mapSrv.map.getBounds().contains(stopObj) && !this.storageSrv.elementsDownloaded.has(stopObj.id)) {
+      // inBounds.push(stopObj.id);
+      // }
+    // }
     return inBounds;
   }
   //
@@ -526,5 +624,75 @@ export class ErrorHighlightService {
   //   this.overpassSrv.download();
   //
   // }
+
+  jumpToLocation(index: number): any {
+    if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing name tag')) {
+      document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'white';
+      this.currentIndex = index;
+      this.storageSrv.currentIndex = index;
+      this.storageSrv.refreshErrorObjects.emit('missing name');
+      this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+      this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex]['stop'], 15);
+      document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+    }
+    if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing ref tag')) {
+      document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'white';
+      this.currentIndex = index;
+      this.storageSrv.currentIndex = index;
+      this.storageSrv.refreshErrorObjects.emit('missing ref');
+      this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
+      this.mapSrv.map.setView(this.refErrorsO[this.currentIndex]['stop'], 15);
+      document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+    }
+    }
+
+  getParentRelations(id: any): any {
+    let parentRels = [];
+
+    this.storageSrv.elementsMap.forEach((element) => {
+      if ((element.type === 'relation') && !(element.tags.public_transport === 'stop_area')) {
+
+        if (element.members) {
+          for (let member of element.members) {
+            if(member.ref === id){
+              parentRels.push(element);
+            }
+          }
+        }
+      }
+    });
+    return parentRels;
+  }
+
+
+  compareRefs(parentRels: any, addedRefs: any): any {
+    let parentRefs = [];
+    let missingRefs = [];
+    for (let parent of parentRels) {
+      parentRefs.push(parent.tags.ref);
+    }
+
+    parentRefs = parentRefs.filter((val, ind) => { return parentRefs.indexOf(val) === ind; });
+
+    let flag = true;
+    for(let ref of parentRefs){
+
+      if (!addedRefs.includes(ref)){
+        flag = false;
+        missingRefs.push(ref);
+      }
+    }
+
+    return missingRefs;
+    
+  }
+
+  getNearbyRefs(latlngm: any): any {
+    this.storageSrv.elementsMap.forEach((element) => {
+      if (element.type === 'node' && (element.tags.bus === 'yes' || element.tags.public_transport)) {
+
+      }
+  }
+
 }
 

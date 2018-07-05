@@ -50,6 +50,8 @@ export class StorageService {
   public nameErrorsO: any[]                      = [];
   public refErrorsO: any[]                       = [];
   public currentIndex                            = 0;
+  public refreshErrorObjects: EventEmitter<string> = new EventEmitter();
+
   constructor() {
     this.currentElementsChange.subscribe((data) => {
       this.currentElement = data;
