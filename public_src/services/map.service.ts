@@ -30,6 +30,10 @@ export class MapService {
   private highlight: any = undefined;
   private markerFrom: any = undefined;
   private markerTo: any = undefined;
+  public popUpArr = [];
+  public popUpLayerGroup: L.LayerGroup;
+  public currentPopUpFeatureId: number;
+  public errorLocations: L.LatLngExpression [] = [];
 
   constructor(
     private confSrv: ConfService,
@@ -728,7 +732,7 @@ export class MapService {
    * @param feature
    * @returns {number}
    */
-  private getFeatureIdFromMarker(feature: any): number {
+  public getFeatureIdFromMarker(feature: any): number {
     const featureTypeId = feature.id.split('/');
     const featureType = featureTypeId[0];
     return Number(featureTypeId[1]); // featureId
@@ -754,4 +758,121 @@ export class MapService {
     const marker: object = feature.target; // FIXME DELETE?
     this.markerMembershipToggleClick.emit({ featureId });
   }
+
+  /***
+   * Colors popup according to event
+   * @param e
+   * @returns {void}
+   */
+  public static colorPopUpByEvent (e: any): void {
+    let colorString = '';
+    if (e.type === 'click' || e.type === 'mouseover') {
+      colorString = 'lightblue';
+    }
+    if (e.type === 'mouseout') {
+      colorString = 'white';
+    }
+    if (e.target.className === 'leaflet-popup-content-wrapper') {
+      e.target.style.backgroundColor = colorString;
+      e.target.parentElement.lastElementChild.lastElementChild.style.backgroundColor = colorString;
+    }
+  }
+
+  /***
+   * Colors popup according to the given popup name
+   * @param {string} colorName
+   * @param element
+   * @returns {any}
+   */
+  public static colorPopUpByColorName(colorName: string, element: any): void {
+    element.children[0].style.backgroundColor = colorName;
+    element.lastElementChild.lastElementChild.style.backgroundColor = colorName;
+  }
+
+  /***
+   * Fetches popup element from currently added popups on map
+   * @param popUpId
+   * @returns {HTMLElement}
+   */
+  public getPopUpFromArray(popUpId: number): HTMLElement {
+    for (let popUp of this.popUpArr) {
+      if (popUp['_leaflet_id'] === popUpId) {
+        return popUp.getElement();
+      }
+    }
+  }
+
+  /***
+   * Checks if popup was already added to map
+   * @param latLongObj
+   * @returns {boolean}
+   */
+  public checkIfAlreadyAdded(latLongObj: object): boolean {
+     for (let popUp of this.popUpArr) {
+       if (JSON.stringify(latLongObj) === JSON.stringify(popUp.getLatLng())) {
+         return true;
+       }
+     }
+     return false;
+  }
+
+  /***
+   * Removes the complete popup layer and enables marker click again
+   * @returns {void}
+   */
+  public removePopUps(): void {
+    this.map.closePopup();
+    if (this.popUpLayerGroup) {
+      this.popUpLayerGroup.remove();
+    }
+    this.map.eachLayer((layer) => {
+      if (layer['_latlng']  && layer['feature']) {
+        this.enableDrag(layer['feature'], layer);
+      }
+    });
+  }
+  // public newremovePopUps(): void {
+  //   if (this.popUpLayerGroup) {
+  //     this.map.closePopup();
+  //     this.map.removeLayer(this.popUpLayerGroup);
+  //     this.popUpLayerGroup.remove();
+  //     this.map.removeLayer(this.popUpArr[0]);
+  //     this.popUpLayerGroup.eachLayer((layer) => {
+  //       console.log('to remove', layer);
+  //       // this.map.closePopup(layer);
+  //       console.log(layer['_leaflet_id']);
+  //       this.map.removeLayer(layer);
+  //       console.log('true or false', this.map.hasLayer(layer));
+  //
+  //     });
+  //   }
+  //
+  //   // this.map.eachLayer((layer) => {
+  //   //   // console.log('each', layer);
+  //   //   if (layer instanceof L.popup) {
+  //   //     console.log('to reove', layer);
+  //   //    this.map.removeLayer(layer);
+  //   //   }
+  //   // });
+  // }
+  /***
+   * Adds mouseover and mouseout listeners from popup
+   * @param popUpElement
+   * @returns {void}
+   */
+  public static addHoverListenersToPopUp(popUpElement: HTMLElement): void {
+    L.DomEvent.addListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
+    L.DomEvent.addListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
+  }
+
+  /***
+   * Removes mouseover and mouseout listeners from popup
+   * @param popUpElement
+   * @returns {void}
+   */
+  public static removeHoverListenersToPopUp(popUpElement: HTMLElement): void {
+    L.DomEvent.removeListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
+    L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
+  }
+
 }

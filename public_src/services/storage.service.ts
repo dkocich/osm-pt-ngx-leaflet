@@ -47,6 +47,11 @@ export class StorageService {
   public completelyDownloadedPlatformsIDB = new Set();
   public queriedRoutesForMastersIDB       = new Set();
 
+  public nameErrorsO: any[]                      = [];
+  public refErrorsO: any[]                       = [];
+  public currentIndex                            = 0;
+  public refreshErrorObjects: EventEmitter<string> = new EventEmitter();
+
   constructor() {
     this.currentElementsChange.subscribe((data) => {
       this.currentElement = data;

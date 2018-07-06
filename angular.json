@@ -31,7 +31,9 @@
               "./node_modules/dragula/dist/dragula.css",
               "./node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/leaflet/src/Leaflet.js",
+            ]
           },
           "configurations": {
             "production": {
@@ -88,7 +90,10 @@
               "./node_modules/dragula/dist/dragula.css",
               "./node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/leaflet/src/Leaflet.js",
+              "node_modules/leaflet-editable/src/Leaflet.Editable.js"
+            ],
             "assets": [
               "public_src/assets",
               "public_src/land.html",
