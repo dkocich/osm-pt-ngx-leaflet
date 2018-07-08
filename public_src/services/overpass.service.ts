@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { ConfService } from './conf.service';
 import { DbService } from './db.service';
+import { ErrorHighlightService } from './error-highlight.service';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
@@ -29,12 +30,13 @@ export class OverpassService {
   constructor(
     private authSrv: AuthService,
     private dbSrv: DbService,
+    private errorHighlightSrv: ErrorHighlightService,
     private httpClient: HttpClient,
+    private mapSrv: MapService,
+    private ngRedux: NgRedux<IAppState>,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
-    private mapSrv: MapService,
     private warnSrv: WarnService,
-    private ngRedux: NgRedux<IAppState>,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -124,6 +126,7 @@ export class OverpassService {
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
+          this.errorHighlightSrv.isDataDownloaded.emit(true);
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();

@@ -35,6 +35,7 @@ import { BeginnerComponent } from './components/beginner/beginner.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { ExpertComponent } from './components/expert/expert.component';
 import { LangComponent } from './components/lang/lang.component';
+import { ModalComponent } from './components/modal/modal.component';
 import { NavigatorComponent } from './components/navigator/navigator.component';
 import { RelationBrowserComponent } from './components/sidebar/relation-browser.component';
 import { RouteBrowserComponent } from './components/sidebar/route-browser.component';
@@ -43,11 +44,13 @@ import { StopBrowserComponent } from './components/sidebar/stop-browser.componen
 import { TagBrowserComponent } from './components/sidebar/tag-browser.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
+import { ValidationBrowserComponent } from './components/sidebar/validation-browser.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
 import { DbService } from './services/db.service';
 import { EditService } from './services/edit.service';
+import { ErrorHighlightService } from './services/error-highlight.service';
 import { GeocodeService } from './services/geocode.service';
 import { MapService } from './services/map.service';
 import { OverpassService } from './services/overpass.service';
@@ -80,6 +83,7 @@ const conditional_providers = [
 
 @NgModule({
   bootstrap: [AppComponent],
+  entryComponents: [ModalComponent],
   declarations: [
     AppComponent,
     AuthComponent,
@@ -87,16 +91,19 @@ const conditional_providers = [
     EditorComponent,
     ExpertComponent,
     LangComponent,
+    ModalComponent,
     NavigatorComponent,
     RelationBrowserComponent,
     RouteBrowserComponent,
+    SettingsComponent,
     StopBrowserComponent,
     TagBrowserComponent,
     ToolbarComponent,
     TransporterComponent,
-    SettingsComponent,
+    ValidationBrowserComponent,
 
     KeysPipe,
+
   ],
   imports: [
     AccordionModule.forRoot(),
@@ -135,6 +142,7 @@ const conditional_providers = [
     ConfService,
     DbService,
     EditService,
+    ErrorHighlightService,
     GeocodeService,
     MapService,
     OverpassService,

@@ -11,6 +11,9 @@ import { StorageService } from '../../services/storage.service';
 
 import { IOsmElement } from '../../core/osmElement.interface';
 
+import { select } from '@angular-redux/store';
+import { Observable } from 'rxjs';
+
 @Component({
   providers: [],
   selector: 'toolbar',
@@ -30,6 +33,7 @@ export class ToolbarComponent implements OnInit {
 
   public currentElement: IOsmElement;
   public stats = { s: 0, r: 0, a: 0, m: 0 };
+  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
 
   constructor(
     private confSrv: ConfService,
@@ -47,6 +51,9 @@ export class ToolbarComponent implements OnInit {
           data, this.currentElement, this.storageSrv.currentElement,
         );
         this.currentElement = this.storageSrv.currentElement;
+      } else if (data === 'cancel selection') {
+        this.currentElement = undefined;
+        delete this.currentElement;
       }
     });
     this.storageSrv.stats.subscribe((data) => (this.stats = data));
