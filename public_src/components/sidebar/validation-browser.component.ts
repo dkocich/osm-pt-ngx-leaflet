@@ -1,13 +1,11 @@
-import { Component } from '@angular/core';
-
+import { AppActions } from '../../store/app/actions';
 import { BsModalService } from 'ngx-bootstrap';
-import { MapService } from '../../services/map.service';
-
-import { ErrorHighlightService } from '../../services/error-highlight.service';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
-import { AppActions } from '../../store/app/actions';
 
+import { ErrorHighlightService } from '../../services/error-highlight.service';
+import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { StorageService } from '../../services/storage.service';
 
@@ -23,12 +21,15 @@ export class ValidationBrowserComponent {
 
   public refErrorsO;
   public nameErrorsO;
-  constructor(private modalService: BsModalService,
-              private mapSrv: MapService,
-              private errorHighlightSrv: ErrorHighlightService,
-              public appActions: AppActions,
-              private overpassSrv: OverpassService,
-              public storageSrv: StorageService) {
+
+  constructor(
+    private errorHighlightSrv: ErrorHighlightService,
+    private mapSrv: MapService,
+    private modalService: BsModalService,
+    private overpassSrv: OverpassService,
+    public appActions: AppActions,
+    public storageSrv: StorageService,
+  ) {
 
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
       if (data === 'missing name') {
@@ -38,11 +39,11 @@ export class ValidationBrowserComponent {
 
   }
 
-  /***
+  /**
    * Counts and list all errors
    * @returns {void}
    */
-  private startValidation(): void {
+  public startValidation(): void {
     this.refErrorsO = [];
     this.nameErrorsO = [];
     if (this.mapSrv.map.getZoom() > 11) {
@@ -53,47 +54,46 @@ export class ValidationBrowserComponent {
     }
   }
 
-  /***
+  /**
    * Starts name correction mode
    * @returns {void}
    */
-  private startNameCorrection(): void {
-      this.appActions.actSetErrorCorrectionMode('missing name tag');
-      this.errorHighlightSrv.missingTagError('name');
+  public startNameCorrection(): void {
+    this.appActions.actSetErrorCorrectionMode('missing name tag');
+    this.errorHighlightSrv.missingTagError('name');
   }
 
-  /***
-   * Moves to next location
+  /**
+   * Moves to the next location
    */
-  private nextLocation(): void {
+  public nextLocation(): void {
     this.errorHighlightSrv.nextLocation();
   }
 
-  /***
-   * Moves to prev location
+  /**
+   * Moves to the previous location
    */
-  private previousLocation(): void {
+  public previousLocation(): void {
     this.errorHighlightSrv.previousLocation();
   }
 
-  /***
+  /**
    * Quits mode
    */
-  private quit(): void {
+  public quit(): void {
     this.errorHighlightSrv.quit();
     this.storageSrv.currentElement = null;
     this.storageSrv.currentElementsChange.emit(
       JSON.parse(JSON.stringify(null)),
     );
-   }
+  }
 
-  /***
+  /**
    * Jumps to different location
    * @param {number} index
    */
-
-  private jumpToLocation(index: number): void {
+  public jumpToLocation(index: number): void {
     console.log('sad');
     this.errorHighlightSrv.jumpToLocation(index);
   }
-  }
+}

@@ -45,13 +45,15 @@ export class AppActions {
   }
 
   public actSetErrorCorrectionMode = (payload: string): Action => {
-     return this.ngRedux.dispatch({ type: AppActions.SET_ERROR_CORRECTION_MODE, payload });
-   }
+    return this.ngRedux.dispatch({ type: AppActions.SET_ERROR_CORRECTION_MODE, payload });
+  }
+
   public actSetBeginnerView = (payload: string): Action => {
     return this.ngRedux.dispatch({ type: AppActions.SET_BEGINNER_VIEW, payload });
   }
+
   // basic sync action
   public actToggleSwitchMode = (payload: boolean): Action => {
-        return this.ngRedux.dispatch({ type: AppActions.TOGGLE_SWITCH_MODE, payload });
-     }
+    return this.ngRedux.dispatch({ type: AppActions.TOGGLE_SWITCH_MODE, payload });
+  }
 }

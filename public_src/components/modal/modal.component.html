@@ -13,14 +13,14 @@
     </form>
     <h4 *ngIf="suggestedNames.length !== 0">{{'Suggested Names' | translate }}</h4>
     <table *ngIf="suggestedNames.length !== 0" class="table table-condensed">
-    <tr *ngFor="let name of suggestedNames">
-    <td>
-      <p class="pull-left">{{name}}</p>
-    </td>
-      <td>
-        <button (click)="v.value = name">{{'Use' | translate }}</button>
-      </td>
-    </tr>
+      <tr *ngFor="let name of suggestedNames">
+        <td>
+          <p class="pull-left">{{name}}</p>
+        </td>
+        <td>
+          <button (click)="v.value = name">{{'Use' | translate }}</button>
+        </td>
+      </tr>
     </table>
   </div>
   <div class="modal-footer">

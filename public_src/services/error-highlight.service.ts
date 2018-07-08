@@ -10,7 +10,7 @@ import { IAppState } from '../store/model';
 
 import { NgRedux } from '@angular-redux/store';
 
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import { ModalComponent } from '../components/modal/modal.component';
 
@@ -19,17 +19,18 @@ import * as MobileDetect from 'mobile-detect';
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
-  public nameErrorsO: any[]                      = [];
-  public currentIndex                            = 0;
+  public nameErrorsO: any[] = [];
+  public currentIndex = 0;
   public currentMode: string;
   public isDataDownloaded: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(public mapSrv: MapService,
-              public appActions: AppActions,
-              public storageSrv: StorageService,
-              private ngRedux: NgRedux<IAppState>,
-              private modalService: BsModalService,
-              private processSrv: ProcessService,
+  constructor(
+    private modalService: BsModalService,
+    private ngRedux: NgRedux<IAppState>,
+    private processSrv: ProcessService,
+    public appActions: AppActions,
+    public mapSrv: MapService,
+    public storageSrv: StorageService,
   ) {
     this.isDataDownloaded.subscribe((data) => {
       if (data) {
@@ -39,7 +40,7 @@ export class ErrorHighlightService {
 
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
       if (data === 'missing name') {
-        this.currentIndex =  this.storageSrv.currentIndex;
+        this.currentIndex = this.storageSrv.currentIndex;
         this.nameErrorsO = this.storageSrv.nameErrorsO;
       }
     });
@@ -92,8 +93,8 @@ export class ErrorHighlightService {
       if (element) {
         let latlng = { lat: element.lat, lng: element.lon };
         if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing name tag')) {
-          let arr    = this.getNearbyNodeNames(latlng);
-          let suggestedNames   = this.getMostUsedName(arr);
+          let arr = this.getNearbyNodeNames(latlng);
+          let suggestedNames = this.getMostUsedName(arr);
           this.openModalWithComponent(stop, suggestedNames);
         }
         this.storageSrv.currentElementsChange.emit(
@@ -126,14 +127,14 @@ export class ErrorHighlightService {
           suggestedNames,
           errorObject: stop,
         };
-        this.modalRef      = this.modalService.show(ModalComponent, { initialState });
+        this.modalRef = this.modalService.show(ModalComponent, { initialState });
       }
       else {
         const initialState = {
           error      : 'missing name tag',
           errorObject: stop,
         };
-        this.modalRef      = this.modalService.show(ModalComponent, { initialState });
+        this.modalRef = this.modalService.show(ModalComponent, { initialState });
       }
     }
   }
@@ -146,14 +147,14 @@ export class ErrorHighlightService {
     let count = 0;
     this.storageSrv.elementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-        count ++;
+        count++;
         let errorObj = { stop, isCorrected: false };
         if (!stop.tags['name'] && this.mapSrv.map.getBounds().contains(stop)) {
           this.nameErrorsO.push(errorObj);
         }
       }
     });
-    this.storageSrv.nameErrorsO =  this.nameErrorsO;
+    this.storageSrv.nameErrorsO = this.nameErrorsO;
     this.storageSrv.refreshErrorObjects.emit('missing name');
     this.storageSrv.refreshErrorObjects.emit('missing ref');
   }
@@ -183,7 +184,7 @@ export class ErrorHighlightService {
       document.getElementById('sidebar').style.width = '35%';
       this.appActions.actToggleSwitchMode(bool);
     } else {
-      console.log('run' , this.currentMode);
+      console.log('run', this.currentMode);
       if (this.currentMode === 'name') {
         this.addSinglePopUp(this.nameErrorsO[0]);
         this.mapSrv.map.setView(this.nameErrorsO[0]['stop'], 15);
@@ -200,22 +201,22 @@ export class ErrorHighlightService {
   nextLocation(): any {
     if (this.currentMode === 'name') {
       if (this.currentIndex === (this.nameErrorsO.length - 1)) {
-          this.currentIndex = 0;
-          this.storageSrv.currentIndex = 0;
-          this.storageSrv.refreshErrorObjects.emit('missing name');
-          this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
-          this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex]['stop'], 15);
-          document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1]['stop'].id).style.backgroundColor = 'white';
-          document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
-
-      } else {
-        this.currentIndex++;
-        this.storageSrv.currentIndex ++;
+        this.currentIndex = 0;
+        this.storageSrv.currentIndex = 0;
         this.storageSrv.refreshErrorObjects.emit('missing name');
         this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
         this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex]['stop'], 15);
-        document.getElementById(this.nameErrorsO[this.currentIndex - 1 ]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.nameErrorsO[this.currentIndex ]['stop'].id).style.backgroundColor = 'lightblue';
+        document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1]['stop'].id).style.backgroundColor = 'white';
+        document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+
+      } else {
+        this.currentIndex++;
+        this.storageSrv.currentIndex++;
+        this.storageSrv.refreshErrorObjects.emit('missing name');
+        this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+        this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex]['stop'], 15);
+        document.getElementById(this.nameErrorsO[this.currentIndex - 1]['stop'].id).style.backgroundColor = 'white';
+        document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
       }
     }
   }
@@ -229,15 +230,15 @@ export class ErrorHighlightService {
     if (this.currentMode === 'name') {
       if (this.currentIndex === 0) {
 
-          this.currentIndex = this.nameErrorsO.length - 1;
+        this.currentIndex = this.nameErrorsO.length - 1;
 
-          this.storageSrv.currentIndex = this.nameErrorsO.length - 1;
-          this.storageSrv.refreshErrorObjects.emit('missing name');
-          this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
-          this.mapSrv.map.panTo(this.nameErrorsO[this.currentIndex]['stop']);
+        this.storageSrv.currentIndex = this.nameErrorsO.length - 1;
+        this.storageSrv.refreshErrorObjects.emit('missing name');
+        this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
+        this.mapSrv.map.panTo(this.nameErrorsO[this.currentIndex]['stop']);
 
-          document.getElementById(this.nameErrorsO[0]['stop'].id).style.backgroundColor = 'white';
-          document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1]['stop'].id).style.backgroundColor = 'lightblue';
+        document.getElementById(this.nameErrorsO[0]['stop'].id).style.backgroundColor = 'white';
+        document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1]['stop'].id).style.backgroundColor = 'lightblue';
       } else {
         this.currentIndex--;
 
@@ -318,7 +319,7 @@ export class ErrorHighlightService {
     sorted.forEach((x) => console.log(x + ': ' + arr[0][x]));
 
     if (sorted.length > 5) {
-      sorted =  sorted.slice(0, 5);
+      sorted = sorted.slice(0, 5);
     }
     return sorted;
   }
@@ -328,30 +329,30 @@ export class ErrorHighlightService {
    * @param errorObj
    * @returns {any}
    */
-  addSinglePopUp(errorObj: any): any {
-     let stop =  errorObj['stop'];
-     this.mapSrv.removePopUps();
-     let latlng = { lat: stop.lat, lng: stop.lon };
-     let popupContent;
-     if (errorObj.isCorrected) {
+  public addSinglePopUp(errorObj: any): any {
+    let stop = errorObj['stop'];
+    this.mapSrv.removePopUps();
+    let latlng = { lat: stop.lat, lng: stop.lon };
+    let popupContent;
+    if (errorObj.isCorrected) {
       console.log('true');
-      popupContent    = L.DomUtil.create('div', 'content');
+      popupContent = L.DomUtil.create('div', 'content');
       popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
-      } else {
+    } else {
       popupContent = ErrorHighlightService.makePopUpContent();
-      }
-     let popup        = L.popup({
-        closeOnClick: false,
-        closeButton : false,
-        autoPan     : false,
-        minWidth    : 4,
-      }).setLatLng(latlng)
-        .setContent(popupContent).openOn(this.mapSrv.map);
-     this.mapSrv.popUpArr.push(popup);
-     this.addClickListenerToPopUp(popup.getElement(), stop.id, popup['_leaflet_id'], stop);
-     MapService.addHoverListenersToPopUp(popup.getElement());
-     this.mapSrv.popUpLayerGroup = L.layerGroup().addTo(this.mapSrv.map);
-     this.mapSrv.popUpLayerGroup.addLayer(popup);
+    }
+    let popup =     L.popup({
+      closeOnClick: false,
+      closeButton : false,
+      autoPan     : false,
+      minWidth    : 4,
+    }).setLatLng(latlng)
+      .setContent(popupContent).openOn(this.mapSrv.map);
+    this.mapSrv.popUpArr.push(popup);
+    this.addClickListenerToPopUp(popup.getElement(), stop.id, popup['_leaflet_id'], stop);
+    MapService.addHoverListenersToPopUp(popup.getElement());
+    this.mapSrv.popUpLayerGroup = L.layerGroup().addTo(this.mapSrv.map);
+    this.mapSrv.popUpLayerGroup.addLayer(popup);
   }
 
   /***
@@ -381,6 +382,5 @@ export class ErrorHighlightService {
       this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex]['stop'], 15);
       document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
     }
-    }
-
+  }
 }

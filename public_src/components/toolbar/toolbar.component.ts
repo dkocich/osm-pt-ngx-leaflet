@@ -12,8 +12,7 @@ import { StorageService } from '../../services/storage.service';
 import { IOsmElement } from '../../core/osmElement.interface';
 
 import { select } from '@angular-redux/store';
-
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
   providers: [],

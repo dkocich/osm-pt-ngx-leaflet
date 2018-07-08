@@ -8,9 +8,8 @@ describe('ValidationBrowserComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ValidationBrowserComponent ]
-    })
-    .compileComponents();
+      declarations: [ValidationBrowserComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

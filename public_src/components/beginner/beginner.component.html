@@ -25,7 +25,7 @@
   </accordion-group>
   <accordion-group #a3 [isOpen]="true" *ngIf="(beginnerView$ | async) === 'stop' && (editing$ | async)">
     <div accordion-heading class="text-center text-uppercase">
-     {{ 'Validation' | translate }}
+      {{ 'Validation' | translate }}
       <i class="pull-right float-xs-right fa"
          [ngClass]="{'fa-chevron-down': a2?.isOpen, 'fa-chevron-right': !a2?.isOpen}"></i>
     </div>

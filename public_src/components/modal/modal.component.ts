@@ -32,28 +32,12 @@ export class ModalComponent {
   @ViewChildren('v') newlyAddedValue ;
   public errorObject: any;
 
-   /***
-   * Handles adding missing name
-   * @param {string} name
-   */
-  private createChangeForNameTag(name: string): void {
-    let change: object;
-    if (name !== '') {
-      this.storageSrv.currentElement.tags['name'] = name;
-      change = {
-        key: 'name',
-        value: name,
-      };
-      this.editSrv.addChange(this.storageSrv.currentElement, 'add tag', change);
-    }
-  }
-
   /***
    * Executed on click of save button for adding new name tag
    * @param {string} name
    * @returns {void}
    */
-  private saveNameTag(name: string): void {
+  public saveNameTag(name: string): void {
     if (name.length !== 0) {
       this.createChangeForNameTag(name);
       this.bsModalRef.hide();
@@ -77,7 +61,23 @@ export class ModalComponent {
    * Closes the currently opened modal
    * @returns {void}
    */
-  private close(): void {
+  public close(): void {
     this.bsModalRef.hide();
+  }
+
+  /***
+   * Handles adding missing name
+   * @param {string} name
+   */
+  private createChangeForNameTag(name: string): void {
+    let change: object;
+    if (name !== '') {
+      this.storageSrv.currentElement.tags['name'] = name;
+      change = {
+        key: 'name',
+        value: name,
+      };
+      this.editSrv.addChange(this.storageSrv.currentElement, 'add tag', change);
+    }
   }
 }
