@@ -35,7 +35,7 @@
     "ngstart": "ng serve",
     "ngstart-hmr": "ng serve --configuration hmr --hmr --aot=true",
     "ngstart-aot": "ng serve --aot=true",
-    "ngbuild": "ng build --progress --verbose --aot=true",
+    "ngbuild": "ng build --progress --verbose",
     "ngtest": "ng test",
     "nglint": "ng lint",
     "nge2e": "ng e2e"
