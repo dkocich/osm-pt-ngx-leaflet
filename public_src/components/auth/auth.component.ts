@@ -38,7 +38,9 @@ export class AuthComponent {
   }
 
   private gotAuthenticatedCallback = (err: any, response: any): void => {
-    if (err) { throw new Error(err.toString()); }
+    if (err) {
+      throw new Error(JSON.stringify(err));
+    }
     this.showDetails();
   }
 
@@ -52,7 +54,7 @@ export class AuthComponent {
     if (err) {
       document.getElementById('user').innerHTML = 'error! try clearing your browser cache';
       document.getElementById('user').style.display = 'block';
-      throw new Error(err.toString());
+      throw new Error(JSON.stringify(err));
     }
     const u = res.getElementsByTagName('user')[0];
     const changesets = res.getElementsByTagName('changesets')[0];

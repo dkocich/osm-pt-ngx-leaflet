@@ -48,7 +48,7 @@ export class GeocodeService {
           this.mapSrv.map.fitBounds(location.viewBounds, {});
         },
         (err) => {
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         },
       );
   }
@@ -68,12 +68,12 @@ export class GeocodeService {
                 this.mapSrv.map.panTo([location.latitude, location.longitude]);
               },
               (err) => {
-                throw new Error(err.toString());
+                throw new Error(JSON.stringify(err));
               },
             );
         },
         (err) => {
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         },
       );
   }

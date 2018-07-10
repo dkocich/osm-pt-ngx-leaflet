@@ -176,8 +176,7 @@ export class OverpassService {
         this.processSrv.processMastersResponse(res);
       }).catch((err) => {
         console.log('LOG (overpass s.) Error in fetching routes from IDB');
-        console.error(err);
-        throw new Error(err.toString());
+        throw new Error(JSON.stringify(err));
       });
     }
     let requestBody: string = `
@@ -215,12 +214,12 @@ export class OverpassService {
           this.dbSrv.addResponseToIDB(res, 'route_master').catch((err) => {
             console.log('LOG (overpass s.) Error in adding route_master related response to IDB');
             console.error(err);
-            throw new Error(err.toString());
+            throw new Error(JSON.stringify(err));
           });
         },
         (err) => {
           this.warnSrv.showError();
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         },
       );
   }
@@ -238,7 +237,7 @@ export class OverpassService {
           this.mapSrv.renderData(res);
         },
         (err) => {
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         },
       );
   }
@@ -337,14 +336,14 @@ export class OverpassService {
               console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
                 ' in adding related metadata to IDB for route with id : ' + featureId);
               console.error(err);
-              throw new Error(err.toString());
+              throw new Error(JSON.stringify(err));
             });
           }
           this.warnSrv.showSuccess();
         },
         (err) => {
           this.warnSrv.showError();
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         });
   }
 
@@ -400,7 +399,7 @@ export class OverpassService {
         },
         (err) => {
           this.warnSrv.showError();
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         });
   }
 
@@ -721,7 +720,7 @@ export class OverpassService {
     }).catch((err) => {
       console.log('LOG (overpass s.) Could not fetch ids of relations for a stop with id :' + stopId);
       console.error(err);
-      throw new Error(err.toString());
+      throw new Error(JSON.stringify(err));
     });
   }
   public getPlatformDataIDB(platformId: number): any {
@@ -752,7 +751,7 @@ export class OverpassService {
     }).catch((err) => {
       console.log('LOG (overpass s.) Could not fetch ids of relations for a platform with id :' + platformId);
       console.error(err);
-      throw new Error(err.toString());
+      throw new Error(JSON.stringify(err));
     });
   }
 }

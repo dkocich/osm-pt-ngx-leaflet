@@ -19,7 +19,7 @@ export class DbService {
         return;
       })
       .catch((err) => {
-        throw new Error(err.toString());
+        throw new Error(JSON.stringify(err));
       });
   }
 
@@ -29,7 +29,7 @@ export class DbService {
         return !!item;
       })
       .catch((err) => {
-        throw new Error(err.toString());
+        throw new Error(JSON.stringify(err));
       });
   }
 
@@ -39,7 +39,7 @@ export class DbService {
         return;
       })
       .catch((err) => {
-        throw new Error(err.toString());
+        throw new Error(JSON.stringify(err));
       });
   }
 
@@ -66,7 +66,7 @@ export class DbService {
     }).catch((err) => {
       console.log('LOG (db s.) Error in fetching ids of completely downloaded elements in IDB');
       console.error(err);
-      throw new Error(err.toString());
+      throw new Error(JSON.stringify(err));
     });
   }
 
@@ -85,7 +85,7 @@ export class DbService {
     }).catch((err) => {
       console.log('LOG (db s.) Error in fetching IDs of routes for which masters have been queried and added to IDB');
       console.error(err);
-      throw new Error(err.toString());
+      throw new Error(JSON.stringify(err));
     });
   }
 
@@ -249,7 +249,7 @@ export class DbService {
           console.log('LOG (db s.) Error in adding platforms to IDB, all previous ' +
             'operations for this particular transaction (not metadata) will be rolled back');
           console.error(err);
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         });
 
       }
@@ -262,7 +262,7 @@ export class DbService {
           console.log('LOG (db s.) Error in adding stops to IDB, all previous ' +
             'operations for this particular transaction (not metadata) will be rolled back');
           console.error(err);
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         });
       }
       if (ways.length !== 0) {
@@ -274,7 +274,7 @@ export class DbService {
           console.log('LOG (db s.) Error in adding ways to IDB, all previous ' +
             ' operations for this particular transaction (not metadata) will be rolled back');
           console.error(err);
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         });
       }
       if (routeMasters.length !== 0) {
@@ -286,7 +286,7 @@ export class DbService {
           console.log('LOG (db s.) Error in adding route masters to IDB, all previous ' +
             ' operations for this particular transaction (not metadata) will be rolled back');
           console.error(err);
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         });
       }
       if (routes.length !== 0) {
@@ -298,7 +298,7 @@ export class DbService {
           console.log('LOG (db s.) Error in adding routes to IDB, all previous ' +
             ' operations for this particular transaction (not metadata) will be rolled back');
           console.error(err);
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         });
       }
 
@@ -333,7 +333,7 @@ export class DbService {
         this.storageSrv.completelyDownloadedRoutesIDB.delete(id);
         this.storageSrv.completelyDownloadedPlatformsIDB.delete(id);
         console.error(err);
-        throw new Error(err.toString());
+        throw new Error(JSON.stringify(err));
       });
     });
   }
@@ -418,7 +418,7 @@ export class DbService {
             }).catch((err) => {
               console.log('LOG (db s.) Error in deleting platform with id ' + value.id + ' from IDB');
               console.error(err);
-              throw new Error(err.toString());
+              throw new Error(JSON.stringify(err));
             });
 
           }
@@ -428,7 +428,7 @@ export class DbService {
             }).catch((err) => {
               console.log('LOG (db s.) Error in deleting stop with id ' + value.id + ' from IDB');
               console.error(err);
-              throw new Error(err.toString());
+              throw new Error(JSON.stringify(err));
             });
 
           }
@@ -438,7 +438,7 @@ export class DbService {
             }).catch((err) => {
               console.log('LOG (db s.) Error in deleting route master with id ' + value.id + ' from IDB');
               console.error(err);
-              throw new Error(err.toString());
+              throw new Error(JSON.stringify(err));
             });
 
           }
@@ -448,7 +448,7 @@ export class DbService {
             }).catch((err) => {
               console.log('LOG (db s.) Error in deleting way with id ' + value.id + ' from IDB');
               console.error(err);
-              throw new Error(err.toString());
+              throw new Error(JSON.stringify(err));
             });
           }
           if (value['type'] === 'route') {
@@ -465,12 +465,12 @@ export class DbService {
               }).catch((err) => {
                 console.log('LOG (db s.) Error in deleting route from parentRoutes with id ' + value.id + ' in metadata from IDB');
                 console.error(err);
-                throw new Error(err.toString());
+                throw new Error(JSON.stringify(err));
               });
             }).catch((err) => {
               console.log('LOG (db s.) Error in deleting route with id ' + value.id + ' from IDB');
               console.error(err);
-              throw new Error(err.toString());
+              throw new Error(JSON.stringify(err));
             });
           }
         }
