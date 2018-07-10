@@ -19,14 +19,17 @@
             "polyfills": "public_src/polyfills.ts",
             "tsConfig": "public_src/tsconfig.app.json",
             "assets": [
-              "public_src/assets"
+              "public_src/assets",
+              "public_src/land.html",
+              "public_src/land_single.html"
             ],
             "styles": [
               "public_src/styles.css",
               "./node_modules/bootstrap/dist/css/bootstrap.css",
               "./node_modules/leaflet/dist/leaflet.css",
               "./node_modules/font-awesome/css/font-awesome.css",
-              "./node_modules/dragula/dist/dragula.css"
+              "./node_modules/dragula/dist/dragula.css",
+              "./node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           },
@@ -40,7 +43,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
@@ -82,7 +85,8 @@
               "./node_modules/bootstrap/dist/css/bootstrap.css",
               "./node_modules/leaflet/dist/leaflet.css",
               "./node_modules/font-awesome/css/font-awesome.css",
-              "./node_modules/dragula/dist/dragula.css"
+              "./node_modules/dragula/dist/dragula.css",
+              "./node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [],
             "assets": [
@@ -115,6 +119,11 @@
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
             "devServerTarget": "osm-pt-leaflet-ngx:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "osmpt608:serve:production"
+            }
           }
         },
         "lint": {
@@ -129,5 +138,5 @@
       }
     }
   },
-  "defaultProject": "osm-pt-leaflet-ngx",
+  "defaultProject": "osm-pt-leaflet-ngx"
 }

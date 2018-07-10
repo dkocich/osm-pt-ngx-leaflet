@@ -1,0 +1,40 @@
+<div class="panel-group">
+  <div class="panel panel-heading panel-default">
+    <ng-container *ngIf="!(errorCorrectionMode$ | async) ||(errorCorrectionMode$ | async) === 'menu' ">
+      <p> {{'Zoom into the area where you want to run the validation.' | translate}}</p>
+      <button class="btn btn-default" (click)="startValidation()"> {{'Find Errors' | translate }}</button>
+    </ng-container>
+    <ng-container *ngIf="(switchMode$ | async)">
+      <button class="btn btn-default" type="submit" id='prevLoc' (click)="previousLocation()"><i
+        class="fa fa-arrow-left" aria-hidden="true"></i></button>
+      <button class="btn btn-default" type="submit" id='nextLoc' (click)="nextLocation()"><i class="fa fa-arrow-right"
+                                                                                             aria-hidden="true"></i>
+      </button>
+      <button class="btn btn-default pull-right" type="submit" id='quit' (click)="quit()">{{'Quit' | translate }}
+      </button>
+    </ng-container>
+  </div>
+
+  <div class="content panel panel-body panel-default scrollable-panel"
+       *ngIf="(errorCorrectionMode$ | async) === 'menu' || (errorCorrectionMode$ | async) === 'missing name tag'">
+    <ng-container *ngIf="(errorCorrectionMode$ | async) === 'menu'">
+      <ul class="list-group">
+        <li class="list-group-item" *ngIf="nameErrorsO"> {{nameErrorsO.length}} {{'missing name tags' | translate }}
+          <button (click)="startNameCorrection()">{{'Start Correction' | translate }}</button>
+        </li>
+      </ul>
+    </ng-container>
+    <ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing name tag'">
+      <ul class="list-group">
+        <ng-container *ngFor="let error of nameErrorsO; let i = index">
+          <li (click)="jumpToLocation(i)" id='{{ error.stop.id }}' class="list-group-item"
+              [style.background-color]="i===0 ? 'lightblue':'white'">
+            Location {{i + 1}} ({{error['stop'].lat}}, {{error['stop'].lon}})
+            <i *ngIf="error['stop'].isCorrected" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="!error['stop'].isCorrected" class="fa fa-times pull-right" aria-hidden="true"></i>
+          </li>
+        </ng-container>
+      </ul>
+    </ng-container>
+  </div>
+</div>

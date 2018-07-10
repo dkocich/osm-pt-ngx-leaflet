@@ -20,6 +20,7 @@ import { AppActions } from '../../store/app/actions';
   templateUrl: './editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class EditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editModal') public editModal: ModalDirective;
   public totalEditSteps: number = 0;

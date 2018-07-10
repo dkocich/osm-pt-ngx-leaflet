@@ -10,6 +10,7 @@ import {
 import { Location } from '../core/location.class';
 
 import { MapService } from './map.service';
+import { ConfService } from './conf.service';
 
 @Injectable()
 export class GeocodeService {
@@ -47,8 +48,8 @@ export class GeocodeService {
           );
           this.mapSrv.map.fitBounds(location.viewBounds, {});
         },
-        (error) => {
-          throw new Error(error);
+        (err) => {
+          throw new Error(JSON.stringify(err));
         },
       );
   }
@@ -57,9 +58,10 @@ export class GeocodeService {
     return this.httpClient.get<IResponseIp>('https://ipv4.myexternalip.com/json')
       .subscribe(
         (resp1: IResponseIp) => {
-          this.httpClient.get<IResponseFreeGeoIp>(`https://freegeoip.net/json/${resp1.ip}`)
+          this.httpClient.get<IResponseFreeGeoIp>(`${ConfService.geocodingApiUrl}${resp1.ip}${ConfService.geocodingApiKey}`)
             .subscribe(
               (resp2: IResponseFreeGeoIp) => {
+                debugger;
                 const location = new Location();
                 location.address =
                   `${resp2.city}, ${resp2.region_code} ${resp2.zip_code}, ${resp2.country_code}`;
@@ -67,13 +69,13 @@ export class GeocodeService {
                 location.longitude = resp2.longitude;
                 this.mapSrv.map.panTo([location.latitude, location.longitude]);
               },
-              (error) => {
-                throw new Error(error);
+              (err) => {
+                throw new Error(JSON.stringify(err));
               },
             );
         },
-        (error) => {
-          throw new Error(error);
+        (err) => {
+          throw new Error(JSON.stringify(err));
         },
       );
   }

@@ -3,9 +3,10 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
-import { select } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 
 import { Observable } from 'rxjs';
 
@@ -14,7 +15,10 @@ import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 
 import { IOsmElement } from '../../core/osmElement.interface';
+
 import { PtTags } from '../../core/ptTags.class';
+import { ITagBrowserOptions } from '../../core/editingOptions.interface';
+import { IAppState } from '../../store/model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -26,21 +30,28 @@ import { PtTags } from '../../core/ptTags.class';
   ],
   templateUrl: './tag-browser.component.html',
 })
-export class TagBrowserComponent implements OnInit {
+export class TagBrowserComponent implements OnInit, OnDestroy {
   @Input() public tagKey: string = '';
   @Input() public tagValue: string = '';
-  public currentElement: IOsmElement;
+  public currentElement: IOsmElement =  this.storageSrv.currentElement;
   public expectedKeys = PtTags.expectedKeys;
   public expectedValues = PtTags.expectedValues;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  @Input() tagBrowserOptions: ITagBrowserOptions;
+  public unfilledKeys = [];
+  private advancedExpModeSubscription: any;
+  private advancedExpMode: boolean;
 
   constructor(
     private cd: ChangeDetectorRef,
     private editSrv: EditService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
   ) {
-    //
+    this.advancedExpModeSubscription = ngRedux.select<boolean>(['app', 'advancedExpMode'])
+      .subscribe((data) => this.advancedExpMode = data);
   }
 
   public ngOnInit(): void {
@@ -54,11 +65,17 @@ export class TagBrowserComponent implements OnInit {
         );
         delete this.currentElement;
         this.currentElement = this.storageSrv.currentElement;
+        if (this.tagBrowserOptions.limitedKeys) {
+          this.unfilledKeys = this.getUnfilledKeys();
+        }
       } else if (data === 'cancel selection') {
         this.currentElement = undefined;
         delete this.currentElement;
       }
     });
+    if (this.tagBrowserOptions.limitedKeys) {
+      this.unfilledKeys = this.getUnfilledKeys();
+    }
   }
 
   private checkUnchanged(change: any): boolean {
@@ -182,5 +199,30 @@ export class TagBrowserComponent implements OnInit {
 
   private valueChange($event: any): void {
     console.log('LOG (tag-browser)', $event);
+  }
+
+  /***
+   * Gets missing keys from allowed keys in beginnerMode
+   * @returns {string[]}
+   */
+  private getUnfilledKeys(): string[] {
+    if (this.currentElement) {
+      let existingKeys = Object.keys(this.currentElement.tags);
+      return this.tagBrowserOptions.allowedKeys.filter((key) => !existingKeys.includes(key));
+    }
+  }
+
+  /***
+   * Adds tag for beginnerMode
+   * @param {string} key
+   * @returns {void}
+   */
+  private addChangeBeginnerMode(key: string): void {
+    this.tagKey = key;
+    this.createChange('add tag');
+  }
+
+  ngOnDestroy(): void {
+    this.advancedExpModeSubscription.unsubscribe();
   }
 }

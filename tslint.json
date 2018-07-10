@@ -4,7 +4,7 @@
         "tslint-eslint-rules"
     ],
     "rules": {
-        "array-type": ["array-simple"],
+        "array-type": [true, "array-simple"],
         "arrow-parens": true,
         "class-name": true,
         "comment-format": [
@@ -13,7 +13,7 @@
         ],
         "no-consecutive-blank-lines": [true, 1],
         "curly": true,
-        "import-blacklist": [true, "rxjs"],
+        "import-blacklist": [true],
         "indent": [
             true,
             "spaces",
@@ -56,12 +56,12 @@
         "no-shadowed-variable": true,
         "no-string-literal": false,
         "no-submodule-imports": [true,
-          "rxjs",
           "core-js",
           "@angular",
           "@angular-redux",
           "angulartics2/piwik",
           "zone.js",
+          "ng-http-loader",
           "bootstrap",
           "dragula",
           "font-awesome",

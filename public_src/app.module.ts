@@ -26,29 +26,37 @@ import {
 
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2Piwik } from 'angulartics2/piwik';
+import { NgHttpLoaderModule } from 'ng-http-loader';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './components/app/app.component';
 import { AuthComponent } from './components/auth/auth.component';
-import { LangComponent } from './components/lang/lang.component';
+import { BeginnerComponent } from './components/beginner/beginner.component';
 import { EditorComponent } from './components/editor/editor.component';
+import { ExpertComponent } from './components/expert/expert.component';
+import { LangComponent } from './components/lang/lang.component';
+import { ModalComponent } from './components/modal/modal.component';
 import { NavigatorComponent } from './components/navigator/navigator.component';
 import { RelationBrowserComponent } from './components/sidebar/relation-browser.component';
 import { RouteBrowserComponent } from './components/sidebar/route-browser.component';
+import { SettingsComponent } from './components/settings/settings.component';
 import { StopBrowserComponent } from './components/sidebar/stop-browser.component';
 import { TagBrowserComponent } from './components/sidebar/tag-browser.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
-import { SettingsComponent } from './components/settings/settings.component';
+import { ValidationBrowserComponent } from './components/sidebar/validation-browser.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
+import { DbService } from './services/db.service';
 import { EditService } from './services/edit.service';
+import { ErrorHighlightService } from './services/error-highlight.service';
 import { GeocodeService } from './services/geocode.service';
-import { LoadService } from './services/load.service';
 import { MapService } from './services/map.service';
 import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
 import { StorageService } from './services/storage.service';
+import { WarnService } from './services/warn.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -75,21 +83,27 @@ const conditional_providers = [
 
 @NgModule({
   bootstrap: [AppComponent],
+  entryComponents: [ModalComponent],
   declarations: [
     AppComponent,
     AuthComponent,
+    BeginnerComponent,
     EditorComponent,
+    ExpertComponent,
     LangComponent,
+    ModalComponent,
     NavigatorComponent,
     RelationBrowserComponent,
     RouteBrowserComponent,
+    SettingsComponent,
     StopBrowserComponent,
     TagBrowserComponent,
     ToolbarComponent,
     TransporterComponent,
-    SettingsComponent,
+    ValidationBrowserComponent,
 
     KeysPipe,
+
   ],
   imports: [
     AccordionModule.forRoot(),
@@ -103,6 +117,7 @@ const conditional_providers = [
     FormsModule,
     HttpClientModule,
     ModalModule.forRoot(),
+    NgHttpLoaderModule,
     TooltipModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
@@ -114,19 +129,26 @@ const conditional_providers = [
     TypeaheadModule.forRoot(),
     RouterModule.forRoot(ROUTES),
     StoreModule,
+    ToastrModule.forRoot({
+      timeOut: 2000,
+      positionClass: 'toast-bottom-right',
+      maxOpened: 1,
+    }),
   ],
   providers: [
     ...conditional_providers,
 
     AuthService,
     ConfService,
+    DbService,
     EditService,
+    ErrorHighlightService,
     GeocodeService,
-    LoadService,
     MapService,
     OverpassService,
     ProcessService,
     StorageService,
+    WarnService,
 
     KeysPipe,
 

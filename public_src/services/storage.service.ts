@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
 import { IPtStop } from '../core/ptStop.interface';
+import { IOsmElement } from '../core/osmElement.interface';
 
 @Injectable()
 export class StorageService {
@@ -30,8 +31,9 @@ export class StorageService {
 
   public idsHaveMaster = new Set();
 
-  public currentElement: any;
+  public currentElement: IOsmElement | undefined;
   public currentElementsChange = new EventEmitter();
+  public selectedStopBeginnerMode: IOsmElement | undefined;
 
   public displayName: string = '';
   public imgHref: string = '';
@@ -39,6 +41,16 @@ export class StorageService {
   public edits: object[] = [];
   public editsChanged: EventEmitter<boolean> = new EventEmitter();
   public stats: EventEmitter<object> = new EventEmitter();
+
+  public completelyDownloadedRoutesIDB    = new Set();
+  public completelyDownloadedStopsIDB     = new Set();
+  public completelyDownloadedPlatformsIDB = new Set();
+  public queriedRoutesForMastersIDB       = new Set();
+
+  public nameErrorsO: any[]                      = [];
+  public refErrorsO: any[]                       = [];
+  public currentIndex                            = 0;
+  public refreshErrorObjects: EventEmitter<string> = new EventEmitter();
 
   constructor() {
     this.currentElementsChange.subscribe((data) => {
