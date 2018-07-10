@@ -20,5 +20,8 @@ export class ConfService {
   public static readonly minDownloadZoom       = 15;
   public static readonly minDownloadDistance   = 1500;
 
+  public static readonly geocodingApiUrl = 'http://api.ipstack.com/';
+  public static readonly geocodingApiKey = '?access_key=2be8b578b9cef6bddf3a706d10c620dd';
+
   public cfgFilterLines: boolean = true;
 }
