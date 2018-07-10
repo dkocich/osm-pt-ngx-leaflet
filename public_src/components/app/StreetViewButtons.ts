@@ -1,6 +1,6 @@
 import * as L from 'leaflet';
 
-const StreetView = L.Control.extend({
+L.Control.StreetView = L.Control.extend({
   options: {
     google: true,
     bing: true,
@@ -27,27 +27,28 @@ const StreetView = L.Control.extend({
   ],
 
   onAdd: (map): any => {
-    this._container = L.DomUtil.create('div', 'leaflet-bar');
-    this._buttons = [];
+    debugger;
+    const container = L.DomUtil.create('div', 'leaflet-bar');
+    const _buttons = [];
     for (let provider of this.providers) {
       this._addProvider(provider);
     }
     map.on('moveend', () => {
-      if (!this._fixed) {
+      if (!this.fixed) {
         this._update(map.getCenter());
       }
     }, this);
     this._update(map.getCenter());
-    return this._container;
+    return this.container;
   },
 
   fixCoord: (latlon) => {
     this._update(latlon);
-    this._fixed = true;
+    this.fixed = true;
   },
 
   releaseCoord: () => {
-    this._fixed = false;
+    this.fixed = false;
     this._update(this._map.getCenter());
   },
 
@@ -104,13 +105,13 @@ const StreetView = L.Control.extend({
     for (let button of this._buttons) {
       const b = button;
       let show = !b._bounds || b._bounds.contains(center);
-      let vis = this._container.contains(b);
+      let vis = this.container.contains(b);
 
       if (show && !vis) {
-        const ref = last ? last.nextSibling : this._container.firstChild;
-        this._container.insertBefore(b, ref);
+        const ref = last ? last.nextSibling : this.container.firstChild;
+        this.container.insertBefore(b, ref);
       } else if (!show && vis) {
-        this._container.removeChild(b);
+        this.container.removeChild(b);
         return;
       }
       last = b;
@@ -144,7 +145,6 @@ const StreetView = L.Control.extend({
   },
 });
 
-export const streetView = (options) => {
-  debugger;
+L.control.streetView = (options) => {
   return new StreetView(options);
 };
