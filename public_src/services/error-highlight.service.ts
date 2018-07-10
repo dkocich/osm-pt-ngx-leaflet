@@ -354,9 +354,7 @@ export class ErrorHighlightService {
   nextLocation(): any {
     if (this.currentMode === 'name') {
       if (this.currentIndex === (this.nameErrorsO.length - 1)) {
-        // p dont need below line
           this.currentIndex = 0;
-
           this.storageSrv.currentIndex = 0;
           this.storageSrv.refreshErrorObjects.emit('missing name');
           this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
@@ -365,10 +363,7 @@ export class ErrorHighlightService {
           document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
 
       } else {
-        // p dont need below line
-
         this.currentIndex++;
-
         this.storageSrv.currentIndex ++;
         this.storageSrv.refreshErrorObjects.emit('missing name');
         this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
@@ -611,11 +606,6 @@ export class ErrorHighlightService {
       }
     });
     console.log('in bounds', inBounds.length);
-      //   for (let stopObj of listOfStops) {
-      // if (this.mapSrv.map.getBounds().contains(stopObj) && !this.storageSrv.elementsDownloaded.has(stopObj.id)) {
-      // inBounds.push(stopObj.id);
-      // }
-    // }
     return inBounds;
   }
   //
@@ -684,7 +674,7 @@ export class ErrorHighlightService {
     }
 
     return missingRefs;
-    
+
   }
 
   getNearbyRefs(latlngm: any): any {
@@ -692,7 +682,6 @@ export class ErrorHighlightService {
       if (element.type === 'node' && (element.tags.bus === 'yes' || element.tags.public_transport)) {
 
       }
+    });
   }
-
 }
-

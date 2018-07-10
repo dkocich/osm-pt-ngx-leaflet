@@ -22,7 +22,7 @@ import { IAppState } from '../store/model';
 import { BsModalService } from 'ngx-bootstrap';
 import { ModalComponent } from '../components/modal/modal.component';
 import { ErrorHighlightService } from './error-highlight.service';
-import {CorrectService} from './correct.service';
+import  {CorrectService } from './correct.service';
 import {Observable} from 'rxjs/index';
 
 @Injectable()
