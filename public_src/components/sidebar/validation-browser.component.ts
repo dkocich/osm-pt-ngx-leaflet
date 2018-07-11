@@ -67,7 +67,6 @@ export class ValidationBrowserComponent {
     this.errorHighlightSrv.missingTagError('name');
   }
 
-
   public startRefCorrection(): any {
     this.appActions.actSetErrorCorrectionMode('missing ref tag');
     this.errorHighlightSrv.missingTagError('ref');
@@ -102,7 +101,6 @@ export class ValidationBrowserComponent {
    * @param {number} index
    */
   public jumpToLocation(index: number): void {
-    console.log('sad');
     this.errorHighlightSrv.jumpToLocation(index);
   }
 }
