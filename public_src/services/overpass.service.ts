@@ -20,6 +20,7 @@ import { Utils } from '../core/utils.class';
 
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
+import {AppActions} from '../store/app/actions';
 
 @Injectable()
 export class OverpassService {
@@ -37,6 +38,7 @@ export class OverpassService {
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private warnSrv: WarnService,
+    public appActions: AppActions,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -126,8 +128,18 @@ export class OverpassService {
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
-          this.errorHighlightSrv.isDataDownloaded.emit(true);
-          // FIXME
+          // this.errorHighlightSrv.isDataDownloaded.emit(true);
+          // console.log('mpde', this.ngRedux.getState()['app']['errorCorrectionMode']);
+          if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'find errors')) {
+            let toDownloadStops = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
+            if(toDownloadStops.length !== 0) {
+              this.downloadMultipleNodeData(toDownloadStops);
+            } else {
+              this.errorHighlightSrv.isDataDownloaded.emit(true);
+              this.appActions.actSetErrorCorrectionMode('menu');
+            }
+          }
+            // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
         },
@@ -754,5 +766,52 @@ export class OverpassService {
       console.error(err);
       throw new Error(err.toString());
     });
+  }
+
+  private downloadMultipleNodeData(nearbyStops: any): any {
+    let requestBody = `
+      [out:json][timeout:25];
+      (
+         node(id:${nearbyStops.join(', ')});
+      );
+      (._;<;);
+      out meta;`;
+    console.log('query', requestBody);
+    requestBody = this.replaceBboxString(requestBody.trim());
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          if (!res) {
+            return alert('No response from API. Try to select element again please.');
+          }
+
+          console.log('res', res);
+          for (const element of nearbyStops) {
+            this.storageSrv.elementsDownloaded.add(element);
+          }
+
+          for (const element of res['elements']) {
+            if (!this.storageSrv.elementsMap.has(element.id)) {
+              this.storageSrv.elementsMap.set(element.id, element); }
+          }
+
+          // let relations = [];
+          // for (const element of res['elements']) {
+          //   if (element.type === 'relation' && element.tags.type === 'route') {
+          //     relations.push(element);
+          //   }
+          //   // if (!this.storageSrv.elementsMap.has(element.id)) {
+          //   //   this.storageSrv.elementsMap.set(element.id, element);
+          //   // }
+          // }
+
+          this.appActions.actSetErrorCorrectionMode('menu');
+          this.errorHighlightSrv.isDataDownloaded.emit(true);
+        },
+        (err) => {
+          this.warnSrv.showError();
+          throw new Error(err.toString());
+        });
   }
 }

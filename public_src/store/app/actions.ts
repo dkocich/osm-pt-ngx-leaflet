@@ -52,7 +52,6 @@ export class AppActions {
     return this.ngRedux.dispatch({ type: AppActions.SET_BEGINNER_VIEW, payload });
   }
 
-  // basic sync action
   public actToggleSwitchMode = (payload: boolean): Action => {
     return this.ngRedux.dispatch({ type: AppActions.TOGGLE_SWITCH_MODE, payload });
   }

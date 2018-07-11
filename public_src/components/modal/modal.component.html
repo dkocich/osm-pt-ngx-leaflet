@@ -30,3 +30,162 @@
     </p>
   </div>
 </ng-container>
+
+
+
+
+<ng-container *ngIf="error === 'missing ref tag'">
+  <div class="modal-body text-center">
+    <div class="panel-group">
+      <ng-container class="content panel panel-body panel-default">
+
+        <table class="table-responsive table-condensed table-bordered wide-table">
+          <tbody>
+          <h5> Added refs </h5>
+          <tr *ngFor="let ref of newAddedRefs">
+
+            <td>
+              <input class="form-control" type="number" value="{{ref}}" readonly>
+            </td>
+
+            <td>
+              <button class="btn btn-sm btn-danger fa fa-minus"
+                      aria-hidden="true" container="body"
+                      (click)="removeNewRefValue(ref)">
+              </button>
+            </td>
+
+          </tr>
+<h5> addded from missing</h5>
+          <tr *ngFor="let rel of addedMissingSuggestionsRefs">
+
+            <td>
+              <form>
+                <div class="form-group">
+                  <input class="form-control"  value="{{rel.tags.ref}}, {{rel.tags.name}}" readonly>
+                </div>
+              </form>
+            </td>
+
+            <td>
+              <button class="btn btn-sm btn-danger fa fa-minus"
+                      aria-hidden="true" container="body"
+                      (click)="removeMissingSuggestedRefValue(rel)">
+              </button>
+            </td>
+
+          </tr>
+          <h5> addded from nearby</h5>
+
+          <tr *ngFor="let ref of addedFromNearbySuggestionsRefs">
+
+            <td>
+              <form>
+                <div class="form-group">
+                  <input class="form-control" type="number" value="{{ref}}" readonly>
+                </div>
+              </form>
+            </td>
+
+            <td>
+              <button class="btn btn-sm btn-danger fa fa-minus"
+                      aria-hidden="true" container="body"
+                      (click)="removeNearbySuggestedRefValue(ref)">
+              </button>
+            </td>
+
+          </tr>
+
+          </tbody>
+        </table>
+
+      </ng-container>
+
+
+      <hr>
+
+
+      <ng-container class="content panel panel-body panel-default">
+        <table class="table-responsive table-condensed table-bordered  wide-table">
+          <tbody>
+          <h5> Add new ref </h5>
+          <tr>
+            <td>
+              <form>
+                <div class="form-group">
+                  <input type="number" class="form-control" #newlyAddedValue>
+                </div>
+              </form>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-success fa fa-plus"
+                      aria-hidden="true" container="body"
+                      (click)="addNewRefValue(newlyAddedValue.value)">
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </ng-container>
+
+      <ng-container class="content panel panel-body panel-default">
+        <table class="table-responsive table-condensed table-bordered wide-table">
+          <tbody>
+          <ng-container *ngIf="(missingRefs.length === 0)">
+            <h5> No nearby suggestions available </h5>
+          </ng-container>
+          <ng-container *ngIf="!(missingRefs.length === 0)">
+            <h5 class="pull-left"> Suggested routes </h5>
+          </ng-container>
+
+          <tr *ngFor="let key of missingRefs">
+            <td>
+              <form>
+                <div class="form-group">
+                  <input class="form-control" type="number" value="{{key['tags']['ref']}}" readonly #x>
+                </div>
+              </form>
+
+              {{key['tags']['name']}}
+            </td>
+            <td>
+              <button class="btn btn-sm btn-success fa fa-check"
+                      aria-hidden="true" container="body"
+                      (click)="addMissingSuggestedRefValue(key)">
+              </button>
+            </td>
+          </tr>
+
+<h5>nearby Rels</h5>
+
+
+          <tr *ngFor="let key of nearbyRels">
+            <td>
+              <form>
+                <div class="form-group">
+                  <input class="form-control" type="number" value="{{key['tags']['ref']}}" readonly #x>
+                </div>
+              </form>
+
+              {{key['tags']['name']}}
+            </td>
+            <td>
+              <button class="btn btn-sm btn-success fa fa-check"
+                      aria-hidden="true" container="body"
+                      (click)="addSuggestedRefValue(key)">
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </ng-container>
+      <div class="modal-footer">
+        <p>
+          <button type="button" class="btn btn-default" (click)="close()">{{'Cancel' | translate }}</button>
+          <button type="button" class="btn btn-primary" (click)="saveRefTag()">{{'Save' | translate}}</button>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</ng-container>
