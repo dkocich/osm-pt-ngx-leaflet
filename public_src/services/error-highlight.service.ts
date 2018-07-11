@@ -213,7 +213,7 @@ export class ErrorHighlightService {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
         count++;
 
-        let errorObj = {stop, isCorrected: false};
+        let errorObj = { stop, isCorrected: false };
         if (!stop.tags['name'] && this.mapSrv.map.getBounds().contains(stop)) {
           // let errorObj = {stop, isCorrected: false};
           this.nameErrorsO.push(errorObj);
@@ -223,7 +223,7 @@ export class ErrorHighlightService {
         if (this.mapSrv.map.getBounds().contains(stop)) {
           // let refErrorObj = { stop, isCorrected: false };
           let parentRels  = this.getParentRelations(stop.id);
-          if(parentRels.length !== 0){
+          if(parentRels.length !== 0) {
           if (stop.tags['route_ref']) {
 
             console.log('route ref tag');
@@ -611,7 +611,7 @@ export class ErrorHighlightService {
     this.storageSrv.elementsMap.forEach((element) => {
       if ((element.type === 'relation') && !(element.tags.public_transport === 'stop_area') && (element.members)) {
           for (let member of element.members) {
-            if (member.ref === id) {
+            if (member.ref === id && element.tags.ref && /^\d+$/.test(element.tags.ref)) {
               parentRels.push(element);
             }
           }
@@ -622,7 +622,12 @@ export class ErrorHighlightService {
 
   private getAlreadyAddedRefsInTag(routeRefTag: string): string[] {
     console.log('tag', routeRefTag);
-    return  routeRefTag.split(';');
+    let tags = routeRefTag.split(';');
+    tags = tags.filter((tag) => {
+    return  /^\d+$/.test(tag);
+    });
+    console.log('after reges', tags);
+    return  tags;
   }
 
   private compareRefs(parentRels: any, addedRefs: any): any {

@@ -32,83 +32,64 @@
 </ng-container>
 
 
-
-
 <ng-container *ngIf="error === 'missing ref tag'">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{'Route References Correction' | translate }}</h4>
+  </div>
   <div class="modal-body text-center">
     <div class="panel-group">
+
+        <!--<h5 class="pull-left" *ngIf="(newAddedRefs.length !==0 || addedMissingSuggestionsRefs.length !==0 || addedFromNearbySuggestionsRefs.length !== 0)">-->
+          <!--Added Route References-->
+          <!--<i class="fa fa-question-circle" aria-hidden="true" container="body"-->
+             <!--tooltip="Added route references for selected stop/platform"></i>-->
+        <!--</h5>-->
       <ng-container class="content panel panel-body panel-default">
 
-        <table class="table-responsive table-condensed table-bordered wide-table">
-          <tbody>
-          <h5> Added refs </h5>
-          <tr *ngFor="let ref of newAddedRefs">
+        <!--<ng-container *ngIf="(newAddedRefs.length !==0 || addedMissingSuggestionsRefs.length !==0 || addedFromNearbySuggestionsRefs.length !== 0)">-->
+          <!--<h5 class="pull-left"> Missing routes-->
+            <!--<i class="fa fa-question-circle" aria-hidden="true" container="body"-->
+               <!--tooltip="Added Refrences"></i>-->
+          <!--</h5>-->
+        <!--</ng-container>-->
 
-            <td>
-              <input class="form-control" type="number" value="{{ref}}" readonly>
-            </td>
+        <ul class="list-group">
 
-            <td>
-              <button class="btn btn-sm btn-danger fa fa-minus"
-                      aria-hidden="true" container="body"
-                      (click)="removeNewRefValue(ref)">
-              </button>
-            </td>
+          <li class="list-group-item list-group-item-success" *ngFor="let ref of newAddedRefs">
+            Ref: {{ref}}
+            <a  class="badge badge-danger">
+              <i class="fa fa-minus" aria-hidden="true" container="body"
+                 (click)="removeNewRefValue(ref)"></i>
+            </a>
+          </li>
 
-          </tr>
-<h5> addded from missing</h5>
-          <tr *ngFor="let rel of addedMissingSuggestionsRefs">
 
-            <td>
-              <form>
-                <div class="form-group">
-                  <input class="form-control"  value="{{rel.tags.ref}}, {{rel.tags.name}}" readonly>
-                </div>
-              </form>
-            </td>
+          <li class="list-group-item list-group-item-success" *ngFor="let rel of addedMissingSuggestionsRefs">
+            Ref: {{rel.tags.ref}} (Name: {{rel.tags.name}})
+            <a  class="badge badge-danger">
+              <i class="fa fa-minus" aria-hidden="true" container="body"
+                 (click)="removeMissingSuggestedRefValue(rel)"></i>
+            </a>
+          </li>
 
-            <td>
-              <button class="btn btn-sm btn-danger fa fa-minus"
-                      aria-hidden="true" container="body"
-                      (click)="removeMissingSuggestedRefValue(rel)">
-              </button>
-            </td>
 
-          </tr>
-          <h5> addded from nearby</h5>
-
-          <tr *ngFor="let ref of addedFromNearbySuggestionsRefs">
-
-            <td>
-              <form>
-                <div class="form-group">
-                  <input class="form-control" type="number" value="{{ref}}" readonly>
-                </div>
-              </form>
-            </td>
-
-            <td>
-              <button class="btn btn-sm btn-danger fa fa-minus"
-                      aria-hidden="true" container="body"
-                      (click)="removeNearbySuggestedRefValue(ref)">
-              </button>
-            </td>
-
-          </tr>
-
-          </tbody>
-        </table>
-
+          <li class="list-group-item list-group-item-success" *ngFor="let rel of addedFromNearbySuggestionsRefs">
+            {{rel.tags.ref}}, {{rel.tags.name}}
+            <a  class="badge badge-danger">
+              <i class="fa fa-minus" aria-hidden="true" container="body"
+                 (click)="removeNearbySuggestedRefValue(rel)"></i>
+            </a>
+          </li>
+        </ul>
       </ng-container>
-
-
-      <hr>
-
 
       <ng-container class="content panel panel-body panel-default">
         <table class="table-responsive table-condensed table-bordered  wide-table">
           <tbody>
-          <h5> Add new ref </h5>
+          <h5 class="pull-left"> Enter new reference
+            <i class="fa fa-question-circle" aria-hidden="true" container="body"
+               tooltip="Enter new ref for selected node"></i>
+          </h5>
           <tr>
             <td>
               <form>
@@ -128,56 +109,58 @@
         </table>
       </ng-container>
 
-      <ng-container class="content panel panel-body panel-default">
-        <table class="table-responsive table-condensed table-bordered wide-table">
-          <tbody>
-          <ng-container *ngIf="(missingRefs.length === 0)">
-            <h5> No nearby suggestions available </h5>
-          </ng-container>
-          <ng-container *ngIf="!(missingRefs.length === 0)">
-            <h5 class="pull-left"> Suggested routes </h5>
-          </ng-container>
-
-          <tr *ngFor="let key of missingRefs">
-            <td>
-              <form>
-                <div class="form-group">
-                  <input class="form-control" type="number" value="{{key['tags']['ref']}}" readonly #x>
-                </div>
-              </form>
-
-              {{key['tags']['name']}}
-            </td>
-            <td>
-              <button class="btn btn-sm btn-success fa fa-check"
-                      aria-hidden="true" container="body"
-                      (click)="addMissingSuggestedRefValue(key)">
-              </button>
-            </td>
-          </tr>
-
-<h5>nearby Rels</h5>
+      <ng-container class="content panel panel-body panel-default ">
 
 
-          <tr *ngFor="let key of nearbyRels">
-            <td>
-              <form>
-                <div class="form-group">
-                  <input class="form-control" type="number" value="{{key['tags']['ref']}}" readonly #x>
-                </div>
-              </form>
+        <!--<ng-container *ngIf="(missingRefs.length === 0)">-->
+          <!--<h5> No suggestions available-->
+            <!--<i class="fa fa-question-circle" aria-hidden="true" container="body"-->
+               <!--tooltip="No suggestions based on incomplete route_ref tag avaliable"-->
+               <!--</h5>-->
+        <!--</ng-container>-->
+        <ng-container *ngIf="!(missingRefs.length === 0)">
+          <h5 class="pull-left"> Missing routes
+            <i class="fa fa-question-circle" aria-hidden="true" container="body"
+               tooltip="List of routes which have the stop/platform as a member but reference is not added in route_ref tag of the stop/platform. Select from the list to add to the route_ref tag"></i>
+          </h5>
+        </ng-container>
 
-              {{key['tags']['name']}}
-            </td>
-            <td>
-              <button class="btn btn-sm btn-success fa fa-check"
-                      aria-hidden="true" container="body"
-                      (click)="addSuggestedRefValue(key)">
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+
+        <ul class="list-group scrollable-panel">
+
+
+          <li class="list-group-item list-group-item-info" *ngFor="let key of missingRefs">
+            Ref : {{key['tags']['ref']}}, Name: {{key['tags']['name']}}
+            <a class="badge badge-success">
+              <i class="fa fa-check" aria-hidden="true" container="body"
+                 (click)="addMissingSuggestedRefValue(key)"></i>
+            </a>
+          </li>
+
+        </ul>
+
+
+        <ng-container *ngIf="(nearbyRels.length !== 0)">
+          <h5 class="pull-left"> Nearby routes <i class="fa fa-question-circle" aria-hidden="true" container="body"
+                                                  tooltip="List of nearby routes (within 1/2 km) which do not have the given stop/platform as a member. Select from the list to add the node as a member. Please note that route_ref of the node tag will also be updated accordingly. "></i>
+          </h5>
+        </ng-container>
+        <ul *ngIf="nearbyRels.length !== 0" class="list-group scrollable-panel">
+
+
+          <li class="list-group-item list-group-item-info" *ngFor="let key of nearbyRels">
+
+            Ref : {{key['tags']['ref']}}, Name: {{key['tags']['name']}}
+            <a class="badge badge-success">
+              <i class="fa fa-check" aria-hidden="true" container="body"
+                 (click)="addNearbySuggestedRefValue(key)"></i>
+            </a>
+          </li>
+
+
+        </ul>
+
+
       </ng-container>
       <div class="modal-footer">
         <p>

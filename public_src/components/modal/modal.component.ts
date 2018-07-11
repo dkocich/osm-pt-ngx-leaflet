@@ -35,14 +35,15 @@ export class ModalComponent {
   public refArr: Map <any, any>;
   public missingRefsDisplay = [];
 
-  public newAddedRefs: any[] = [];
 
-  public removedSuggestions: any[] = [];
+
+  // public removedSuggestions: any[] = [];
   public removedNearbySuggestions: any[] = [];
   public removedMissingSuggestions: any[] = [];
 
   public addedMissingSuggestionsRefs: any[] = [];
   public addedFromNearbySuggestionsRefs: any[] = [];
+  public newAddedRefs: any[] = [];
 
   public newValue: any;
 
@@ -114,6 +115,15 @@ export class ModalComponent {
   }
 
 
+  private addNearbySuggestedRefValue(rel: any): any {
+    this.addedFromNearbySuggestionsRefs.push(rel);
+    this.nearbyRels.forEach((item, ind) => {
+      if (item.id === rel.id){
+        this.removedNearbySuggestions = this.removedNearbySuggestions.concat(this.nearbyRels.splice(ind, 1));
+      }
+    });
+  }
+
   /***
    * Remove the added ref value (added from suggestions (missing) by user)
    * @param ref
@@ -149,14 +159,27 @@ export class ModalComponent {
    * Remove the added ref value (added from suggestions (nearby) by user)
    * @param ref
    */
-  private removeNearbySuggestedRefValue(ref: any): void {
-    let index = this.addedMissingSuggestionsRefs.indexOf(ref);
-    if (index > -1) {
-      this.addedMissingSuggestionsRefs.splice(index, 1);
+  private removeNearbySuggestedRefValue(toRemoveRel: any): void {
+
+    console.log('to emove', toRemoveRel);
+    let index ;
+    for (let rel of  this.addedFromNearbySuggestionsRefs){
+      if(rel.id === toRemoveRel.id){
+        index = this.addedFromNearbySuggestionsRefs.indexOf(rel);
+      }
     }
-    for (let key of this.removedSuggestions) {
-      if (key[0] === ref) {
-        this.missingRefs.push(key);
+
+    if (index > -1) {
+      this.addedFromNearbySuggestionsRefs.splice(index, 1);
+    }
+
+
+    for (let key of this.removedNearbySuggestions) {
+      console.log('removed', this.removedNearbySuggestions);
+      if (key.id === toRemoveRel.id) {
+        console.log('matched', key,toRemoveRel );
+        console.log('ids', key.tags.id, toRemoveRel.tags.id, (key.tags.id === toRemoveRel.tags.id));
+        this.nearbyRels.push(key);
         break;
       }
     }
@@ -186,32 +209,116 @@ export class ModalComponent {
     this.newlyAddedValue.first.nativeElement.value = '';
   }
 
-  private addNearbySuggestedRefValue(rel: any): any{
-    this.addedFromNearbySuggestionsRefs.push(rel.tags.ref);
-    this.nearbyRels.forEach((item, ind) => {
-      if (item === rel.tags.ref) {
-        this.removedNearbySuggestions = this.removedNearbySuggestions.concat(this.nearbyRels.splice(ind, 1));
-      }
+
+
+  private saveRefTag(): void {
+
+
+
+    let refsForTag = [];
+    for(let rel of this.addedMissingSuggestionsRefs){
+      refsForTag.push(rel.tags.ref);
+    }
+
+
+    for (let rel of this.addedFromNearbySuggestionsRefs){
+      refsForTag.push(rel.tags.ref);
+    }
+
+    refsForTag = refsForTag.concat(this.newAddedRefs);
+    let refString: string = '';
+    refsForTag.forEach((item, index) => {
+      refString = (index !== refsForTag.length - 1) ? refString + item + ', ' : refString + item;
     });
+    refString = this.errorObject.tags.route_ref + refString;
+    console.log('ohh yaha tk');
+
+    this.createChangeForRefTag(refString);
+    console.log('yaha tk');
+    this.addToMembers(this.addedFromNearbySuggestionsRefs);
+    this.bsModalRef.hide();
+    let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
+    MapService.addHoverListenersToPopUp(popUpElement);
+    this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
+    this.mapSrv.popUpLayerGroup.removeLayer(this.mapSrv.currentPopUpFeatureId);
+    this.warnSrv.showGenericSuccess();
+  }
+
+
+
+  /***
+   *  Handles adding missing refs
+   * @param {string} ref
+   */
+  private createChangeForRefTag(ref: string): void {
+    let change: any;
+    if (ref !== '') {
+      change = {
+        from: this.storageSrv.currentElement,
+        to: undefined,
+      };
+      this.storageSrv.currentElement.tags['route_ref'] = ref;
+      change.to = this.storageSrv.currentElement;
+      this.editSrv.addChange(this.storageSrv.currentElement, 'change tag', change);
+    }
+  }
+
+  private addToMembers(addedFromNearbySuggestionsRefs: any): any{
+
+    console.log('start');
+
+    if (addedFromNearbySuggestionsRefs.length !== 0) {
+      for(let relation of addedFromNearbySuggestionsRefs){
+        const rel = JSON.parse(
+          JSON.stringify(
+            this.storageSrv.elementsMap.get(
+              relation.id,
+            ),
+          ),
+        ); // string to not influence new route edit
+
+        console.log('found', rel, 'es', relation);
+        if (!rel || rel.type !== 'relation') {
+          return alert(
+            'Relation was not found ' +
+            JSON.stringify(this.storageSrv.currentElement),
+          );
+        }
+
+        let change = { from: JSON.parse(JSON.stringify(rel)), to: undefined }; // string to not influence toggle edits
+        let probableRole: string = '';
+        switch (this.errorObject.tags.public_transport) {
+          case 'platform':
+          case 'station':
+            probableRole = 'platform';
+            break;
+          case 'stop_position':
+            probableRole = 'stop';
+            break;
+          default:
+            alert('FIXME: suspicious role - ' + this.errorObject.tags.public_transport);
+            probableRole = 'stop';
+        }
+        const memberToToggle = {
+          type: 'node',
+          ref: this.errorObject.id,
+          role: probableRole,
+        };
+        rel.members.push(memberToToggle);
+
+        change.to = rel;
+
+        this.editSrv.addChange(rel, 'toggle members', change);
+
+      }
+    }
 
   }
 
-  //
-  // private saveRefTag(): void {
-  //   let resultArr = this.addedSuggestions.concat(this.addedRef);
-  //   let refString: string = '';
-  //   resultArr.forEach((item, index) => {
-  //     refString = (index !== resultArr.length - 1) ? refString + item + ', ' : refString + item;
-  //   });
-  //   this.createChangeForRefTag(refString);
-  //   this.bsModalRef.hide();
-  //   let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
-  //   MapService.addHoverListenersToPopUp(popUpElement);
-  //   this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
-  //   this.mapSrv.popUpLayerGroup.removeLayer(this.mapSrv.currentPopUpFeatureId);
-  //   // this.mapSrv.map.remove(this.mapSrv.currentPopUpFeatureId);
-  //   this.warnSrv.showGenericSuccess();
-  // }
+  private showStopInfo(): any {
+    alert(JSON.stringify(this.errorObject));
+  }
+
 }
 
 
