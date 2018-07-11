@@ -19,12 +19,6 @@ import * as L from 'leaflet';
 })
 
 export class ModalComponent {
-  constructor(public bsModalRef: BsModalRef,
-              private editSrv: EditService,
-              private storageSrv: StorageService,
-              private mapSrv: MapService,
-              private warnSrv: WarnService,
-              ) { }
 
   public suggestedNames: string[];
   public error: string;
@@ -43,6 +37,13 @@ export class ModalComponent {
 
   public missingRefs: any[];
   public nearbyRels: any[];
+
+  constructor(public bsModalRef: BsModalRef,
+              private editSrv: EditService,
+              private storageSrv: StorageService,
+              private mapSrv: MapService,
+              private warnSrv: WarnService,
+              ) { }
 
   /***
    * Executed on click of save button for adding new name tag
@@ -69,6 +70,9 @@ export class ModalComponent {
     }
   }
 
+  /**
+   * Saves ref correction
+   */
   private saveRefTag(): void {
     let refsForTag = [];
     for (let rel of this.addedMissingSuggestionsRefs) {
@@ -137,7 +141,12 @@ export class ModalComponent {
     });
   }
 
-  private addNearbySuggestedRefValue(rel: any): any {
+  /***
+   * adds selected nearby suggestion
+   * @param rel
+   * @returns {any}
+   */
+  private addNearbySuggestedRefValue(rel: any): void {
     this.addedFromNearbySuggestionsRefs.push(rel);
     this.nearbyRels.forEach((item, ind) => {
       if (item.id === rel.id) {
@@ -236,6 +245,11 @@ export class ModalComponent {
     }
   }
 
+  /***
+   * adds given node as child member of routes
+   * @param addedFromNearbySuggestionsRefs
+   * @returns {any}
+   */
   private addToMembers(addedFromNearbySuggestionsRefs: any): any {
 
     if (addedFromNearbySuggestionsRefs.length !== 0) {

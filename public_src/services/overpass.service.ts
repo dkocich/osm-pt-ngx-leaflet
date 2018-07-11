@@ -128,15 +128,13 @@ export class OverpassService {
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
-          // this.errorHighlightSrv.isDataDownloaded.emit(true);
-          // console.log('mpde', this.ngRedux.getState()['app']['errorCorrectionMode']);
           if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'find errors')) {
-            let toDownloadStops = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
-            if(toDownloadStops.length !== 0) {
-              this.downloadMultipleNodeData(toDownloadStops);
-            } else {
+            let toDownload = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
+            if (this.errorHighlightSrv.isMobileDevice() || toDownload.length === 0) {
               this.errorHighlightSrv.isDataDownloaded.emit(true);
               this.appActions.actSetErrorCorrectionMode('menu');
+            } else {
+                this.downloadMultipleNodeData(toDownload);
             }
           }
             // FIXME
@@ -768,11 +766,11 @@ export class OverpassService {
     });
   }
 
-  private downloadMultipleNodeData(nearbyStops: any): any {
+  private downloadMultipleNodeData(toDownload: any): any {
     let requestBody = `
       [out:json][timeout:25];
       (
-         node(id:${nearbyStops.join(', ')});
+         node(id:${toDownload.join(', ')});
       );
       (._;<;);
       out meta;`;
@@ -787,7 +785,7 @@ export class OverpassService {
           }
 
           console.log('res', res);
-          for (const element of nearbyStops) {
+          for (const element of toDownload) {
             this.storageSrv.elementsDownloaded.add(element);
           }
 
@@ -795,16 +793,6 @@ export class OverpassService {
             if (!this.storageSrv.elementsMap.has(element.id)) {
               this.storageSrv.elementsMap.set(element.id, element); }
           }
-
-          // let relations = [];
-          // for (const element of res['elements']) {
-          //   if (element.type === 'relation' && element.tags.type === 'route') {
-          //     relations.push(element);
-          //   }
-          //   // if (!this.storageSrv.elementsMap.has(element.id)) {
-          //   //   this.storageSrv.elementsMap.set(element.id, element);
-          //   // }
-          // }
 
           this.appActions.actSetErrorCorrectionMode('menu');
           this.errorHighlightSrv.isDataDownloaded.emit(true);

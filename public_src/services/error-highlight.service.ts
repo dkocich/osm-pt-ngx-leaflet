@@ -67,9 +67,16 @@ export class ErrorHighlightService {
         layer.off('click');
       }
     });
+    this.appActions.actToggleSwitchMode(true);
+    if (this.currentMode === 'name') {
+      this.addSinglePopUp(this.nameErrorsO[0]);
+      this.mapSrv.map.setView(this.nameErrorsO[0]['stop'], 15);
+    }
 
-    this.switchLocationModeOn();
-
+    if (this.currentMode === 'ref') {
+      this.addSinglePopUp(this.refErrorsO[0]);
+      this.mapSrv.map.setView(this.refErrorsO[0]['stop'], 15);
+    }
   }
 
   /***
@@ -190,36 +197,30 @@ export class ErrorHighlightService {
     this.storageSrv.nameErrorsO = [];
     this.storageSrv.refErrorsO = [];
 
-    let count = 0;
-    let withtag = 0;
-    let withouttag = 0;
     this.storageSrv.elementsMap.forEach((stop) => {
-
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-        count++;
-
         let errorObj = { stop, isCorrected: false };
         if (!stop.tags['name'] && this.mapSrv.map.getBounds().contains(stop)) {
-          // let errorObj = {stop, isCorrected: false};
           this.nameErrorsO.push(errorObj);
         }
-
         if (this.mapSrv.map.getBounds().contains(stop)) {
-          let parentRels  = this.getParentRelations(stop.id);
-          if (parentRels.length !== 0) {
-          if (stop.tags['route_ref']) {
-            let addedRefs   = this.getAlreadyAddedRefsInTag(stop.tags['route_ref']);
-            let missingRefs = this.compareRefs(parentRels, addedRefs);
-            if (missingRefs.length !== 0) {
-              this.refErrorsO.push(errorObj);
-              withtag++;
+          if (this.isMobileDevice()) {
+            if (!stop.tags['route_ref']) {
+              this.refErrorsO.push(errorObj); }
+             } else {
+            let parentRels = this.getParentRelations(stop.id);
+            if (parentRels.length !== 0) {
+              if (stop.tags['route_ref']) {
+                let addedRefs   = this.getAlreadyAddedRefsInTag(stop.tags['route_ref']);
+                let missingRefs = this.compareRefs(parentRels, addedRefs);
+                if (missingRefs.length !== 0) {
+                  this.refErrorsO.push(errorObj);
+                }
+              } else {
+                this.refErrorsO.push(errorObj);
+              }
             }
-          } else {
-            this.refErrorsO.push(errorObj);
-            withouttag ++;
           }
-          }
-
         }
       }
     });
@@ -234,35 +235,13 @@ export class ErrorHighlightService {
    * Checks whether on Mobile/Desktop
    * @returns {boolean}
    */
-  private isMobileDevice(): boolean {
+  public isMobileDevice(): boolean {
     let md = new MobileDetect(window.navigator.userAgent);
     if (md.mobile()) {
       return true;
     } else {
       return false;
     }
-  }
-
-  /***
-   * Turns on error location mode
-   * @param {boolean} bool
-   * @param arr
-   * @returns {any}
-   */
-  switchLocationModeOn(): any {
-    this.appActions.actToggleSwitchMode(true);
-    if (this.currentMode === 'name') {
-        this.addSinglePopUp(this.nameErrorsO[0]);
-        this.mapSrv.map.setView(this.nameErrorsO[0]['stop'], 15);
-      }
-
-    if (this.currentMode === 'ref') {
-        this.addSinglePopUp(this.refErrorsO[0]);
-        this.mapSrv.map.setView(this.refErrorsO[0]['stop'], 15);
-      }
-      // this.appActions.actToggleSwitchMode(bool);
-    // }
-    // this.mapSrv.map.invalidateSize();
   }
 
   /***
@@ -378,9 +357,6 @@ export class ErrorHighlightService {
    * Quits correction mode
    */
   public quit(): void {
-    document.getElementById('map').style.width     = '65%';
-    document.getElementById('sidebar').style.width = '35%';
-    this.mapSrv.map.invalidateSize();
     this.appActions.actSetErrorCorrectionMode('menu');
     this.appActions.actToggleSwitchMode(false);
     this.processSrv.refreshSidebarView('cancel selection');
@@ -408,8 +384,9 @@ export class ErrorHighlightService {
   }
 
   /***
-   * returns names of nearby nodes
+   * Nearby route suggestions
    * @param latlngm
+   * @param missingRefs
    * @returns {any[]}
    */
   public getNearbyRoutesSuggestions(latlngm: any, missingRefs: any): any[] {
@@ -571,8 +548,6 @@ export class ErrorHighlightService {
    */
   public getNotDownloadedStopsInBounds(): any[] {
     let inBounds = [];
-    let inBounds2 = [];
-    let inBounds3 = [];
     this.storageSrv.elementsMap.forEach((element) => {
       if (element.type === 'node' &&
         (element.tags.bus === 'yes' || element.tags.public_transport) &&
@@ -582,23 +557,6 @@ export class ErrorHighlightService {
 
       }
     });
-
-    this.storageSrv.elementsMap.forEach((element) => {
-      if (element.type === 'node' &&
-        (element.tags.bus === 'yes' || element.tags.public_transport) && !this.storageSrv.elementsDownloaded.has(element.id)) {
-        inBounds2.push(element.id);
-      }
-    });
-
-    this.storageSrv.elementsMap.forEach((element) => {
-      if (element.type === 'node' &&
-        (element.tags.bus === 'yes' || element.tags.public_transport) &&
-        this.mapSrv.map.getBounds().contains(element)) {
-        inBounds3.push(element.id);
-
-      }
-    });
-
     return inBounds;
   }
 

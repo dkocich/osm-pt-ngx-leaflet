@@ -1,8 +1,10 @@
 import { AppActions } from '../../store/app/actions';
-import { BsModalService } from 'ngx-bootstrap';
+
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
+import { Observable } from 'rxjs';
+
+import { BsModalService } from 'ngx-bootstrap';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
 import { MapService } from '../../services/map.service';
