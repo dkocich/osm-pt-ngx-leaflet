@@ -1,8 +1,10 @@
 import { AppActions } from '../../store/app/actions';
-import { BsModalService } from 'ngx-bootstrap';
+
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
+import { Observable } from 'rxjs';
+
+import { BsModalService } from 'ngx-bootstrap';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
 import { MapService } from '../../services/map.service';
@@ -35,6 +37,10 @@ export class ValidationBrowserComponent {
       if (data === 'missing name') {
         this.nameErrorsO = this.storageSrv.nameErrorsO;
       }
+
+      if (data === 'missing ref') {
+        this.refErrorsO = this.storageSrv.refErrorsO;
+      }
     });
 
   }
@@ -47,7 +53,7 @@ export class ValidationBrowserComponent {
     this.refErrorsO = [];
     this.nameErrorsO = [];
     if (this.mapSrv.map.getZoom() > 11) {
-      this.appActions.actSetErrorCorrectionMode('menu');
+      this.appActions.actSetErrorCorrectionMode('find errors');
       this.overpassSrv.requestNewOverpassData();
     } else {
       alert('Not sufficient zoom level');
@@ -63,6 +69,10 @@ export class ValidationBrowserComponent {
     this.errorHighlightSrv.missingTagError('name');
   }
 
+  public startRefCorrection(): any {
+    this.appActions.actSetErrorCorrectionMode('missing ref tag');
+    this.errorHighlightSrv.missingTagError('ref');
+  }
   /**
    * Moves to the next location
    */
@@ -93,7 +103,6 @@ export class ValidationBrowserComponent {
    * @param {number} index
    */
   public jumpToLocation(index: number): void {
-    console.log('sad');
     this.errorHighlightSrv.jumpToLocation(index);
   }
 }

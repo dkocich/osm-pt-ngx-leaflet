@@ -19,18 +19,31 @@ import * as L from 'leaflet';
 })
 
 export class ModalComponent {
+
+  public suggestedNames: string[];
+  public error: string;
+
+  @ViewChildren('chosenRef') chosenRefS ;
+  @ViewChildren('newlyAddedValue') newlyAddedValue ;
+
+  public errorObject: any;
+
+  public removedNearbySuggestions: any[] = [];
+  public removedMissingSuggestions: any[] = [];
+
+  public addedMissingSuggestionsRefs: any[] = [];
+  public addedFromNearbySuggestionsRefs: any[] = [];
+  public newAddedRefs: any[] = [];
+
+  public missingRefs: any[];
+  public nearbyRels: any[];
+
   constructor(public bsModalRef: BsModalRef,
               private editSrv: EditService,
               private storageSrv: StorageService,
               private mapSrv: MapService,
               private warnSrv: WarnService,
               ) { }
-
-  public suggestedNames: string[];
-  public error: string;
-  @ViewChildren('chosenRef') chosenRefS ;
-  @ViewChildren('v') newlyAddedValue ;
-  public errorObject: any;
 
   /***
    * Executed on click of save button for adding new name tag
@@ -57,6 +70,39 @@ export class ModalComponent {
     }
   }
 
+  /**
+   * Saves ref correction
+   */
+  private saveRefTag(): void {
+    let refsForTag = [];
+    for (let rel of this.addedMissingSuggestionsRefs) {
+      refsForTag.push(rel.tags.ref);
+    }
+    for (let rel of this.addedFromNearbySuggestionsRefs) {
+      refsForTag.push(rel.tags.ref);
+    }
+    refsForTag = refsForTag.concat(this.newAddedRefs);
+    let refString: string = '';
+    refsForTag.forEach((item, index) => {
+      refString = (index !== refsForTag.length - 1) ? refString + item + ', ' : refString + item;
+    });
+    refString = this.errorObject.tags.route_ref + refString;
+    this.createChangeForRefTag(refString);
+    this.addToMembers(this.addedFromNearbySuggestionsRefs);
+    this.bsModalRef.hide();
+    let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
+    MapService.addHoverListenersToPopUp(popUpElement);
+    this.mapSrv.popUpArr   = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
+    let popupContent       = L.DomUtil.create('div', 'content');
+    popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+    let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
+    popupArr[0].setContent(popupContent);
+    this.errorObject.isCorrected                                          = true;
+    this.storageSrv.refErrorsO[this.storageSrv.currentIndex].isCorrected = true;
+    this.storageSrv.refreshErrorObjects.emit('missing ref');
+    this.warnSrv.showGenericSuccess();
+  }
+
   /***
    * Closes the currently opened modal
    * @returns {void}
@@ -79,5 +125,177 @@ export class ModalComponent {
       };
       this.editSrv.addChange(this.storageSrv.currentElement, 'add tag', change);
     }
+  }
+
+  /***
+   * Adds suggested ref value to ref list
+   * @param rel
+   * @returns {void}
+   */
+  private addMissingSuggestedRefValue(rel: any): void {
+    this.addedMissingSuggestionsRefs.push(rel);
+    this.missingRefs.forEach((item, ind) => {
+      if (item.id === rel.id) {
+        this.removedMissingSuggestions = this.removedMissingSuggestions.concat(this.missingRefs.splice(ind, 1));
+      }
+    });
+  }
+
+  /***
+   * adds selected nearby suggestion
+   * @param rel
+   * @returns {any}
+   */
+  private addNearbySuggestedRefValue(rel: any): void {
+    this.addedFromNearbySuggestionsRefs.push(rel);
+    this.nearbyRels.forEach((item, ind) => {
+      if (item.id === rel.id) {
+        this.removedNearbySuggestions = this.removedNearbySuggestions.concat(this.nearbyRels.splice(ind, 1));
+      }
+    });
+  }
+
+  /***
+   * Remove the added ref value (added from suggestions (missing) by user)
+   * @param ref
+   */
+  private removeMissingSuggestedRefValue(toRemoveRel: any): void {
+    let index ;
+    for (let rel of  this.addedMissingSuggestionsRefs) {
+      if (rel.id === toRemoveRel.id) {
+        index = this.addedMissingSuggestionsRefs.indexOf(rel);
+      }
+    }
+
+    if (index > -1) {
+      this.addedMissingSuggestionsRefs.splice(index, 1);
+    }
+
+    for (let key of this.removedMissingSuggestions) {
+      if (key.id === toRemoveRel.id) {
+        this.missingRefs.push(key);
+        break;
+      }
+    }
+  }
+
+  /***
+   * Remove the added ref value (added from suggestions (nearby) by user)
+   * @param ref
+   */
+  private removeNearbySuggestedRefValue(toRemoveRel: any): void {
+
+    let index ;
+    for (let rel of  this.addedFromNearbySuggestionsRefs) {
+      if (rel.id === toRemoveRel.id) {
+        index = this.addedFromNearbySuggestionsRefs.indexOf(rel);
+      }
+    }
+
+    if (index > -1) {
+      this.addedFromNearbySuggestionsRefs.splice(index, 1);
+    }
+
+    for (let key of this.removedNearbySuggestions) {
+      if (key.id === toRemoveRel.id) {
+        this.nearbyRels.push(key);
+        break;
+      }
+    }
+  }
+
+  /***
+   * Remove the added ref value (newly added by user)
+   * @param ref
+   */
+  private removeNewRefValue(ref: any): void {
+    let index = this.newAddedRefs.indexOf(ref);
+    if (index > -1) {
+      this.newAddedRefs.splice(index, 1);
+    }
+  }
+
+  /***
+   * Adds new ref value
+   * @param ref
+   */
+  private addNewRefValue(ref: string): void {
+    if (ref !== '') {
+      this.newAddedRefs.push(ref);
+    } else {
+      alert('Please enter a numeric value');
+    }
+    this.newlyAddedValue.first.nativeElement.value = '';
+  }
+
+  /***
+   *  Handles adding missing refs
+   * @param {string} ref
+   */
+  private createChangeForRefTag(ref: string): void {
+    let change: any;
+    if (ref !== '') {
+      change = {
+        from: this.storageSrv.currentElement,
+        to: undefined,
+      };
+      this.storageSrv.currentElement.tags['route_ref'] = ref;
+      change.to = this.storageSrv.currentElement;
+      this.editSrv.addChange(this.storageSrv.currentElement, 'change tag', change);
+    }
+  }
+
+  /***
+   * adds given node as child member of routes
+   * @param addedFromNearbySuggestionsRefs
+   * @returns {any}
+   */
+  private addToMembers(addedFromNearbySuggestionsRefs: any): any {
+
+    if (addedFromNearbySuggestionsRefs.length !== 0) {
+      for (let relation of addedFromNearbySuggestionsRefs) {
+        const rel = JSON.parse(
+          JSON.stringify(
+            this.storageSrv.elementsMap.get(
+              relation.id,
+            ),
+          ),
+        );
+
+        if (!rel || rel.type !== 'relation') {
+          return alert(
+            'Relation was not found ' +
+            JSON.stringify(this.storageSrv.currentElement),
+          );
+        }
+
+        let change = { from: JSON.parse(JSON.stringify(rel)), to: undefined }; // string to not influence toggle edits
+        let probableRole: string = '';
+        switch (this.errorObject.tags.public_transport) {
+          case 'platform':
+          case 'station':
+            probableRole = 'platform';
+            break;
+          case 'stop_position':
+            probableRole = 'stop';
+            break;
+          default:
+            alert('FIXME: suspicious role - ' + this.errorObject.tags.public_transport);
+            probableRole = 'stop';
+        }
+        const memberToToggle = {
+          type: 'node',
+          ref: this.errorObject.id,
+          role: probableRole,
+        };
+        rel.members.push(memberToToggle);
+
+        change.to = rel;
+
+        this.editSrv.addChange(rel, 'toggle members', change);
+
+      }
+    }
+
   }
 }
