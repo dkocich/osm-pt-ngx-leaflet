@@ -52,7 +52,7 @@ export class ValidationBrowserComponent {
   public startValidation(): void {
     this.refErrorsO = [];
     this.nameErrorsO = [];
-    if (this.mapSrv.map.getZoom() > 11) {
+    if (this.mapSrv.map.getZoom() > 13) {
       this.appActions.actSetErrorCorrectionMode('find errors');
       this.overpassSrv.requestNewOverpassData();
     } else {

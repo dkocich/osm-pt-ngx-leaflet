@@ -2,7 +2,7 @@
   <i class="fa fa-caret-left  icon-2x" aria-hidden="true"> Back </i>
 </button>
 <accordion>
-  <accordion-group #a1 [isOpen]="true" *ngIf="!(errorCorrectionMode$ | async)">
+  <accordion-group #a1 [isOpen]="true" *ngIf="(errorCorrectionMode$ | async) === 'find errors' || (errorCorrectionMode$ | async) === 'menu' || (errorCorrectionMode$ | async) === null">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-tags" aria-hidden="true"></i>
       <ng-container *ngIf="(beginnerView$ | async) === 'stop'"> {{ 'Tags' | translate }}</ng-container>
@@ -14,7 +14,7 @@
       [tagBrowserOptions]="(beginnerView$| async) === 'stop'? stopTagBrowserOptions : routeTagBrowserOptions">
     </tag-browser>
   </accordion-group>
-  <accordion-group #a2 [isOpen]="true" *ngIf="(beginnerView$ | async) === 'stop' && !(errorCorrectionMode$ | async)">
+  <accordion-group #a2 [isOpen]="true" *ngIf="(beginnerView$ | async) === 'stop' && ((errorCorrectionMode$ | async) === 'find errors' || (errorCorrectionMode$ | async) === 'menu' || (errorCorrectionMode$ | async) === null)">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-road" aria-hidden="true"></i>&nbsp;{{ 'Parent Routes' | translate }}
       <i class="pull-right float-xs-right fa"
