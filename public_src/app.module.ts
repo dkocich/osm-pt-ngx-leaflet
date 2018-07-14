@@ -54,6 +54,7 @@ import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
 import { StorageService } from './services/storage.service';
 import { WarnService } from './services/warn.service';
+import { AutoTasksService } from './services/auto-tasks.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -145,6 +146,7 @@ const conditional_providers = [
     ProcessService,
     StorageService,
     WarnService,
+    AutoTasksService,
 
     KeysPipe,
 

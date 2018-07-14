@@ -12,6 +12,8 @@ import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtRelationNew } from '../core/ptRelationNew.interface';
 import { RouteModalComponent } from '../components/route-modal/route-modal.component';
 
+import { AutoTasksService } from './auto-tasks.service';
+
 @Injectable()
 export class EditService {
   public editingMode: EventEmitter<boolean>      = new EventEmitter(false);
@@ -27,7 +29,20 @@ export class EditService {
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private modalService: BsModalService,
+    private autoTaskSrv: AutoTasksService,
   ) {
+
+    this.modalService.onShown.subscribe(() => {
+      console.log('shown');
+      this.autoTaskSrv.onShownModal();
+    });
+
+    this.modalService.onShow.subscribe(() => {
+      console.log('shown');
+      this.autoTaskSrv.onShowModal();
+    });
+
+
     // local events
     this.currentTotalSteps.subscribe(
       /**
@@ -1034,7 +1049,7 @@ export class EditService {
   }
 
   public createAutomaticRoute(): any {
-    this.modalRef = this.modalService.show(RouteModalComponent);
+    this.modalRef = this.modalService.show(RouteModalComponent, {class: 'modal-lg'});
     console.log('stops in bounds and having route ref tag');
   }
 }

@@ -834,6 +834,9 @@ export class OverpassService {
           console.log('stops in bounds', inBounds.length);
 
           for (let stop of this.storageSrv.listOfStops) {
+            console.log('route ref',stop.tags.route_ref );
+            console.log('in bounds ?route ref', this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon }));
+
             if (stop.tags.route_ref && this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })){
               route_refs.push(stop.tags.route_ref);
             }
