@@ -2,7 +2,7 @@
         *ngIf="isAuthenticated()"
         tooltip="{{ 'Switch edit mode' | translate }}"
         [class.btn-primary]="editing$ | async"
-        (click)="appActions.actToggleEditing()" btnCheckbox>
+        (click)="toggleEditMode()" btnCheckbox>
   <i class="fa fa-pencil" aria-hidden="true"></i>
 
 </button>

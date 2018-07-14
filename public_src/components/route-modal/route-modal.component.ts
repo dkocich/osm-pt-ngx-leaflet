@@ -17,9 +17,11 @@ import {AutoTasksService} from '../../services/auto-tasks.service';
   templateUrl: './route-modal.component.html',
 })
 
-export class RouteModalComponent implements OnInit, AfterViewInit, AfterContentInit {
+export class RouteModalComponent {
 
   public map ;
+  public routesMap;
+  public routesarr;
   constructor(public bsModalRef: BsModalRef,
               // private editSrv: EditService,
               private storageSrv: StorageService,
@@ -27,6 +29,11 @@ export class RouteModalComponent implements OnInit, AfterViewInit, AfterContentI
               private warnSrv: WarnService,
               private overpassSrv: OverpassService,
               private autoTaskSrv: AutoTasksService) {
+
+    this.autoTaskSrv.routesRec.subscribe((routes) => {
+      this.routesMap =  routes;
+      Array.from(this.routesMap).map(([key, value]) => { this.routesarr.concat(value); });
+    });
   }
 
 
@@ -34,14 +41,18 @@ export class RouteModalComponent implements OnInit, AfterViewInit, AfterContentI
     // let x = this.mapSrv.map.getContainer();
     // document.getElementById('map2').appendChild(x);
     this.map = L.map('map2', {
-      center: L.latLng(49.686, 18.351),
-      // layers: [this.mapSrv.baseMaps.CartoDB_light],
+      center: this.mapSrv.map.getCenter(),
+      layers: [this.autoTaskSrv.baseMaps.CartoDB_light],
       maxZoom: 22,
       minZoom: 4,
       zoom: 14,
       zoomAnimation: false,
       zoomControl: false,
     });
+
+    L.control.zoom({ position: 'topright' }).addTo(this.map);
+    L.control.layers(this.autoTaskSrv.baseMaps).addTo(this.map);
+    L.control.scale().addTo(this.map);
     //
     // L.control.zoom({ position: 'topright' }).addTo(map);
     // L.control.layers(this.mapSrv.baseMaps).addTo(map);
@@ -52,16 +63,16 @@ export class RouteModalComponent implements OnInit, AfterViewInit, AfterContentI
     // //   layer.addTo(map);
     // // });
     //
-    L.tileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      {
-        attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'
-            target='_blank' rel='noopener'>
-            OpenStreetMap</a>, Tiles courtesy of <a href='https://openstreetmap.org/'
-            target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
-        maxNativeZoom: 19,
-        maxZoom: 22,
-      }).addTo(this.map);
+    // L.tileLayer(
+    //   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    //   {
+    //     attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'
+    //         target='_blank' rel='noopener'>
+    //         OpenStreetMap</a>, Tiles courtesy of <a href='https://openstreetmap.org/'
+    //         target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
+    //     maxNativeZoom: 19,
+    //     maxZoom: 22,
+    //   }).addTo(this.map);
     // this.map.invalidateSize();
     // L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     //   attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',

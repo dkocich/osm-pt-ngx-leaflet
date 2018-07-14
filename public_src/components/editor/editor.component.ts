@@ -46,7 +46,10 @@ export class EditorComponent implements OnInit, AfterViewInit {
       this.totalEditSteps = data.total;
     });
     this.mapSrv.map.on('click', (event: MouseEvent) => {
+      console.log('clickk event', this.editing);
+
       if (this.editing && this.creatingElementOfType !== '') {
+        console.log('clickk');
         this.editSrv.createElement(this.creatingElementOfType, event);
         this.creatingElementOfType = '';
       }
@@ -147,6 +150,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
    * Activates editing mode (locally/globally).
    */
   private toggleEditMode(): void {
+    this.appActions.actToggleEditing();
     this.editing = !this.editing;
     this.editSrv.editingMode.emit(this.editing);
     this.mapSrv.editingMode = this.editing;

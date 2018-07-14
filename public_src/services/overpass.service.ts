@@ -19,6 +19,7 @@ import { Utils } from '../core/utils.class';
 
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
+import {AutoTasksService} from './auto-tasks.service';
 
 @Injectable()
 export class OverpassService {
@@ -35,6 +36,7 @@ export class OverpassService {
     private mapSrv: MapService,
     private warnSrv: WarnService,
     private ngRedux: NgRedux<IAppState>,
+    private autoTaskSrv: AutoTasksService,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -810,8 +812,18 @@ export class OverpassService {
 
 
   public requestNewOverpassData2(): void {
-    console.log('bounds', this.mapSrv.map.getBounds());
-    const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
+    // setup area reference
+    const viewCenter: LatLng = this.autoTaskSrv.map.getCenter();
+    const south: string = (Math.floor(viewCenter.lat / 0.05) * 0.05).toFixed(2);
+    const west: string = (Math.floor(viewCenter.lng / 0.05) * 0.05).toFixed(2);
+    const north: string = (Number(south) + 0.05).toFixed(2);
+    const east: string = (Number(west) + 0.05).toFixed(2);
+    const areaPseudoId = south + 'x' + west;
+    this.areaReference = { areaPseudoId, overpassBox: [south, west, north, east], viewCenter };
+    // replace bbox string
+    const bboxStr: string = this.areaReference.overpassBox.join(', ');
+    const requestBody = Utils.CONTINUOUS_QUERY.replace(new RegExp('{{bbox}}', 'g'), bboxStr);
+
     this.httpClient
       .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
         responseType: 'json',
@@ -819,47 +831,68 @@ export class OverpassService {
       })
       .subscribe(
         (res: IOverpassResponse) => {
+          console.log('query', requestBody);
           console.log('LOG (overpass s.)', res);
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
           let route_refs = [];
           let inBounds = [];
-          for (let stop of this.storageSrv.listOfStops) {
-            if (this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
-              inBounds.push(stop.tags.route_ref);
-            }
-          }
-          console.log('downloaded elements', res.elements.length);
-          console.log('stops in bounds', inBounds.length);
+          let stopsT = [];
+          let refs = [];
 
-          for (let stop of this.storageSrv.listOfStops) {
-            console.log('route ref',stop.tags.route_ref );
-            console.log('in bounds ?route ref', this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon }));
+          this.storageSrv.elementsMap.forEach((stop) => {
+            // console.log('stop', stop);
 
-            if (stop.tags.route_ref && this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })){
-              route_refs.push(stop.tags.route_ref);
+            if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+              stopsT.push(stop);
+              if (stop.tags.route_ref) {
+                refs.push(stop);
+                if (this.autoTaskSrv.map.getBounds().contains({lat: stop.lat, lng: stop.lon})) {
+                  inBounds.push(stop);
+                }
+              }
             }
-          }
-          console.log('node route refs' , route_refs);
+          });
+
+          console.log('total stops', stopsT.length , 'stops with route ref tag' ,
+            refs.length, 'stops in bounds with rr tag', inBounds.length);
+          // for (let stop of this.storageSrv.listOfStops) {
+          //   if (this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
+          //     inBounds.push(stop.tags.route_ref);
+          //   }
+          // // }
+          // console.log('downloaded elements', res.elements.length);
+          // console.log('stops in bounds', inBounds.length);
+
+          // for (let stop of this.storageSrv.listOfStops) {
+          //   console.log('route ref',stop.tags.route_ref );
+          //   console.log('in bounds ?route ref', this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon }));
+          //
+          //   if (stop.tags.route_ref && this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })){
+          //     route_refs.push(stop.tags.route_ref);
+          //   }
+          // }
+
+          route_refs = inBounds;
+          // console.log('node route refs' , route_refs);
           let ref_map = this.getIndividualRouteRefs(route_refs);
           console.log('map', ref_map);
           let values = [];
-          Array.from(ref_map).map( ([key, value]) => { values.push(key); });
+          Array.from(ref_map).map(([key, value]) => { values.push(key); });
           // let ref_Data = JSON.stringify([...ref_map]);
           // let values = JSON.parse(ref_Data).map((item) => item[1]);
           console.log('vslues', values);
           let stopsInBounds = [];
           for (let stop of this.storageSrv.listOfStops) {
-            if (this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
+            if (this.autoTaskSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
               stopsInBounds.push(stop.id);
             }
           }
           console.log('multiple nodes nmber', stopsInBounds.length);
-          if(stopsInBounds.length!== 0){
-
-
-          this.getMultipleNodeData(stopsInBounds, values); }
+          if (stopsInBounds.length !== 0) {
+            this.getMultipleNodeData(stopsInBounds, values);
+          }
         },
         (err) => {
           this.warnSrv.showError();
@@ -868,7 +901,11 @@ export class OverpassService {
       );
   }
 
-  private getIndividualRouteRefs(refs: any[]): any {
+  private getIndividualRouteRefs(stops: any[]): any {
+    let refs = [];
+    for (let stop of stops) {
+      refs.push(stop.tags.route_ref);
+    }
     let ref_map = new Map();
     for (let routeRefs of refs) {
       let singleRefs = routeRefs.split(';');
@@ -905,7 +942,7 @@ export class OverpassService {
             return alert('No response from API. Try to select element again please.');
           }
           console.log('LOG (overpass s.) multiple node data', res);
-          this.processMultipleNodeDataResponse(res,nodeRefs);
+          this.processMultipleNodeDataResponse(res, nodeRefs);
 
           this.warnSrv.showSuccess();
         },
@@ -917,6 +954,7 @@ export class OverpassService {
 
   private processMultipleNodeDataResponse(response: any, nodeRefs: any): any{
     let refs: any[] = [];
+    // let refsStops = [];
     for (const element of response.elements) {
       if (!this.storageSrv.elementsMap.has(element.id)) {
         this.storageSrv.elementsMap.set(element.id, element);
@@ -936,8 +974,9 @@ export class OverpassService {
             } else {
               // console.log('relation', element);
               if (element.tags.ref) {
-                console.log('element', element);
+                // console.log('element', element);
                 refs.push(element.tags.ref);
+                // refsStops.push(element);
               }
               this.storageSrv.listOfRelations.push(element);
               break;
@@ -948,7 +987,22 @@ export class OverpassService {
     console.log('downloaded ref', refs);
     console.log('type', typeof refs[0]);
     let unique = this.removeDuplicatefromArray(refs);
-    this.compareArrays(nodeRefs, unique);
+    let refnodes = this.compareArrays(nodeRefs, unique);
+    if (refnodes.length !== 0){
+      let newRoutes = [];
+
+      this.storageSrv.elementsMap.forEach((stop) => {
+        if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+          if (refnodes.includes(stop.tags.route_ref) && this.autoTaskSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
+            newRoutes.push(stop);
+          }
+        }
+      });
+
+      this.autoTaskSrv.newRoutes(newRoutes);
+    }
+
+
   }
 
   private removeDuplicatefromArray(arr: any[]): any{
@@ -966,17 +1020,17 @@ export class OverpassService {
 
    for (let itemA of nodeRefs) {
      let flag = false;
-      for (let itemB of routeRefs) {
-        console.log('tyoe', typeof itemA);
+     for (let itemB of routeRefs) {
+        console.log('type', typeof itemA);
         if (itemA === itemB) {
           flag = true;
           }
       }
 
-      if (flag === false) {
+     if (flag === false) {
         arr.push(itemA);
       }
     }
-    console.log('arr', arr);
+    return arr;
   }
 }

@@ -13,6 +13,9 @@
       </div>
     <div class="col-md-5 full-height">
       <button (click)="findMissingRoutes()">Find missing Routes</button>
+      <p *ngFor="let arr of routesarr">
+        {{arr.id}}
+      </p>
     </div>
 
     <!--<div id = "list">-->
