@@ -7,6 +7,7 @@ import { WarnService } from '../../services/warn.service';
 import * as L from 'leaflet';
 import { OverpassService } from '../../services/overpass.service';
 import {AutoTasksService} from '../../services/auto-tasks.service';
+import {Subject} from '../../../node_modules/rxjs/Rx';
 
 @Component({
   selector: 'route-modal',
@@ -22,6 +23,10 @@ export class RouteModalComponent {
   public map ;
   public routesMap;
   public routesarr;
+  public osmtogeojson: any = require('osmtogeojson');
+  private startEventProcessing = new Subject<L.LeafletEvent>();
+
+
   constructor(public bsModalRef: BsModalRef,
               // private editSrv: EditService,
               private storageSrv: StorageService,
@@ -51,7 +56,7 @@ export class RouteModalComponent {
     });
 
     L.control.zoom({ position: 'topright' }).addTo(this.map);
-    L.control.layers(this.autoTaskSrv.baseMaps).addTo(this.map);
+    // L.control.layers(this.autoTaskSrv.baseMaps).addTo(this.map);
     L.control.scale().addTo(this.map);
     //
     // L.control.zoom({ position: 'topright' }).addTo(map);
@@ -82,23 +87,41 @@ export class RouteModalComponent {
     // }).addTo(map);
 
     this.autoTaskSrv.map = this.map;
+    let obj: any = {};
+    let elements = [];
+    this.storageSrv.elementsMap.forEach((element) => {
+     console.log('element', element);
+     elements.push(element);
+    });
+    obj.elements = elements;
+    console.log('obj', obj);
+    let transformed = this.osmtogeojson(obj);
+    this.mapSrv.renderTransformedGeojsonData2(transformed);
+
+    this.autoTaskSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
+      console.log('event');
+      this.startEventProcessing.next(event);
+    });
+    this.startEventProcessing
+      .debounceTime(500)
+      .distinctUntilChanged()
+      .subscribe((event: L.LeafletEvent) => {
+        this.overpassSrv.initDownloaderForModalMap(this.autoTaskSrv.map);
+      });
   }
+
+
 
   private close(): any {
   // this.bsModalRef.hide();
   // let x = this.mapSrv.map.getContainer();
   // document.getElementById('map-c').appendChild(x);
-
-
-
-
-
   }
 
   private findMissingRoutes(): any {
     // this.map.invalidateSize();
     if (this.mapSrv.map.getZoom() > 8) {
-      this.overpassSrv.requestNewOverpassData2();
+      this.overpassSrv.requestNewOverpassDataForModalMap(true);
     } else {
       alert('Not sufficient zoom level');
     }

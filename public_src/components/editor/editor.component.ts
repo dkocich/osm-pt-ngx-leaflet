@@ -46,10 +46,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
       this.totalEditSteps = data.total;
     });
     this.mapSrv.map.on('click', (event: MouseEvent) => {
-      console.log('clickk event', this.editing);
-
       if (this.editing && this.creatingElementOfType !== '') {
-        console.log('clickk');
         this.editSrv.createElement(this.creatingElementOfType, event);
         this.creatingElementOfType = '';
       }

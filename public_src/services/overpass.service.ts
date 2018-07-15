@@ -7,6 +7,8 @@ import { DbService } from './db.service';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
+import { AutoTasksService } from './auto-tasks.service';
+
 import { WarnService } from './warn.service';
 
 import { create } from 'xmlbuilder';
@@ -19,13 +21,15 @@ import { Utils } from '../core/utils.class';
 
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
-import {AutoTasksService} from './auto-tasks.service';
+
+import * as L from 'leaflet';
 
 @Injectable()
 export class OverpassService {
   public changeset;
   private changeset_id: string;
   private areaReference: IAreaRef;
+  public osmtogeojson: any = require('osmtogeojson');
 
   constructor(
     private authSrv: AuthService,
@@ -248,10 +252,17 @@ export class OverpassService {
     this.putChangeset(this.changeset, testUpload);
   }
 
-  public async initDownloader(): Promise<void> {
-    this.setupAreaReference();
-    if (this.minZoomLevelIsValid() && await this.shouldDownloadMissingArea()) {
+  public async initDownloader(map: L.Map): Promise<void> {
+    this.setupAreaReference(map);
+    if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
       this.requestNewOverpassData();
+    }
+  }
+
+  public async initDownloaderForModalMap(map: L.Map): Promise<void> {
+    this.setupAreaReference(map);
+    if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
+      this.requestNewOverpassDataForModalMap(false);
     }
   }
 
@@ -278,8 +289,8 @@ export class OverpassService {
     }
   }
 
-  private setupAreaReference(): void {
-    const viewCenter: LatLng = this.mapSrv.map.getCenter();
+  private setupAreaReference(map: L.Map): void {
+    const viewCenter: LatLng = map.getCenter();
     const south: string = (Math.floor(viewCenter.lat / 0.05) * 0.05).toFixed(2);
     const west: string = (Math.floor(viewCenter.lng / 0.05) * 0.05).toFixed(2);
     const north: string = (Number(south) + 0.05).toFixed(2);
@@ -288,8 +299,18 @@ export class OverpassService {
     this.areaReference = { areaPseudoId, overpassBox: [south, west, north, east], viewCenter };
   }
 
-  private minZoomLevelIsValid(): boolean {
-    return this.mapSrv.map.getZoom() > ConfService.minDownloadZoom;
+  private setupAreaReference2(): void {
+    const viewCenter: LatLng = this.autoTaskSrv.map.getCenter();
+    const south: string = (Math.floor(viewCenter.lat / 0.05) * 0.05).toFixed(2);
+    const west: string = (Math.floor(viewCenter.lng / 0.05) * 0.05).toFixed(2);
+    const north: string = (Number(south) + 0.05).toFixed(2);
+    const east: string = (Number(west) + 0.05).toFixed(2);
+    const areaPseudoId = south + 'x' + west;
+    this.areaReference = { areaPseudoId, overpassBox: [south, west, north, east], viewCenter };
+  }
+
+  private minZoomLevelIsValid(map: L.Map): boolean {
+    return map.getZoom() > ConfService.minDownloadZoom;
   }
 
   private async shouldDownloadMissingArea(): Promise<boolean> {
@@ -384,7 +405,7 @@ export class OverpassService {
           const transformedGeojson = this.mapSrv.osmtogeojson(res);
           // FIXME save all requests...
           // this.storageSrv.localGeojsonStorage = transformedGeojson;
-          this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
+          this.mapSrv.renderTransformedGeojsonData(transformedGeojson, this.mapSrv.map);
           this.dbSrv.addResponseToIDB(res, 'route', rel.id).catch((err) => {
             console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
               ' in adding related metadata to IDB for route with id : ' + rel.id);
@@ -811,18 +832,19 @@ export class OverpassService {
   }
 
 
-  public requestNewOverpassData2(): void {
-    // setup area reference
-    const viewCenter: LatLng = this.autoTaskSrv.map.getCenter();
-    const south: string = (Math.floor(viewCenter.lat / 0.05) * 0.05).toFixed(2);
-    const west: string = (Math.floor(viewCenter.lng / 0.05) * 0.05).toFixed(2);
-    const north: string = (Number(south) + 0.05).toFixed(2);
-    const east: string = (Number(west) + 0.05).toFixed(2);
-    const areaPseudoId = south + 'x' + west;
-    this.areaReference = { areaPseudoId, overpassBox: [south, west, north, east], viewCenter };
-    // replace bbox string
-    const bboxStr: string = this.areaReference.overpassBox.join(', ');
-    const requestBody = Utils.CONTINUOUS_QUERY.replace(new RegExp('{{bbox}}', 'g'), bboxStr);
+  public requestNewOverpassDataForModalMap(findRoutes: boolean): void {
+    // // setup area reference
+    // const viewCenter: LatLng = this.autoTaskSrv.map.getCenter();
+    // const south: string = (Math.floor(viewCenter.lat / 0.05) * 0.05).toFixed(2);
+    // const west: string = (Math.floor(viewCenter.lng / 0.05) * 0.05).toFixed(2);
+    // const north: string = (Number(south) + 0.05).toFixed(2);
+    // const east: string = (Number(west) + 0.05).toFixed(2);
+    // const areaPseudoId = south + 'x' + west;
+    // this.areaReference = { areaPseudoId, overpassBox: [south, west, north, east], viewCenter };
+    // // replace bbox string
+    // const bboxStr: string = this.areaReference.overpassBox.join(', ');
+    const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
+    // const requestBody = Utils.CONTINUOUS_QUERY.replace(new RegExp('{{bbox}}', 'g'), bboxStr);
 
     this.httpClient
       .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
@@ -835,28 +857,51 @@ export class OverpassService {
           console.log('LOG (overpass s.)', res);
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
+          let transformed = this.osmtogeojson(res);
+          this.mapSrv.renderTransformedGeojsonData2(transformed);
           this.warnSrv.showSuccess();
-          let route_refs = [];
-          let inBounds = [];
-          let stopsT = [];
-          let refs = [];
+          if(findRoutes){
+            let route_refs = [];
+            let inBounds = [];
+            let stopsT = [];
+            let refs = [];
 
-          this.storageSrv.elementsMap.forEach((stop) => {
-            // console.log('stop', stop);
-
-            if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-              stopsT.push(stop);
-              if (stop.tags.route_ref) {
-                refs.push(stop);
-                if (this.autoTaskSrv.map.getBounds().contains({lat: stop.lat, lng: stop.lon})) {
-                  inBounds.push(stop);
+            this.storageSrv.elementsMap.forEach((stop) => {
+              // console.log('stop', stop);
+              if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+                stopsT.push(stop);
+                if (stop.tags.route_ref) {
+                  refs.push(stop);
+                  if (this.autoTaskSrv.map.getBounds().contains({lat: stop.lat, lng: stop.lon})) {
+                    inBounds.push(stop);
+                  }
                 }
               }
-            }
-          });
+            });
 
-          console.log('total stops', stopsT.length , 'stops with route ref tag' ,
-            refs.length, 'stops in bounds with rr tag', inBounds.length);
+            console.log('total stops', stopsT.length , 'stops with route ref tag' ,
+              refs.length, 'stops in bounds with rr tag', inBounds.length);
+            route_refs = inBounds;
+            // console.log('node route refs' , route_refs);
+            let ref_map = this.getIndividualRouteRefs(route_refs);
+            console.log('map', ref_map);
+            let values = [];
+            Array.from(ref_map).map(([key, value]) => { values.push(key); });
+            // let ref_Data = JSON.stringify([...ref_map]);
+            // let values = JSON.parse(ref_Data).map((item) => item[1]);
+            console.log('vslues', values);
+            let stopsInBounds = [];
+            for (let stop of this.storageSrv.listOfStops) {
+              if (this.autoTaskSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
+                stopsInBounds.push(stop.id);
+              }
+            }
+            console.log('multiple nodes nmber', stopsInBounds.length);
+            if (stopsInBounds.length !== 0) {
+              this.getMultipleNodeData(stopsInBounds, values);
+            }
+          }
+
           // for (let stop of this.storageSrv.listOfStops) {
           //   if (this.mapSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
           //     inBounds.push(stop.tags.route_ref);
@@ -874,25 +919,7 @@ export class OverpassService {
           //   }
           // }
 
-          route_refs = inBounds;
-          // console.log('node route refs' , route_refs);
-          let ref_map = this.getIndividualRouteRefs(route_refs);
-          console.log('map', ref_map);
-          let values = [];
-          Array.from(ref_map).map(([key, value]) => { values.push(key); });
-          // let ref_Data = JSON.stringify([...ref_map]);
-          // let values = JSON.parse(ref_Data).map((item) => item[1]);
-          console.log('vslues', values);
-          let stopsInBounds = [];
-          for (let stop of this.storageSrv.listOfStops) {
-            if (this.autoTaskSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
-              stopsInBounds.push(stop.id);
-            }
-          }
-          console.log('multiple nodes nmber', stopsInBounds.length);
-          if (stopsInBounds.length !== 0) {
-            this.getMultipleNodeData(stopsInBounds, values);
-          }
+
         },
         (err) => {
           this.warnSrv.showError();

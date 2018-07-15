@@ -9,13 +9,15 @@ export class AutoTasksService {
 
   public routesRec: EventEmitter<any> =  new EventEmitter();
   public baseMaps;
+  public osmtogeojson: any = require('osmtogeojson');
+
   constructor(
-  ){
+  ) {
     this.baseMaps ={
       Empty: L.tileLayer('', {
         attribution: '',
       }),
-        CartoDB_dark: L.tileLayer(
+      CartoDB_dark: L.tileLayer(
       'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
       {
         attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank'

@@ -8,6 +8,7 @@ import * as L from 'leaflet';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
+import {AutoTasksService} from './auto-tasks.service';
 
 @Injectable()
 export class MapService {
@@ -35,6 +36,7 @@ export class MapService {
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
+    private autoTask: AutoTasksService,
   ) {
     this.baseMaps = {
       Empty: L.tileLayer('', {
@@ -224,7 +226,8 @@ export class MapService {
    * Renders GeoJson data on the map.
    * @param transformedGeojson
    */
-  public renderTransformedGeojsonData(transformedGeojson: any): void {
+  public renderTransformedGeojsonData(transformedGeojson: any, map: L.Map): void {
+    console.log('transformed geojson', transformedGeojson);
     this.ptLayer = L.geoJSON(transformedGeojson, {
       filter: (feature) => {
         // filter away already rendered elements
@@ -252,7 +255,8 @@ export class MapService {
       },
     });
     console.log('LOG (map s.) Adding PTlayer to map again', this.ptLayer);
-    this.ptLayer.addTo(this.map);
+
+    this.ptLayer.addTo(map);
   }
 
   /**
@@ -753,5 +757,45 @@ export class MapService {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     const marker: object = feature.target; // FIXME DELETE?
     this.markerMembershipToggleClick.emit({ featureId });
+  }
+
+  /**
+   * Renders GeoJson data on the map.
+   * @param transformedGeojson
+   */
+  public renderTransformedGeojsonData2(transformedGeojson: any): void {
+    console.log('transformed geojson', transformedGeojson);
+    this.ptLayer = L.geoJSON(transformedGeojson, {
+      // filter: (feature) => {
+      //   // filter away already rendered elements
+      //   if (this.storageSrv.elementsRendered.has(feature.id)) {
+      //     return false;
+      //   }
+      //   if (this.confSrv.cfgFilterLines) {
+      //     return (
+      //       'public_transport' in feature.properties && feature.id[0] === 'n'
+      //     );
+      //   } else {
+      //     return true;
+      //   }
+      // },
+      // onEachFeature: (feature, layer) => {
+      //   // prevent rendering elements twice later
+      //   // this.storageSrv.elementsRendered.add(feature.id);
+      //   // this.enableDrag(feature, layer);
+      // },
+      pointToLayer: (feature, latlng) => {
+        console.log('feature', feature);
+        return this.stylePoint(feature, latlng);
+      },
+      // style: (feature) => {
+      //   return this.styleFeature(feature);
+      // },
+    });
+    console.log('LOG (map s.) Adding PTlayer to map again', this.ptLayer);
+
+    console.log('added', this.ptLayer, this.autoTask.map);
+    this.ptLayer.addTo(this.autoTask.map);
+
   }
 }

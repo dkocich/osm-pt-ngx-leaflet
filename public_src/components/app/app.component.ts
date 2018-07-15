@@ -90,7 +90,7 @@ export class AppComponent implements OnInit {
       .distinctUntilChanged()
       .subscribe((event: L.LeafletEvent) => {
         this.processSrv.addPositionToUrlHash();
-        this.overpassSrv.initDownloader();
+        this.overpassSrv.initDownloader(this.mapSrv.map);
         this.processSrv.filterDataInBounds();
       });
 
