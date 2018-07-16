@@ -9,6 +9,9 @@ import { WarnService } from '../../services/warn.service';
 
 import * as L from 'leaflet';
 
+import { IPtRelation } from '../../core/ptRelation.interface';
+import { IErrorObject } from '../../core/errorObject.interface';
+
 @Component({
   selector: 'modal-content',
   styleUrls: [
@@ -26,7 +29,7 @@ export class ModalComponent {
   @ViewChildren('chosenRef') chosenRefS ;
   @ViewChildren('newlyAddedValue') newlyAddedValue ;
 
-  public errorObject: any;
+  public errorObject: IErrorObject;
 
   public removedNearbySuggestions: any[] = [];
   public removedMissingSuggestions: any[] = [];
@@ -50,6 +53,7 @@ export class ModalComponent {
    * @param {string} name
    * @returns {void}
    */
+
   public saveNameTag(name: string): void {
     if (name.length !== 0) {
       this.createChangeForNameTag(name);
@@ -61,9 +65,9 @@ export class ModalComponent {
       popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
       let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
       popupArr[0].setContent(popupContent);
-      this.errorObject.isCorrected                                          = true;
-      this.storageSrv.nameErrorsO[this.storageSrv.currentIndex].isCorrected = true;
-      this.storageSrv.refreshErrorObjects.emit('missing name');
+      this.errorObject.corrected                                          = 'true';
+      this.storageSrv.nameErrorsO[this.storageSrv.currentIndex].corrected = 'true';
+      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
       this.warnSrv.showGenericSuccess();
     } else {
       alert('Entered name cannot be empty');
@@ -75,6 +79,8 @@ export class ModalComponent {
    */
   private saveRefTag(): void {
     let refsForTag = [];
+    let refString: string = '';
+
     for (let rel of this.addedMissingSuggestionsRefs) {
       refsForTag.push(rel.tags.ref);
     }
@@ -82,25 +88,25 @@ export class ModalComponent {
       refsForTag.push(rel.tags.ref);
     }
     refsForTag = refsForTag.concat(this.newAddedRefs);
-    let refString: string = '';
-    refsForTag.forEach((item, index) => {
-      refString = (index !== refsForTag.length - 1) ? refString + item + ', ' : refString + item;
-    });
-    refString = this.errorObject.tags.route_ref + refString;
-    this.createChangeForRefTag(refString);
-    this.addToMembers(this.addedFromNearbySuggestionsRefs);
-    this.bsModalRef.hide();
-    let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
-    MapService.addHoverListenersToPopUp(popUpElement);
-    this.mapSrv.popUpArr   = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
-    let popupContent       = L.DomUtil.create('div', 'content');
-    popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
-    let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
-    popupArr[0].setContent(popupContent);
-    this.errorObject.isCorrected                                          = true;
-    this.storageSrv.refErrorsO[this.storageSrv.currentIndex].isCorrected = true;
-    this.storageSrv.refreshErrorObjects.emit('missing ref');
-    this.warnSrv.showGenericSuccess();
+    if (refsForTag.length !== 0) {
+      refsForTag.forEach((item, index) => {
+        refString = (index !== refsForTag.length - 1) ? refString + item + ', ' : refString + item;
+      });
+      refString = this.errorObject.stop.tags.route_ref + refString;
+      this.createChangeForRefTag(refString);
+      this.addToMembers(this.addedFromNearbySuggestionsRefs);
+      this.bsModalRef.hide();
+      let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
+      MapService.addHoverListenersToPopUp(popUpElement);
+      this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter((popup) => {
+        return popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId;
+      });
+      this.checkErrorIfCorrected();
+      this.storageSrv.refreshErrorObjects.emit({typeOfErrorObject: 'missing ref'});
+      this.warnSrv.showGenericSuccess();
+    } else {
+      alert('Nothing to save');
+    }
   }
 
   /***
@@ -132,7 +138,7 @@ export class ModalComponent {
    * @param rel
    * @returns {void}
    */
-  private addMissingSuggestedRefValue(rel: any): void {
+  private addMissingSuggestedRefValue(rel: IPtRelation): void {
     this.addedMissingSuggestionsRefs.push(rel);
     this.missingRefs.forEach((item, ind) => {
       if (item.id === rel.id) {
@@ -271,7 +277,7 @@ export class ModalComponent {
 
         let change = { from: JSON.parse(JSON.stringify(rel)), to: undefined }; // string to not influence toggle edits
         let probableRole: string = '';
-        switch (this.errorObject.tags.public_transport) {
+        switch (this.errorObject.stop.tags.public_transport) {
           case 'platform':
           case 'station':
             probableRole = 'platform';
@@ -280,12 +286,12 @@ export class ModalComponent {
             probableRole = 'stop';
             break;
           default:
-            alert('FIXME: suspicious role - ' + this.errorObject.tags.public_transport);
+            alert('FIXME: suspicious role - ' + this.errorObject.stop.tags.public_transport);
             probableRole = 'stop';
         }
         const memberToToggle = {
           type: 'node',
-          ref: this.errorObject.id,
+          ref: this.errorObject.stop.id,
           role: probableRole,
         };
         rel.members.push(memberToToggle);
@@ -297,5 +303,24 @@ export class ModalComponent {
       }
     }
 
+  }
+
+  private checkErrorIfCorrected(): void {
+    let val;
+    let popupContent       = L.DomUtil.create('div', 'content');
+    if (this.missingRefs.length === 0) {
+      val = 'true';
+      popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+    } else if (this.addedMissingSuggestionsRefs.length !== 0) {
+      val = 'partial';
+      popupContent.innerHTML = '<i class="fa fa-question" aria-hidden="true"></i>';
+    } else {
+      val = 'false';
+      popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
+    }
+    this.errorObject.corrected = val;
+    this.storageSrv.refErrorsO[this.storageSrv.currentIndex].corrected = val;
+    let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
+    popupArr[0].setContent(popupContent);
   }
 }

@@ -5,11 +5,12 @@ import { IRouteBrowserOptions, ITagBrowserOptions } from '../../core/editingOpti
 
 import { Observable } from 'rxjs';
 
-import { select } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 import { AppActions } from '../../store/app/actions';
 
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
+import {IAppState} from '../../store/model';
 
 @Component({
   providers  : [],
@@ -44,7 +45,8 @@ export class BeginnerComponent {
 
   constructor(private appActions: AppActions,
               private processSrv: ProcessService,
-              private storageSrv: StorageService) {
+              private storageSrv: StorageService,
+              private ngRedux: NgRedux<IAppState>) {
   }
 
   /***
@@ -75,7 +77,7 @@ export class BeginnerComponent {
     this.processSrv.exploreStop(this.storageSrv.currentElement, false, true, true);
   }
 
-  public view(windowName: string): boolean {
+  public shouldView(windowName: string): boolean {
 
     let beginnerView =  this.ngRedux.getState()['app']['beginnerView'];
     let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];

@@ -3,7 +3,7 @@
     <h4 class="modal-title pull-left">{{'Enter name' | translate }}</h4>
   </div>
   <div class="modal-body text-center">
-    <h4 *ngIf="errorObject.isCorrected">
+    <h4 *ngIf="errorObject.corrected === 'true'">
       {{'Already entered name' | translate }} : {{errorObject.tags.name}}
     </h4>
     <form>

@@ -798,7 +798,7 @@ export class OverpassService {
         },
         (err) => {
           this.warnSrv.showError();
-          throw new Error(err.toString());
+          throw new Error(JSON.stringify(err));
         });
   }
 }

@@ -1,5 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
+
 import * as L from 'leaflet';
+import * as MobileDetect from 'mobile-detect';
 
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
@@ -14,13 +16,13 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import { ModalComponent } from '../components/modal/modal.component';
 
-import * as MobileDetect from 'mobile-detect';
+import { IErrorObject } from '../core/errorObject.interface';
 
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
-  public nameErrorsO: any[] = [];
-  public refErrorsO: any[] = [];
+  public nameErrorsO: IErrorObject[] = [];
+  public refErrorsO: IErrorObject[] = [];
   public currentIndex = 0;
   public currentMode: string;
   public isDataDownloaded: EventEmitter<boolean> = new EventEmitter();
@@ -40,11 +42,12 @@ export class ErrorHighlightService {
     });
 
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
-      if (data === 'missing name') {
+      const { typeOfErrorObject } = data;
+      if (typeOfErrorObject === 'missing name') {
         this.currentIndex = this.storageSrv.currentIndex;
         this.nameErrorsO = this.storageSrv.nameErrorsO;
       }
-      if (data === 'missing ref') {
+      if (typeOfErrorObject === 'missing ref') {
         this.currentIndex = this.storageSrv.currentIndex;
         this.refErrorsO = this.storageSrv.refErrorsO;
       }
@@ -52,16 +55,17 @@ export class ErrorHighlightService {
   }
 
   /***
-   * Turns of marker click and starts switch location mode on
+   * Turns off marker click and starts switch location mode on
    * @param {string} tag
    * @returns {void}
    */
   public missingTagError(tag: string): void {
     this.storageSrv.currentIndex = 0;
-    this.storageSrv.refreshErrorObjects.emit('missing ' + tag);
+    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing ' + tag });
     this.currentMode = tag;
     this.mapSrv.popUpLayerGroup = null;
     this.mapSrv.popUpArr = [];
+    let stop;
     this.mapSrv.map.eachLayer((layer) => {
       if (layer['_latlng'] && layer['feature']) {
         layer.off('click');
@@ -69,13 +73,15 @@ export class ErrorHighlightService {
     });
     this.appActions.actToggleSwitchMode(true);
     if (this.currentMode === 'name') {
+      stop = this.nameErrorsO[0]['stop'];
       this.addSinglePopUp(this.nameErrorsO[0]);
-      this.mapSrv.map.setView(this.nameErrorsO[0]['stop'], 15);
+      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
     }
 
     if (this.currentMode === 'ref') {
       this.addSinglePopUp(this.refErrorsO[0]);
-      this.mapSrv.map.setView(this.refErrorsO[0]['stop'], 15);
+      stop = this.refErrorsO[0]['stop'];
+      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
     }
   }
 
@@ -83,31 +89,46 @@ export class ErrorHighlightService {
    * Generates the popup content
    * @returns {object}
    */
-  private static makePopUpContent(): HTMLElement {
+  private static makePopUpContent(isCorrected: string): HTMLElement {
     let popupContent       = L.DomUtil.create('div', 'content');
     popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true">';
+    switch (isCorrected) {
+      case 'true':
+        popupContent           = L.DomUtil.create('div', 'content');
+        popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+        break;
+      case 'partial' :
+        popupContent           = L.DomUtil.create('div', 'content');
+        popupContent.innerHTML = '<i class="fa fa-question" aria-hidden="true"></i>';
+        break;
+      case 'false' :
+        popupContent           = L.DomUtil.create('div', 'content');
+        popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true">';
+        break;
+    }
     return popupContent;
   }
 
   /***
-   * Handles click of popup
-   * @param popUpElement
-   * @param markerFeatureid
-   * @param popUpId
-   * @param stop
-   * @returns {void}
+   * Handles click events for popup
+   * @param popUp
+   * @param errorObj
    */
 
-  private addClickListenerToPopUp(popUpElement: HTMLElement, markerFeatureid: number, popUpId: number, stop: any): void {
+  private addClickListenerToPopUp(popUp: any, errorObj: IErrorObject): void {
+    let stop = errorObj['stop'];
+    let popUpElement = popUp.getElement();
+    let popUpId = popUp['_leaflet_id'];
+
     L.DomEvent.addListener(popUpElement, 'click', (e) => {
-      const featureId = Number(markerFeatureid);
+      const featureId = Number(stop.id);
       const element   = this.processSrv.getElementById(featureId);
       if (element) {
         let latlng = { lat: element.lat, lng: element.lon };
         if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing name tag')) {
-          let arr = this.getNearbyNodeNames(latlng);
-          let suggestedNames = this.getMostUsedName(arr);
-          this.openModalWithComponent(stop, suggestedNames);
+          let nearbyNodes = this.getNearbyNodeNames(latlng);
+          let suggestedNames = this.getMostUsedName(nearbyNodes);
+          this.openModalWithComponentForName(errorObj, suggestedNames);
         }
 
         if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing ref tag')) {
@@ -124,11 +145,11 @@ export class ErrorHighlightService {
             }
           }
           if (this.isMobileDevice()) {
-            this.openModalWithComponentForRef(stop, missingRefs);
+            this.openModalWithComponentForRef(errorObj, missingRefs);
 
           } else {
             let nearbyRels = this.getNearbyRoutesSuggestions(latlng, missingRefs);
-            this.openModalWithComponentForRef(stop, missingRefs, nearbyRels);
+            this.openModalWithComponentForRef(errorObj, missingRefs, nearbyRels);
           }
 
         }
@@ -153,35 +174,33 @@ export class ErrorHighlightService {
    * Opens up modal
    * @returns {void}
    */
-  public openModalWithComponent(stop: any, suggestedNames: string): void {
-    if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing name tag')) {
+  public openModalWithComponentForName(errorObject: IErrorObject, suggestedNames: string): void {
         const initialState = {
           error      : 'missing name tag',
           suggestedNames,
-          errorObject: stop,
+          errorObject,
         };
         this.modalRef = this.modalService.show(ModalComponent, { initialState });
-    }
   }
 
   /***
    * Opens up modal for ref
    * @returns {void}
    */
-  public openModalWithComponentForRef(stop: any, suggestedRefs: any, nearbyRels?: any): void {
+  public openModalWithComponentForRef(errorObject: IErrorObject, suggestedRefs: any, nearbyRels?: any): void {
     let initialState;
     if (nearbyRels) {
        initialState = {
              error      : 'missing ref tag',
              missingRefs : suggestedRefs,
-             errorObject: stop,
+             errorObject,
              nearbyRels,
     };
     } else {
       initialState = {
         error      : 'missing ref tag',
         missingRefs : suggestedRefs,
-        errorObject: stop,
+        errorObject,
       };
     }
     this.modalRef = this.modalService.show(ModalComponent, { initialState });
@@ -199,7 +218,7 @@ export class ErrorHighlightService {
 
     this.storageSrv.elementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-        let errorObj = { stop, isCorrected: false };
+        let errorObj: IErrorObject = { stop, corrected: 'false' };
         if (!stop.tags['name'] && this.mapSrv.map.getBounds().contains(stop)) {
           this.nameErrorsO.push(errorObj);
         }
@@ -226,8 +245,8 @@ export class ErrorHighlightService {
     });
     this.storageSrv.refErrorsO = this.refErrorsO;
     this.storageSrv.nameErrorsO = this.nameErrorsO;
-    this.storageSrv.refreshErrorObjects.emit('missing name');
-    this.storageSrv.refreshErrorObjects.emit('missing ref');
+    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
+    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing ref' });
 
   }
 
@@ -253,20 +272,22 @@ export class ErrorHighlightService {
       if (this.currentIndex === (this.nameErrorsO.length - 1)) {
         this.currentIndex = 0;
         this.storageSrv.currentIndex = 0;
-        this.storageSrv.refreshErrorObjects.emit('missing name');
+        this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
         this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
-        this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex]['stop'], 15);
-        document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+        let stop = this.nameErrorsO[this.currentIndex].stop;
+        this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+        document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1].stop.id.toString()).style.backgroundColor = 'white';
+        document.getElementById(this.nameErrorsO[this.currentIndex].stop.id.toString()).style.backgroundColor = 'lightblue';
 
       } else {
         this.currentIndex++;
         this.storageSrv.currentIndex++;
-        this.storageSrv.refreshErrorObjects.emit('missing name');
+        this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
         this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
-        this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex]['stop'], 15);
-        document.getElementById(this.nameErrorsO[this.currentIndex - 1]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+        let stop = this.nameErrorsO[this.currentIndex].stop;
+        this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+        document.getElementById(this.nameErrorsO[this.currentIndex - 1].stop.id.toString()).style.backgroundColor = 'white';
+        document.getElementById(this.nameErrorsO[this.currentIndex].stop.id.toString()).style.backgroundColor = 'lightblue';
       }
     }
 
@@ -274,20 +295,23 @@ export class ErrorHighlightService {
       if (this.currentIndex === (this.refErrorsO.length - 1)) {
         this.currentIndex = 0;
         this.storageSrv.currentIndex = 0;
-        this.storageSrv.refreshErrorObjects.emit('missing ref');
+        this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing ref' });
         this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
-        this.mapSrv.map.setView(this.refErrorsO[this.currentIndex]['stop'], 15);
-        document.getElementById(this.refErrorsO[this.refErrorsO.length - 1]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+        let stop = this.refErrorsO[this.currentIndex].stop;
+        this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+        document.getElementById(this.refErrorsO[this.refErrorsO.length - 1].stop.id.toString()).style.backgroundColor = 'white';
+        document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id.toString()).style.backgroundColor = 'lightblue';
 
       } else {
         this.currentIndex++;
         this.storageSrv.currentIndex++;
-        this.storageSrv.refreshErrorObjects.emit('missing ref');
+        this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing ref' });
         this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
-        this.mapSrv.map.setView(this.refErrorsO[this.currentIndex]['stop'], 15);
-        document.getElementById(this.refErrorsO[this.currentIndex - 1]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+        let stop = this.refErrorsO[this.currentIndex].stop;
+        this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+
+        document.getElementById(this.refErrorsO[this.currentIndex - 1].stop.id.toString()).style.backgroundColor = 'white';
+        document.getElementById(this.refErrorsO[this.currentIndex].stop.id.toString()).style.backgroundColor = 'lightblue';
       }
     }
   }
@@ -299,55 +323,48 @@ export class ErrorHighlightService {
   previousLocation(): any {
 
     if (this.currentMode === 'name') {
+
       if (this.currentIndex === 0) {
-
         this.currentIndex = this.nameErrorsO.length - 1;
-
         this.storageSrv.currentIndex = this.nameErrorsO.length - 1;
-        this.storageSrv.refreshErrorObjects.emit('missing name');
+        this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
         this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
-        this.mapSrv.map.panTo(this.nameErrorsO[this.currentIndex]['stop']);
-
-        document.getElementById(this.nameErrorsO[0]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1]['stop'].id).style.backgroundColor = 'lightblue';
+        let stop = this.nameErrorsO[this.currentIndex].stop;
+        this.mapSrv.map.panTo({ lat: stop.lat, lng: stop.lon });
+        document.getElementById(this.nameErrorsO[0].stop.id.toString()).style.backgroundColor = 'white';
+        document.getElementById(this.nameErrorsO[this.nameErrorsO.length - 1].stop.id.toString()).style.backgroundColor = 'lightblue';
       } else {
         this.currentIndex--;
-
         this.storageSrv.currentIndex--;
-
-        this.storageSrv.refreshErrorObjects.emit('missing name');
-
+        this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
         this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
-        this.mapSrv.map.panTo(this.nameErrorsO[this.currentIndex]['stop']);
-        document.getElementById(this.nameErrorsO[this.currentIndex + 1]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+        let stop = this.nameErrorsO[this.currentIndex].stop;
+        this.mapSrv.map.panTo({ lat: stop.lat, lng: stop.lon });
+        document.getElementById(this.nameErrorsO[this.currentIndex + 1].stop.id.toString()).style.backgroundColor = 'white';
+        document.getElementById(this.nameErrorsO[this.currentIndex].stop.id.toString()).style.backgroundColor = 'lightblue';
 
       }
     }
 
     if (this.currentMode === 'ref') {
       if (this.currentIndex === 0) {
-
         this.currentIndex = this.refErrorsO.length - 1;
-
         this.storageSrv.currentIndex = this.refErrorsO.length - 1;
-        this.storageSrv.refreshErrorObjects.emit('missing ref');
+        this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing ref' });
         this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
-        this.mapSrv.map.panTo(this.refErrorsO[this.currentIndex]['stop']);
-
-        document.getElementById(this.refErrorsO[0]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.refErrorsO[this.refErrorsO.length - 1]['stop'].id).style.backgroundColor = 'lightblue';
+        let stop = this.refErrorsO[this.currentIndex].stop;
+        this.mapSrv.map.panTo({ lat: stop.lat, lng: stop.lon });
+        document.getElementById(this.refErrorsO[0].stop.id.toString()).style.backgroundColor = 'white';
+        document.getElementById(this.refErrorsO[this.refErrorsO.length - 1].stop.id.toString()).style.backgroundColor = 'lightblue';
       } else {
         this.currentIndex--;
-
         this.storageSrv.currentIndex--;
-
-        this.storageSrv.refreshErrorObjects.emit('missing ref');
-
+        this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing ref' });
         this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
-        this.mapSrv.map.panTo(this.refErrorsO[this.currentIndex]['stop']);
-        document.getElementById(this.refErrorsO[this.currentIndex + 1]['stop'].id).style.backgroundColor = 'white';
-        document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+        let stop = this.refErrorsO[this.currentIndex].stop;
+        this.mapSrv.map.panTo({ lat: stop.lat, lng: stop.lon });
+        document.getElementById(this.refErrorsO[this.currentIndex + 1].stop.id.toString()).style.backgroundColor = 'white';
+        document.getElementById(this.refErrorsO[this.currentIndex].stop.id.toString()).style.backgroundColor = 'lightblue';
 
       }
     }
@@ -466,19 +483,13 @@ export class ErrorHighlightService {
   /***
    * Adds popup
    * @param errorObj
-   * @returns {any}
+   * @returns {void}
    */
-  public addSinglePopUp(errorObj: any): any {
+  public addSinglePopUp(errorObj: IErrorObject): void {
     let stop = errorObj['stop'];
     this.mapSrv.removePopUps();
     let latlng = { lat: stop.lat, lng: stop.lon };
-    let popupContent;
-    if (errorObj.isCorrected) {
-      popupContent = L.DomUtil.create('div', 'content');
-      popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
-    } else {
-      popupContent = ErrorHighlightService.makePopUpContent();
-    }
+    let popupContent = ErrorHighlightService.makePopUpContent(errorObj.corrected);
     let popup =     L.popup({
       closeOnClick: false,
       closeButton : false,
@@ -487,7 +498,7 @@ export class ErrorHighlightService {
     }).setLatLng(latlng)
       .setContent(popupContent).openOn(this.mapSrv.map);
     this.mapSrv.popUpArr.push(popup);
-    this.addClickListenerToPopUp(popup.getElement(), stop.id, popup['_leaflet_id'], stop);
+    this.addClickListenerToPopUp(popup, errorObj);
     MapService.addHoverListenersToPopUp(popup.getElement());
     this.mapSrv.popUpLayerGroup = L.layerGroup().addTo(this.mapSrv.map);
     this.mapSrv.popUpLayerGroup.addLayer(popup);
@@ -521,23 +532,25 @@ export class ErrorHighlightService {
 
   public jumpToLocation(index: number): any {
     if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing name tag')) {
-      document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'white';
+      document.getElementById(this.nameErrorsO[this.currentIndex].stop.id.toString()).style.backgroundColor = 'white';
       this.currentIndex = index;
       this.storageSrv.currentIndex = index;
-      this.storageSrv.refreshErrorObjects.emit('missing name');
+      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
       this.addSinglePopUp(this.nameErrorsO[this.currentIndex]);
-      this.mapSrv.map.setView(this.nameErrorsO[this.currentIndex]['stop'], 15);
-      document.getElementById(this.nameErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+      let stop = this.nameErrorsO[this.currentIndex].stop;
+      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+      document.getElementById(this.nameErrorsO[this.currentIndex].stop.id.toString()).style.backgroundColor = 'lightblue';
     }
 
     if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'missing ref tag')) {
-      document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'white';
+      document.getElementById(this.refErrorsO[this.currentIndex].stop.id.toString()).style.backgroundColor = 'white';
       this.currentIndex = index;
       this.storageSrv.currentIndex = index;
-      this.storageSrv.refreshErrorObjects.emit('missing ref');
+      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing ref' });
       this.addSinglePopUp(this.refErrorsO[this.currentIndex]);
-      this.mapSrv.map.setView(this.refErrorsO[this.currentIndex]['stop'], 15);
-      document.getElementById(this.refErrorsO[this.currentIndex]['stop'].id).style.backgroundColor = 'lightblue';
+      let stop = this.refErrorsO[this.currentIndex].stop;
+      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+      document.getElementById(this.refErrorsO[this.currentIndex].stop.id.toString()).style.backgroundColor = 'lightblue';
     }
   }
 
@@ -600,6 +613,5 @@ export class ErrorHighlightService {
     }
 
     return missingRefs;
-
   }
 }

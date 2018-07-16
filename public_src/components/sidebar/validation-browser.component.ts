@@ -10,6 +10,8 @@ import { ErrorHighlightService } from '../../services/error-highlight.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { StorageService } from '../../services/storage.service';
+import { ConfService } from '../../services/conf.service';
+import { IPtStop } from '../../core/ptStop.interface';
 
 @Component({
   selector: 'validation-browser',
@@ -34,11 +36,12 @@ export class ValidationBrowserComponent {
   ) {
 
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
-      if (data === 'missing name') {
+      const { typeOfErrorObject } = data;
+      if (typeOfErrorObject === 'missing name') {
         this.nameErrorsO = this.storageSrv.nameErrorsO;
       }
 
-      if (data === 'missing ref') {
+      if (typeOfErrorObject === 'missing ref') {
         this.refErrorsO = this.storageSrv.refErrorsO;
       }
     });
@@ -52,7 +55,7 @@ export class ValidationBrowserComponent {
   public startValidation(): void {
     this.refErrorsO = [];
     this.nameErrorsO = [];
-    if (this.mapSrv.map.getZoom() > 13) {
+    if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForErrors) {
       this.appActions.actSetErrorCorrectionMode('find errors');
       this.overpassSrv.requestNewOverpassData();
     } else {
@@ -104,5 +107,14 @@ export class ValidationBrowserComponent {
    */
   public jumpToLocation(index: number): void {
     this.errorHighlightSrv.jumpToLocation(index);
+  }
+
+  private getNodeType(stop: IPtStop): string {
+    if (stop.tags.public_transport === 'platform') {
+      return 'platform';
+    }
+    if (stop.tags.public_transport === 'stop_position' || stop.tags.highway === 'bus_stop') {
+      return 'stop';
+    }
   }
 }
