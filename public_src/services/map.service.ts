@@ -8,7 +8,7 @@ import * as L from 'leaflet';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
-import {AutoTasksService} from './auto-tasks.service';
+import { AutoTasksService } from './auto-tasks.service';
 
 @Injectable()
 export class MapService {
@@ -36,7 +36,7 @@ export class MapService {
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
-    private autoTask: AutoTasksService,
+    // private autoTask: AutoTasksService,
   ) {
     this.baseMaps = {
       Empty: L.tileLayer('', {
@@ -484,26 +484,40 @@ export class MapService {
    * @param rel
    * @returns {boolean}
    */
-  public showRoute(rel: any): boolean {
+  public showRoute(rel: any, map: L.Map): boolean {
     for (const member of rel.members) {
       if (
         member.type === 'node' &&
         ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
-        this.storageSrv.stopsForRoute.push(member.ref);
+
+        if(member.ref){
+          this.storageSrv.stopsForRoute.push(member.ref);
+        }
+        if(member.id){
+          this.storageSrv.stopsForRoute.push(member.id);
+
+        }
       } else if (
         member.type === 'node' &&
         ['platform', 'platform_entry_only', 'platform_exit_only']
           .indexOf(member.role) > -1
       ) {
-        this.storageSrv.platformsForRoute.push(member.ref);
+        if(member.ref){
+          this.storageSrv.platformsForRoute.push(member.ref);
+        }
+        if(member.id){
+          this.storageSrv.platformsForRoute.push(member.id);
+
+        }
+
       } else if (member.type === 'way') {
         this.storageSrv.waysForRoute.push(member.ref);
       } else if (member.type === 'relation') {
         this.storageSrv.relationsForRoute.push(member.ref);
       }
     }
-
+    console.log('stops', this.storageSrv.stopsForRoute, 'platforms', this.storageSrv.platformsForRoute);
     // setup highlight type
     if (
       this.storageSrv.stopsForRoute.length === 0 &&
@@ -526,6 +540,7 @@ export class MapService {
     const latlngs = Array();
     for (const ref of memberRefs) {
       const latlng: L.LatLngExpression = this.findCoordinates(ref);
+      // console.log('fornd lat lng', latlng);
       if (latlng) {
         latlngs.push(latlng);
       }
@@ -546,12 +561,17 @@ export class MapService {
       this.highlight = L.layerGroup([
         this.highlightStroke,
         this.highlightFill,
-      ]).addTo(this.map);
+      ]).addTo(map);
+      console.log('view set to', latlngs[0]);
+
+      // this.autoTask.map.setView(latlngs[0], 15);
+      // TODO ABOVE set back to map srv map
       return true;
     } else {
       if (rel.members.length <= 1) {
         console.log('LOG (map s.) This is new relation -> do not highlight route');
       } else {
+        console.log('not abel to', rel);
         alert(
           'Problem has occurred while drawing line connecting its members (no added stops?).' +
           ' Please add members and try again.' + '\n\n' + JSON.stringify(rel),
@@ -763,39 +783,16 @@ export class MapService {
    * Renders GeoJson data on the map.
    * @param transformedGeojson
    */
-  public renderTransformedGeojsonData2(transformedGeojson: any): void {
+  public renderTransformedGeojsonData2(transformedGeojson: any, map:L.Map): void {
     console.log('transformed geojson', transformedGeojson);
     this.ptLayer = L.geoJSON(transformedGeojson, {
-      // filter: (feature) => {
-      //   // filter away already rendered elements
-      //   if (this.storageSrv.elementsRendered.has(feature.id)) {
-      //     return false;
-      //   }
-      //   if (this.confSrv.cfgFilterLines) {
-      //     return (
-      //       'public_transport' in feature.properties && feature.id[0] === 'n'
-      //     );
-      //   } else {
-      //     return true;
-      //   }
-      // },
-      // onEachFeature: (feature, layer) => {
-      //   // prevent rendering elements twice later
-      //   // this.storageSrv.elementsRendered.add(feature.id);
-      //   // this.enableDrag(feature, layer);
-      // },
       pointToLayer: (feature, latlng) => {
-        console.log('feature', feature);
+        // console.log('feature', feature);
         return this.stylePoint(feature, latlng);
       },
-      // style: (feature) => {
-      //   return this.styleFeature(feature);
-      // },
     });
-    console.log('LOG (map s.) Adding PTlayer to map again', this.ptLayer);
-
-    console.log('added', this.ptLayer, this.autoTask.map);
-    this.ptLayer.addTo(this.autoTask.map);
-
+    console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayer);
+    console.log('added', this.ptLayer, map);
+    this.ptLayer.addTo(map);
   }
 }

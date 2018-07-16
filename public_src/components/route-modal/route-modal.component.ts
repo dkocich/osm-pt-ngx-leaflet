@@ -1,13 +1,16 @@
-import { AfterContentInit, AfterViewInit, Component, OnInit, ViewChildren} from '@angular/core';
+import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap';
-import { EditService } from '../../services/edit.service';
+
 import { StorageService } from '../../services/storage.service';
 import { MapService } from '../../services/map.service';
 import { WarnService } from '../../services/warn.service';
-import * as L from 'leaflet';
 import { OverpassService } from '../../services/overpass.service';
-import {AutoTasksService} from '../../services/auto-tasks.service';
-import {Subject} from '../../../node_modules/rxjs/Rx';
+import { AutoTasksService } from '../../services/auto-tasks.service';
+
+import * as L from 'leaflet';
+
+
+import { Subject } from 'rxjs/Rx';
 
 @Component({
   selector: 'route-modal',
@@ -20,32 +23,35 @@ import {Subject} from '../../../node_modules/rxjs/Rx';
 
 export class RouteModalComponent {
 
-  public map ;
+  public map: L.Map;
   public routesMap;
-  public routesarr;
+  public newRoutesRefs = [];
   public osmtogeojson: any = require('osmtogeojson');
   private startEventProcessing = new Subject<L.LeafletEvent>();
 
 
-  constructor(public bsModalRef: BsModalRef,
-              // private editSrv: EditService,
-              private storageSrv: StorageService,
+  constructor(private storageSrv: StorageService,
               private mapSrv: MapService,
               private warnSrv: WarnService,
               private overpassSrv: OverpassService,
               private autoTaskSrv: AutoTasksService) {
 
     this.autoTaskSrv.routesRec.subscribe((routes) => {
-      this.routesMap =  routes;
-      Array.from(this.routesMap).map(([key, value]) => { this.routesarr.concat(value); });
+      this.routesMap = routes;
+      console.log('first',routes.keys().next().value);
+      this.highlightRoute2(routes.keys().next().value);
+      routes.forEach((value, key) => {
+        console.log('key', key, 'value', value);
+        this.newRoutesRefs.push(key);
+      });
     });
+
+    console.log('arr to display', this.newRoutesRefs);
   }
 
 
   public ngOnInit(): void {
-    // let x = this.mapSrv.map.getContainer();
-    // document.getElementById('map2').appendChild(x);
-    this.map = L.map('map2', {
+    this.map = L.map('auto-route-modal-map', {
       center: this.mapSrv.map.getCenter(),
       layers: [this.autoTaskSrv.baseMaps.CartoDB_light],
       maxZoom: 22,
@@ -56,50 +62,12 @@ export class RouteModalComponent {
     });
 
     L.control.zoom({ position: 'topright' }).addTo(this.map);
-    // L.control.layers(this.autoTaskSrv.baseMaps).addTo(this.map);
     L.control.scale().addTo(this.map);
-    //
-    // L.control.zoom({ position: 'topright' }).addTo(map);
-    // L.control.layers(this.mapSrv.baseMaps).addTo(map);
-    // L.control.scale().addTo(map);
-
-    // let map = L.map('map2').setView([51.505, -0.09], 13);
-    // // this.mapSrv.map.eachLayer((layer) => {
-    // //   layer.addTo(map);
-    // // });
-    //
-    // L.tileLayer(
-    //   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    //   {
-    //     attribution: `&copy; <a href='https://www.openstreetmap.org/copyright'
-    //         target='_blank' rel='noopener'>
-    //         OpenStreetMap</a>, Tiles courtesy of <a href='https://openstreetmap.org/'
-    //         target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
-    //     maxNativeZoom: 19,
-    //     maxZoom: 22,
-    //   }).addTo(this.map);
-    // this.map.invalidateSize();
-    // L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-    //   attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    //   maxZoom: 18,
-    //   id: 'mapbox.streets',
-    //   accessToken: 'your.mapbox.access.token'
-    // }).addTo(map);
 
     this.autoTaskSrv.map = this.map;
-    let obj: any = {};
-    let elements = [];
-    this.storageSrv.elementsMap.forEach((element) => {
-     console.log('element', element);
-     elements.push(element);
-    });
-    obj.elements = elements;
-    console.log('obj', obj);
-    let transformed = this.osmtogeojson(obj);
-    this.mapSrv.renderTransformedGeojsonData2(transformed);
+    this.autoTaskSrv.renderAlreadyDownloadedData();
 
     this.autoTaskSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
-      console.log('event');
       this.startEventProcessing.next(event);
     });
     this.startEventProcessing
@@ -110,16 +78,11 @@ export class RouteModalComponent {
       });
   }
 
-
-
   private close(): any {
-  // this.bsModalRef.hide();
-  // let x = this.mapSrv.map.getContainer();
-  // document.getElementById('map-c').appendChild(x);
+
   }
 
   private findMissingRoutes(): any {
-    // this.map.invalidateSize();
     if (this.mapSrv.map.getZoom() > 8) {
       this.overpassSrv.requestNewOverpassDataForModalMap(true);
     } else {
@@ -127,17 +90,60 @@ export class RouteModalComponent {
     }
   }
 
-  // public ngAfterViewInit(): void{
-  //   this.map.invalidateSize();
-  // }
-  //
-  // public ngAfterContentInit(): void {
-  //   this.map.invalidateSize();
-  // }
-  //
-  // public invalidate(): void {
-  //    console.log('on sh');
-  //   this.map.invalidateSize();
-  // }
+  private highlightRoute(routesMap: any): any{
+    console.log('this map', this.routesMap);
+    routesMap.forEach((key, value) => {
+      this.newRoutesRefs.push(key);
+      for (let member of value) {
+        if (member.tags.public_transport === 'stop_position'){
+          member.role = 'stop';
+        }
+        if (member.tags.public_transport === 'platform'){
+          member.role = 'platform';
+        }
+      }
+      let rel = {
+        members: value,
+        tags : { name : 'unnammed' },
+      };
+      this.mapSrv.showRoute(rel, this.autoTaskSrv.map);
+    });
+
+   //  for(let member of stops){
+   //    if(member.tags.public_transport === 'stop_position'){
+   //      member.role = 'stop';
+   //    }
+   //    if(member.tags.public_transport === 'platform'){
+   //      member.role = 'platform';
+   //    }
+   //  }
+   // let rel = {
+   //   members: stops,
+   //   tags : { name : 'unnammed' },
+   //  };
+   // this.mapSrv.showRoute(rel, this.autoTaskSrv.map);
+  }
+
+  private highlightRoute2(refKey: any): void{
+    console.log('refkey', typeof refKey);
+    // console.log()
+    let members = this.routesMap.get(refKey);
+    console.log('route map', this.routesMap, 'members', members);
+      for (let member of members) {
+        if (member.tags.public_transport === 'stop_position'){
+          member.role = 'stop';
+        }
+        if (member.tags.public_transport === 'platform'){
+          member.role = 'platform';
+        }
+      }
+      let rel = {
+        members,
+        tags : { name : 'unnammed' },
+      };
+      this.mapSrv.showRoute(rel, this.autoTaskSrv.map);
+      this.autoTaskSrv.map.setView(this.mapSrv.findCoordinates(members[0].id), 15);
+
+  }
 }
 

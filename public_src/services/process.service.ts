@@ -424,7 +424,7 @@ export class ProcessService {
       this.mapSrv.clearHighlight();
     }
     this.storageSrv.clearRouteData();
-    if (this.mapSrv.showRoute(rel)) {
+    if (this.mapSrv.showRoute(rel, this.mapSrv.map)) {
       this.mapSrv.drawTooltipFromTo(rel);
       this.filterStopsByRelation(rel);
       if (zoomToElement) {

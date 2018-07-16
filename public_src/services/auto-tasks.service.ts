@@ -1,17 +1,21 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {ConfService} from './conf.service';
+import { EventEmitter, Injectable } from '@angular/core';
+
+import { ConfService } from './conf.service';
+import { StorageService } from './storage.service';
+import { MapService } from './map.service';
+
 import * as L from 'leaflet';
 
 @Injectable()
 export class AutoTasksService {
   public map;
   public routes = [];
-
   public routesRec: EventEmitter<any> =  new EventEmitter();
   public baseMaps;
   public osmtogeojson: any = require('osmtogeojson');
 
-  constructor(
+  constructor(private storageSrv: StorageService,
+              private mapSrv: MapService
   ) {
     this.baseMaps ={
       Empty: L.tileLayer('', {
@@ -182,18 +186,33 @@ export class AutoTasksService {
   }
 
   public newRoutes(newRoutes: any): any{
-    let refsMap = new Map();
-    for (let stop of newRoutes){
-      if (!refsMap.get(stop.tags.route_ref)) {
-        let arr = [];
-        arr.push(stop);
-        refsMap.set(stop.tags.ref, stop);
-      } else {
-        let arr = refsMap.get(stop.tags.route_ref);
-        arr.push(stop);
-      }
-    }
+    // let refsMap = new Map();
+    // for (let stop of newRoutes){
+    //   if (!refsMap.get(stop.tags.route_ref)) {
+    //     let arr = [];
+    //     arr.push(stop);
+    //     refsMap.set(stop.tags.route_ref, arr);
+    //     console.log('no ref set yet', refsMap);
+    //   } else {
+    //     let arr = refsMap.get(stop.tags.route_ref);
+    //     arr.push(stop);
+    //     console.log('ref set yet', refsMap);
+    //
+    //   }
+    // }
+    // console.log('refsMap', refsMap);
+    this.routesRec.emit(newRoutes);
+  }
 
-    this.routesRec.emit(refsMap);
+  public renderAlreadyDownloadedData(): any{
+    let obj: any = {};
+    let elements = [];
+    this.storageSrv.elementsMap.forEach((element) => {
+      elements.push(element);
+    });
+    obj.elements = elements;
+    console.log('obj', obj);
+    let transformed = this.osmtogeojson(obj);
+    this.mapSrv.renderTransformedGeojsonData2(transformed, this.map);
   }
 }
