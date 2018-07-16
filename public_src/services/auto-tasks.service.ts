@@ -9,7 +9,7 @@ import * as L from 'leaflet';
 @Injectable()
 export class AutoTasksService {
   public map;
-  public routes = [];
+  public routesMap ;
   public routesRec: EventEmitter<any> =  new EventEmitter();
   public baseMaps;
   public osmtogeojson: any = require('osmtogeojson');
@@ -17,6 +17,9 @@ export class AutoTasksService {
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService
   ) {
+    this.routesRec.subscribe((routes) => {
+      this.routesMap = routes;
+    });
     this.baseMaps ={
       Empty: L.tileLayer('', {
         attribution: '',
@@ -174,10 +177,6 @@ export class AutoTasksService {
 
   public onShowModal(): any {
   }
-
-  // public newRoutes(newRoutes: any): any {
-  //   this.routesRec.emit(newRoutes);
-  // }
 
   public renderAlreadyDownloadedData(): any {
     let obj: any = {};
@@ -353,5 +352,31 @@ export class AutoTasksService {
     }
     console.log('not added in routes node refs', notAdded);
     return notAdded;
+  }
+
+  public highlightRoute(refKey: any): void {
+    let members = this.routesMap.get(refKey);
+    if (this.checkMemberCount(members)) {
+      for (let member of members) {
+        if (member.tags.public_transport === 'stop_position') {
+          member.role = 'stop';
+        }
+        if (member.tags.public_transport === 'platform') {
+          member.role = 'platform';
+        }
+      }
+      let rel = {
+        members,
+        tags: { name: 'nil' },
+      };
+      this.mapSrv.showRoute(rel, this.map);
+      this.map.setView(this.mapSrv.findCoordinates(members[0].id), 20);
+    } else {
+      alert('no routes found');
+    }
+  }
+
+  public checkMemberCount(members: any): any {
+    return members.length !== 1;
   }
 }

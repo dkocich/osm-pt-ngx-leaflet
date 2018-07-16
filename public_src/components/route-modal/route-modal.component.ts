@@ -36,7 +36,7 @@ export class RouteModalComponent {
 
     this.autoTaskSrv.routesRec.subscribe((routes) => {
       this.routesMap = routes;
-      if (this.checkMemberCount(routes.values().next().value)) {
+      if (this.autoTaskSrv.checkMemberCount(routes.values().next().value)) {
         this.highlightRoute(routes.keys().next().value);
       }
       routes.forEach((value, key) => {
@@ -86,29 +86,15 @@ export class RouteModalComponent {
   }
 
   private highlightRoute(refKey: any): void {
-    let members = this.routesMap.get(refKey);
-    if (this.checkMemberCount(members)) {
-      for (let member of members) {
-        if (member.tags.public_transport === 'stop_position') {
-          member.role = 'stop';
-        }
-        if (member.tags.public_transport === 'platform') {
-          member.role = 'platform';
-        }
-      }
-      let rel = {
-        members,
-        tags: { name: 'nil' },
-      };
-      this.mapSrv.showRoute(rel, this.autoTaskSrv.map);
-      this.autoTaskSrv.map.setView(this.mapSrv.findCoordinates(members[0].id), 20);
-    } else {
-      this.message = 'no routes found';
-    }
+    this.autoTaskSrv.highlightRoute(refKey);
   }
 
-  private checkMemberCount(members: any): any{
-    console.log('members length', members.length, members);
-    return members.length !== 1;
+  private save(): void{
+
   }
+
+  private cancel(): void{
+
+  }
+
 }

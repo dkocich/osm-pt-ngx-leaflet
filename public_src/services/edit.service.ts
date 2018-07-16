@@ -33,14 +33,12 @@ export class EditService {
   ) {
 
     this.modalService.onShown.subscribe(() => {
-      console.log('shown');
       this.autoTaskSrv.onShownModal();
     });
-
-    this.modalService.onShow.subscribe(() => {
-      console.log('shown');
-      this.autoTaskSrv.onShowModal();
-    });
+    //
+    // this.modalService.onShow.subscribe(() => {
+    //   this.autoTaskSrv.onShowModal();
+    // });
 
 
     // local events
