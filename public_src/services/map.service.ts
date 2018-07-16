@@ -8,7 +8,6 @@ import * as L from 'leaflet';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
-import { AutoTasksService } from './auto-tasks.service';
 
 @Injectable()
 export class MapService {
@@ -36,7 +35,6 @@ export class MapService {
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
-    // private autoTask: AutoTasksService,
   ) {
     this.baseMaps = {
       Empty: L.tileLayer('', {
@@ -491,24 +489,22 @@ export class MapService {
         ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
 
-        if(member.ref){
+        if (member.ref) {
           this.storageSrv.stopsForRoute.push(member.ref);
         }
-        if(member.id){
+        if (member.id) {
           this.storageSrv.stopsForRoute.push(member.id);
-
         }
       } else if (
         member.type === 'node' &&
         ['platform', 'platform_entry_only', 'platform_exit_only']
           .indexOf(member.role) > -1
       ) {
-        if(member.ref){
+        if (member.ref) {
           this.storageSrv.platformsForRoute.push(member.ref);
         }
-        if(member.id){
+        if (member.id) {
           this.storageSrv.platformsForRoute.push(member.id);
-
         }
 
       } else if (member.type === 'way') {
@@ -517,7 +513,7 @@ export class MapService {
         this.storageSrv.relationsForRoute.push(member.ref);
       }
     }
-    console.log('stops', this.storageSrv.stopsForRoute, 'platforms', this.storageSrv.platformsForRoute);
+
     // setup highlight type
     if (
       this.storageSrv.stopsForRoute.length === 0 &&
@@ -540,7 +536,6 @@ export class MapService {
     const latlngs = Array();
     for (const ref of memberRefs) {
       const latlng: L.LatLngExpression = this.findCoordinates(ref);
-      // console.log('fornd lat lng', latlng);
       if (latlng) {
         latlngs.push(latlng);
       }
@@ -562,16 +557,11 @@ export class MapService {
         this.highlightStroke,
         this.highlightFill,
       ]).addTo(map);
-      console.log('view set to', latlngs[0]);
-
-      // this.autoTask.map.setView(latlngs[0], 15);
-      // TODO ABOVE set back to map srv map
       return true;
     } else {
       if (rel.members.length <= 1) {
         console.log('LOG (map s.) This is new relation -> do not highlight route');
       } else {
-        console.log('not abel to', rel);
         alert(
           'Problem has occurred while drawing line connecting its members (no added stops?).' +
           ' Please add members and try again.' + '\n\n' + JSON.stringify(rel),
@@ -765,8 +755,6 @@ export class MapService {
   private handleMarkerClick(feature: any): void {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     this.markerClick.emit(featureId);
-    // explores leaflet element
-    // this.popupBtnClick.emit([featureType, featureId]);
   }
 
   /**
@@ -784,15 +772,12 @@ export class MapService {
    * @param transformedGeojson
    */
   public renderTransformedGeojsonData2(transformedGeojson: any, map:L.Map): void {
-    console.log('transformed geojson', transformedGeojson);
     this.ptLayer = L.geoJSON(transformedGeojson, {
       pointToLayer: (feature, latlng) => {
-        // console.log('feature', feature);
         return this.stylePoint(feature, latlng);
       },
     });
     console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayer);
-    console.log('added', this.ptLayer, map);
     this.ptLayer.addTo(map);
   }
 }

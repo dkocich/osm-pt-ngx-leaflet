@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap';
 
 import { StorageService } from '../../services/storage.service';
 import { MapService } from '../../services/map.service';
@@ -8,7 +7,6 @@ import { OverpassService } from '../../services/overpass.service';
 import { AutoTasksService } from '../../services/auto-tasks.service';
 
 import * as L from 'leaflet';
-
 
 import { Subject } from 'rxjs/Rx';
 
@@ -28,7 +26,7 @@ export class RouteModalComponent {
   public newRoutesRefs = [];
   public osmtogeojson: any = require('osmtogeojson');
   private startEventProcessing = new Subject<L.LeafletEvent>();
-
+  public message = '';
 
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,
@@ -38,17 +36,14 @@ export class RouteModalComponent {
 
     this.autoTaskSrv.routesRec.subscribe((routes) => {
       this.routesMap = routes;
-      console.log('first',routes.keys().next().value);
-      this.highlightRoute2(routes.keys().next().value);
+      if (this.checkMemberCount(routes.values().next().value)) {
+        this.highlightRoute(routes.keys().next().value);
+      }
       routes.forEach((value, key) => {
-        console.log('key', key, 'value', value);
         this.newRoutesRefs.push(key);
       });
     });
-
-    console.log('arr to display', this.newRoutesRefs);
-  }
-
+    }
 
   public ngOnInit(): void {
     this.map = L.map('auto-route-modal-map', {
@@ -73,7 +68,7 @@ export class RouteModalComponent {
     this.startEventProcessing
       .debounceTime(500)
       .distinctUntilChanged()
-      .subscribe((event: L.LeafletEvent) => {
+      .subscribe(() => {
         this.overpassSrv.initDownloaderForModalMap(this.autoTaskSrv.map);
       });
   }
@@ -90,60 +85,30 @@ export class RouteModalComponent {
     }
   }
 
-  private highlightRoute(routesMap: any): any{
-    console.log('this map', this.routesMap);
-    routesMap.forEach((key, value) => {
-      this.newRoutesRefs.push(key);
-      for (let member of value) {
-        if (member.tags.public_transport === 'stop_position'){
-          member.role = 'stop';
-        }
-        if (member.tags.public_transport === 'platform'){
-          member.role = 'platform';
-        }
-      }
-      let rel = {
-        members: value,
-        tags : { name : 'unnammed' },
-      };
-      this.mapSrv.showRoute(rel, this.autoTaskSrv.map);
-    });
-
-   //  for(let member of stops){
-   //    if(member.tags.public_transport === 'stop_position'){
-   //      member.role = 'stop';
-   //    }
-   //    if(member.tags.public_transport === 'platform'){
-   //      member.role = 'platform';
-   //    }
-   //  }
-   // let rel = {
-   //   members: stops,
-   //   tags : { name : 'unnammed' },
-   //  };
-   // this.mapSrv.showRoute(rel, this.autoTaskSrv.map);
-  }
-
-  private highlightRoute2(refKey: any): void{
-    console.log('refkey', typeof refKey);
-    // console.log()
+  private highlightRoute(refKey: any): void {
     let members = this.routesMap.get(refKey);
-    console.log('route map', this.routesMap, 'members', members);
+    if (this.checkMemberCount(members)) {
       for (let member of members) {
-        if (member.tags.public_transport === 'stop_position'){
+        if (member.tags.public_transport === 'stop_position') {
           member.role = 'stop';
         }
-        if (member.tags.public_transport === 'platform'){
+        if (member.tags.public_transport === 'platform') {
           member.role = 'platform';
         }
       }
       let rel = {
         members,
-        tags : { name : 'unnammed' },
+        tags: { name: 'nil' },
       };
       this.mapSrv.showRoute(rel, this.autoTaskSrv.map);
-      this.autoTaskSrv.map.setView(this.mapSrv.findCoordinates(members[0].id), 15);
+      this.autoTaskSrv.map.setView(this.mapSrv.findCoordinates(members[0].id), 20);
+    } else {
+      this.message = 'no routes found';
+    }
+  }
 
+  private checkMemberCount(members: any): any{
+    console.log('members length', members.length, members);
+    return members.length !== 1;
   }
 }
-

@@ -11,20 +11,13 @@
         <div id="auto-route-modal-map">
         </div>
       </div>
-    <div class="col-md-5 full-height">
-      <button (click)="findMissingRoutes()">Find missing Routes</button>
-      <!--<p *ngFor="let arr of routesarr">-->
-        <!--{{arr.id}}-->
-      <!--</p>-->
-    </div>
-
-      <ul class="list-group" *ngIf="newRoutesRefs.length !== 0">
-        <li class="list-group-item" *ngFor="let ref of newRoutesRefs" (click)="highlightRoute2(ref)">{{ref}}</li>
-      </ul>
-    <!--<div id = "list">-->
-
-    <!--</div>-->
-
+      <div class="col-md-5 full-height">
+        <button (click)="findMissingRoutes()">Find missing Routes</button>
+        <p>{{message}}</p>
+        <ul class="list-group" *ngIf="newRoutesRefs.length !== 0">
+          <li class="list-group-item" *ngFor="let ref of newRoutesRefs" (click)="highlightRoute(ref)">Route Ref: {{ref}}</li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="modal-footer">
