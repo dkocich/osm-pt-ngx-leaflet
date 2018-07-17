@@ -33,8 +33,8 @@
   </accordion-group>
   <accordion-group #a3 [isOpen]="true" *ngIf="editing$ | async">
     <div accordion-heading class="text-center text-uppercase">
-      {{ 'Validation' | translate }}
-      <i class="pull-right float-xs-right fa"
+      {{ 'Suggestions for quick edit' | translate }}
+      <i class="pull-right float-xs-right fa " aria-hidden="true"
          [ngClass]="{'fa-chevron-down': a2?.isOpen, 'fa-chevron-right': !a2?.isOpen}"></i>
     </div>
     <validation-browser [suggestionsBrowserOptions] = 'suggestionsBrowserOptions' ></validation-browser>
