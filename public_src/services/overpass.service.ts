@@ -20,7 +20,7 @@ import { Utils } from '../core/utils.class';
 
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
-import {AppActions} from '../store/app/actions';
+import { AppActions } from '../store/app/actions';
 
 @Injectable()
 export class OverpassService {
@@ -128,13 +128,35 @@ export class OverpassService {
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
-          if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'find errors')) {
-            let toDownload = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
-            if (this.errorHighlightSrv.isMobileDevice() || toDownload.length === 0) {
-              this.errorHighlightSrv.isDataDownloaded.emit(true);
-              this.appActions.actSetErrorCorrectionMode('menu');
+          let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
+          if (errorCorrectionMode) {
+            if (errorCorrectionMode.refSuggestions === null) {
+              this.errorHighlightSrv.countNameErrors();
+              this.appActions.actSetErrorCorrectionMode({
+                nameSuggestions: {
+                  found          : true,
+                  startCorrection: false,
+                },
+                refSuggestions : null,
+              });
             } else {
+              let toDownload = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
+              if (this.errorHighlightSrv.isMobileDevice() || toDownload.length === 0) {
+                this.errorHighlightSrv.countNameErrors();
+                this.errorHighlightSrv.countRefErrors();
+                this.appActions.actSetErrorCorrectionMode({
+                  nameSuggestions: {
+                    found          : true,
+                    startCorrection: false,
+                  },
+                  refSuggestions : {
+                    found          : true,
+                    startCorrection: false,
+                  },
+                });
+              } else {
                 this.downloadMultipleNodeData(toDownload);
+              }
             }
           }
             // FIXME
@@ -793,8 +815,18 @@ export class OverpassService {
               this.storageSrv.elementsMap.set(element.id, element); }
           }
 
-          this.appActions.actSetErrorCorrectionMode('menu');
-          this.errorHighlightSrv.isDataDownloaded.emit(true);
+          this.appActions.actSetErrorCorrectionMode({
+            nameSuggestions: {
+              found          : true,
+              startCorrection: false,
+            },
+            refSuggestions : {
+              found          : true,
+              startCorrection: false,
+            },
+          });
+          this.errorHighlightSrv.countNameErrors();
+          this.errorHighlightSrv.countRefErrors();
         },
         (err) => {
           this.warnSrv.showError();

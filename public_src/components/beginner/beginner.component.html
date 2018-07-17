@@ -25,10 +25,10 @@
   </accordion-group>
   <accordion-group #a3 [isOpen]="true" *ngIf="shouldView('validation-browser')">
     <div accordion-heading class="text-center text-uppercase">
-      {{ 'Validation' | translate }}
+      {{ 'Suggestions for quick edit' | translate }}
       <i class="pull-right float-xs-right fa"
          [ngClass]="{'fa-chevron-down': a2?.isOpen, 'fa-chevron-right': !a2?.isOpen}"></i>
     </div>
-    <validation-browser></validation-browser>
+    <validation-browser [suggestionsBrowserOptions]='suggestionsBrowserOptions'></validation-browser>
   </accordion-group>
 </accordion>

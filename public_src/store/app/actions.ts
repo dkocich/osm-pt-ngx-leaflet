@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { Action } from 'redux';
 import { IAppState } from '../model';
+import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
 
 @Injectable()
 export class AppActions {
@@ -44,7 +45,7 @@ export class AppActions {
     return this.ngRedux.dispatch({ type: AppActions.SET_GOOD_CONNECT_MODE, payload });
   }
 
-  public actSetErrorCorrectionMode = (payload: string): Action => {
+  public actSetErrorCorrectionMode = (payload: ISuggestionsBrowserOptions): Action => {
     return this.ngRedux.dispatch({ type: AppActions.SET_ERROR_CORRECTION_MODE, payload });
   }
 

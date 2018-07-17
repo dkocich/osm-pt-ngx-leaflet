@@ -4,7 +4,7 @@
   </div>
   <div class="modal-body text-center">
     <h4 *ngIf="errorObject.corrected === 'true'">
-      {{'Already entered name' | translate }} : {{errorObject.tags.name}}
+      {{'Already entered name' | translate }} : {{errorObject.stop.tags.name}}
     </h4>
     <form>
       <div class="form-group">
@@ -33,7 +33,7 @@
 
 
 <ng-container *ngIf="error === 'missing ref tag'">
-  <div class="modal-header">
+    <div class="modal-header">
     <h4 class="modal-title pull-left">{{'Route References Correction' | translate }}</h4>
   </div>
   <div class="modal-body text-center">

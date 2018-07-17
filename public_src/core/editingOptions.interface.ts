@@ -10,3 +10,12 @@ export interface ITagBrowserOptions {
   limitedKeys: boolean;
   makeKeysReadOnly: boolean;
 }
+
+export interface ISuggestionsBrowserOptions {
+  nameSuggestions: ISuggestions;
+  refSuggestions: ISuggestions;
+}
+export interface ISuggestions {
+  found: boolean;
+  startCorrection: boolean;
+}

@@ -22,7 +22,6 @@ import { IErrorObject } from '../../core/errorObject.interface';
 })
 
 export class ModalComponent {
-
   public suggestedNames: string[];
   public error: string;
 
@@ -47,7 +46,6 @@ export class ModalComponent {
               private mapSrv: MapService,
               private warnSrv: WarnService,
               ) { }
-
   /***
    * Executed on click of save button for adding new name tag
    * @param {string} name
@@ -78,7 +76,7 @@ export class ModalComponent {
    * Saves ref correction
    */
   private saveRefTag(): void {
-    let refsForTag = [];
+    let refsForTag        = [];
     let refString: string = '';
 
     for (let rel of this.addedMissingSuggestionsRefs) {
@@ -88,11 +86,20 @@ export class ModalComponent {
       refsForTag.push(rel.tags.ref);
     }
     refsForTag = refsForTag.concat(this.newAddedRefs);
+    refsForTag = refsForTag.filter((v, i, a) => {
+      return a.indexOf(v) === i;
+    }) ;
+    console.log('ref tag', refsForTag);
+    refsForTag.sort();
     if (refsForTag.length !== 0) {
       refsForTag.forEach((item, index) => {
-        refString = (index !== refsForTag.length - 1) ? refString + item + ', ' : refString + item;
+        refString = (index !== refsForTag.length - 1) ? refString + item + ';' : refString + item;
       });
-      refString = this.errorObject.stop.tags.route_ref + refString;
+
+      if (this.errorObject.stop.tags.route_ref) {
+        refString = this.errorObject.stop.tags.route_ref + ';' + refString;
+      }
+
       this.createChangeForRefTag(refString);
       this.addToMembers(this.addedFromNearbySuggestionsRefs);
       this.bsModalRef.hide();
@@ -102,7 +109,7 @@ export class ModalComponent {
         return popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId;
       });
       this.checkErrorIfCorrected();
-      this.storageSrv.refreshErrorObjects.emit({typeOfErrorObject: 'missing ref'});
+      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing ref' });
       this.warnSrv.showGenericSuccess();
     } else {
       alert('Nothing to save');
@@ -163,7 +170,7 @@ export class ModalComponent {
 
   /***
    * Remove the added ref value (added from suggestions (missing) by user)
-   * @param ref
+   * @param toRemoveRel
    */
   private removeMissingSuggestedRefValue(toRemoveRel: any): void {
     let index ;
@@ -187,7 +194,7 @@ export class ModalComponent {
 
   /***
    * Remove the added ref value (added from suggestions (nearby) by user)
-   * @param ref
+   * @param toRemoveRel
    */
   private removeNearbySuggestedRefValue(toRemoveRel: any): void {
 
