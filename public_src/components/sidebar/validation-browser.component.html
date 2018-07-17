@@ -16,22 +16,40 @@
   </div>
 
   <div class="content panel panel-body panel-default scrollable-panel"
-       *ngIf="(errorCorrectionMode$ | async) === 'menu' || (errorCorrectionMode$ | async) === 'missing name tag'">
+       *ngIf="(errorCorrectionMode$ | async) === 'menu' || (errorCorrectionMode$ | async) === 'missing name tag' || (errorCorrectionMode$ | async) === 'missing ref tag'">
     <ng-container *ngIf="(errorCorrectionMode$ | async) === 'menu'">
       <ul class="list-group">
         <li class="list-group-item" *ngIf="nameErrorsO"> {{nameErrorsO.length}} {{'missing name tags' | translate }}
           <button (click)="startNameCorrection()">{{'Start Correction' | translate }}</button>
         </li>
+        <li class="list-group-item" *ngIf="refErrorsO"> {{refErrorsO.length}} {{'missing ref tags' | translate }}
+          <button (click)="startRefCorrection()">{{'Start Correction' | translate }}</button>
+        </li>
       </ul>
     </ng-container>
+
     <ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing name tag'">
       <ul class="list-group">
-        <ng-container *ngFor="let error of nameErrorsO; let i = index">
-          <li (click)="jumpToLocation(i)" id='{{ error.stop.id }}' class="list-group-item"
+        <ng-container *ngFor="let nameError of nameErrorsO; let i = index">
+          <li (click)="jumpToLocation(i)" id='{{ nameError.stop.id }}' class="list-group-item"
               [style.background-color]="i===0 ? 'lightblue':'white'">
-            Location {{i + 1}} ({{error['stop'].lat}}, {{error['stop'].lon}})
-            <i *ngIf="error['stop'].isCorrected" class="fa fa-check pull-right" aria-hidden="true"></i>
-            <i *ngIf="!error['stop'].isCorrected" class="fa fa-times pull-right" aria-hidden="true"></i>
+            {{i +1}}. {{getNodeType(nameError.stop)}}
+            <i *ngIf="nameError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="nameError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
+          </li>
+        </ng-container>
+      </ul>
+    </ng-container>
+
+    <ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing ref tag'">
+      <ul class="list-group">
+        <ng-container *ngFor="let refError of refErrorsO; let i = index">
+          <li (click)="jumpToLocation(i)" id='{{ refError.stop.id }}' class="list-group-item"
+              [style.background-color]="i===0 ? 'lightblue':'white'">
+            {{i +1}}. {{getNodeType(refError.stop)}}
+            <i *ngIf="refError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="refError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
+            <i *ngIf="refError.corrected === 'partial'" class="fa fa-question pull-right" aria-hidden="true"></i>
           </li>
         </ng-container>
       </ul>

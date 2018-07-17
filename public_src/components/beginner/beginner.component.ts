@@ -5,11 +5,12 @@ import { IRouteBrowserOptions, ITagBrowserOptions } from '../../core/editingOpti
 
 import { Observable } from 'rxjs';
 
-import { select } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 import { AppActions } from '../../store/app/actions';
 
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
+import {IAppState} from '../../store/model';
 
 @Component({
   providers  : [],
@@ -41,14 +42,11 @@ export class BeginnerComponent {
     allowedKeys     : this.expectedKeys.filter(this.filterRouteKeysForBeginner),
     makeKeysReadOnly: true,
   };
-  public validationOptions : any = {
-    missingNameTag : true,
-    missingRefTag : true,
-  };
 
   constructor(private appActions: AppActions,
               private processSrv: ProcessService,
-              private storageSrv: StorageService) {
+              private storageSrv: StorageService,
+              private ngRedux: NgRedux<IAppState>) {
   }
 
   /***
@@ -78,4 +76,33 @@ export class BeginnerComponent {
     this.processSrv.refreshSidebarView('tag');
     this.processSrv.exploreStop(this.storageSrv.currentElement, false, true, true);
   }
+
+  public shouldView(windowName: string): boolean {
+
+    let beginnerView =  this.ngRedux.getState()['app']['beginnerView'];
+    let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
+    let editing = this.ngRedux.getState()['app']['editing'];
+
+    switch (windowName) {
+
+       case 'route-browser':
+         return (beginnerView === 'stop' ||
+           errorCorrectionMode === 'find errors' ||
+           errorCorrectionMode === 'menu' ||
+           errorCorrectionMode === null);
+
+      case 'tag-browser':
+        return (errorCorrectionMode === 'find errors' ||
+          errorCorrectionMode === 'menu' ||
+          errorCorrectionMode === null);
+
+      case 'validation-browser':
+        return (beginnerView === 'stop' && editing);
+
+      default:
+        return false;
+    }
+
+  }
+
 }

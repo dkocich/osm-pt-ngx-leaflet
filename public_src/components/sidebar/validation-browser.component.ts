@@ -1,13 +1,17 @@
 import { AppActions } from '../../store/app/actions';
-import { BsModalService } from 'ngx-bootstrap';
+
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
+import { Observable } from 'rxjs';
+
+import { BsModalService } from 'ngx-bootstrap';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { StorageService } from '../../services/storage.service';
+import { ConfService } from '../../services/conf.service';
+import { IPtStop } from '../../core/ptStop.interface';
 
 @Component({
   selector: 'validation-browser',
@@ -32,8 +36,13 @@ export class ValidationBrowserComponent {
   ) {
 
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
-      if (data === 'missing name') {
+      const { typeOfErrorObject } = data;
+      if (typeOfErrorObject === 'missing name') {
         this.nameErrorsO = this.storageSrv.nameErrorsO;
+      }
+
+      if (typeOfErrorObject === 'missing ref') {
+        this.refErrorsO = this.storageSrv.refErrorsO;
       }
     });
 
@@ -46,8 +55,8 @@ export class ValidationBrowserComponent {
   public startValidation(): void {
     this.refErrorsO = [];
     this.nameErrorsO = [];
-    if (this.mapSrv.map.getZoom() > 11) {
-      this.appActions.actSetErrorCorrectionMode('menu');
+    if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForErrors) {
+      this.appActions.actSetErrorCorrectionMode('find errors');
       this.overpassSrv.requestNewOverpassData();
     } else {
       alert('Not sufficient zoom level');
@@ -63,6 +72,10 @@ export class ValidationBrowserComponent {
     this.errorHighlightSrv.missingTagError('name');
   }
 
+  public startRefCorrection(): any {
+    this.appActions.actSetErrorCorrectionMode('missing ref tag');
+    this.errorHighlightSrv.missingTagError('ref');
+  }
   /**
    * Moves to the next location
    */
@@ -93,7 +106,15 @@ export class ValidationBrowserComponent {
    * @param {number} index
    */
   public jumpToLocation(index: number): void {
-    console.log('sad');
     this.errorHighlightSrv.jumpToLocation(index);
+  }
+
+  private getNodeType(stop: IPtStop): string {
+    if (stop.tags.public_transport === 'platform') {
+      return 'platform';
+    }
+    if (stop.tags.public_transport === 'stop_position' || stop.tags.highway === 'bus_stop') {
+      return 'stop';
+    }
   }
 }
