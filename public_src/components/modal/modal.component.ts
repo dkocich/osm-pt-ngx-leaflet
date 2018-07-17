@@ -78,7 +78,7 @@ export class ModalComponent {
    * Saves ref correction
    */
   private saveRefTag(): void {
-    let refsForTag = [];
+    let refsForTag        = [];
     let refString: string = '';
 
     for (let rel of this.addedMissingSuggestionsRefs) {
@@ -90,9 +90,13 @@ export class ModalComponent {
     refsForTag = refsForTag.concat(this.newAddedRefs);
     if (refsForTag.length !== 0) {
       refsForTag.forEach((item, index) => {
-        refString = (index !== refsForTag.length - 1) ? refString + item + ', ' : refString + item;
+        refString = (index !== refsForTag.length - 1) ? refString + item + ';' : refString + item;
       });
-      refString = this.errorObject.stop.tags.route_ref + refString;
+
+      if (this.errorObject.stop.tags.route_ref) {
+        refString = this.errorObject.stop.tags.route_ref + refString;
+      }
+
       this.createChangeForRefTag(refString);
       this.addToMembers(this.addedFromNearbySuggestionsRefs);
       this.bsModalRef.hide();
