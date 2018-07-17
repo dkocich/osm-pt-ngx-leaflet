@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
-import {IRouteBrowserOptions, ISuggestionsBrowserOptions, ITagBrowserOptions} from '../../core/editingOptions.interface';
+import { IRouteBrowserOptions, ISuggestionsBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interface';
 
-import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
+
+import {  select } from '@angular-redux/store';
 
 @Component({
   providers  : [],

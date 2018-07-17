@@ -148,10 +148,6 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
    */
   public quit(): void {
     this.errorHighlightSrv.quit();
-    this.storageSrv.currentElement = null;
-    this.storageSrv.currentElementsChange.emit(
-      JSON.parse(JSON.stringify(null)),
-    );
   }
 
   /**

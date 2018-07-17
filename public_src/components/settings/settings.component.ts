@@ -3,6 +3,8 @@ import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
 
+import { ErrorHighlightService } from '../../services/error-highlight.service';
+
 @Component({
   selector: 'settings',
   styleUrls: [
@@ -17,6 +19,7 @@ export class SettingsComponent {
 
   constructor(
     public appActions: AppActions,
+    private errorHighlightSrv: ErrorHighlightService,
   ) {
     //
   }
@@ -27,6 +30,8 @@ export class SettingsComponent {
   }
 
   public changeExpMode(advancedExpMode: boolean): void {
+    this.appActions.actToggleSwitchMode(false);
+    this.errorHighlightSrv.quit();
     this.appActions.actSetAdvancedExpMode(advancedExpMode);
     localStorage.setItem('advancedMode', JSON.stringify(advancedExpMode));
   }

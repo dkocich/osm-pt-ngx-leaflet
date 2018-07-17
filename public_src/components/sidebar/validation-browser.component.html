@@ -9,8 +9,7 @@
       <ng-container *ngIf="(switchMode$ | async)">
         <button class="btn btn-default" type="submit" id='prevLoc' (click)="previousLocation()"><i
           class="fa fa-arrow-left" aria-hidden="true"></i></button>
-        <button class="btn btn-default" type="submit" id='nextLoc' (click)="nextLocation()"><i class="fa fa-arrow-right"
-                                                                                               aria-hidden="true"></i>
+        <button class="btn btn-default" type="submit" id='nextLoc' (click)="nextLocation()"><i class="fa fa-arrow-right" aria-hidden="true"></i>
         </button>
         <button class="btn btn-default pull-right" type="submit" id='quit' (click)="quit()">{{'Quit' | translate }}
         </button>
@@ -20,25 +19,42 @@
   <ng-container>
 
     <ng-container *ngIf="(errorCorrectionMode$ | async) as errorCorrectMode">
-      <ng-container *ngIf=" (errorCorrectMode.refSuggestions ? (!errorCorrectMode.refSuggestions.startCorrection) : true) &&
+      <ng-container *ngIf="(errorCorrectMode.refSuggestions ? (!errorCorrectMode.refSuggestions.startCorrection) : true) &&
       !errorCorrectMode.nameSuggestions.startCorrection">
         <ul class="list-group">
-          <li class="list-group-item" *ngIf="errorCorrectMode.nameSuggestions.found"> {{nameErrorsO.length}} {{'missing
-            name tags' | translate }}
-            <button (click)="startNameCorrection()">{{'Start Correction' | translate }}</button>
+
+          <li class="list-group-item clearfix" *ngIf="errorCorrectMode.nameSuggestions.found">
+            <ng-container *ngIf="nameErrorsO.length !==0">
+              {{nameErrorsO.length}} {{'missing name tags' | translate }}
+              <button class="btn btn-default pull-right" (click)="startNameCorrection()">{{'Start Correction' | translate }}
+              </button>
+            </ng-container>
+            <ng-container *ngIf="nameErrorsO.length ===0">
+              No missing name suggestions available
+            </ng-container>
+
           </li>
 
-          <li class="list-group-item" *ngIf="errorCorrectMode.refSuggestions &&
-      errorCorrectMode.refSuggestions.found"> {{refErrorsO.length}} {{'missing ref tags' | translate }}
-            <button (click)="startRefCorrection()">{{'Start Correction' | translate }}</button>
+          <li class="list-group-item clearfix" *ngIf="errorCorrectMode.refSuggestions &&
+      errorCorrectMode.refSuggestions.found">
+            <ng-container *ngIf="refErrorsO.length !==0">
+              {{refErrorsO.length}} {{'missing ref tags' | translate }}
+              <button class="btn btn-default pull-right" (click)="startRefCorrection()">{{'Start Correction' | translate
+                }}
+              </button>
+            </ng-container>
+            <ng-container *ngIf="refErrorsO.length ===0">
+              No missing ref suggestions available
+            </ng-container>
           </li>
+
         </ul>
       </ng-container>
     </ng-container>
 
     <ng-container *ngIf="(errorCorrectionMode$ | async) as errorCorrectMode">
       <ng-container *ngIf="errorCorrectMode.nameSuggestions.startCorrection">
-        <ul class="list-group">
+        <ul class="list-group scrollable-panel">
           <ng-container *ngFor="let nameError of nameErrorsO; let i = index">
             <li (click)="jumpToLocation(i)" id='{{ nameError.stop.id }}-name-error-list-id' class="list-group-item"
                 [style.background-color]="i===0 ? 'lightblue':'white'">
@@ -53,7 +69,7 @@
 
     <ng-container *ngIf="(errorCorrectionMode$ | async) as errorCorrectMode">
       <ng-container *ngIf="errorCorrectMode.refSuggestions && errorCorrectMode.refSuggestions.startCorrection">
-        <ul class="list-group">
+        <ul class="list-group scrollable-panel">
           <ng-container *ngFor="let refError of refErrorsO; let i = index">
             <li (click)="jumpToLocation(i)" id='{{ refError.stop.id }}-ref-error-list-id' class="list-group-item"
                 [style.background-color]="i===0 ? 'lightblue':'white'">

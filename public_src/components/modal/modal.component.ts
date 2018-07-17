@@ -89,7 +89,6 @@ export class ModalComponent {
     refsForTag = refsForTag.filter((v, i, a) => {
       return a.indexOf(v) === i;
     }) ;
-    console.log('ref tag', refsForTag);
     refsForTag.sort();
     if (refsForTag.length !== 0) {
       refsForTag.forEach((item, index) => {

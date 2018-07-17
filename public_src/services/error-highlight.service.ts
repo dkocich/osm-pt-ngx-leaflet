@@ -417,7 +417,10 @@ export class ErrorHighlightService {
     this.appActions.actToggleSwitchMode(false);
     this.processSrv.refreshSidebarView('cancel selection');
     this.mapSrv.removePopUps();
-
+    this.storageSrv.currentElement = null;
+    this.storageSrv.currentElementsChange.emit(
+      JSON.parse(JSON.stringify(null)),
+    );
     }
   /***
    * returns names of nearby nodes
