@@ -130,49 +130,35 @@ export class OverpassService {
           this.warnSrv.showSuccess();
           let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
           if (errorCorrectionMode) {
-          if (errorCorrectionMode.refSuggestions === null) {
-            // TODO below
-            this.errorHighlightSrv.countNameErrors();
-            // this.errorHighlightSrv.isDataDownloaded.emit('name');
-            this.appActions.actSetErrorCorrectionMode({
-              nameSuggestions: {
-                found          : true,
-                startCorrection: false,
-              },
-              refSuggestions : null,
-            });
-          } else {
-            let toDownload = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
-            if (this.errorHighlightSrv.isMobileDevice() || toDownload.length === 0) {
-              // TODO
-              // this.errorHighlightSrv.isDataDownloaded.emit('ref');
+            if (errorCorrectionMode.refSuggestions === null) {
               this.errorHighlightSrv.countNameErrors();
-              this.errorHighlightSrv.countRefErrors();
               this.appActions.actSetErrorCorrectionMode({
                 nameSuggestions: {
                   found          : true,
                   startCorrection: false,
                 },
-                refSuggestions : {
-                  found          : true,
-                  startCorrection: false,
-                },
+                refSuggestions : null,
               });
             } else {
-              this.downloadMultipleNodeData(toDownload);
+              let toDownload = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
+              if (this.errorHighlightSrv.isMobileDevice() || toDownload.length === 0) {
+                this.errorHighlightSrv.countNameErrors();
+                this.errorHighlightSrv.countRefErrors();
+                this.appActions.actSetErrorCorrectionMode({
+                  nameSuggestions: {
+                    found          : true,
+                    startCorrection: false,
+                  },
+                  refSuggestions : {
+                    found          : true,
+                    startCorrection: false,
+                  },
+                });
+              } else {
+                this.downloadMultipleNodeData(toDownload);
+              }
             }
           }
-          }
-          //
-          // if ((this.ngRedux.getState()['app']['errorCorrectionMode'] === 'find ref errors')) {
-          //   let toDownload = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
-          //   if (this.errorHighlightSrv.isMobileDevice() || toDownload.length === 0) {
-          //     this.errorHighlightSrv.isDataDownloaded.emit('ref');
-          //     this.appActions.actSetErrorCorrectionMode('menu');
-          //   } else {
-          //     this.downloadMultipleNodeData(toDownload);
-          //   }
-          // }
             // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
@@ -839,7 +825,6 @@ export class OverpassService {
               startCorrection: false,
             },
           });
-          // this.errorHighlightSrv.isDataDownloaded.emit('ref');
           this.errorHighlightSrv.countNameErrors();
           this.errorHighlightSrv.countRefErrors();
         },

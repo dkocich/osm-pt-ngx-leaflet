@@ -11,13 +11,6 @@ export interface ITagBrowserOptions {
   makeKeysReadOnly: boolean;
 }
 
-// export interface ISuggestionsBrowserOptions {
-//   name: boolean;
-//   ref: boolean;
-//
-//
-// }
-
 export interface ISuggestionsBrowserOptions {
   nameSuggestions: ISuggestions;
   refSuggestions: ISuggestions;
