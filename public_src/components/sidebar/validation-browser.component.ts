@@ -1,8 +1,9 @@
-import { AppActions } from '../../store/app/actions';
-
-import { Component } from '@angular/core';
-import { select } from '@angular-redux/store';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from '../../store/model';
+import { AppActions } from '../../store/app/actions';
 
 import { BsModalService } from 'ngx-bootstrap';
 
@@ -11,20 +12,25 @@ import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { StorageService } from '../../services/storage.service';
 import { ConfService } from '../../services/conf.service';
+
 import { IPtStop } from '../../core/ptStop.interface';
+import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
 
 @Component({
   selector: 'validation-browser',
   templateUrl: './validation-browser.component.html',
   styleUrls: ['./validation-browser.component.less'],
 })
-export class ValidationBrowserComponent {
+export class ValidationBrowserComponent implements OnInit, OnDestroy{
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
+  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<object>;
   @select(['app', 'switchMode']) public readonly switchMode$: Observable<boolean>;
 
   public refErrorsO;
   public nameErrorsO;
+  @Input() suggestionsBrowserOptions: ISuggestionsBrowserOptions;
+  public errorCorrectionModeSubscription;
+  public errorCorrectionMode: ISuggestionsBrowserOptions;
 
   constructor(
     private errorHighlightSrv: ErrorHighlightService,
@@ -33,6 +39,7 @@ export class ValidationBrowserComponent {
     private overpassSrv: OverpassService,
     public appActions: AppActions,
     public storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
   ) {
 
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
@@ -46,6 +53,12 @@ export class ValidationBrowserComponent {
       }
     });
 
+    this.errorCorrectionModeSubscription = ngRedux.select<ISuggestionsBrowserOptions>(['app', 'errorCorrectionMode'])
+      .subscribe((data) => this.errorCorrectionMode = data);
+
+  }
+  public ngOnInit(): void {
+    this.appActions.actSetErrorCorrectionMode(this.suggestionsBrowserOptions);
   }
 
   /**
@@ -53,10 +66,10 @@ export class ValidationBrowserComponent {
    * @returns {void}
    */
   public startValidation(): void {
-    this.refErrorsO = [];
     this.nameErrorsO = [];
+    this.refErrorsO = [];
+
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForErrors) {
-      this.appActions.actSetErrorCorrectionMode('find errors');
       this.overpassSrv.requestNewOverpassData();
     } else {
       alert('Not sufficient zoom level');
@@ -68,12 +81,52 @@ export class ValidationBrowserComponent {
    * @returns {void}
    */
   public startNameCorrection(): void {
-    this.appActions.actSetErrorCorrectionMode('missing name tag');
+    if (this.errorCorrectionMode.refSuggestions) {
+    this.appActions.actSetErrorCorrectionMode(
+      {
+        nameSuggestions: {
+          found          : true,
+          startCorrection: true,
+        },
+        refSuggestions : this.errorCorrectionMode.refSuggestions,
+      }); }
+      else {
+      this.appActions.actSetErrorCorrectionMode(
+        {
+          nameSuggestions: {
+            found          : true,
+            startCorrection: true,
+          },
+          refSuggestions : this.errorCorrectionMode.refSuggestions,
+        });
+    }
     this.errorHighlightSrv.missingTagError('name');
   }
 
-  public startRefCorrection(): any {
-    this.appActions.actSetErrorCorrectionMode('missing ref tag');
+  /***
+   * Starts ref correction
+   * @returns {any}
+   */
+  public startRefCorrection(): void {
+    if (this.errorCorrectionMode.refSuggestions) {
+      this.appActions.actSetErrorCorrectionMode(
+        {
+          nameSuggestions: this.errorCorrectionMode.nameSuggestions,
+          refSuggestions : {
+            found          : true,
+            startCorrection: true,
+          },
+        });
+    } else {
+      this.appActions.actSetErrorCorrectionMode(
+        {
+          nameSuggestions: {
+            found          : true,
+            startCorrection: false,
+          },
+          refSuggestions : this.errorCorrectionMode.refSuggestions,
+        });
+    }
     this.errorHighlightSrv.missingTagError('ref');
   }
   /**
@@ -116,5 +169,9 @@ export class ValidationBrowserComponent {
     if (stop.tags.public_transport === 'stop_position' || stop.tags.highway === 'bus_stop') {
       return 'stop';
     }
+  }
+
+  ngOnDestroy(): void {
+    this.errorCorrectionModeSubscription.unsubscribe();
   }
 }
