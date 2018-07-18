@@ -25,7 +25,7 @@
 
           <li class="list-group-item clearfix" *ngIf="errorCorrectMode.nameSuggestions.found">
             <ng-container *ngIf="nameErrorsO.length !==0">
-              {{nameErrorsO.length}} {{'missing name tags' | translate }}
+              {{nameErrorsO.length}} {{'name tag errors' | translate }}
               <button class="btn btn-default pull-right" (click)="startNameCorrection()">{{'Start Correction' | translate }}
               </button>
             </ng-container>
@@ -38,7 +38,7 @@
           <li class="list-group-item clearfix" *ngIf="errorCorrectMode.refSuggestions &&
       errorCorrectMode.refSuggestions.found">
             <ng-container *ngIf="refErrorsO.length !==0">
-              {{refErrorsO.length}} {{'missing ref tags' | translate }}
+              {{refErrorsO.length}} {{'route references tag errors' | translate }}
               <button class="btn btn-default pull-right" (click)="startRefCorrection()">{{'Start Correction' | translate
                 }}
               </button>
@@ -74,6 +74,12 @@
             <li (click)="jumpToLocation(i)" id='{{ refError.stop.id }}-ref-error-list-id' class="list-group-item"
                 [style.background-color]="i===0 ? 'lightblue':'white'">
               {{i +1}}. {{getNodeType(refError.stop)}}
+              <ng-container *ngIf="refError.missingConnectedRefs !== null">
+                [ {{refError.totalConnectedRefs - refError.missingConnectedRefs}} / {{refError.totalConnectedRefs}} refs added ]
+              </ng-container>
+              <ng-container *ngIf="!refError.missingConnectedRefs && !refError.totalConnectedRefs ">
+                 Missing route_ref Tag
+              </ng-container>
               <i *ngIf="refError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
               <i *ngIf="refError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
               <i *ngIf="refError.corrected === 'partial'" class="fa fa-question pull-right" aria-hidden="true"></i>

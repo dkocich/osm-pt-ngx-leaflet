@@ -10,7 +10,7 @@ import { WarnService } from '../../services/warn.service';
 import * as L from 'leaflet';
 
 import { IPtRelation } from '../../core/ptRelation.interface';
-import { IErrorObject } from '../../core/errorObject.interface';
+import { IErrorObject, IRefErrorObject } from '../../core/errorObject.interface';
 
 @Component({
   selector: 'modal-content',
@@ -28,7 +28,8 @@ export class ModalComponent {
   @ViewChildren('chosenRef') chosenRefS ;
   @ViewChildren('newlyAddedValue') newlyAddedValue ;
 
-  public errorObject: IErrorObject;
+  public nameErrorObject: IErrorObject;
+  public refErrorObject: IRefErrorObject;
 
   public removedNearbySuggestions: any[] = [];
   public removedMissingSuggestions: any[] = [];
@@ -37,7 +38,7 @@ export class ModalComponent {
   public addedFromNearbySuggestionsRefs: any[] = [];
   public newAddedRefs: any[] = [];
 
-  public missingRefs: any[];
+  public missingRefRels: any[];
   public nearbyRels: any[];
 
   constructor(public bsModalRef: BsModalRef,
@@ -52,7 +53,7 @@ export class ModalComponent {
    * @returns {void}
    */
 
-  public saveNameTag(name: string): void {
+  private saveNameTag(name: string): void {
     if (name.length !== 0) {
       this.createChangeForNameTag(name);
       this.bsModalRef.hide();
@@ -63,7 +64,7 @@ export class ModalComponent {
       popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
       let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
       popupArr[0].setContent(popupContent);
-      this.errorObject.corrected                                          = 'true';
+      this.nameErrorObject.corrected                                          = 'true';
       this.storageSrv.nameErrorsO[this.storageSrv.currentIndex].corrected = 'true';
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
       this.warnSrv.showGenericSuccess();
@@ -95,8 +96,8 @@ export class ModalComponent {
         refString = (index !== refsForTag.length - 1) ? refString + item + ';' : refString + item;
       });
 
-      if (this.errorObject.stop.tags.route_ref) {
-        refString = this.errorObject.stop.tags.route_ref + ';' + refString;
+      if (this.refErrorObject.stop.tags.route_ref) {
+        refString = this.refErrorObject.stop.tags.route_ref + ';' + refString;
       }
 
       this.createChangeForRefTag(refString);
@@ -108,6 +109,7 @@ export class ModalComponent {
         return popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId;
       });
       this.checkErrorIfCorrected();
+      this.refErrorObject.missingConnectedRefs = this.missingRefRels.length;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing ref' });
       this.warnSrv.showGenericSuccess();
     } else {
@@ -146,9 +148,9 @@ export class ModalComponent {
    */
   private addMissingSuggestedRefValue(rel: IPtRelation): void {
     this.addedMissingSuggestionsRefs.push(rel);
-    this.missingRefs.forEach((item, ind) => {
+    this.missingRefRels.forEach((item, ind) => {
       if (item.id === rel.id) {
-        this.removedMissingSuggestions = this.removedMissingSuggestions.concat(this.missingRefs.splice(ind, 1));
+        this.removedMissingSuggestions = this.removedMissingSuggestions.concat(this.missingRefRels.splice(ind, 1));
       }
     });
   }
@@ -185,7 +187,7 @@ export class ModalComponent {
 
     for (let key of this.removedMissingSuggestions) {
       if (key.id === toRemoveRel.id) {
-        this.missingRefs.push(key);
+        this.missingRefRels.push(key);
         break;
       }
     }
@@ -248,12 +250,17 @@ export class ModalComponent {
     let change: any;
     if (ref !== '') {
       change = {
-        from: this.storageSrv.currentElement,
-        to: undefined,
+        from: {
+          key: 'route_ref',
+          value: this.refErrorObject.stop.tags['route_ref'],
+        },
+        to: {
+          key: 'route_ref',
+          value: ref,
+        },
       };
-      this.storageSrv.currentElement.tags['route_ref'] = ref;
-      change.to = this.storageSrv.currentElement;
-      this.editSrv.addChange(this.storageSrv.currentElement, 'change tag', change);
+
+      this.editSrv.addChange(this.refErrorObject.stop, 'change tag', change);
     }
   }
 
@@ -283,7 +290,7 @@ export class ModalComponent {
 
         let change = { from: JSON.parse(JSON.stringify(rel)), to: undefined }; // string to not influence toggle edits
         let probableRole: string = '';
-        switch (this.errorObject.stop.tags.public_transport) {
+        switch (this.refErrorObject.stop.tags.public_transport) {
           case 'platform':
           case 'station':
             probableRole = 'platform';
@@ -292,12 +299,12 @@ export class ModalComponent {
             probableRole = 'stop';
             break;
           default:
-            alert('FIXME: suspicious role - ' + this.errorObject.stop.tags.public_transport);
+            alert('FIXME: suspicious role - ' + this.refErrorObject.stop.tags.public_transport);
             probableRole = 'stop';
         }
         const memberToToggle = {
           type: 'node',
-          ref: this.errorObject.stop.id,
+          ref: this.refErrorObject.stop.id,
           role: probableRole,
         };
         rel.members.push(memberToToggle);
@@ -314,7 +321,7 @@ export class ModalComponent {
   private checkErrorIfCorrected(): void {
     let val;
     let popupContent       = L.DomUtil.create('div', 'content');
-    if (this.missingRefs.length === 0) {
+    if (this.missingRefRels.length === 0) {
       val = 'true';
       popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
     } else if (this.addedMissingSuggestionsRefs.length !== 0) {
@@ -324,7 +331,7 @@ export class ModalComponent {
       val = 'false';
       popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
     }
-    this.errorObject.corrected = val;
+    this.refErrorObject.corrected = val;
     this.storageSrv.refErrorsO[this.storageSrv.currentIndex].corrected = val;
     let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
     popupArr[0].setContent(popupContent);

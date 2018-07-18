@@ -3,8 +3,8 @@
     <h4 class="modal-title pull-left">{{'Enter name' | translate }}</h4>
   </div>
   <div class="modal-body text-center">
-    <h4 *ngIf="errorObject.corrected === 'true'">
-      {{'Already entered name' | translate }} : {{errorObject.stop.tags.name}}
+    <h4 *ngIf="nameErrorObject.corrected === 'true'">
+      {{'Already entered name' | translate }} : {{nameErrorObject.stop.tags.name}}
     </h4>
     <form>
       <div class="form-group">
@@ -105,7 +105,7 @@
 
       <ng-container class="content panel panel-body panel-default ">
 
-        <ng-container *ngIf="!(missingRefs.length === 0)">
+        <ng-container *ngIf="!(missingRefRels.length === 0)">
           <h5 class="pull-left"> Missing routes
             <i class="fa fa-question-circle" aria-hidden="true" container="body"
                tooltip="List of routes which have the stop/platform as a member but reference is not added in route_ref tag of the stop/platform. Select from the list to add to the route_ref tag"></i>
@@ -113,10 +113,9 @@
         </ng-container>
 
 
-        <ul class="list-group scrollable-panel" *ngIf="!(missingRefs.length === 0)">
+        <ul class="list-group scrollable-panel" *ngIf="!(missingRefRels.length === 0)">
 
-
-          <li class="list-group-item list-group-item-info" *ngFor="let key of missingRefs">
+          <li class="list-group-item list-group-item-info" *ngFor="let key of missingRefRels">
             Ref : {{key['tags']['ref']}} [ Name: {{key['tags']['name']}} ]
             <a class="badge badge-success">
               <i class="fa fa-check" aria-hidden="true"

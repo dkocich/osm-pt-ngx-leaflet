@@ -16,14 +16,14 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import { ModalComponent } from '../components/modal/modal.component';
 
-import { IErrorObject } from '../core/errorObject.interface';
+import { IErrorObject, IRefErrorObject } from '../core/errorObject.interface';
 import { ISuggestionsBrowserOptions } from '../core/editingOptions.interface';
 
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
   public nameErrorsO: IErrorObject[] = [];
-  public refErrorsO: IErrorObject[] = [];
+  public refErrorsO: IRefErrorObject[] = [];
   public currentIndex = 0;
   public currentMode: string;
 
@@ -111,7 +111,7 @@ export class ErrorHighlightService {
    * @param errorObj
    */
 
-  private addClickListenerToPopUp(popUp: any, errorObj: IErrorObject): void {
+  private addClickListenerToPopUp(popUp: any, errorObj: any): void {
     let stop = errorObj['stop'];
     let popUpElement = popUp.getElement();
     let popUpId = popUp['_leaflet_id'];
@@ -121,34 +121,13 @@ export class ErrorHighlightService {
       const featureId = Number(stop.id);
       const element   = this.processSrv.getElementById(featureId);
       if (element) {
-        let latlng = { lat: element.lat, lng: element.lon };
+
         if ((errorCorrectionMode.nameSuggestions.startCorrection)) {
-          let nearbyNodes = this.getNearbyNodeNames(latlng);
-          let suggestedNames = this.getMostUsedName(nearbyNodes);
-          this.openModalWithComponentForName(errorObj, suggestedNames);
+          this.openModalWithComponentForName(errorObj);
         }
 
         if ((errorCorrectionMode.refSuggestions && errorCorrectionMode.refSuggestions.startCorrection)) {
-          let parentRels       = this.getParentRelations(stop.id);
-          let missingRefs: any = [];
-          if (parentRels.length !== 0) {
-            if (stop.tags['route_ref']) {
-              let addedRefs = this.getAlreadyAddedRefsInTag(stop.tags['route_ref']);
-              missingRefs   = this.compareRefs(parentRels, addedRefs);
-            } else {
-              for (let parent of parentRels) {
-                missingRefs.push(parent);
-              }
-            }
-          }
-          if (this.isMobileDevice()) {
-            this.openModalWithComponentForRef(errorObj, missingRefs);
-
-          } else {
-            let nearbyRels = this.getNearbyRoutesSuggestions(latlng, missingRefs);
-            this.openModalWithComponentForRef(errorObj, missingRefs, nearbyRels);
-          }
-
+          this.openModalWithComponentForRef(errorObj);
         }
         this.storageSrv.currentElementsChange.emit(
           JSON.parse(JSON.stringify(element)),
@@ -171,38 +150,67 @@ export class ErrorHighlightService {
    * Opens up modal
    * @returns {void}
    */
-  public openModalWithComponentForName(errorObject: IErrorObject, suggestedNames: string): void {
-        const initialState = {
+  public openModalWithComponentForName(errorObject: IErrorObject): void {
+    const featureId = Number(errorObject.stop.id);
+    const element   = this.processSrv.getElementById(featureId);
+    const latlng = { lat: element.lat, lng: element.lon };
+
+    let nearbyNodes = this.getNearbyNodeNames(latlng);
+    let suggestedNames = this.getMostUsedName(nearbyNodes);
+
+    const initialState = {
           error      : 'missing name tag',
           suggestedNames,
-          errorObject,
+          nameErrorObject: errorObject,
         };
-        this.modalRef = this.modalService.show(ModalComponent, { initialState });
+    this.modalRef = this.modalService.show(ModalComponent, { initialState });
   }
 
   /***
    * Opens up modal for ref
    * @returns {void}
    */
-  public openModalWithComponentForRef(errorObject: IErrorObject, suggestedRefs: any, nearbyRels?: any): void {
+  public openModalWithComponentForRef(errorObject: IRefErrorObject): void {
+    const featureId = Number(errorObject.stop.id);
+    const element   = this.processSrv.getElementById(featureId);
+    const latlng = { lat: element.lat, lng: element.lon };
+    const parentRels       = this.getParentRelations(errorObject.stop.id);
+
+    let missingRefRels: any = [];
     let initialState;
-    if (nearbyRels) {
-       initialState = {
-             error      : 'missing ref tag',
-             missingRefs : suggestedRefs,
-             errorObject,
-             nearbyRels,
-    };
-    } else {
+
+    if (parentRels.length !== 0) {
+      if (errorObject.stop.tags['route_ref']) {
+        let addedRefs  = this.getAlreadyAddedRefsInTag(errorObject.stop.tags['route_ref']);
+        missingRefRels = this.compareRefs(parentRels, addedRefs);
+      } else {
+        for (let parent of parentRels) {
+          missingRefRels.push(parent);
+        }
+      }
+    }
+
+    if (this.isMobileDevice()) {
       initialState = {
         error      : 'missing ref tag',
-        missingRefs : suggestedRefs,
-        errorObject,
+        missingRefRels,
+        refErrorObject: errorObject,
+      };
+    } else {
+      let nearbyRels = this.getNearbyRoutesSuggestions(latlng, missingRefRels);
+      initialState = {
+        error      : 'missing ref tag',
+        missingRefRels,
+        refErrorObject: errorObject,
+        nearbyRels,
       };
     }
     this.modalRef = this.modalService.show(ModalComponent, { initialState });
   }
 
+  /***
+   * Counts and forms name error objects
+   */
   public countNameErrors(): void {
     this.storageSrv.currentIndex = 0;
     this.nameErrorsO = [];
@@ -221,14 +229,18 @@ export class ErrorHighlightService {
 
   }
 
+  /***
+   * Counts and forms ref error objects
+   */
   public countRefErrors(): void {
     this.storageSrv.currentIndex = 0;
     this.refErrorsO = [];
     this.storageSrv.refErrorsO = [];
-
+    let addedRefs   =  [];
+    let missingRefRels = [];
     this.storageSrv.elementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-        let errorObj: IErrorObject = { stop, corrected: 'false' };
+        let errorObj: IRefErrorObject = { stop, corrected: 'false', missingConnectedRefs: undefined, totalConnectedRefs: undefined };
         if (this.mapSrv.map.getBounds().contains(stop)) {
           if (this.isMobileDevice()) {
             if (!stop.tags['route_ref']) {
@@ -237,12 +249,14 @@ export class ErrorHighlightService {
             let parentRels = this.getParentRelations(stop.id);
             if (parentRels.length !== 0) {
               if (stop.tags['route_ref']) {
-                let addedRefs   = this.getAlreadyAddedRefsInTag(stop.tags['route_ref']);
-                let missingRefs = this.compareRefs(parentRels, addedRefs);
-                if (missingRefs.length !== 0) {
-                  this.refErrorsO.push(errorObj);
-                }
+                addedRefs   = this.getAlreadyAddedRefsInTag(stop.tags['route_ref']);
+                missingRefRels = this.compareRefs(parentRels, addedRefs);
               } else {
+                 missingRefRels = parentRels;
+              }
+              errorObj.totalConnectedRefs = parentRels.length;
+              errorObj.missingConnectedRefs = missingRefRels.length;
+              if (missingRefRels.length !== 0) {
                 this.refErrorsO.push(errorObj);
               }
             }
@@ -254,6 +268,7 @@ export class ErrorHighlightService {
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing ref' });
 
   }
+
   /***
    * Checks whether on Mobile/Desktop
    * @returns {boolean}
@@ -395,24 +410,25 @@ export class ErrorHighlightService {
    */
   public quit(): void {
     let errorCorrectionMode: ISuggestionsBrowserOptions = this.ngRedux.getState()['app']['errorCorrectionMode'];
-
-    if (errorCorrectionMode.refSuggestions && errorCorrectionMode.refSuggestions.startCorrection) {
-      this.appActions.actSetErrorCorrectionMode({
-        nameSuggestions: errorCorrectionMode.nameSuggestions,
-        refSuggestions : {
-          found          : true,
-          startCorrection: false,
-        },
-      });
-    }
-    if (errorCorrectionMode.nameSuggestions.startCorrection) {
-      this.appActions.actSetErrorCorrectionMode({
-        nameSuggestions: {
-          found          : true,
-          startCorrection: false,
-        },
-        refSuggestions : errorCorrectionMode.refSuggestions,
-      });
+    if (errorCorrectionMode) {
+      if (errorCorrectionMode.refSuggestions && errorCorrectionMode.refSuggestions.startCorrection) {
+        this.appActions.actSetErrorCorrectionMode({
+          nameSuggestions: errorCorrectionMode.nameSuggestions,
+          refSuggestions : {
+            found          : true,
+            startCorrection: false,
+          },
+        });
+      }
+      if (errorCorrectionMode.nameSuggestions.startCorrection) {
+        this.appActions.actSetErrorCorrectionMode({
+          nameSuggestions: {
+            found          : true,
+            startCorrection: false,
+          },
+          refSuggestions : errorCorrectionMode.refSuggestions,
+        });
+      }
     }
     this.appActions.actToggleSwitchMode(false);
     this.processSrv.refreshSidebarView('cancel selection');
@@ -421,7 +437,8 @@ export class ErrorHighlightService {
     this.storageSrv.currentElementsChange.emit(
       JSON.parse(JSON.stringify(null)),
     );
-    }
+  }
+
   /***
    * returns names of nearby nodes
    * @param latlngm
@@ -448,7 +465,7 @@ export class ErrorHighlightService {
    * @param missingRefs
    * @returns {any[]}
    */
-  public getNearbyRoutesSuggestions(latlngm: any, missingRefs: any): any[] {
+  public getNearbyRoutesSuggestions(latlngm: any, missingRefRels: any): any[] {
 
     let inRange = [];
     let nearbyRels = [];
@@ -477,7 +494,7 @@ export class ErrorHighlightService {
     });
 
     nearbyRels = nearbyRels.filter((item) => {
-      for (let rel of missingRefs) {
+      for (let rel of missingRefRels) {
         if (rel.id ===  item.id) {
           return false;
         }
@@ -527,7 +544,7 @@ export class ErrorHighlightService {
    * @param errorObj
    * @returns {void}
    */
-  public addSinglePopUp(errorObj: IErrorObject): void {
+  public addSinglePopUp(errorObj: IErrorObject | IRefErrorObject): void {
     let stop = errorObj['stop'];
     this.mapSrv.removePopUps();
     let latlng = { lat: stop.lat, lng: stop.lon };
@@ -572,6 +589,11 @@ export class ErrorHighlightService {
     return inBounds;
   }
 
+  /***
+   * Jumps to error
+   * @param {number} index
+   * @returns {any}
+   */
   public jumpToLocation(index: number): any {
     let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
     if (errorCorrectionMode.nameSuggestions.startCorrection) {
@@ -619,6 +641,11 @@ export class ErrorHighlightService {
     return inBounds;
   }
 
+  /***
+   * Gets all parent relations for id
+   * @param id
+   * @returns {any}
+   */
   private getParentRelations(id: any): any {
     let parentRels = [];
 
@@ -634,17 +661,27 @@ export class ErrorHighlightService {
     return parentRels;
   }
 
+  /***
+   * Splits route_ref tag into individual refs
+   * @param {string} routeRefTag
+   * @returns {string[]}
+   */
   private getAlreadyAddedRefsInTag(routeRefTag: string): string[] {
     return routeRefTag.split(';');
   }
 
+  /***
+   * Compares refs of parent relations with added refs of node
+   * @param parentRels
+   * @param addedRefs
+   * @returns {any}
+   */
   private compareRefs(parentRels: any, addedRefs: any): any {
-    let parentRefs = [];
+    let parentRefs  = [];
     let missingRefs = [];
     for (let parent of parentRels) {
       parentRefs.push(parent.tags.ref);
     }
-
     let flag = true;
     for (let parent of parentRels) {
 
