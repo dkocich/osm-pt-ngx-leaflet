@@ -9,6 +9,7 @@ import { ModalDirective } from 'ngx-bootstrap';
 import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
+import {AutoTasksService} from '../../services/auto-route-creation/auto-tasks.service';
 
 @Component({
   providers: [],
@@ -35,6 +36,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private editSrv: EditService,
     private mapSrv: MapService,
     private storageSrv: StorageService,
+    private autoTaskSrv: AutoTasksService,
   ) {
     //
   }
@@ -163,7 +165,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   private createAutomaticRoute(): any {
-    this.editSrv.createAutomaticRoute();
+    this.autoTaskSrv.createAutomaticRoute();
   }
 
 }

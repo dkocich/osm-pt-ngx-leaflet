@@ -15,6 +15,9 @@ import { IOverpassResponse } from '../core/overpassResponse.interface';
 
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
+// import {AutoTasksService} from './auto-route-creation/auto-tasks.service';
+import {ModalMapService} from './auto-route-creation/modal-map.service';
+// import {AutoTasksService} from './auto-route-creation/auto-tasks.service';
 
 @Injectable()
 export class ProcessService {
@@ -28,6 +31,7 @@ export class ProcessService {
   public refreshSidebarViews$ = this.refreshSidebarViewsSource.asObservable();
   public membersToDownload: EventEmitter<object> = new EventEmitter();
   public refreshMasters: EventEmitter<object> = new EventEmitter();
+  public routesRecieved: EventEmitter<any> =  new EventEmitter();
 
   constructor(
     private ngRedux: NgRedux<IAppState>,
@@ -36,6 +40,7 @@ export class ProcessService {
     private mapSrv: MapService,
     private storageSrv: StorageService,
     private dbSrv: DbService,
+    private modalMapSrv: ModalMapService,
   ) {
     // this.mapSrv.popupBtnClick.subscribe(
     //     (data) => {
@@ -642,6 +647,145 @@ export class ProcessService {
         + rel.id + 'from IDB');
       console.log(err);
     });
+  }
+// from here // also removes duplicates
+  public static getIndividualRouteRefs(stops: any[]): any {
+    // console.log(stops);
+    let refs = [];
+    for (let stop of stops) {
+      refs.push(stop.tags.route_ref);
+    }
+    // console.log(refs);
+    let ref_map = new Map();
+    for (let routeRefs of refs) {
+      let singleRefs = routeRefs.split(';');
+      for (let ref of singleRefs) {
+        if (ref_map.has(ref)) {
+          let val = ref_map.get(ref);
+          val++;
+          ref_map.set(ref, val);
+        } else {
+          ref_map.set(ref, 1);
+        }
+      }
+    }
+    return ref_map;
+  }
+
+  /***
+   * finds all stops/platforms in given map's current bounds
+   * @returns {any}
+   */
+  public findStopsInBounds(map: L.Map): any[] {
+    let stopsInBounds = [];
+    this.storageSrv.elementsMap.forEach((stop) => {
+      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+        if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
+          stopsInBounds.push(stop.id);
+        }
+      }
+    });
+    return stopsInBounds;
+  }
+// process srv? put
+  public processMultipleNodeDataResponse(response: any): any {
+    let stopsInBounds = this.findStopsInBounds(this.modalMapSrv.map);
+    let nodeRefs = this.getRouteRefsFromNodes(stopsInBounds);
+    let refsOfRoutes: any[] = [];
+    this.processNodeResponse(response);
+    for (const element of response.elements) {
+      if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {
+        refsOfRoutes.push(element.tags.ref);
+      }
+    }
+    console.log('process s. refs of routes', refsOfRoutes);
+    let uniqueRefsOfRoutes = ProcessService.removeDuplicatesFromArray(refsOfRoutes);
+    console.log('process s. unique refs of routes', uniqueRefsOfRoutes);
+    let notAddedRefs = ProcessService.compareArrays(nodeRefs, uniqueRefsOfRoutes);
+    console.log('process s. comparing node refs and route refs , not added found:', notAddedRefs);
+    if (notAddedRefs.length !== 0) {
+      console.log('process s. not added refs count not equal to 0:', notAddedRefs);
+      console.log('get stops for not added refs, map: ', this.getStopsForNewRoutes(notAddedRefs));
+      this.routesRecieved.emit(this.getStopsForNewRoutes(notAddedRefs));
+    } else {
+      alert('no route can be formed with tag which does not already exist');
+    }
+  }
+
+  /***
+   * forms an array of route refs from nodes, also removes duplicates
+   * @param stopsInBounds
+   * @returns {any}
+   */
+  public getRouteRefsFromNodes(stopsInBoundsIDs: any): any {
+    let withRouteRefTag = [];
+    let ref_map;
+    let refValues = [];
+    for (let id of stopsInBoundsIDs) {
+      let stop = this.storageSrv.elementsMap.get(id);
+      if (stop.tags.route_ref) {
+        withRouteRefTag.push(stop);
+      }
+    }
+    if (withRouteRefTag.length !== 0) {
+      ref_map = ProcessService.getIndividualRouteRefs(withRouteRefTag);
+      console.log('process s. (to get route refs from nodes) stops in bounds with rr tag', withRouteRefTag);
+      console.log('process s. ref map formed (of stops/platforms)', ref_map);
+      Array.from(ref_map).map(([key]) => {
+        refValues.push(key);
+      });
+    }
+    return refValues;
+  }
+
+  private static removeDuplicatesFromArray(arr: any[]): any {
+    return arr.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
+  }
+
+  private static compareArrays(nodeRefs: any, routeRefs: any): any {
+    console.log('to compare:  node refs', nodeRefs, 'route refs', routeRefs);
+    let notAdded = [];
+    for (let itemA of nodeRefs) {
+      let flag = false;
+      for (let itemB of routeRefs) {
+        if (itemA === itemB) {
+          flag = true;
+        }
+      }
+
+      if (flag === false) {
+        notAdded.push(itemA);
+      }
+    }
+    console.log('not added in routes node refs', notAdded);
+    return notAdded;
+  }
+
+  private getStopsForNewRoutes(notAddedRefs: any): any{
+    let stopsForNewRoutes = new Map();
+    this.storageSrv.elementsMap.forEach((stop) => {
+      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport) && stop.tags.route_ref) {
+        let stops: any[] = [];
+        stops.push(stop);
+        let refMap = ProcessService.getIndividualRouteRefs(stops);
+        let individualRefs = [];
+        Array.from(refMap).map(([key]) => { individualRefs.push(key); });
+        individualRefs.forEach((val) =>  {
+          if (notAddedRefs.includes(val)) {
+            if (stopsForNewRoutes.get(val)) {
+              stopsForNewRoutes.get(val).push(stop);
+            } else {
+              let arr = [];
+              arr.push(stop);
+              stopsForNewRoutes.set(val, arr);
+            }
+          }
+        });
+      }
+    });
+    return stopsForNewRoutes;
   }
 
 }

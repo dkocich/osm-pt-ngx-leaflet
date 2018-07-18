@@ -10,9 +10,9 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { IPtStop } from '../core/ptStop.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtRelationNew } from '../core/ptRelationNew.interface';
-import { RouteModalComponent } from '../components/route-modal/route-modal.component';
+// import { RouteModalComponent } from '../components/route-modal/route-modal.component';
 
-import { AutoTasksService } from './auto-tasks.service';
+// import { AutoTasksService } from './auto-route-creation/auto-tasks.service';
 
 @Injectable()
 export class EditService {
@@ -29,12 +29,12 @@ export class EditService {
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private modalService: BsModalService,
-    private autoTaskSrv: AutoTasksService,
+    // private autoTaskSrv: AutoTasksService,
   ) {
 
-    this.modalService.onShown.subscribe(() => {
-      this.autoTaskSrv.onShownModal();
-    });
+    // this.modalService.onShown.subscribe(() => {
+    //   this.autoTaskSrv.onShownModal();
+    // });
     //
     // this.modalService.onShow.subscribe(() => {
     //   this.autoTaskSrv.onShowModal();
@@ -630,7 +630,7 @@ export class EditService {
     return marker;
   }
 
-  private findNewId(): number {
+  public findNewId(): number {
     let newId: number = -1;
     while (this.storageSrv.elementsMap.has(newId) && newId > -100) {
       newId--;
@@ -1046,8 +1046,8 @@ export class EditService {
     );
   }
 
-  public createAutomaticRoute(): any {
-    this.modalRef = this.modalService.show(RouteModalComponent, {class: 'modal-lg'});
-    console.log('stops in bounds and having route ref tag');
-  }
+  // public createAutomaticRoute(): any {
+  //   this.modalRef = this.modalService.show(RouteModalComponent, {class: 'modal-lg'});
+  //   console.log('stops in bounds and having route ref tag');
+  // }
 }

@@ -7,16 +7,49 @@
   </div>
   <div class="modal-body text-center ">
     <div class="row full-height">
-      <div class="col-md-7 full-height">
+      <div class="col-md-5 full-height">
         <div id="auto-route-modal-map">
         </div>
       </div>
-      <div class="col-md-5 full-height">
+      <div class="col-md-7 full-height">
         <button (click)="findMissingRoutes()">Find missing Routes</button>
         <p>{{message}}</p>
+        <div>
+          <tabset class="nav-justified" type="pills">
+            <tab heading="Pills 1">Step 1</tab>
+            <tab heading="Pills 2">Step 2</tab>
+            <tab heading="Pills 2">Step 3</tab>
+            <tab heading="Pills 2">Step 4</tab>
+            <tab heading="Pills 2">Step 5</tab>
+          </tabset>
+        </div>
+
+
+
+        <ng-container *ngIf="currentView === 'routes-menu'">
         <ul class="list-group" *ngIf="newRoutesRefs.length !== 0">
-          <li class="list-group-item" *ngFor="let ref of newRoutesRefs" (click)="highlightRoute(ref)">Route Ref: {{ref}}</li>
+          <li class="list-group-item" *ngFor="let ref of newRoutesRefs">Route Ref: {{ref}}
+            <button (click)="highlightRoute(ref)"> View </button>
+            <button (click)="useRef(ref)"> Use </button>
+          </li>
         </ul>
+        </ng-container>
+        <ng-container *ngIf="currentView === 'selected-route'">
+          <button (click)="back()">Back</button>
+          <ul class="list-group">
+            suggested members
+            <li class="list-group-item" *ngFor="let member of newRouteMembersSuggestions">
+              {{member.type}}{{member.id}}
+            </li>
+            added members
+            <li class="list-group-item" *ngFor="let member of addedNewRouteMembers">
+              {{member.type}}{{member.id}}
+            </li>
+          </ul>
+          <button>Finish</button>
+          <button>Cancel</button>
+
+        </ng-container>
       </div>
     </div>
   </div>

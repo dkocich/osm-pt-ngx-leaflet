@@ -57,7 +57,7 @@ import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
 import { StorageService } from './services/storage.service';
 import { WarnService } from './services/warn.service';
-import { AutoTasksService } from './services/auto-tasks.service';
+import { AutoTasksService } from './services/auto-route-creation/auto-tasks.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -70,7 +70,10 @@ import { RavenErrorHandler } from './raven-error-handler';
 
 import { Utils } from './core/utils.class';
 import { RouteModalComponent } from './components/route-modal/route-modal.component';
+import { ModalMapService } from './services/auto-route-creation/modal-map.service';
 
+import { SortableModule } from 'ngx-bootstrap/sortable';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
 }
@@ -136,6 +139,8 @@ const conditional_providers = [
       positionClass: 'toast-bottom-right',
       maxOpened: 1,
     }),
+    SortableModule.forRoot(),
+    TabsModule.forRoot(),
   ],
   providers: [
     ...conditional_providers,
@@ -152,6 +157,7 @@ const conditional_providers = [
     StorageService,
     WarnService,
     AutoTasksService,
+    ModalMapService,
 
     KeysPipe,
 
