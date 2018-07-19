@@ -103,6 +103,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   private changeHighlight(): void {
+    console.log('change highlight');
     if (
       this.highlightIsActive() &&
       this.htRadioModel !== this.mapSrv.highlightType
@@ -136,7 +137,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   private clearHighlight(): void {
-    return this.mapSrv.clearHighlight();
+    return this.mapSrv.clearHighlight(this.mapSrv.map);
   }
 
   private getLoadAndZoomUrl(): void {

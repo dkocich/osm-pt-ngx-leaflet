@@ -15,6 +15,9 @@ export class ModalMapService {
   public baseMaps;
   public osmtogeojson: any = require('osmtogeojson');
   modalRef: BsModalRef;
+  public currentHighlightType = 'Stops';
+  private highlightFill: any = undefined;
+  private highlight: any = undefined;
 
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,

@@ -386,6 +386,7 @@ export class ProcessService {
       console.log('LOG (processing s.) (Route in JS) or (no missing elements &' +
         ' old) or (new & has some members)' + rel.id);
       console.log('condition is valid', rel.id, rel['members'].length);
+      console.log('rel available : highlight type', this.mapSrv.highlightType);
       this.downloadedMissingMembers(rel, true, zoomToElement);
       this.refreshTagView(rel);
       this.storageSrv.elementsDownloaded.add(rel.id);
@@ -426,7 +427,7 @@ export class ProcessService {
     refreshTagView: boolean,
   ): void {
     if (this.mapSrv.highlightIsActive()) {
-      this.mapSrv.clearHighlight();
+      this.mapSrv.clearHighlight(this.mapSrv.map);
     }
     this.storageSrv.clearRouteData();
     if (this.mapSrv.showRoute(rel, this.mapSrv.map)) {
@@ -497,7 +498,7 @@ export class ProcessService {
     zoomTo: boolean,
   ): void {
     if (this.mapSrv.highlightIsActive()) {
-      this.mapSrv.clearHighlight();
+      this.mapSrv.clearHighlight(this.mapSrv.map);
     }
     this.mapSrv.showStop(stop);
     if (filterRelations) {
@@ -620,7 +621,7 @@ export class ProcessService {
 
   public cancelSelection(): void {
     this.refreshTagView(undefined);
-    this.mapSrv.clearHighlight();
+    this.mapSrv.clearHighlight(this.mapSrv.map);
   }
 
   public haveSameIds(relId: number, currElementId?: number): boolean {
