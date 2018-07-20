@@ -4,7 +4,7 @@ import { StorageService } from '../../services/storage.service';
 import { MapService } from '../../services/map.service';
 import { WarnService } from '../../services/warn.service';
 import { OverpassService } from '../../services/overpass.service';
-import { ModalMapService } from '../../services/auto-route-creation/modal-map.service';
+import { ModalMapService } from '../../services/modal-map.service';
 import { ProcessService } from '../../services/process.service';
 import { EditService } from '../../services/edit.service';
 
@@ -155,7 +155,8 @@ export class RouteModalComponent {
     this.addedNewRouteMembers       = this.modalMapSrv.routesMap.get(ref);
     this.selectTab(3);
     let countObj = this.modalMapSrv.countNodeType(this.addedNewRouteMembers);
-    this.modalMapSrv.useAndSetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount, this.canStopsConnect, this.canPlatformsConnect);
+    this.modalMapSrv.useAndSetAvailableConnectivity(countObj.stopsCount,
+      countObj.platformsCount, this.canStopsConnect, this.canPlatformsConnect);
     this.modalMapSrv.highlightRoute(this.addedNewRouteMembers);
     this.modalMapSrv.highlightMembers(this.addedNewRouteMembers);
   }
@@ -209,7 +210,7 @@ export class RouteModalComponent {
     this.modalMapSrv.assignRolesToMembers(this.addedNewRouteMembers);
     this.newRoute.members = this.modalMapSrv.formRelMembers(this.addedNewRouteMembers);
     this.newRoute.tags    = this.modalMapSrv.filterEmptyTags(this.newRoute);
-    let change            = {from: undefined, to: this.newRoute};
+    let change            = { from: undefined, to: this.newRoute };
     this.modalMapSrv.modalMapElementsMap.set(this.newRoute.id, this.newRoute);
     this.editSrv.addChange(this.newRoute, 'add route', change);
     this.bsModalRef.hide();

@@ -8,7 +8,7 @@ import { ErrorHighlightService } from './error-highlight.service';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
-import { AutoTasksService } from './auto-route-creation/auto-tasks.service';
+import { ModalMapService } from './modal-map.service';
 
 import { WarnService } from './warn.service';
 
@@ -23,7 +23,6 @@ import { Utils } from '../core/utils.class';
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
-import { ModalMapService } from './auto-route-creation/modal-map.service';
 
 @Injectable()
 export class OverpassService {
@@ -881,23 +880,6 @@ export class OverpassService {
       );
   }
 
-  // private getIndividualRouteRefs(refs: any[]): any {
-  //   let ref_map = new Map();
-  //   for (let routeRefs of refs) {
-  //     let singleRefs = routeRefs.split(';');
-  //     for (let ref of singleRefs) {
-  //       if (ref_map.has(ref)) {
-  //         let val = ref_map.get(ref);
-  //         val++;
-  //         ref_map.set(ref, val);
-  //       } else {
-  //         ref_map.set(ref, 1);
-  //       }
-  //     }
-  //   }
-  //   return ref_map;
-  // }
-
   private getMultipleNodeDataForAutoRoute(idsArr: any): any {
     let requestBody = `
       [out:json][timeout:25];
@@ -924,28 +906,4 @@ export class OverpassService {
           throw new Error(err.toString());
         });
   }
-
-  // private removeDuplicatefromArray(arr: any[]): any{
-  //   let unique = arr.filter((value, index, self) => {
-  //     return self.indexOf(value) === index;
-  //   });
-  //   return unique;
-  // }
-  //
-  // private compareArrays(nodeRefs: any, routeRefs: any): any {
-  //   let arr = [];
-  //   for (let itemA of nodeRefs) {
-  //     let flag = false;
-  //     for (let itemB of routeRefs) {
-  //       console.log('type', typeof itemA);
-  //       if (itemA === itemB) {
-  //         flag = true;
-  //       }
-  //     }
-  //     if (flag === false) {
-  //       arr.push(itemA);
-  //     }
-  //   }
-  //   return arr;
-  // }
 }

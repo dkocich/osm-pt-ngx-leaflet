@@ -22,6 +22,8 @@ import {
   ModalModule,
   TooltipModule,
   TypeaheadModule,
+  SortableModule,
+  TabsModule,
 } from 'ngx-bootstrap';
 
 import { Angulartics2Module } from 'angulartics2';
@@ -45,6 +47,7 @@ import { TagBrowserComponent } from './components/sidebar/tag-browser.component'
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
 import { ValidationBrowserComponent } from './components/sidebar/validation-browser.component';
+import { RouteModalComponent } from './components/route-modal/route-modal.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
@@ -57,7 +60,7 @@ import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
 import { StorageService } from './services/storage.service';
 import { WarnService } from './services/warn.service';
-import { AutoTasksService } from './services/auto-route-creation/auto-tasks.service';
+import { ModalMapService } from './services/modal-map.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -69,11 +72,7 @@ import { RootEpics } from './store/epics';
 import { RavenErrorHandler } from './raven-error-handler';
 
 import { Utils } from './core/utils.class';
-import { RouteModalComponent } from './components/route-modal/route-modal.component';
-import { ModalMapService } from './services/auto-route-creation/modal-map.service';
 
-import { SortableModule } from 'ngx-bootstrap/sortable';
-import { TabsModule } from 'ngx-bootstrap/tabs';
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
 }
@@ -157,7 +156,6 @@ const conditional_providers = [
     ProcessService,
     StorageService,
     WarnService,
-    AutoTasksService,
     ModalMapService,
 
     KeysPipe,

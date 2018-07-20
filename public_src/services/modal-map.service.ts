@@ -1,9 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { MapService } from '../map.service';
+import { MapService } from './map.service';
 
-import { StorageService } from '../storage.service';
+import { StorageService } from './storage.service';
 import { BsModalService } from 'ngx-bootstrap';
-import { ProcessService } from '../process.service';
+import { ProcessService } from './process.service';
 import * as L from 'leaflet';
 
 @Injectable()
@@ -22,11 +22,10 @@ export class ModalMapService {
   public membersHighlightLayerGroup    = L.layerGroup();
   public refreshAvailableConnectivity: EventEmitter<any> =  new EventEmitter();
 
-
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,
               private modalService: BsModalService,
-              private processSrv: ProcessService,) {
+              private processSrv: ProcessService) {
     this.modalService.onShown.subscribe(() => {
       this.onShownModal();
     });
