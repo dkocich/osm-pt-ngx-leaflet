@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MapService } from '../map.service';
+
 import { StorageService } from '../storage.service';
 
 
@@ -14,7 +15,6 @@ export class ModalMapService {
   }
 
   public onShownModal(): any {
-    console.log('in validaet size');
     this.map.invalidateSize();
   }
 
@@ -25,9 +25,8 @@ export class ModalMapService {
       elements.push(element);
     });
     obj.elements = elements;
-    console.log('obj', obj);
     let transformed = this.osmtogeojson(obj);
-    this.mapSrv.renderTransformedGeojsonData2(transformed, this.map);
+    this.mapSrv.renderTransformedGeojsonDataForRouteWizard(transformed, this.map);
   }
 
 }

@@ -8,7 +8,6 @@ import * as L from 'leaflet';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
-import {ModalMapService} from './auto-route-creation/modal-map.service';
 
 @Injectable()
 export class MapService {
@@ -40,7 +39,6 @@ export class MapService {
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
-    // private modalMapSrv: ModalMapService,
   ) {
     this.baseMaps = {
       Empty: L.tileLayer('', {
@@ -489,7 +487,6 @@ export class MapService {
    * @returns {boolean}
    */
   public showRoute(rel: any, map: L.Map, elementsMap: any): boolean {
-    console.log('highlight type', JSON.parse(JSON.stringify(this.highlightType)));
     for (const member of rel.members) {
       if (
         member.type === 'node' &&
@@ -520,16 +517,13 @@ export class MapService {
         this.storageSrv.relationsForRoute.push(member.ref);
       }
     }
-    console.log('stops', JSON.parse(JSON.stringify(this.storageSrv.stopsForRoute)), 'plat', JSON.parse(JSON.stringify(this.storageSrv.platformsForRoute)));
     // setup highlight type
     if (
       this.storageSrv.stopsForRoute.length === 0 &&
       this.storageSrv.platformsForRoute.length !== 0
     ) {
-      console.log('changed to platforms');
       this.highlightType = 'Platforms';
     }
-    console.log('highlight type', JSON.parse(JSON.stringify(this.highlightType)));
     this.highlightTypeEmitter.emit({ highlightType: this.highlightType });
 
     let memberRefs;
@@ -541,7 +535,6 @@ export class MapService {
         memberRefs = this.storageSrv.platformsForRoute;
         break;
     }
-    console.log('member refs', JSON.parse(JSON.stringify(memberRefs)));
     const latlngs = Array();
     for (const ref of memberRefs) {
       const latlng: L.LatLngExpression = this.findCoordinates(ref, elementsMap);
@@ -863,10 +856,9 @@ export class MapService {
    * Renders GeoJson data on the map.
    * @param transformedGeojson
    */
-  public renderTransformedGeojsonData2(transformedGeojson: any, map: L.Map): void {
+  public renderTransformedGeojsonDataForRouteWizard(transformedGeojson: any, map: L.Map): void {
     this.ptLayer = L.geoJSON(transformedGeojson, {
       filter: (feature) => {
-        // filter away already rendered elements
         if (this.storageSrv.elementsRenderedModalMap.has(feature.id)) {
           return false;
         } else {
@@ -874,9 +866,8 @@ export class MapService {
         }
       },
       onEachFeature: (feature, layer) => {
-        // prevent rendering elements twice later
         this.storageSrv.elementsRenderedModalMap.add(feature.id);
-        this.enableDrag2(feature, layer);
+        this.enableDragForRouteWizard(feature, layer);
       },
       pointToLayer: (feature, latlng) => {
         return this.stylePoint(feature, latlng);
@@ -886,53 +877,14 @@ export class MapService {
     this.ptLayer.addTo(map);
   }
 
-
-  public enableDrag2(feature: any, layer: any): any {
+  public enableDragForRouteWizard(feature: any, layer: any): any {
     layer.on('click', (e) => {
         this.handleAutoRouteModalMarkerClick(feature);
     });
-    // layer.on('click', (e) => {
-    //   if (this.membersEditing) {
-    //     this.handleMembershipToggle(feature);
-    //   } else if (this.editingMode) {
-    //     const marker = e.target;
-    //     if (!marker.dragging._draggable) {
-    //       marker.dragging.enable();
-    //     } else {
-    //     }
-    //   }
-    // });
-    //
-    // layer.on('dragend', (e) => {
-    //   // console.log("LOG (map s.) Dragend event during editing mode", e);
-    //   const marker = e.target;
-    //   const featureTypeId = marker.feature.properties.id.split('/');
-    //   const featureType = featureTypeId[0];
-    //   const featureId = featureTypeId[1];
-    //   const lat = marker.feature.geometry.coordinates[1];
-    //   const lng = marker.feature.geometry.coordinates[0];
-    //   const originalCoords: L.LatLng = new L.LatLng(lat, lng);
-    //   const newCoords: L.LatLng = marker['_latlng']; // .; getLatLng()
-    //   const distance = originalCoords.distanceTo(newCoords);
-    //   if (distance > 100) {
-    //     marker.setLatLng(originalCoords).update();
-    //     alert(
-    //       'Current node was dragged more than 100 meters away which is not allowed - resetting position.',
-    //     );
-    //     return;
-    //   }
-    //   const change = {
-    //     from: { lat, lng },
-    //     to: { lat: newCoords['lat'], lng: newCoords['lng'] },
-    //   };
-    // });
   }
 
   private handleAutoRouteModalMarkerClick(feature: any): any {
     const featureId: number = this.getFeatureIdFromMarker(feature);
-    console.log('clicked', featureId);
     this.autoRouteMapNodeClick.emit(featureId);
-    // const element = this.getElementById(featureId);
-
   }
 }

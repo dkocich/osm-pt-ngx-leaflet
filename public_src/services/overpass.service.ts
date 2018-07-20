@@ -808,10 +808,9 @@ export class OverpassService {
       );
       (._;<;);
       out meta;`;
-    console.log('query', requestBody);
-    requestBody = this.replaceBboxString(requestBody.trim());
+    requestBody     = this.replaceBboxString(requestBody.trim());
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, {headers: Utils.HTTP_HEADERS})
       .subscribe(
         (res) => {
           if (!res) {
@@ -825,9 +824,9 @@ export class OverpassService {
 
           for (const element of res['elements']) {
             if (!this.storageSrv.elementsMap.has(element.id)) {
-              this.storageSrv.elementsMap.set(element.id, element); }
+              this.storageSrv.elementsMap.set(element.id, element);
+            }
           }
-// TODO set only changed value
           this.appActions.actSetErrorCorrectionMode({
             nameSuggestions: {
               found          : true,
@@ -847,134 +846,32 @@ export class OverpassService {
         });
   }
 
-  public downloadMultipleNodes(idsArr: any[], center: any): any {
-    let refArr = [];
-    // search for all relations which are routes around a center
-    // TODO : around query
-    for (let ref of refArr) {
-
-    }
-    // TODO  is not equal to areas
-    // TODO search in current area
-    let requestBody: string = `
-            [out:json][timeout:25][bbox:{{bbox}}];
-            (
-              rel([stop_area!=yes](around:1000, ${center}));
-              <<;
-            );
-            out meta;`;
-    console.log(
-      'LOG (overpass s.) Querying rel.\'s route masters with query:',
-      requestBody,
-    );
-    requestBody = this.replaceBboxString(requestBody);
-    this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
-      .subscribe(
-        (res) => {
-          if (!res) {
-            return alert(
-              'No response from API. Try to select other master relation again please.',
-            );
-          }
-          this.processSrv.processNodeResponse(res);
-          let relations = [];
-          let refs = [];
-          for (const element of res['elements']) {
-              switch (element.type) {
-                case 'relation':
-                   relations.push(element);
-                   refs.push(element.tags.route_ref);
-              }
-            }
-
-            // this.compareWithNodeRefs(refs);
-        },
-        (err) => {
-          this.warnSrv.showError();
-          throw new Error(err.toString());
-        },
-      );
-  }
-
-  // public downloadMultipleNodes(idsArr: any[], center: any): any {
-  //   let refArr = [];
-  //   // search for all relations which are routes around a center
-  //
-  //   for (let ref of refArr) {
-  //
-  //   }
-  //
-  //
-  //   let requestBody: string = `
-  //           [out:json][timeout:25][bbox:{{bbox}}];
-  //           (
-  //             rel([stop_area!=yes](around:1000, ${center}));
-  //             <<;
-  //           );
-  //           out meta;`;
-  //   console.log(
-  //     'LOG (overpass s.) Querying rel.\'s route masters with query:',
-  //     requestBody,
-  //   );
-  //   requestBody = this.replaceBboxString(requestBody);
-  //   this.httpClient
-  //     .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
-  //     .subscribe(
-  //       (res) => {
-  //         if (!res) {
-  //           return alert(
-  //             'No response from API. Try to select other master relation again please.',
-  //           );
-  //         }
-  //         this.processSrv.processNodeResponse(res);
-  //         let relations = [];
-  //         let refs = [];
-  //         for (const element of res['elements']) {
-  //             switch (element.type) {
-  //               case 'relation':
-  //                  relations.push(element);
-  //                  refs.push(element.tags.route_ref);
-  //             }
-  //           }
-  //       },
-  //       (err) => {
-  //         this.warnSrv.showError();
-  //         throw new Error(err.toString());
-  //       },
-  //     );
-  // }
 
   public requestNewOverpassDataForModalMap(findRoutes: boolean): void {
     const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
     this.httpClient
       .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
         responseType: 'json',
-        headers: Utils.HTTP_HEADERS,
+        headers     : Utils.HTTP_HEADERS,
       })
       .subscribe(
         (res: IOverpassResponse) => {
-          console.log('query', requestBody);
-          console.log('LOG (overpass s.)', res);
           this.processSrv.savedContinousQueryResponses.push(res);
-          // this.processSrv.processResponse(res);
+          for (let element of res.elements) {
+            if (!this.storageSrv.modalMapElementsMap.has(element.id)) {
+              this.storageSrv.modalMapElementsMap.set(element.id, element); }
+          }
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           let transformed = this.osmtogeojson(res);
-          this.mapSrv.renderTransformedGeojsonData2(transformed, this.modalMapSrv.map);
+          this.mapSrv.renderTransformedGeojsonDataForRouteWizard(transformed, this.modalMapSrv.map);
           this.warnSrv.showSuccess();
           if (findRoutes) {
-            console.log('overpass s. find routes started');
-            // only download not downloaded data
             let stopsInBounds = this.processSrv.findStopsInBounds(this.modalMapSrv.map);
-            console.log('overpass s. stops in current bounds', stopsInBounds);
             let routeRefs = this.processSrv.getRouteRefsFromNodes(stopsInBounds);
-            console.log('overpass s. route refs from nodes(duplicates removed)', routeRefs);
             if (routeRefs.length !== 0) {
-              console.log('overpass s. route refs length not 0, get multiple node data now');
               this.getMultipleNodeDataForAutoRoute(stopsInBounds);
-              } else {
+            } else {
               this.processSrv.routesRecieved.emit(null);
-              // alert('no stops in bound with rr tag');
             }
           }
         },
@@ -999,7 +896,6 @@ export class OverpassService {
         }
       }
     }
-    console.log('map', ref_map);
     return ref_map;
   }
 
@@ -1021,10 +917,7 @@ export class OverpassService {
             return alert('No response from API. Try to select element again please.');
           }
           this.processSrv.savedMultipleNodeDataResponses.push(res);
-          console.log('LOG (overpass s.) multiple node data', res);
-          // move in process srv?
           this.processSrv.processMultipleNodeDataResponse(res);
-
           this.warnSrv.showSuccess();
         },
         (err) => {
@@ -1033,68 +926,15 @@ export class OverpassService {
         });
   }
 
-  // private processMultipleNodeDataResponse(response: any, nodeRefs: any): any {
-  //   let refs: any[] = [];
-  //   for (const element of response.elements) {
-  //     if (!this.storageSrv.elementsMap.has(element.id)) {
-  //       this.storageSrv.elementsMap.set(element.id, element);
-  //       if (!element.tags) {
-  //         continue;
-  //       }
-  //       switch (element.type) {
-  //         case 'node':
-  //           this.storageSrv.elementsDownloaded.add(element.id);
-  //           if (element.tags.bus === 'yes' || element.tags.public_transport) {
-  //             this.storageSrv.listOfStops.push(element);
-  //           }
-  //           break;
-  //         case 'relation':
-  //           if (element.tags.public_transport === 'stop_area') {
-  //             this.storageSrv.listOfAreas.push(element);
-  //           } else {
-  //             // console.log('relation', element);
-  //             if (element.tags.ref) {
-  //               console.log('element', element);
-  //               refs.push(element.tags.ref);
-  //             }
-  //             this.storageSrv.listOfRelations.push(element);
-  //             break;
-  //           }
-  //       }
-  //     }
-  //   }
-  //   console.log('downloaded ref', refs);
-  //   console.log('type', typeof refs[0]);
-  //   let unique = this.removeDuplicatefromArray(refs);
-  //   let refnodes = this.compareArrays(nodeRefs, unique);
-  //   if (refnodes.length !== 0) {
-  //     let newRoutes = [];
-  //
-  //     this.storageSrv.elementsMap.forEach((stop) => {
-  //       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-  //         if (refnodes.includes(stop.tags.route_ref) && this.autoTaskSrv.map.getBounds().contains({ lat : stop.lat, lng: stop.lon })) {
-  //           newRoutes.push(stop);
-  //         }
-  //       }
-  //     });
-  //
-  //     this.autoTaskSrv.newRoutes(newRoutes);
-  //   }
-  // }
-
   private removeDuplicatefromArray(arr: any[]): any{
-
     let unique = arr.filter((value, index, self) => {
       return self.indexOf(value) === index;
     });
     return unique;
-    // console.log('filter', unique);
   }
 
   private compareArrays(nodeRefs: any, routeRefs: any): any {
-    console.log('to compare', nodeRefs, routeRefs);
     let arr = [];
-
     for (let itemA of nodeRefs) {
       let flag = false;
       for (let itemB of routeRefs) {
@@ -1103,7 +943,6 @@ export class OverpassService {
           flag = true;
         }
       }
-
       if (flag === false) {
         arr.push(itemA);
       }

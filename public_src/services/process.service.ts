@@ -15,9 +15,8 @@ import { IOverpassResponse } from '../core/overpassResponse.interface';
 
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
-// import {AutoTasksService} from './auto-route-creation/auto-tasks.service';
-import {ModalMapService} from './auto-route-creation/modal-map.service';
-// import {AutoTasksService} from './auto-route-creation/auto-tasks.service';
+
+import { ModalMapService } from './auto-route-creation/modal-map.service';
 
 @Injectable()
 export class ProcessService {
@@ -651,14 +650,12 @@ export class ProcessService {
       console.log(err);
     });
   }
-// from here // also removes duplicates
+
   public static getIndividualRouteRefs(stops: any[]): any {
-    // console.log(stops);
     let refs = [];
     for (let stop of stops) {
       refs.push(stop.tags.route_ref);
     }
-    // console.log(refs);
     let ref_map = new Map();
     for (let routeRefs of refs) {
       let singleRefs = routeRefs.split(';');
@@ -690,14 +687,11 @@ export class ProcessService {
     });
     return stopsInBounds;
   }
-// process srv? put
-  public processMultipleNodeDataResponse(response: any): any {
-    let stopsInBounds = this.findStopsInBounds(this.modalMapSrv.map);
-    let nodeRefs = this.getRouteRefsFromNodes(stopsInBounds);
-    let refsOfRoutes: any[] = [];
-    // TODO what?
 
-    // this.processNodeResponse(response);
+  public processMultipleNodeDataResponse(response: any): any {
+    let stopsInBounds       = this.findStopsInBounds(this.modalMapSrv.map);
+    let nodeRefs            = this.getRouteRefsFromNodes(stopsInBounds);
+    let refsOfRoutes: any[] = [];
     for (const element of response.elements) {
       if (!this.storageSrv.modalMapElementsMap.has(element.id)) {
         this.storageSrv.modalMapElementsMap.set(element.id, element);
@@ -706,21 +700,14 @@ export class ProcessService {
         refsOfRoutes.push(element.tags.ref);
       }
     }
-    console.log('process s. refs of routes', refsOfRoutes);
     let uniqueRefsOfRoutes = ProcessService.removeDuplicatesFromArray(refsOfRoutes);
-    console.log('process s. unique refs of routes', uniqueRefsOfRoutes);
-    let notAddedRefs = ProcessService.compareArrays(nodeRefs, uniqueRefsOfRoutes);
-    console.log('process s. comparing node refs and route refs , not added found:', notAddedRefs);
-    notAddedRefs = this.filterPreviouslyAddedRefs(notAddedRefs);
-    console.log('after filter process s. comparing node refs and route refs , not added found:', notAddedRefs);
+    let notAddedRefs       = ProcessService.compareArrays(nodeRefs, uniqueRefsOfRoutes);
+    notAddedRefs           = this.filterPreviouslyAddedRefs(notAddedRefs);
 
     if (notAddedRefs.length !== 0) {
-      console.log('process s. not added refs count not equal to 0:', notAddedRefs);
-      console.log('get stops for not added refs, map: ', this.getStopsForNewRoutes(notAddedRefs));
       this.routesRecieved.emit(this.getStopsForNewRoutes(notAddedRefs));
     } else {
       this.routesRecieved.emit(null);
-      // alert('no route can be formed with tag which does not already exist');
     }
   }
 
@@ -732,7 +719,7 @@ export class ProcessService {
   public getRouteRefsFromNodes(stopsInBoundsIDs: any): any {
     let withRouteRefTag = [];
     let ref_map;
-    let refValues = [];
+    let refValues       = [];
     for (let id of stopsInBoundsIDs) {
       let stop = this.storageSrv.modalMapElementsMap.get(id);
       if (stop.tags.route_ref) {
@@ -741,8 +728,6 @@ export class ProcessService {
     }
     if (withRouteRefTag.length !== 0) {
       ref_map = ProcessService.getIndividualRouteRefs(withRouteRefTag);
-      console.log('process s. (to get route refs from nodes) stops in bounds with rr tag', withRouteRefTag);
-      console.log('process s. ref map formed (of stops/platforms)', ref_map);
       Array.from(ref_map).map(([key]) => {
         refValues.push(key);
       });
@@ -757,7 +742,6 @@ export class ProcessService {
   }
 
   private static compareArrays(nodeRefs: any, routeRefs: any): any {
-    console.log('to compare:  node refs', nodeRefs, 'route refs', routeRefs);
     let notAdded = [];
     for (let itemA of nodeRefs) {
       let flag = false;
@@ -771,7 +755,6 @@ export class ProcessService {
         notAdded.push(itemA);
       }
     }
-    console.log('not added in routes node refs', notAdded);
     return notAdded;
   }
 
@@ -802,7 +785,6 @@ export class ProcessService {
 
   private filterPreviouslyAddedRefs(refs: any[]): any{
     let index;
-    console.log('filter , map', this.storageSrv.modalMapElementsMap);
     this.storageSrv.modalMapElementsMap.forEach((element) =>{
       if (element.type === 'relation'
         && element.tags.public_transport !== 'stop_area' &&
@@ -811,11 +793,9 @@ export class ProcessService {
         index = refs.indexOf(element.tags.ref);
       }
     });
-    console.log('index', index);
-    if(index !== undefined){
+    if (index !== undefined) {
       refs.splice(index, 1);
     }
-
     return refs;
   }
 

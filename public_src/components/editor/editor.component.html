@@ -37,12 +37,6 @@
           (click)="createElement('platform')">
     <img src="/assets/transport/platform.png" alt="platform">&nbsp;{{ 'Platform' | translate }}
   </button>
-  <button id="route-creation-btn" type="button" class="btn btn-default on-map" container="body"
-          tooltip="{{ 'Create route automatically' | translate }}"
-          [class.btn-primary]="creatingElementOfType === 'route'"
-          (click)="createAutomaticRoute()">
-    <img src="/assets/transport/platform.png" alt="platform">&nbsp;{{ 'Route' | translate }}
-  </button>
 </div>
 
 <div class="modal fade" bsModal #editModal="bs-modal" [config]="{backdrop: 'static'}"

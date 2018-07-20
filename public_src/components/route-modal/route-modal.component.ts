@@ -9,7 +9,7 @@ import { ProcessService } from '../../services/process.service';
 import { EditService } from '../../services/edit.service';
 
 import * as L from 'leaflet';
-import {BsModalRef, TabsetComponent} from 'ngx-bootstrap';
+import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
 
 import { Subject } from 'rxjs/Subject';
 
@@ -26,24 +26,20 @@ export class RouteModalComponent {
 
   public map: L.Map;
   public routesMap: Map<string, any[]> = new Map();
-  public newRoutesRefs = [];
-  public osmtogeojson: any = require('osmtogeojson');
-  private startEventProcessing = new Subject<L.LeafletEvent>();
-  public message = '';
-  public currentView = 'routes-menu';
-  public newRoute: any = {};
-  public newRouteMembersSuggestions = [];
-  public addedNewRouteMembers = [];
+  public newRoutesRefs                 = [];
+  public osmtogeojson: any             = require('osmtogeojson');
+  private startEventProcessing         = new Subject<L.LeafletEvent>();
+  public newRoute: any                 = {};
+  public newRouteMembersSuggestions    = [];
+  public addedNewRouteMembers          = [];
   public addedTags;
-  public membersHighlightLayerGroup = L.layerGroup();
-  // modalRef: BsModalRef;
+  public membersHighlightLayerGroup    = L.layerGroup();
 
-  @Input() public tagKey: string = '';
+  @Input() public tagKey: string   = '';
   @Input() public tagValue: string = '';
 
-  public canStopsConnect = false;
+  public canStopsConnect     = false;
   public canPlatformsConnect = false;
-  // public firstShow: boolean;
 
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
 
@@ -59,13 +55,12 @@ export class RouteModalComponent {
 
     this.processSrv.routesRecieved.subscribe((routesMap) => {
       if (routesMap === null) {
-        alert('No suggestions available for the chosen map bounds. Please select again.')
+        alert('No suggestions available for the chosen map bounds. Please select again.');
       } else {
-        console.log('route map rec' , routesMap);
-        this.routesMap = new Map();
+        this.routesMap     = new Map();
         this.newRoutesRefs = [];
         this.filterRoutesMap(routesMap);
-        this.highlightFirstRoute(this.routesMap);
+        this.highlightFirstRoute();
         this.routesMap.forEach((value, key) => {
           this.newRoutesRefs.push(key);
         });
@@ -80,32 +75,26 @@ export class RouteModalComponent {
   }
 
   public ngOnInit(): void {
-    console.log('init');
     this.selectTab(1);
     this.storageSrv.elementsRenderedModalMap = new Set();
-    // if (this.firstShow) {
-      this.map = L.map('auto-route-modal-map', {
-        center: this.mapSrv.map.getCenter(),
-        layers: [ L.tileLayer(
-          'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-          {
-            attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank'
+    this.map                                 = L.map('auto-route-modal-map', {
+      center       : this.mapSrv.map.getCenter(),
+      layers       : [L.tileLayer(
+        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+        {
+          attribution  : `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank'
             rel='noopener'>OpenStreetMap</a>&nbsp;&copy;&nbsp;<a href='https://cartodb.com/attributions'
             target='_blank' rel='noopener'>CartoDB</a>`,
-            maxNativeZoom: 19,
-            maxZoom: 22,
-          },
-        )],
-        maxZoom: 22,
-        minZoom: 4,
-        zoom: 14,
-        zoomAnimation: false,
-        zoomControl: false,
-        // trackResize: false,
-      });
-    // } else {
-    //   this.map =  document.getElementById('auto-route-modal-map');
-    // }
+          maxNativeZoom: 19,
+          maxZoom      : 22,
+        },
+      )],
+      maxZoom      : 22,
+      minZoom      : 4,
+      zoom         : 14,
+      zoomAnimation: false,
+      zoomControl  : false,
+    });
     L.control.zoom({ position: 'topright' }).addTo(this.map);
     L.control.scale().addTo(this.map);
     this.modalMapSrv.map = this.map;
@@ -120,7 +109,6 @@ export class RouteModalComponent {
       .subscribe(() => {
         this.overpassSrv.initDownloaderForModalMap(this.modalMapSrv.map);
       });
-
   }
 
   private findMissingRoutes(): any {
@@ -135,33 +123,27 @@ export class RouteModalComponent {
     this.mapSrv.clearHighlight(this.modalMapSrv.map);
     let routeMembers = members;
     this.assignRolesToMembers(routeMembers);
-    let rel = {
+    let rel                           = {
       members: routeMembers,
-      tags: { name: 'nil' },
+      tags   : { name: 'nil' },
     };
-    console.log('new temp rel to highlight: ', rel);
     this.storageSrv.stopsForRoute     = [];
     this.storageSrv.platformsForRoute = [];
     this.mapSrv.showRoute(rel, this.modalMapSrv.map, this.storageSrv.modalMapElementsMap);
     this.adjustZoomForRoute(routeMembers);
   }
-// TODO change to more than 3?
+
   private checkMemberCount(members: any): any {
-    console.log('members length', members.length, members);
     return members.length !== 1;
   }
 
-  private highlightFirstRoute(routesMap: any): any {
-    let members        = this.routesMap.get(this.routesMap.keys().next().value);
-    console.log('first ref key members', members);
+  private highlightFirstRoute(): any {
+    let members  = this.routesMap.get(this.routesMap.keys().next().value);
     let countObj = this.countNodeType(members);
-    console.log('countobj', JSON.parse(JSON.stringify(countObj)));
     this.useAndSetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
-    console.log(' first connecty highlight', this.mapSrv.highlightType);
     this.highlightRoute(members);
-    console.log(' first after highlight connecty highlight', this.mapSrv.highlightType);
-
   }
+
   private adjustZoomForRoute(members: any): any {
     let latlngs: L.LatLng[] = [];
     for (let member of members) {
@@ -205,25 +187,21 @@ export class RouteModalComponent {
     this.useAndSetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
     this.highlightRoute(this.addedNewRouteMembers);
     this.highlightMembers(this.addedNewRouteMembers);
-    this.currentView = 'selected-route';
   }
 
   private selectTab(step: number): void {
     this.stepTabs.tabs[step - 1].disabled = false;
-
-    console.log('select tabs', this.stepTabs.tabs);
-    this.stepTabs.tabs[step - 1].active = true;
-
-    // disable all ahead tabs
+    this.stepTabs.tabs[step - 1].active   = true;
     for (let i = step + 1; i < 5; i++) {
       this.stepTabs.tabs[i - 1].disabled = true;
     }
-
   }
 
   private handleModalMapMarkerClick(featureId: number): any {
-   let newMember = this.processSrv.getElementById(featureId, this.storageSrv.modalMapElementsMap);
-   this.addNewMemberToRoute(newMember);
+    if (this.stepTabs.tabs[2].active) {
+      let newMember = this.processSrv.getElementById(featureId, this.storageSrv.modalMapElementsMap);
+      this.addNewMemberToRoute(newMember);
+    }
   }
 
   private addNewMemberToRoute(newMember: any): void {
@@ -231,10 +209,7 @@ export class RouteModalComponent {
     members.push(newMember);
     this.addedNewRouteMembers = this.addedNewRouteMembers.concat(members);
     let countObj = this.countNodeType(this.addedNewRouteMembers);
-    console.log('add new', this.mapSrv.highlightType);
     this.resetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
-    console.log(' after reset, add new', this.mapSrv.highlightType);
-    console.log('highlight type in add new members before highlighting', JSON.parse(JSON.stringify(this.mapSrv.highlightType)));
     this.mapSrv.clearHighlight(this.modalMapSrv.map);
     this.clearMembersHighlight();
     this.highlightRoute(this.addedNewRouteMembers);
@@ -251,18 +226,15 @@ export class RouteModalComponent {
       }
     }
     let countObj = this.countNodeType(this.addedNewRouteMembers);
-    console.log('add new', this.mapSrv.highlightType);
     this.resetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
     if (index > -1) {
       this.addedNewRouteMembers.splice(index, 1);
     }
-    this.addedNewRouteMembers = [ ...this.addedNewRouteMembers ];
+    this.addedNewRouteMembers = [...this.addedNewRouteMembers];
     this.mapSrv.clearHighlight(this.modalMapSrv.map);
     this.clearMembersHighlight();
     this.highlightRoute(this.addedNewRouteMembers);
     this.highlightMembers(this.addedNewRouteMembers);
-    // this.mapSrv.clearHighlight(this.modalMapSrv.map);
-    // this.highlightRoute(this.addedNewRouteMembers);
   }
 
   public showConnectivity(type: string): any {
@@ -270,9 +242,7 @@ export class RouteModalComponent {
     let countObj = this.countNodeType(this.addedNewRouteMembers);
     this.resetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
     this.setHighlightType(type);
-    console.log('show connectivity', JSON.parse(JSON.stringify(this.mapSrv.highlightType)));
     this.highlightRoute(this.addedNewRouteMembers);
-    document.getElementById(type).style.backgroundColor = 'blue';
     this.styleButtons(type);
   }
 
@@ -306,7 +276,6 @@ export class RouteModalComponent {
     } else {
       this.canPlatformsConnect = false;
     }
-    console.log('stops can cnnect', this.canStopsConnect, 'platforms can conn', this.canPlatformsConnect);
   }
 
   private viewSuggestedRoute(ref: any): any {
@@ -337,7 +306,6 @@ export class RouteModalComponent {
         this.routesMap.set(key, value);
       }
     });
-    console.log('after filter and assign', this.routesMap);
   }
 
   private countNodeType(members: any): any {
@@ -357,43 +325,37 @@ export class RouteModalComponent {
   private styleButtons(type: string): any {
     switch (type) {
       case 'Stops':
-        document.getElementById(type).style.backgroundColor = 'blue';
+        document.getElementById(type).style.backgroundColor        = 'cornflowerblue';
         document.getElementById('Platforms').style.backgroundColor = 'white';
         break;
       case 'Platforms':
-        document.getElementById(type).style.backgroundColor = 'blue';
+        document.getElementById(type).style.backgroundColor    = 'cornflowerblue';
         document.getElementById('Stops').style.backgroundColor = 'white';
         break;
     }
   }
 
   private reorderMembers(members: any): any {
-
     this.mapSrv.clearHighlight(this.modalMapSrv.map);
     this.highlightRoute(this.addedNewRouteMembers);
-
   }
 
   private saveStep3(): any {
-   // this.addedTags = this.newRoute.tags;
    this.selectTab(4);
   }
 
   private createChange(action: string, key: any, event: any): any {
-    console.log('key', key);
     switch (action) {
       case 'change tag':
-       this.newRoute.tags[key] = event.target.value;
-       console.log('after change tag', this.addedTags);
-       break;
+        this.newRoute.tags[key] = event.target.value;
+        break;
       case 'remove tag':
         delete this.newRoute.tags[key];
-        // this.addedTags = { ...this.addedTags };
         break;
       case 'add tag':
         this.newRoute.tags[key] = event;
-        this.tagKey = '';
-        this.tagValue = '';
+        this.tagKey             = '';
+        this.tagValue           = '';
         break;
     }
     this.newRoute.tags = { ...this.newRoute.tags };
@@ -401,14 +363,13 @@ export class RouteModalComponent {
 
   public saveStep4(): any {
     this.assignRolesToMembers(this.addedNewRouteMembers);
-    let relMembers = this.formRelMembers(this.addedNewRouteMembers);
+    let relMembers        = this.formRelMembers(this.addedNewRouteMembers);
     this.newRoute.members = relMembers;
-    let tags = this.filterEmptyTags(this.newRoute);
-    this.newRoute.tags = tags;
-    let change                     = { from: undefined, to: this.newRoute };
+    let tags              = this.filterEmptyTags(this.newRoute);
+    this.newRoute.tags    = tags;
+    let change            = {from: undefined, to: this.newRoute};
     this.storageSrv.modalMapElementsMap.set(this.newRoute.id, this.newRoute);
     this.editSrv.addChange(this.newRoute, 'add route', change);
-    // this.processAllDownloadedOnMainMap();
     this.bsModalRef.hide();
   }
 
@@ -442,18 +403,10 @@ export class RouteModalComponent {
     return relMembers;
   }
 
-  // let circle = L.circleMarker([node.lat, node.lon], {
-  //   radius : 15,
-  //   color  : '#00ffff',
-  //   opacity: 0.75,
-  // });
-
   private highlightMembers(members: any[]): any {
-    this.membersHighlightLayerGroup = new L.LayerGroup();
-    for(let member of members) {
+    for (let member of members) {
       const latlng = { lat: member.lat, lng: member.lon };
-
-      let circle = L.circleMarker(latlng, {
+      let circle   = L.circleMarker(latlng, {
         radius : 15,
         color  : '#00ffff',
         opacity: 0.75,
@@ -465,10 +418,9 @@ export class RouteModalComponent {
 
   private clearMembersHighlight(): any {
     this.membersHighlightLayerGroup.clearLayers();
-    // this.membersHighlightLayerGroup = null;
   }
 
-  private jumpToStep(step: string){
+  private jumpToStep(step: string): any {
     switch (step) {
       case '1':
         this.clearMembersHighlight();
@@ -483,19 +435,14 @@ export class RouteModalComponent {
         this.highlightRoute(this.addedNewRouteMembers);
         this.highlightMembers(this.addedNewRouteMembers);
         break;
-
     }
   }
 
   private filterEmptyTags(route: any): any {
     let tags = route.tags;
-    console.log('routes tag', route.tags);
     for (let property in tags) {
       if (tags.hasOwnProperty(property)) {
-        console.log('tags prop', property);
-        console.log('tags prop val', tags[property]);
-        if (tags[property] === "") {
-
+        if (tags[property] === '') {
           delete tags[property];
         }
       }

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
+import {AutoTasksService} from '../../services/auto-route-creation/auto-tasks.service';
 
 @Component({
   selector: 'settings',
@@ -16,10 +17,12 @@ import { ErrorHighlightService } from '../../services/error-highlight.service';
 export class SettingsComponent {
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
   @select(['app', 'goodConnectMode']) public readonly goodConnectMode$: Observable<boolean>;
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
   constructor(
     public appActions: AppActions,
     private errorHighlightSrv: ErrorHighlightService,
+    private autoTaskSrv: AutoTasksService,
   ) {
     //
   }
@@ -34,5 +37,9 @@ export class SettingsComponent {
     this.errorHighlightSrv.quit();
     this.appActions.actSetAdvancedExpMode(advancedExpMode);
     localStorage.setItem('advancedMode', JSON.stringify(advancedExpMode));
+  }
+
+  private createAutomaticRoute(): any {
+    this.autoTaskSrv.createAutomaticRoute();
   }
 }

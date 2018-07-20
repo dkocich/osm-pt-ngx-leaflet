@@ -163,9 +163,4 @@ export class EditorComponent implements OnInit, AfterViewInit {
       }, 250);
     }
   }
-
-  private createAutomaticRoute(): any {
-    this.autoTaskSrv.createAutomaticRoute();
-  }
-
 }
