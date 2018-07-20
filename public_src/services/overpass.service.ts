@@ -956,13 +956,15 @@ export class OverpassService {
         (res: IOverpassResponse) => {
           console.log('query', requestBody);
           console.log('LOG (overpass s.)', res);
-          this.processSrv.processResponse(res);
+          this.processSrv.savedContinousQueryResponses.push(res);
+          // this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           let transformed = this.osmtogeojson(res);
           this.mapSrv.renderTransformedGeojsonData2(transformed, this.modalMapSrv.map);
           this.warnSrv.showSuccess();
           if (findRoutes) {
             console.log('overpass s. find routes started');
+            // only download not downloaded data
             let stopsInBounds = this.processSrv.findStopsInBounds(this.modalMapSrv.map);
             console.log('overpass s. stops in current bounds', stopsInBounds);
             let routeRefs = this.processSrv.getRouteRefsFromNodes(stopsInBounds);
@@ -971,7 +973,8 @@ export class OverpassService {
               console.log('overpass s. route refs length not 0, get multiple node data now');
               this.getMultipleNodeDataForAutoRoute(stopsInBounds);
               } else {
-              alert('no stops in bound with rr tag');
+              this.processSrv.routesRecieved.emit(null);
+              // alert('no stops in bound with rr tag');
             }
           }
         },
@@ -1017,6 +1020,7 @@ export class OverpassService {
           if (!res) {
             return alert('No response from API. Try to select element again please.');
           }
+          this.processSrv.savedMultipleNodeDataResponses.push(res);
           console.log('LOG (overpass s.) multiple node data', res);
           // move in process srv?
           this.processSrv.processMultipleNodeDataResponse(res);

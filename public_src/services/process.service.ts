@@ -32,6 +32,8 @@ export class ProcessService {
   public membersToDownload: EventEmitter<object> = new EventEmitter();
   public refreshMasters: EventEmitter<object> = new EventEmitter();
   public routesRecieved: EventEmitter<any> =  new EventEmitter();
+  public savedContinousQueryResponses = [];
+  public savedMultipleNodeDataResponses = [];
 
   constructor(
     private ngRedux: NgRedux<IAppState>,
@@ -63,7 +65,7 @@ export class ProcessService {
        */
       (data) => {
         const featureId = Number(data);
-        const element = this.getElementById(featureId);
+        const element = this.getElementById(featureId, this.storageSrv.elementsMap);
         if (!element) {
           alert(
             'Problem occurred - clicked element was not found?! Select different element please.',
@@ -85,9 +87,9 @@ export class ProcessService {
    * Returns element with specific ID directly from mapped object.
    * @param featureId
    */
-  public getElementById(featureId: number): any {
-    if (this.storageSrv.elementsMap.has(featureId)) {
-      return this.storageSrv.elementsMap.get(featureId);
+  public getElementById(featureId: number, map: any): any {
+    if (map.has(featureId)) {
+      return map.get(featureId);
     }
   }
 
@@ -260,7 +262,7 @@ export class ProcessService {
         if (member['type'] !== 'node') {
           continue;
         }
-        const ref: IPtStop = this.getElementById(member.ref);
+        const ref: IPtStop = this.getElementById(member.ref, this.storageSrv.elementsMap);
         coords.push([ref.lat, ref.lon]);
       }
       const polyline = L.polyline(coords);
@@ -321,7 +323,7 @@ export class ProcessService {
     this.storageSrv.listOfVariants.length = 0;
     if (rel.tags.type === 'route_master') {
       for (const member of rel.members) {
-        const routeVariant = this.getElementById(member.ref);
+        const routeVariant = this.getElementById(member.ref, this.storageSrv.elementsMap);
         this.storageSrv.listOfVariants.push(routeVariant);
       }
     }
@@ -430,7 +432,7 @@ export class ProcessService {
       this.mapSrv.clearHighlight(this.mapSrv.map);
     }
     this.storageSrv.clearRouteData();
-    if (this.mapSrv.showRoute(rel, this.mapSrv.map)) {
+    if (this.mapSrv.showRoute(rel, this.mapSrv.map, this.storageSrv.elementsMap)) {
       this.mapSrv.drawTooltipFromTo(rel);
       this.filterStopsByRelation(rel);
       if (zoomToElement) {
@@ -474,7 +476,7 @@ export class ProcessService {
     }
     // explore first variant and focus tag/rel. browsers on selected master rel.
     this.exploreRelation(
-      this.getElementById(rel.members[0].ref),
+      this.getElementById(rel.members[0].ref, this.storageSrv.elementsMap),
       false,
       false,
       false,
@@ -544,7 +546,7 @@ export class ProcessService {
     this.storageSrv.listOfStopsForRoute.length = 0;
     rel.members.forEach((mem) => {
       if (this.storageSrv.elementsMap.has(mem.ref) && mem.type === 'node') {
-        const stop = this.getElementById(mem.ref);
+        const stop = this.getElementById(mem.ref, this.storageSrv.elementsMap);
         const stopWithMemberAttr = Object.assign(
           JSON.parse(JSON.stringify(mem)),
           JSON.parse(JSON.stringify(stop)),
@@ -576,7 +578,7 @@ export class ProcessService {
       const coords = [];
       for (const member of element['members']) {
         if (member.type === 'node') {
-          const elem = this.getElementById(member.ref);
+          const elem = this.getElementById(member.ref, this.storageSrv.elementsMap);
           if (elem['lat'] && elem['lon']) {
             coords.push([elem['lat'], elem['lon']]);
           }
@@ -679,7 +681,7 @@ export class ProcessService {
    */
   public findStopsInBounds(map: L.Map): any[] {
     let stopsInBounds = [];
-    this.storageSrv.elementsMap.forEach((stop) => {
+    this.storageSrv.modalMapElementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
         if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
           stopsInBounds.push(stop.id);
@@ -693,8 +695,13 @@ export class ProcessService {
     let stopsInBounds = this.findStopsInBounds(this.modalMapSrv.map);
     let nodeRefs = this.getRouteRefsFromNodes(stopsInBounds);
     let refsOfRoutes: any[] = [];
-    this.processNodeResponse(response);
+    // TODO what?
+
+    // this.processNodeResponse(response);
     for (const element of response.elements) {
+      if (!this.storageSrv.modalMapElementsMap.has(element.id)) {
+        this.storageSrv.modalMapElementsMap.set(element.id, element);
+      }
       if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {
         refsOfRoutes.push(element.tags.ref);
       }
@@ -704,12 +711,16 @@ export class ProcessService {
     console.log('process s. unique refs of routes', uniqueRefsOfRoutes);
     let notAddedRefs = ProcessService.compareArrays(nodeRefs, uniqueRefsOfRoutes);
     console.log('process s. comparing node refs and route refs , not added found:', notAddedRefs);
+    notAddedRefs = this.filterPreviouslyAddedRefs(notAddedRefs);
+    console.log('after filter process s. comparing node refs and route refs , not added found:', notAddedRefs);
+
     if (notAddedRefs.length !== 0) {
       console.log('process s. not added refs count not equal to 0:', notAddedRefs);
       console.log('get stops for not added refs, map: ', this.getStopsForNewRoutes(notAddedRefs));
       this.routesRecieved.emit(this.getStopsForNewRoutes(notAddedRefs));
     } else {
-      alert('no route can be formed with tag which does not already exist');
+      this.routesRecieved.emit(null);
+      // alert('no route can be formed with tag which does not already exist');
     }
   }
 
@@ -723,7 +734,7 @@ export class ProcessService {
     let ref_map;
     let refValues = [];
     for (let id of stopsInBoundsIDs) {
-      let stop = this.storageSrv.elementsMap.get(id);
+      let stop = this.storageSrv.modalMapElementsMap.get(id);
       if (stop.tags.route_ref) {
         withRouteRefTag.push(stop);
       }
@@ -766,7 +777,7 @@ export class ProcessService {
 
   private getStopsForNewRoutes(notAddedRefs: any): any{
     let stopsForNewRoutes = new Map();
-    this.storageSrv.elementsMap.forEach((stop) => {
+    this.storageSrv.modalMapElementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport) && stop.tags.route_ref) {
         let stops: any[] = [];
         stops.push(stop);
@@ -787,6 +798,25 @@ export class ProcessService {
       }
     });
     return stopsForNewRoutes;
+  }
+
+  private filterPreviouslyAddedRefs(refs: any[]): any{
+    let index;
+    console.log('filter , map', this.storageSrv.modalMapElementsMap);
+    this.storageSrv.modalMapElementsMap.forEach((element) =>{
+      if (element.type === 'relation'
+        && element.tags.public_transport !== 'stop_area' &&
+        element.tags.ref
+        && refs.includes(element.tags.ref)) {
+        index = refs.indexOf(element.tags.ref);
+      }
+    });
+    console.log('index', index);
+    if(index !== undefined){
+      refs.splice(index, 1);
+    }
+
+    return refs;
   }
 
 }

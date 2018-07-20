@@ -7,7 +7,7 @@ import 'zone.js/dist/long-stack-trace-zone';
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -141,6 +141,7 @@ const conditional_providers = [
     }),
     SortableModule.forRoot(),
     TabsModule.forRoot(),
+    ReactiveFormsModule,
   ],
   providers: [
     ...conditional_providers,

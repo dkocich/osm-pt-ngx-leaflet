@@ -61,6 +61,7 @@ export class EditService {
       (data) => {
         const element = this.processSrv.getElementById(
           Number(data.featureId),
+          this.storageSrv.elementsMap,
         );
         this.addChange(element, data.type, data.change);
       },
@@ -895,7 +896,7 @@ export class EditService {
       default:
         alert('Current change type was not recognized ' + JSON.stringify(edit));
     }
-    const element = this.processSrv.getElementById(edit['id']);
+    const element = this.processSrv.getElementById(edit['id'], this.storageSrv.elementsMap);
     if (edit.type === 'add element') {
       this.processSrv.exploreStop(element, false, false, false);
     }
@@ -1008,7 +1009,7 @@ export class EditService {
       default:
         alert('Current change type was not recognized ' + JSON.stringify(edit));
     }
-    const element = this.processSrv.getElementById(edit['id']);
+    const element = this.processSrv.getElementById(edit['id'], this.storageSrv.elementsMap);
     if (edit.type === 'add element') {
       this.processSrv.exploreStop(element, false, false, false);
     }

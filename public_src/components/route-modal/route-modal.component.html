@@ -1,9 +1,8 @@
 <div id="container">
   <div class="modal-header">
     <h4 class="modal-title pull-left">Automatic Route Creation</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
-      <span aria-hidden="true"></span>
-    </button>
+    <!--<button type="button" class="pull-right" aria-label="Close" (click)="closeModal()">-->
+      <i class="pull-right fa fa-times" aria-hidden="true" (click)="bsModalRef.hide()"></i>
   </div>
   <div class="modal-body text-center ">
     <div class="row full-height">
@@ -12,37 +11,30 @@
         </div>
       </div>
       <div class="col-md-7 full-height">
-        <button (click)="findMissingRoutes()">Find missing Routes</button>
-        <p>{{message}}</p>
         <div>
-
-
           <tabset [justified]="true"  type="pills" #stepTabs>
-            <tab heading="Step 1">
-              Step 1
+            <tab heading="Step 1" (select)="jumpToStep('1')" >
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <p class="text-success">Zoom into the required area on the map and find suggested Routes </p>
+                  <button class="btn btn-default" type="submit"  (click)="findMissingRoutes()">Show suggested Routes</button>
+                </div>
+              </div>
+
+            </tab>
+            <tab heading ="Step 2" (select)="jumpToStep('2')">
               <ul class="list-group scrollable-panel" *ngIf="newRoutesRefs.length !== 0">
-                <li class="list-group-item" *ngFor="let ref of newRoutesRefs">Route Ref: {{ref}}
-                  <button (click)="viewSuggestedRoute(ref)"> View </button>
-                  <button (click)="useRef(ref)"> Use </button>
-                </li>
+              <li class="list-group-item" *ngFor="let ref of newRoutesRefs">Route Ref: {{ref}}
+              <button (click)="viewSuggestedRoute(ref)"> View </button>
+              <button (click)="useRef(ref)"> Use </button>
+              </li>
               </ul>
             </tab>
-            <tab heading="Step 2">
-              Step 2
-              <button id = 'Stops' [disabled]="!canStopsConnect" (click)="showConnectivity('Stops')">stops</button>
-              <button id = 'Platforms' [disabled]="!canPlatformsConnect" (click)="showConnectivity('Platforms')">platforms</button>
-              <!--<ul class="list-group scrollable-panel">-->
-                Added members
-                <!--<li class="list-group-item" *ngFor="let member of addedNewRouteMembers">-->
-                  <!--{{member.type}}{{member.id}}-->
-                  <!--<i class="fa fa-times" (click)="removeMember(member.id)" aria-hidden="true"></i>-->
-                <!--</li>-->
-              <!--</ul>-->
-              <!--<div class="row">-->
-                <!--<div class="col-xs-6 col-6 col-md-5 col-lg-3">-->
-                  <!--<ul class="list-group ">-->
-
-                <bs-sortable
+            <tab heading="Step 3" (select)="jumpToStep('3')">
+              <button id = 'Stops' [disabled]="!canStopsConnect" (click)="showConnectivity('Stops')" [ngStyle] = "{'background-color' : mapSrv.highlightType ==='Stops' ? 'blue': 'white'}" >stops</button>
+              <button id = 'Platforms' [disabled]="!canPlatformsConnect" (click)="showConnectivity('Platforms')" [ngStyle] = "{'background-color' : mapSrv.highlightType ==='Platforms' ? 'blue': 'white'}">platforms</button>
+<ng-container *ngIf="addedNewRouteMembers.length !== 0">
+              <bs-sortable
                 (ngModelChange) = "reorderMembers(addedNewRouteMembers)"
                 [(ngModel)]="addedNewRouteMembers"
                 itemClass="sortable-item"
@@ -51,25 +43,23 @@
                 placeholderClass="sortable-item"
                 wrapperClass="sortable-wrapper"
                 [itemTemplate]="itemTemplate" >
-                  </bs-sortable>
-                  <!--</ul>-->
-                <!--</div>-->
-              <!--</div>-->
-             <button (click)="saveStep2()" > Done</button>
+              </bs-sortable>
+</ng-container>
+              <button (click)="saveStep3()">Done</button>
 
             </tab>
-            <tab heading="Step 3">
+            <tab heading="Step 4">
               Add Tags
               <div class="content panel panel-body panel-default">
                 <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
                   <tbody>
                   <tr *ngFor="let tag of newRoute.tags | keys; ">
-                    <ng-container >
+
                       <td>
-                        <input type="text" value="{{tag.key}}" data-type="key" [readonly]="true" >
+                        <input  type="text" value="{{tag.key}}" data-type="key" [readonly]="true" >
                       </td>
                       <td>
-                        <input type="text" value="{{tag.value}}" data-type="value"
+                        <input  type="text" value="{{tag.value}}" data-type="value"
                                (blur)="createChange('change tag', tag.key, $event)" >
                       </td>
                       <td>
@@ -79,28 +69,27 @@
                                 (click)="createChange('remove tag', tag.key)">
                         </button>
                       </td>
-                    </ng-container>
                   </tr>
                   <tr>
                     <td>
-                      <input #k class="form-control" type="text" minlength="1"
+                      <input  #k class="form-control" type="text" minlength="1"
                              placeholder="{{ 'Add new tag' | translate }}" [ngModel] = "tagKey">
                     </td>
                     <td>
-                      <input #v class="form-control" type="text" minlength="1"
+                      <input  #v class="form-control" type="text" minlength="1"
                              placeholder="{{ 'Add new value' | translate }}">
                     </td>
                     <td>
                       <button class="btn btn-sm btn-primary fa fa-plus" aria-hidden="true" container="body"
                               tooltip="{{ 'Create a new tag' | translate }}"
-                              (click)="createChange('add tag', k.value, v.value)" [ngModel] = "tagKey">
+                              (click)="createChange('add tag', k.value, v.value)">
                       </button>
                     </td>
                   </tr>
                   </tbody>
                 </table>
               </div>
-              <button (click)="saveStep3()"> Done </button>
+              <button (click)="saveStep4()"> Done </button>
             </tab>
           </tabset>
 
@@ -109,13 +98,11 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button (click)="save()">Save</button>
-    <button (click)="cancel()">Cancel</button>
   </div>
 </div>
 
 <ng-template #itemTemplate let-item="item" let-index="index">
-  <li class="list-group-item"> {{index}}:jhk {{item.value.id}}
+  <li class="list-group-item"> {{index}} . {{item.value.tags.public_transport}} [Name : {{item.value.tags.name}}]
     <i class="fa fa-times" (click)="removeMember(item.value.id)" aria-hidden="true"></i>
   </li>
 

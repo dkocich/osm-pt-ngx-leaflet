@@ -8,6 +8,7 @@ import * as L from 'leaflet';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
+import {ModalMapService} from './auto-route-creation/modal-map.service';
 
 @Injectable()
 export class MapService {
@@ -39,6 +40,7 @@ export class MapService {
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
+    // private modalMapSrv: ModalMapService,
   ) {
     this.baseMaps = {
       Empty: L.tileLayer('', {
@@ -384,8 +386,8 @@ export class MapService {
    * @param refId
    * @returns {{lat: number, lng: number}}
    */
-  public findCoordinates(refId: number): L.LatLngExpression {
-    const element = this.storageSrv.elementsMap.get(refId);
+  public findCoordinates(refId: number, map: any): L.LatLngExpression {
+    const element = map.get(refId);
     if (!element) {
       console.log('Warning - elem. not found ', refId, JSON.stringify(element));
     } else {
@@ -441,7 +443,7 @@ export class MapService {
         ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
         this.storageSrv.stopsForRoute.push(member.ref);
-        const latlng: L.LatLngExpression = this.findCoordinates(member.ref);
+        const latlng: L.LatLngExpression = this.findCoordinates(member.ref, this.storageSrv.elementsMap);
         if (latlng) {
           latlngs.push(latlng);
         }
@@ -486,7 +488,7 @@ export class MapService {
    * @param rel
    * @returns {boolean}
    */
-  public showRoute(rel: any, map: L.Map): boolean {
+  public showRoute(rel: any, map: L.Map, elementsMap: any): boolean {
     console.log('highlight type', JSON.parse(JSON.stringify(this.highlightType)));
     for (const member of rel.members) {
       if (
@@ -542,7 +544,7 @@ export class MapService {
     console.log('member refs', JSON.parse(JSON.stringify(memberRefs)));
     const latlngs = Array();
     for (const ref of memberRefs) {
-      const latlng: L.LatLngExpression = this.findCoordinates(ref);
+      const latlng: L.LatLngExpression = this.findCoordinates(ref, elementsMap);
       if (latlng) {
         latlngs.push(latlng);
       }
@@ -595,11 +597,12 @@ export class MapService {
     let latlngFrom;
     switch (this.highlightType) {
       case 'Stops':
-        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0]); // get first and last ID reference
+        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0],this.storageSrv.elementsMap); // get first and last ID reference
         return latlngFrom;
       case 'Platforms':
         latlngFrom = this.findCoordinates(
           this.storageSrv.platformsForRoute[0],
+          this.storageSrv.elementsMap,
         ); // get first and last ID reference
         return latlngFrom;
     }
@@ -613,6 +616,7 @@ export class MapService {
           this.storageSrv.stopsForRoute[
             this.storageSrv.stopsForRoute.length - 1
           ],
+          this.storageSrv.elementsMap,
         );
         return latlngTo;
       case 'Platforms':
@@ -620,6 +624,7 @@ export class MapService {
           this.storageSrv.platformsForRoute[
             this.storageSrv.platformsForRoute.length - 1
           ],
+          this.storageSrv.elementsMap,
         );
         return latlngTo;
     }
@@ -858,10 +863,19 @@ export class MapService {
    * Renders GeoJson data on the map.
    * @param transformedGeojson
    */
-  public renderTransformedGeojsonData2(transformedGeojson: any, map:L.Map): void {
+  public renderTransformedGeojsonData2(transformedGeojson: any, map: L.Map): void {
     this.ptLayer = L.geoJSON(transformedGeojson, {
+      filter: (feature) => {
+        // filter away already rendered elements
+        if (this.storageSrv.elementsRenderedModalMap.has(feature.id)) {
+          return false;
+        } else {
+          return true;
+        }
+      },
       onEachFeature: (feature, layer) => {
         // prevent rendering elements twice later
+        this.storageSrv.elementsRenderedModalMap.add(feature.id);
         this.enableDrag2(feature, layer);
       },
       pointToLayer: (feature, latlng) => {

@@ -119,7 +119,7 @@ export class ErrorHighlightService {
 
     L.DomEvent.addListener(popUpElement, 'click', (e) => {
       const featureId = Number(stop.id);
-      const element   = this.processSrv.getElementById(featureId);
+      const element   = this.processSrv.getElementById(featureId, this.storageSrv.elementsMap);
       if (element) {
 
         if ((errorCorrectionMode.nameSuggestions.startCorrection)) {
@@ -152,7 +152,7 @@ export class ErrorHighlightService {
    */
   public openModalWithComponentForName(errorObject: IErrorObject): void {
     const featureId = Number(errorObject.stop.id);
-    const element   = this.processSrv.getElementById(featureId);
+    const element   = this.processSrv.getElementById(featureId, this.storageSrv.elementsMap);
     const latlng = { lat: element.lat, lng: element.lon };
 
     let nearbyNodes = this.getNearbyNodeNames(latlng);
@@ -172,7 +172,7 @@ export class ErrorHighlightService {
    */
   public openModalWithComponentForRef(errorObject: IRefErrorObject): void {
     const featureId = Number(errorObject.stop.id);
-    const element   = this.processSrv.getElementById(featureId);
+    const element   = this.processSrv.getElementById(featureId, this.storageSrv.elementsMap);
     const latlng = { lat: element.lat, lng: element.lon };
     const parentRels       = this.getParentRelations(errorObject.stop.id);
 
