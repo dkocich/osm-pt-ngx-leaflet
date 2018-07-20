@@ -36,7 +36,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private editSrv: EditService,
     private mapSrv: MapService,
     private storageSrv: StorageService,
-    private autoTaskSrv: AutoTasksService,
+    // private autoTaskSrv: AutoTasksService,
   ) {
     //
   }

@@ -25,7 +25,6 @@ import { Subject } from 'rxjs/Subject';
 export class RouteModalComponent {
 
   public map: L.Map;
-  public routesMap: Map<string, any[]> = new Map();
   public newRoutesRefs                 = [];
   public osmtogeojson: any             = require('osmtogeojson');
   private startEventProcessing         = new Subject<L.LeafletEvent>();
@@ -33,7 +32,6 @@ export class RouteModalComponent {
   public newRouteMembersSuggestions    = [];
   public addedNewRouteMembers          = [];
   public addedTags;
-  public membersHighlightLayerGroup    = L.layerGroup();
 
   @Input() public tagKey: string   = '';
   @Input() public tagValue: string = '';
@@ -53,15 +51,16 @@ export class RouteModalComponent {
               public bsModalRef: BsModalRef,
               ) {
 
-    this.processSrv.routesRecieved.subscribe((routesMap) => {
+    this.modalMapSrv.routesRecieved.subscribe((routesMap) => {
       if (routesMap === null) {
         alert('No suggestions available for the chosen map bounds. Please select again.');
       } else {
-        this.routesMap     = new Map();
-        this.newRoutesRefs = [];
-        this.filterRoutesMap(routesMap);
-        this.highlightFirstRoute();
-        this.routesMap.forEach((value, key) => {
+        this.modalMapSrv.routesMap = new Map();
+        this.newRoutesRefs         = [];
+        // also assign modalservice' s var
+        this.modalMapSrv.filterRoutesMap(routesMap);
+        this.modalMapSrv.highlightFirstRoute(this.canStopsConnect, this.canPlatformsConnect);
+        this.modalMapSrv.routesMap.forEach((value, key) => {
           this.newRoutesRefs.push(key);
         });
         this.selectTab(2);
@@ -69,14 +68,19 @@ export class RouteModalComponent {
 
     });
 
-    this.mapSrv.autoRouteMapNodeClick.subscribe((featureId) => {
+    this.modalMapSrv.autoRouteMapNodeClick.subscribe((featureId) => {
       this.handleModalMapMarkerClick(featureId);
+    });
+
+    this.modalMapSrv.refreshAvailableConnectivity.subscribe((data) => {
+      this.canStopsConnect = data.canStopsConnect;
+      this.canPlatformsConnect = data.canPlatformsConnect;
     });
   }
 
   public ngOnInit(): void {
     this.selectTab(1);
-    this.storageSrv.elementsRenderedModalMap = new Set();
+    this.modalMapSrv.elementsRenderedModalMap = new Set();
     this.map                                 = L.map('auto-route-modal-map', {
       center       : this.mapSrv.map.getCenter(),
       layers       : [L.tileLayer(
@@ -99,7 +103,7 @@ export class RouteModalComponent {
     L.control.scale().addTo(this.map);
     this.modalMapSrv.map = this.map;
     this.modalMapSrv.renderAlreadyDownloadedData();
-    this.storageSrv.modalMapElementsMap = new Map<any, any>(this.storageSrv.elementsMap);
+    this.modalMapSrv.modalMapElementsMap = new Map<any, any>(this.storageSrv.elementsMap);
     this.modalMapSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
       this.startEventProcessing.next(event);
     });
@@ -119,42 +123,9 @@ export class RouteModalComponent {
     }
   }
 
-  private highlightRoute(members: any): void {
-    this.mapSrv.clearHighlight(this.modalMapSrv.map);
-    let routeMembers = members;
-    this.assignRolesToMembers(routeMembers);
-    let rel                           = {
-      members: routeMembers,
-      tags   : { name: 'nil' },
-    };
-    this.storageSrv.stopsForRoute     = [];
-    this.storageSrv.platformsForRoute = [];
-    this.mapSrv.showRoute(rel, this.modalMapSrv.map, this.storageSrv.modalMapElementsMap);
-    this.adjustZoomForRoute(routeMembers);
-  }
-
-  private checkMemberCount(members: any): any {
-    return members.length !== 1;
-  }
-
-  private highlightFirstRoute(): any {
-    let members  = this.routesMap.get(this.routesMap.keys().next().value);
-    let countObj = this.countNodeType(members);
-    this.useAndSetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
-    this.highlightRoute(members);
-  }
-
-  private adjustZoomForRoute(members: any): any {
-    let latlngs: L.LatLng[] = [];
-    for (let member of members) {
-      latlngs.push(L.latLng(member.lat, member.lon));
-    }
-    this.modalMapSrv.map.fitBounds(L.latLngBounds(latlngs));
-  }
-
   public useRef(ref: string): any {
     this.mapSrv.clearHighlight(this.modalMapSrv.map);
-    this.clearMembersHighlight();
+    this.modalMapSrv.clearMembersHighlight();
     const newId                     = this.editSrv.findNewId();
     this.newRoute                   = {
       id       : newId,
@@ -180,13 +151,13 @@ export class RouteModalComponent {
 
       },
     };
-    this.newRouteMembersSuggestions = this.routesMap.get(ref);
-    this.addedNewRouteMembers       = this.routesMap.get(ref);
+    this.newRouteMembersSuggestions = this.modalMapSrv.routesMap.get(ref);
+    this.addedNewRouteMembers       = this.modalMapSrv.routesMap.get(ref);
     this.selectTab(3);
-    let countObj = this.countNodeType(this.addedNewRouteMembers);
-    this.useAndSetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
-    this.highlightRoute(this.addedNewRouteMembers);
-    this.highlightMembers(this.addedNewRouteMembers);
+    let countObj = this.modalMapSrv.countNodeType(this.addedNewRouteMembers);
+    this.modalMapSrv.useAndSetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount, this.canStopsConnect, this.canPlatformsConnect);
+    this.modalMapSrv.highlightRoute(this.addedNewRouteMembers);
+    this.modalMapSrv.highlightMembers(this.addedNewRouteMembers);
   }
 
   private selectTab(step: number): void {
@@ -199,254 +170,70 @@ export class RouteModalComponent {
 
   private handleModalMapMarkerClick(featureId: number): any {
     if (this.stepTabs.tabs[2].active) {
-      let newMember = this.processSrv.getElementById(featureId, this.storageSrv.modalMapElementsMap);
+      let newMember = this.processSrv.getElementById(featureId, this.modalMapSrv.modalMapElementsMap);
       this.addNewMemberToRoute(newMember);
     }
   }
 
   private addNewMemberToRoute(newMember: any): void {
-    let members = [];
-    members.push(newMember);
-    this.addedNewRouteMembers = this.addedNewRouteMembers.concat(members);
-    let countObj = this.countNodeType(this.addedNewRouteMembers);
-    this.resetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
-    this.mapSrv.clearHighlight(this.modalMapSrv.map);
-    this.clearMembersHighlight();
-    this.highlightRoute(this.addedNewRouteMembers);
-    this.highlightMembers(this.addedNewRouteMembers);
+    this.addedNewRouteMembers = this.modalMapSrv.addNewMemberToRoute(newMember, this.addedNewRouteMembers);
   }
 
   private removeMember(toRemoveMemberID: string): void {
-    let members = [];
-    let index;
-    for (let member of this.addedNewRouteMembers) {
-      if (member.id === toRemoveMemberID) {
-        members.push(member);
-        index = this.addedNewRouteMembers.indexOf(member);
-      }
-    }
-    let countObj = this.countNodeType(this.addedNewRouteMembers);
-    this.resetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
-    if (index > -1) {
-      this.addedNewRouteMembers.splice(index, 1);
-    }
-    this.addedNewRouteMembers = [...this.addedNewRouteMembers];
-    this.mapSrv.clearHighlight(this.modalMapSrv.map);
-    this.clearMembersHighlight();
-    this.highlightRoute(this.addedNewRouteMembers);
-    this.highlightMembers(this.addedNewRouteMembers);
-  }
-
-  public showConnectivity(type: string): any {
-    this.mapSrv.clearHighlight(this.modalMapSrv.map);
-    let countObj = this.countNodeType(this.addedNewRouteMembers);
-    this.resetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
-    this.setHighlightType(type);
-    this.highlightRoute(this.addedNewRouteMembers);
-    this.styleButtons(type);
-  }
-
-  private setHighlightType(type: string): boolean {
-    switch (type) {
-      case 'Stops':
-        if (this.canStopsConnect) {
-          this.mapSrv.highlightType = 'Stops';
-          return true;
-        }
-        break;
-      case 'Platforms':
-        if (this.canPlatformsConnect) {
-          this.mapSrv.highlightType = 'Platforms';
-          return true;
-        }
-        break;
-      default:
-        return false;
-    }
-  }
-
-  private resetAvailableConnectivity(stopsCount: number, platformsCount: number): any {
-    if (stopsCount > 1) {
-      this.canStopsConnect = true;
-    } else {
-      this.canStopsConnect = false;
-    }
-    if (platformsCount > 1) {
-      this.canPlatformsConnect = true;
-    } else {
-      this.canPlatformsConnect = false;
-    }
+    this.addedNewRouteMembers = this.modalMapSrv.removeMember(toRemoveMemberID, this.addedNewRouteMembers);
   }
 
   private viewSuggestedRoute(ref: any): any {
-    let members = this.routesMap.get(ref);
-    let countObj = this.countNodeType(members);
-    this.useAndSetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
-    this.highlightRoute(members);
-  }
-
-  /***
-   * checks if stops connectivity is available, else uses platforms for highlighting
-   * @param {number} stopsCount
-   * @param {number} platformsCount
-   * @returns {any}
-   */
-  private useAndSetAvailableConnectivity(stopsCount: number, platformsCount: number): any {
-    this.resetAvailableConnectivity(stopsCount, platformsCount);
-    if (this.canStopsConnect) {
-      this.setHighlightType('Stops');
-    } else if (this.canPlatformsConnect) {
-      this.setHighlightType('Platforms');
-    }
-  }
-
-  private filterRoutesMap(routesMap: any): any {
-    routesMap.forEach((value, key) => {
-      if (this.checkMemberCount(value)) {
-        this.routesMap.set(key, value);
-      }
-    });
-  }
-
-  private countNodeType(members: any): any {
-    let stopsCount     = 0;
-    let platformsCount = 0;
-    for (let member of members) {
-      if (member.tags.public_transport === 'stop_position') {
-        stopsCount++;
-      }
-      if (member.tags.public_transport === 'platform') {
-        platformsCount++;
-      }
-    }
-    return { stopsCount, platformsCount };
-  }
-
-  private styleButtons(type: string): any {
-    switch (type) {
-      case 'Stops':
-        document.getElementById(type).style.backgroundColor        = 'cornflowerblue';
-        document.getElementById('Platforms').style.backgroundColor = 'white';
-        break;
-      case 'Platforms':
-        document.getElementById(type).style.backgroundColor    = 'cornflowerblue';
-        document.getElementById('Stops').style.backgroundColor = 'white';
-        break;
-    }
+  this.modalMapSrv.viewSuggestedRoute(ref, this.canStopsConnect, this.canPlatformsConnect);
   }
 
   private reorderMembers(members: any): any {
     this.mapSrv.clearHighlight(this.modalMapSrv.map);
-    this.highlightRoute(this.addedNewRouteMembers);
+    this.modalMapSrv.highlightRoute(this.addedNewRouteMembers);
   }
 
   private saveStep3(): any {
    this.selectTab(4);
   }
 
-  private createChange(action: string, key: any, event: any): any {
-    switch (action) {
-      case 'change tag':
-        this.newRoute.tags[key] = event.target.value;
-        break;
-      case 'remove tag':
-        delete this.newRoute.tags[key];
-        break;
-      case 'add tag':
-        this.newRoute.tags[key] = event;
-        this.tagKey             = '';
-        this.tagValue           = '';
-        break;
+  private createChangeTag(action: string, key: any, event: any): any {
+    this.newRoute = this.modalMapSrv.createChangeTag(action, key, event, this.newRoute);
+    if (action === 'add tag') {
+      this.tagKey             = '';
+      this.tagValue           = '';
     }
-    this.newRoute.tags = { ...this.newRoute.tags };
+
   }
 
   public saveStep4(): any {
-    this.assignRolesToMembers(this.addedNewRouteMembers);
-    let relMembers        = this.formRelMembers(this.addedNewRouteMembers);
-    this.newRoute.members = relMembers;
-    let tags              = this.filterEmptyTags(this.newRoute);
-    this.newRoute.tags    = tags;
+    this.modalMapSrv.assignRolesToMembers(this.addedNewRouteMembers);
+    this.newRoute.members = this.modalMapSrv.formRelMembers(this.addedNewRouteMembers);
+    this.newRoute.tags    = this.modalMapSrv.filterEmptyTags(this.newRoute);
     let change            = {from: undefined, to: this.newRoute};
-    this.storageSrv.modalMapElementsMap.set(this.newRoute.id, this.newRoute);
+    this.modalMapSrv.modalMapElementsMap.set(this.newRoute.id, this.newRoute);
     this.editSrv.addChange(this.newRoute, 'add route', change);
     this.bsModalRef.hide();
-  }
-
-  private assignRolesToMembers(members: any): any{
-    let probableRole: string = '';
-    for (let member of members) {
-      switch (member.tags.public_transport) {
-        case 'platform':
-        case 'station':
-          probableRole = 'platform';
-          break;
-        case 'stop_position':
-          probableRole = 'stop';
-          break;
-        default:
-          alert('FIXME: suspicious role - ');
-          probableRole = 'stop';
-      }
-      member.role = probableRole;
-    }
-  }
-  private formRelMembers(toAddNodes: any): any {
-    let relMembers = [];
-    for (let node of toAddNodes) {
-      relMembers.push({
-        type: 'node',
-        ref : node.id,
-        role: node.role,
-      });
-    }
-    return relMembers;
-  }
-
-  private highlightMembers(members: any[]): any {
-    for (let member of members) {
-      const latlng = { lat: member.lat, lng: member.lon };
-      let circle   = L.circleMarker(latlng, {
-        radius : 15,
-        color  : '#00ffff',
-        opacity: 0.75,
-      });
-      this.membersHighlightLayerGroup.addLayer(circle);
-      this.membersHighlightLayerGroup.addTo(this.modalMapSrv.map);
-    }
-  }
-
-  private clearMembersHighlight(): any {
-    this.membersHighlightLayerGroup.clearLayers();
   }
 
   private jumpToStep(step: string): any {
     switch (step) {
       case '1':
-        this.clearMembersHighlight();
+        this.modalMapSrv.clearMembersHighlight();
         this.mapSrv.clearHighlight(this.modalMapSrv.map);
         break;
       case '2':
-        this.clearMembersHighlight();
+        this.modalMapSrv.clearMembersHighlight();
         this.mapSrv.clearHighlight(this.modalMapSrv.map);
         this.viewSuggestedRoute(this.newRoutesRefs[0]);
         break;
       case '3':
-        this.highlightRoute(this.addedNewRouteMembers);
-        this.highlightMembers(this.addedNewRouteMembers);
+        this.modalMapSrv.highlightRoute(this.addedNewRouteMembers);
+        this.modalMapSrv.highlightMembers(this.addedNewRouteMembers);
         break;
     }
   }
 
-  private filterEmptyTags(route: any): any {
-    let tags = route.tags;
-    for (let property in tags) {
-      if (tags.hasOwnProperty(property)) {
-        if (tags[property] === '') {
-          delete tags[property];
-        }
+ public showConnectivity(type: string): any {
+      this.modalMapSrv.showConnectivity(type, this.canStopsConnect, this.canPlatformsConnect, this.addedNewRouteMembers);
       }
-    }
-    return tags;
-  }
 }

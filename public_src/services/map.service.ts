@@ -34,7 +34,7 @@ export class MapService {
   public popUpLayerGroup: L.LayerGroup;
   public currentPopUpFeatureId: number;
   public errorLocations: L.LatLngExpression [] = [];
-  public autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
+  // public autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
   constructor(
     private confSrv: ConfService,
     private httpClient: HttpClient,
@@ -665,7 +665,7 @@ export class MapService {
    * @param latlng
    * @returns {any}
    */
-  private stylePoint(feature: any, latlng: any): any {
+  public stylePoint(feature: any, latlng: any): any {
     let iconUrl = 'assets/marker-icon.png';
     let shadowUrl = '';
     const fp = feature.properties;
@@ -747,7 +747,7 @@ export class MapService {
    * @param feature
    * @returns {number}
    */
-  private getFeatureIdFromMarker(feature: any): number {
+  public getFeatureIdFromMarker(feature: any): number {
     const featureTypeId = feature.id.split('/');
     const featureType = featureTypeId[0];
     return Number(featureTypeId[1]); // featureId
@@ -852,39 +852,39 @@ export class MapService {
   }
 
 
-  /**
-   * Renders GeoJson data on the map.
-   * @param transformedGeojson
-   */
-  public renderTransformedGeojsonDataForRouteWizard(transformedGeojson: any, map: L.Map): void {
-    this.ptLayer = L.geoJSON(transformedGeojson, {
-      filter: (feature) => {
-        if (this.storageSrv.elementsRenderedModalMap.has(feature.id)) {
-          return false;
-        } else {
-          return true;
-        }
-      },
-      onEachFeature: (feature, layer) => {
-        this.storageSrv.elementsRenderedModalMap.add(feature.id);
-        this.enableDragForRouteWizard(feature, layer);
-      },
-      pointToLayer: (feature, latlng) => {
-        return this.stylePoint(feature, latlng);
-      },
-    });
-    console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayer);
-    this.ptLayer.addTo(map);
-  }
+  // /**
+  //  * Renders GeoJson data on the map.
+  //  * @param transformedGeojson
+  //  */
+  // public renderTransformedGeojsonDataForRouteWizard(transformedGeojson: any, map: L.Map): void {
+  //   this.ptLayer = L.geoJSON(transformedGeojson, {
+  //     filter: (feature) => {
+  //       if (this.storageSrv.elementsRenderedModalMap.has(feature.id)) {
+  //         return false;
+  //       } else {
+  //         return true;
+  //       }
+  //     },
+  //     onEachFeature: (feature, layer) => {
+  //       this.storageSrv.elementsRenderedModalMap.add(feature.id);
+  //       this.enableDragForRouteWizard(feature, layer);
+  //     },
+  //     pointToLayer: (feature, latlng) => {
+  //       return this.stylePoint(feature, latlng);
+  //     },
+  //   });
+  //   console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayer);
+  //   this.ptLayer.addTo(map);
+  // }
 
-  public enableDragForRouteWizard(feature: any, layer: any): any {
-    layer.on('click', (e) => {
-        this.handleAutoRouteModalMarkerClick(feature);
-    });
-  }
+  // public enableDragForRouteWizard(feature: any, layer: any): any {
+  //   layer.on('click', (e) => {
+  //       this.handleAutoRouteModalMarkerClick(feature);
+  //   });
+  // }
 
-  private handleAutoRouteModalMarkerClick(feature: any): any {
-    const featureId: number = this.getFeatureIdFromMarker(feature);
-    this.autoRouteMapNodeClick.emit(featureId);
-  }
+  // private handleAutoRouteModalMarkerClick(feature: any): any {
+  //   const featureId: number = this.getFeatureIdFromMarker(feature);
+  //   this.autoRouteMapNodeClick.emit(featureId);
+  // }
 }

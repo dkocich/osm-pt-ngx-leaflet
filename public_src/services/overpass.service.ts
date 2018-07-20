@@ -23,7 +23,7 @@ import { Utils } from '../core/utils.class';
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
-import {ModalMapService} from './auto-route-creation/modal-map.service';
+import { ModalMapService } from './auto-route-creation/modal-map.service';
 
 @Injectable()
 export class OverpassService {
@@ -43,7 +43,6 @@ export class OverpassService {
     private warnSrv: WarnService,
     private ngRedux: NgRedux<IAppState>,
     public appActions: AppActions,
-    // private autoTaskSrv: AutoTasksService,
     private modalMapSrv: ModalMapService,
   ) {
     /**
@@ -856,22 +855,22 @@ export class OverpassService {
       })
       .subscribe(
         (res: IOverpassResponse) => {
-          this.processSrv.savedContinousQueryResponses.push(res);
+          this.modalMapSrv.savedContinousQueryResponses.push(res);
           for (let element of res.elements) {
-            if (!this.storageSrv.modalMapElementsMap.has(element.id)) {
-              this.storageSrv.modalMapElementsMap.set(element.id, element); }
+            if (!this.modalMapSrv.modalMapElementsMap.has(element.id)) {
+              this.modalMapSrv.modalMapElementsMap.set(element.id, element); }
           }
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           let transformed = this.osmtogeojson(res);
-          this.mapSrv.renderTransformedGeojsonDataForRouteWizard(transformed, this.modalMapSrv.map);
+          this.modalMapSrv.renderTransformedGeojsonDataForRouteWizard(transformed, this.modalMapSrv.map);
           this.warnSrv.showSuccess();
           if (findRoutes) {
-            let stopsInBounds = this.processSrv.findStopsInBounds(this.modalMapSrv.map);
-            let routeRefs = this.processSrv.getRouteRefsFromNodes(stopsInBounds);
+            let stopsInBounds = this.modalMapSrv.findStopsInBounds(this.modalMapSrv.map);
+            let routeRefs = this.modalMapSrv.getRouteRefsFromNodes(stopsInBounds);
             if (routeRefs.length !== 0) {
               this.getMultipleNodeDataForAutoRoute(stopsInBounds);
             } else {
-              this.processSrv.routesRecieved.emit(null);
+              this.modalMapSrv.routesRecieved.emit(null);
             }
           }
         },
@@ -882,22 +881,22 @@ export class OverpassService {
       );
   }
 
-  private getIndividualRouteRefs(refs: any[]): any {
-    let ref_map = new Map();
-    for (let routeRefs of refs) {
-      let singleRefs = routeRefs.split(';');
-      for (let ref of singleRefs) {
-        if (ref_map.has(ref)) {
-          let val = ref_map.get(ref);
-          val++;
-          ref_map.set(ref, val);
-        } else {
-          ref_map.set(ref, 1);
-        }
-      }
-    }
-    return ref_map;
-  }
+  // private getIndividualRouteRefs(refs: any[]): any {
+  //   let ref_map = new Map();
+  //   for (let routeRefs of refs) {
+  //     let singleRefs = routeRefs.split(';');
+  //     for (let ref of singleRefs) {
+  //       if (ref_map.has(ref)) {
+  //         let val = ref_map.get(ref);
+  //         val++;
+  //         ref_map.set(ref, val);
+  //       } else {
+  //         ref_map.set(ref, 1);
+  //       }
+  //     }
+  //   }
+  //   return ref_map;
+  // }
 
   private getMultipleNodeDataForAutoRoute(idsArr: any): any {
     let requestBody = `
@@ -916,8 +915,8 @@ export class OverpassService {
           if (!res) {
             return alert('No response from API. Try to select element again please.');
           }
-          this.processSrv.savedMultipleNodeDataResponses.push(res);
-          this.processSrv.processMultipleNodeDataResponse(res);
+          this.modalMapSrv.savedMultipleNodeDataResponses.push(res);
+          this.modalMapSrv.processMultipleNodeDataResponse(res);
           this.warnSrv.showSuccess();
         },
         (err) => {
@@ -926,27 +925,27 @@ export class OverpassService {
         });
   }
 
-  private removeDuplicatefromArray(arr: any[]): any{
-    let unique = arr.filter((value, index, self) => {
-      return self.indexOf(value) === index;
-    });
-    return unique;
-  }
-
-  private compareArrays(nodeRefs: any, routeRefs: any): any {
-    let arr = [];
-    for (let itemA of nodeRefs) {
-      let flag = false;
-      for (let itemB of routeRefs) {
-        console.log('type', typeof itemA);
-        if (itemA === itemB) {
-          flag = true;
-        }
-      }
-      if (flag === false) {
-        arr.push(itemA);
-      }
-    }
-    return arr;
-  }
+  // private removeDuplicatefromArray(arr: any[]): any{
+  //   let unique = arr.filter((value, index, self) => {
+  //     return self.indexOf(value) === index;
+  //   });
+  //   return unique;
+  // }
+  //
+  // private compareArrays(nodeRefs: any, routeRefs: any): any {
+  //   let arr = [];
+  //   for (let itemA of nodeRefs) {
+  //     let flag = false;
+  //     for (let itemB of routeRefs) {
+  //       console.log('type', typeof itemA);
+  //       if (itemA === itemB) {
+  //         flag = true;
+  //       }
+  //     }
+  //     if (flag === false) {
+  //       arr.push(itemA);
+  //     }
+  //   }
+  //   return arr;
+  // }
 }

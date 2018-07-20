@@ -86,13 +86,13 @@
                             </td>
                             <td>
                               <input type="text" value="{{tag.value}}" data-type="value"
-                                     (blur)="createChange('change tag', tag.key, $event)">
+                                     (blur)="createChangeTag('change tag', tag.key, $event)">
                             </td>
                             <td>
                               <button class="btn btn-sm btn-danger fa fa-minus"
                                       aria-hidden="true" container="body"
                                       tooltip="{{ 'Remove tag' | translate }}"
-                                      (click)="createChange('remove tag', tag.key)">
+                                      (click)="createChangeTag('remove tag', tag.key)">
                               </button>
                             </td>
                           </tr>
@@ -108,7 +108,7 @@
                             <td>
                               <button class="btn btn-sm btn-primary fa fa-plus" aria-hidden="true" container="body"
                                       tooltip="{{ 'Create a new tag' | translate }}"
-                                      (click)="createChange('add tag', k.value, v.value)">
+                                      (click)="createChangeTag('add tag', k.value, v.value)">
                               </button>
                             </td>
                           </tr>

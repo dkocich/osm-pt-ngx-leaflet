@@ -30,9 +30,9 @@ export class ProcessService {
   public refreshSidebarViews$ = this.refreshSidebarViewsSource.asObservable();
   public membersToDownload: EventEmitter<object> = new EventEmitter();
   public refreshMasters: EventEmitter<object> = new EventEmitter();
-  public routesRecieved: EventEmitter<any> =  new EventEmitter();
-  public savedContinousQueryResponses = [];
-  public savedMultipleNodeDataResponses = [];
+  // public routesRecieved: EventEmitter<any> =  new EventEmitter();
+  // public savedContinousQueryResponses = [];
+  // public savedMultipleNodeDataResponses = [];
 
   constructor(
     private ngRedux: NgRedux<IAppState>,
@@ -41,7 +41,7 @@ export class ProcessService {
     private mapSrv: MapService,
     private storageSrv: StorageService,
     private dbSrv: DbService,
-    private modalMapSrv: ModalMapService,
+    // private modalMapSrv: ModalMapService,
   ) {
     // this.mapSrv.popupBtnClick.subscribe(
     //     (data) => {
@@ -651,152 +651,152 @@ export class ProcessService {
     });
   }
 
-  public static getIndividualRouteRefs(stops: any[]): any {
-    let refs = [];
-    for (let stop of stops) {
-      refs.push(stop.tags.route_ref);
-    }
-    let ref_map = new Map();
-    for (let routeRefs of refs) {
-      let singleRefs = routeRefs.split(';');
-      for (let ref of singleRefs) {
-        if (ref_map.has(ref)) {
-          let val = ref_map.get(ref);
-          val++;
-          ref_map.set(ref, val);
-        } else {
-          ref_map.set(ref, 1);
-        }
-      }
-    }
-    return ref_map;
-  }
+  // public static getIndividualRouteRefs(stops: any[]): any {
+  //   let refs = [];
+  //   for (let stop of stops) {
+  //     refs.push(stop.tags.route_ref);
+  //   }
+  //   let ref_map = new Map();
+  //   for (let routeRefs of refs) {
+  //     let singleRefs = routeRefs.split(';');
+  //     for (let ref of singleRefs) {
+  //       if (ref_map.has(ref)) {
+  //         let val = ref_map.get(ref);
+  //         val++;
+  //         ref_map.set(ref, val);
+  //       } else {
+  //         ref_map.set(ref, 1);
+  //       }
+  //     }
+  //   }
+  //   return ref_map;
+  // }
 
   /***
    * finds all stops/platforms in given map's current bounds
    * @returns {any}
    */
-  public findStopsInBounds(map: L.Map): any[] {
-    let stopsInBounds = [];
-    this.storageSrv.modalMapElementsMap.forEach((stop) => {
-      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-        if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
-          stopsInBounds.push(stop.id);
-        }
-      }
-    });
-    return stopsInBounds;
-  }
+  // public findStopsInBounds(map: L.Map): any[] {
+  //   let stopsInBounds = [];
+  //   this.modalMapSrv.modalMapElementsMap.forEach((stop) => {
+  //     if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+  //       if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
+  //         stopsInBounds.push(stop.id);
+  //       }
+  //     }
+  //   });
+  //   return stopsInBounds;
+  // }
 
-  public processMultipleNodeDataResponse(response: any): any {
-    let stopsInBounds       = this.findStopsInBounds(this.modalMapSrv.map);
-    let nodeRefs            = this.getRouteRefsFromNodes(stopsInBounds);
-    let refsOfRoutes: any[] = [];
-    for (const element of response.elements) {
-      if (!this.storageSrv.modalMapElementsMap.has(element.id)) {
-        this.storageSrv.modalMapElementsMap.set(element.id, element);
-      }
-      if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {
-        refsOfRoutes.push(element.tags.ref);
-      }
-    }
-    let uniqueRefsOfRoutes = ProcessService.removeDuplicatesFromArray(refsOfRoutes);
-    let notAddedRefs       = ProcessService.compareArrays(nodeRefs, uniqueRefsOfRoutes);
-    notAddedRefs           = this.filterPreviouslyAddedRefs(notAddedRefs);
-
-    if (notAddedRefs.length !== 0) {
-      this.routesRecieved.emit(this.getStopsForNewRoutes(notAddedRefs));
-    } else {
-      this.routesRecieved.emit(null);
-    }
-  }
+  // public processMultipleNodeDataResponse(response: any): any {
+  //   let stopsInBounds       = this.modalMapSrv.findStopsInBounds(this.modalMapSrv.map);
+  //   let nodeRefs            = this.modalMapSrv.getRouteRefsFromNodes(stopsInBounds);
+  //   let refsOfRoutes: any[] = [];
+  //   for (const element of response.elements) {
+  //     if (!this.modalMapSrv.modalMapElementsMap.has(element.id)) {
+  //       this.modalMapSrv.modalMapElementsMap.set(element.id, element);
+  //     }
+  //     if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {
+  //       refsOfRoutes.push(element.tags.ref);
+  //     }
+  //   }
+  //   let uniqueRefsOfRoutes = ProcessService.removeDuplicatesFromArray(refsOfRoutes);
+  //   let notAddedRefs       = ProcessService.compareArrays(nodeRefs, uniqueRefsOfRoutes);
+  //   notAddedRefs           = this.filterPreviouslyAddedRefs(notAddedRefs);
+  //
+  //   if (notAddedRefs.length !== 0) {
+  //     this.modalMapSrv.routesRecieved.emit(this.modalMapSrv.getStopsForNewRoutes(notAddedRefs));
+  //   } else {
+  //     this.modalMapSrv.routesRecieved.emit(null);
+  //   }
+  // }
 
   /***
    * forms an array of route refs from nodes, also removes duplicates
    * @param stopsInBounds
    * @returns {any}
    */
-  public getRouteRefsFromNodes(stopsInBoundsIDs: any): any {
-    let withRouteRefTag = [];
-    let ref_map;
-    let refValues       = [];
-    for (let id of stopsInBoundsIDs) {
-      let stop = this.storageSrv.modalMapElementsMap.get(id);
-      if (stop.tags.route_ref) {
-        withRouteRefTag.push(stop);
-      }
-    }
-    if (withRouteRefTag.length !== 0) {
-      ref_map = ProcessService.getIndividualRouteRefs(withRouteRefTag);
-      Array.from(ref_map).map(([key]) => {
-        refValues.push(key);
-      });
-    }
-    return refValues;
-  }
+  // public getRouteRefsFromNodes(stopsInBoundsIDs: any): any {
+  //   let withRouteRefTag = [];
+  //   let ref_map;
+  //   let refValues       = [];
+  //   for (let id of stopsInBoundsIDs) {
+  //     let stop = this.modalMapSrv.modalMapElementsMap.get(id);
+  //     if (stop.tags.route_ref) {
+  //       withRouteRefTag.push(stop);
+  //     }
+  //   }
+  //   if (withRouteRefTag.length !== 0) {
+  //     ref_map = ProcessService.getIndividualRouteRefs(withRouteRefTag);
+  //     Array.from(ref_map).map(([key]) => {
+  //       refValues.push(key);
+  //     });
+  //   }
+  //   return refValues;
+  // }
 
-  private static removeDuplicatesFromArray(arr: any[]): any {
-    return arr.filter((value, index, self) => {
-      return self.indexOf(value) === index;
-    });
-  }
+  // private static removeDuplicatesFromArray(arr: any[]): any {
+  //   return arr.filter((value, index, self) => {
+  //     return self.indexOf(value) === index;
+  //   });
+  // }
+  //
+  // private static compareArrays(nodeRefs: any, routeRefs: any): any {
+  //   let notAdded = [];
+  //   for (let itemA of nodeRefs) {
+  //     let flag = false;
+  //     for (let itemB of routeRefs) {
+  //       if (itemA === itemB) {
+  //         flag = true;
+  //       }
+  //     }
+  //
+  //     if (flag === false) {
+  //       notAdded.push(itemA);
+  //     }
+  //   }
+  //   return notAdded;
+  // }
 
-  private static compareArrays(nodeRefs: any, routeRefs: any): any {
-    let notAdded = [];
-    for (let itemA of nodeRefs) {
-      let flag = false;
-      for (let itemB of routeRefs) {
-        if (itemA === itemB) {
-          flag = true;
-        }
-      }
+  // private getStopsForNewRoutes(notAddedRefs: any): any{
+  //   let stopsForNewRoutes = new Map();
+  //   this.modalMapSrv.modalMapElementsMap.forEach((stop) => {
+  //     if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport) && stop.tags.route_ref) {
+  //       let stops: any[] = [];
+  //       stops.push(stop);
+  //       let refMap = ProcessService.getIndividualRouteRefs(stops);
+  //       let individualRefs = [];
+  //       Array.from(refMap).map(([key]) => { individualRefs.push(key); });
+  //       individualRefs.forEach((val) =>  {
+  //         if (notAddedRefs.includes(val)) {
+  //           if (stopsForNewRoutes.get(val)) {
+  //             stopsForNewRoutes.get(val).push(stop);
+  //           } else {
+  //             let arr = [];
+  //             arr.push(stop);
+  //             stopsForNewRoutes.set(val, arr);
+  //           }
+  //         }
+  //       });
+  //     }
+  //   });
+  //   return stopsForNewRoutes;
+  // }
 
-      if (flag === false) {
-        notAdded.push(itemA);
-      }
-    }
-    return notAdded;
-  }
-
-  private getStopsForNewRoutes(notAddedRefs: any): any{
-    let stopsForNewRoutes = new Map();
-    this.storageSrv.modalMapElementsMap.forEach((stop) => {
-      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport) && stop.tags.route_ref) {
-        let stops: any[] = [];
-        stops.push(stop);
-        let refMap = ProcessService.getIndividualRouteRefs(stops);
-        let individualRefs = [];
-        Array.from(refMap).map(([key]) => { individualRefs.push(key); });
-        individualRefs.forEach((val) =>  {
-          if (notAddedRefs.includes(val)) {
-            if (stopsForNewRoutes.get(val)) {
-              stopsForNewRoutes.get(val).push(stop);
-            } else {
-              let arr = [];
-              arr.push(stop);
-              stopsForNewRoutes.set(val, arr);
-            }
-          }
-        });
-      }
-    });
-    return stopsForNewRoutes;
-  }
-
-  private filterPreviouslyAddedRefs(refs: any[]): any{
-    let index;
-    this.storageSrv.modalMapElementsMap.forEach((element) =>{
-      if (element.type === 'relation'
-        && element.tags.public_transport !== 'stop_area' &&
-        element.tags.ref
-        && refs.includes(element.tags.ref)) {
-        index = refs.indexOf(element.tags.ref);
-      }
-    });
-    if (index !== undefined) {
-      refs.splice(index, 1);
-    }
-    return refs;
-  }
+  // private filterPreviouslyAddedRefs(refs: any[]): any{
+  //   let index;
+  //   this.modalMapSrv.modalMapElementsMap.forEach((element) =>{
+  //     if (element.type === 'relation'
+  //       && element.tags.public_transport !== 'stop_area' &&
+  //       element.tags.ref
+  //       && refs.includes(element.tags.ref)) {
+  //       index = refs.indexOf(element.tags.ref);
+  //     }
+  //   });
+  //   if (index !== undefined) {
+  //     refs.splice(index, 1);
+  //   }
+  //   return refs;
+  // }
 
 }

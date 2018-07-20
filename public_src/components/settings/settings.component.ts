@@ -5,6 +5,8 @@ import { AppActions } from '../../store/app/actions';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
 import {AutoTasksService} from '../../services/auto-route-creation/auto-tasks.service';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap';
+import {RouteModalComponent} from '../route-modal/route-modal.component';
 
 @Component({
   selector: 'settings',
@@ -18,11 +20,13 @@ export class SettingsComponent {
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
   @select(['app', 'goodConnectMode']) public readonly goodConnectMode$: Observable<boolean>;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  modalRef: BsModalRef;
 
   constructor(
     public appActions: AppActions,
     private errorHighlightSrv: ErrorHighlightService,
-    private autoTaskSrv: AutoTasksService,
+    // private autoTaskSrv: AutoTasksService,
+    private modalService: BsModalService,
   ) {
     //
   }
@@ -39,7 +43,7 @@ export class SettingsComponent {
     localStorage.setItem('advancedMode', JSON.stringify(advancedExpMode));
   }
 
-  private createAutomaticRoute(): any {
-    this.autoTaskSrv.createAutomaticRoute();
+  public createAutomaticRoute(): any {
+    this.modalRef = this.modalService.show(RouteModalComponent, { class: 'modal-lg', ignoreBackdropClick: true });
   }
 }

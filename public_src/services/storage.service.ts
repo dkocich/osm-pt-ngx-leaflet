@@ -51,8 +51,8 @@ export class StorageService {
   public refErrorsO: any[]                       = [];
   public currentIndex                            = 0;
   public refreshErrorObjects: EventEmitter<object> = new EventEmitter();
-  public elementsRenderedModalMap = new Set();
-  public modalMapElementsMap = new Map();
+  // public elementsRenderedModalMap = new Set();
+  // public modalMapElementsMap = new Map();
 
   constructor() {
     this.currentElementsChange.subscribe((data) => {
