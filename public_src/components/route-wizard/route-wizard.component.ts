@@ -44,7 +44,7 @@ export class RouteWizardComponent {
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
 
   constructor(private storageSrv: StorageService,
-              private mapSrv: MapService,
+              public mapSrv: MapService,
               private warnSrv: WarnService,
               private overpassSrv: OverpassService,
               private routeWizardSrv: RouteWizardService,
