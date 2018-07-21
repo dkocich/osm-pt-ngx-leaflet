@@ -20,15 +20,26 @@
                   <button class="btn btn-default" type="submit" (click)="findMissingRoutes()">Find suggestions</button>
                 </tab>
                 <tab heading="Step 2" (select)="jumpToStep('2')">
-                  <p class="text-success">Select from the following suggested routes </p>
-                  <ul class="list-group scrollable-panel clearfix" *ngIf="newRoutesRefs.length !== 0">
-                    <li class="list-group-item clearfix" *ngFor="let ref of newRoutesRefs">
-                      <span> Route Ref: {{ref}}</span>
-                      <button class="btn btn-default pull-right" type="submit" (click)="useRef(ref)"> Use</button>
-                      <button class="btn btn-default pull-right" type="submit" (click)="viewSuggestedRoute(ref)"> View
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <p class="text-success">Select from the following suggested routes </p>
+                    </div>
+                    <div class="panel-body ">
+                      <ul class="list-group scrollable-panel clearfix" *ngIf="newRoutesRefs.length !== 0">
+                        <li class="list-group-item clearfix" *ngFor="let ref of newRoutesRefs"
+                            [ngStyle]="{'background-color' : currentlyViewedRef === ref ? 'cornflowerblue': 'white'}"
+                            (click)="viewSuggestedRoute(ref)">
+                          <span> Route Ref: {{ref}}</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="panel-footer clearfix">
+                      <button class="btn btn-default pull-right" type="submit" (click)="useRef(currentlyViewedRef)">Use
+                        Route
                       </button>
-                    </li>
-                  </ul>
+                    </div>
+                  </div>
                 </tab>
                 <tab heading="Step 3" (select)="jumpToStep('3')">
                   <div class="panel panel-default">

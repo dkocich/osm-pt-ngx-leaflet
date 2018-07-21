@@ -38,6 +38,7 @@ export class RouteModalComponent {
 
   public canStopsConnect     = false;
   public canPlatformsConnect = false;
+  public currentlyViewedRef = null;
 
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
 
@@ -63,6 +64,7 @@ export class RouteModalComponent {
         this.modalMapSrv.routesMap.forEach((value, key) => {
           this.newRoutesRefs.push(key);
         });
+        this.currentlyViewedRef = this.newRoutesRefs[0];
         this.selectTab(2);
       }
 
@@ -181,10 +183,14 @@ export class RouteModalComponent {
   }
 
   private removeMember(toRemoveMemberID: string): void {
+    console.log('remove member C, id: ', toRemoveMemberID, 'mebres', this.addedNewRouteMembers );
     this.addedNewRouteMembers = this.modalMapSrv.removeMember(toRemoveMemberID, this.addedNewRouteMembers);
+    console.log('remove member C after removal, id: ', toRemoveMemberID, 'mebres', this.addedNewRouteMembers );
+
   }
 
   private viewSuggestedRoute(ref: any): any {
+  this.currentlyViewedRef = ref;
   this.modalMapSrv.viewSuggestedRoute(ref, this.canStopsConnect, this.canPlatformsConnect);
   }
 

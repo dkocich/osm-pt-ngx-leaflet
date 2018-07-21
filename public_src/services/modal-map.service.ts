@@ -430,11 +430,12 @@ export class ModalMapService {
         index = addedNewRouteMembers.indexOf(member);
       }
     }
-    let countObj = this.countNodeType(addedNewRouteMembers);
-    this.resetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
+
     if (index > -1) {
       addedNewRouteMembers.splice(index, 1);
     }
+    let countObj = this.countNodeType(addedNewRouteMembers);
+    this.resetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
     addedNewRouteMembers = [...addedNewRouteMembers];
     this.mapSrv.clearHighlight(this.map);
     this.clearMembersHighlight();
