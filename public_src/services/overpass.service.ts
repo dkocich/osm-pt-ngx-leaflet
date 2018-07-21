@@ -813,7 +813,7 @@ export class OverpassService {
       out meta;`;
     requestBody     = this.replaceBboxString(requestBody.trim());
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, {headers: Utils.HTTP_HEADERS})
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
         (res) => {
           if (!res) {
@@ -873,9 +873,17 @@ export class OverpassService {
           this.warnSrv.showSuccess();
           if (findRoutes) {
             let stopsInBounds = this.routeWizardSrv.findStopsInBounds(this.routeWizardSrv.map);
+            let toDownload = stopsInBounds.filter((stop) => {
+              return !(this.routeWizardSrv.nodesFullyDownloaded.has(stop));
+            });
             let routeRefs = this.routeWizardSrv.getRouteRefsFromNodes(stopsInBounds);
             if (routeRefs.length !== 0) {
-              this.getMultipleNodeDataForRouteWizard(stopsInBounds);
+              if (toDownload.length !== 0) {
+                this.getMultipleNodeDataForRouteWizard(toDownload);
+              } else {
+                this.routeWizardSrv.findMissingRoutes(null);
+              }
+
             } else {
               this.routeWizardSrv.routesReceived.emit(null);
             }
@@ -910,8 +918,11 @@ export class OverpassService {
           if (!res) {
             return alert('No response from API. Try to select element again please.');
           }
+          for (let id of idsArr) {
+            this.routeWizardSrv.nodesFullyDownloaded.add(id);
+          }
           this.routeWizardSrv.savedMultipleNodeDataResponses.push(res);
-          this.routeWizardSrv.processMultipleNodeDataResponse(res);
+          this.routeWizardSrv.findMissingRoutes(res);
           this.warnSrv.showSuccess();
         },
         (err) => {

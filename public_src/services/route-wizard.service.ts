@@ -23,6 +23,8 @@ export class RouteWizardService {
   public savedContinuousQueryResponses = [];
 
   public elementsRenderedModalMap = new Set();
+  public nodesFullyDownloaded = new Set();
+
   public routesMap: Map<string, any[]> = new Map();
   public membersHighlightLayerGroup    = L.layerGroup();
 
@@ -167,21 +169,25 @@ export class RouteWizardService {
 
   /***
    * Processes multiple node data
-   * @param response
+   * @param downloadedResponse
    * @returns {void}
    */
-  public processMultipleNodeDataResponse(response: any): void {
+  public findMissingRoutes(downloadedResponse: any): void {
     let stopsInBounds       = this.findStopsInBounds(this.map);
     let nodeRefs            = this.getRouteRefsFromNodes(stopsInBounds);
     let refsOfRoutes: any[] = [];
-    for (const element of response.elements) {
-      if (!this.modalMapElementsMap.has(element.id)) {
-        this.modalMapElementsMap.set(element.id, element);
-      }
-      if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {
-        refsOfRoutes.push(element.tags.ref);
+    if (downloadedResponse) {
+      for (const element of downloadedResponse.elements) {
+        if (!this.modalMapElementsMap.has(element.id)) {
+          this.modalMapElementsMap.set(element.id, element);
+        }
+        if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {
+          refsOfRoutes.push(element.tags.ref);
+        }
       }
     }
+    let refs = this.getFromAlreadyDownloadedRoutes();
+    refsOfRoutes = refsOfRoutes.concat(refs);
     let uniqueRefsOfRoutes = RouteWizardService.removeDuplicatesFromArray(refsOfRoutes);
     let notAddedRefs       = RouteWizardService.compareArrays(nodeRefs, uniqueRefsOfRoutes);
     notAddedRefs           = this.filterPreviouslyAddedRefs(notAddedRefs);
@@ -644,5 +650,24 @@ export class RouteWizardService {
     this.setHighlightType(type, connectivityObj);
     this.highlightRoute(addedNewRouteMembers);
     RouteWizardService.styleButtons(type);
+  }
+
+  /***
+   * Fetches ref of relations already downloaded
+   * @returns {any}
+   */
+  public getFromAlreadyDownloadedRoutes(): any {
+    let refsOfRoutes = [];
+    this.modalMapElementsMap.forEach((element) => {
+      if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {
+        for (let member of element.members) {
+          let stopsInBoundsIDs = this.findStopsInBounds(this.map);
+          if (stopsInBoundsIDs.includes(member.id)) {
+            refsOfRoutes.push(element.tags.ref);
+          }
+        }
+      }
+    });
+    return refsOfRoutes;
   }
 }
