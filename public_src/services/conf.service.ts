@@ -17,9 +17,10 @@ export class ConfService {
   public static readonly hereAppCode              = 'n8AtIn2aXHff9D-Dp_S6rA';
   public static readonly mapboxToken              =
                            'pk.eyJ1IjoiZGtvY2ljaCIsImEiOiJjajR5ZGc5b3kxbnozMnFwZjI4eWo4N2piIn0.EizwwnWouhfRkJznDpEWCw';
-  public static readonly minDownloadZoom          = 15;
-  public static readonly minDownloadZoomForErrors = 13;
-  public static readonly minDownloadDistance      = 1500;
+  public static readonly minDownloadZoom               = 15;
+  public static readonly minDownloadZoomForErrors      = 13;
+  public static readonly minDownloadZoomForRouteWizard = 8;
+  public static readonly minDownloadDistance           = 1500;
 
   public static readonly geocodingApiUrl = 'http://api.ipstack.com/';
   public static readonly geocodingApiKey = '?access_key=2be8b578b9cef6bddf3a706d10c620dd';

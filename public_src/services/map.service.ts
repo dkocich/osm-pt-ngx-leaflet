@@ -851,40 +851,4 @@ export class MapService {
     L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
 
-
-  // /**
-  //  * Renders GeoJson data on the map.
-  //  * @param transformedGeojson
-  //  */
-  // public renderTransformedGeojsonDataForRouteWizard(transformedGeojson: any, map: L.Map): void {
-  //   this.ptLayer = L.geoJSON(transformedGeojson, {
-  //     filter: (feature) => {
-  //       if (this.storageSrv.elementsRenderedModalMap.has(feature.id)) {
-  //         return false;
-  //       } else {
-  //         return true;
-  //       }
-  //     },
-  //     onEachFeature: (feature, layer) => {
-  //       this.storageSrv.elementsRenderedModalMap.add(feature.id);
-  //       this.enableDragForRouteWizard(feature, layer);
-  //     },
-  //     pointToLayer: (feature, latlng) => {
-  //       return this.stylePoint(feature, latlng);
-  //     },
-  //   });
-  //   console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayer);
-  //   this.ptLayer.addTo(map);
-  // }
-
-  // public enableDragForRouteWizard(feature: any, layer: any): any {
-  //   layer.on('click', (e) => {
-  //       this.handleAutoRouteModalMarkerClick(feature);
-  //   });
-  // }
-
-  // private handleAutoRouteModalMarkerClick(feature: any): any {
-  //   const featureId: number = this.getFeatureIdFromMarker(feature);
-  //   this.autoRouteMapNodeClick.emit(featureId);
-  // }
 }

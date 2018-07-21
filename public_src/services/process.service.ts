@@ -28,9 +28,6 @@ export class ProcessService {
   public refreshSidebarViews$ = this.refreshSidebarViewsSource.asObservable();
   public membersToDownload: EventEmitter<object> = new EventEmitter();
   public refreshMasters: EventEmitter<object> = new EventEmitter();
-  // public routesRecieved: EventEmitter<any> =  new EventEmitter();
-  // public savedContinousQueryResponses = [];
-  // public savedMultipleNodeDataResponses = [];
 
   constructor(
     private ngRedux: NgRedux<IAppState>,

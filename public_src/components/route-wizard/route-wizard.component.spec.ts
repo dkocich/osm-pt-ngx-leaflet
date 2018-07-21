@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RouteModalComponent } from './route-modal.component';
+import { RouteWizardComponent } from './route-wizard.component';
 
 describe('RouteModalComponent', () => {
-  let component: RouteModalComponent;
-  let fixture: ComponentFixture<RouteModalComponent>;
+  let component: RouteWizardComponent;
+  let fixture: ComponentFixture<RouteWizardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RouteModalComponent ]
+      declarations: [ RouteWizardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RouteModalComponent);
+    fixture = TestBed.createComponent(RouteWizardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

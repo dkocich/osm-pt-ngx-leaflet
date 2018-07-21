@@ -5,7 +5,7 @@ import { AppActions } from '../../store/app/actions';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
-import { RouteModalComponent } from '../route-modal/route-modal.component';
+import { RouteWizardComponent } from '../route-wizard/route-wizard.component';
 
 @Component({
   selector: 'settings',
@@ -24,7 +24,6 @@ export class SettingsComponent {
   constructor(
     public appActions: AppActions,
     private errorHighlightSrv: ErrorHighlightService,
-    // private autoTaskSrv: AutoTasksService,
     private modalService: BsModalService,
   ) {
     //
@@ -43,6 +42,6 @@ export class SettingsComponent {
   }
 
   public createAutomaticRoute(): any {
-    this.modalRef = this.modalService.show(RouteModalComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+    this.modalRef = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
   }
 }

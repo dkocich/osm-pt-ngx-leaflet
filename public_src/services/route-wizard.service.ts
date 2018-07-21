@@ -1,26 +1,30 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { MapService } from './map.service';
 
+import { MapService } from './map.service';
 import { StorageService } from './storage.service';
 import { BsModalService } from 'ngx-bootstrap';
 import { ProcessService } from './process.service';
+
 import * as L from 'leaflet';
 
 @Injectable()
-export class ModalMapService {
+export class RouteWizardService {
   public map;
   public routes = [];
   public ptLayerModal;
   public osmtogeojson: any = require('osmtogeojson');
   public modalMapElementsMap = new Map();
-  public savedContinousQueryResponses = [];
+
   public autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
-  public routesRecieved: EventEmitter<any> =  new EventEmitter();
+  public routesReceived: EventEmitter<any> =  new EventEmitter();
+  public refreshAvailableConnectivity: EventEmitter<any> =  new EventEmitter();
+
   public savedMultipleNodeDataResponses = [];
+  public savedContinuousQueryResponses = [];
+
   public elementsRenderedModalMap = new Set();
   public routesMap: Map<string, any[]> = new Map();
   public membersHighlightLayerGroup    = L.layerGroup();
-  public refreshAvailableConnectivity: EventEmitter<any> =  new EventEmitter();
 
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,
@@ -41,11 +45,19 @@ export class ModalMapService {
     });
   }
 
-  public onShownModal(): any {
+  /***
+   * Fired when modal has rendered
+   * @returns {void}
+   */
+  public onShownModal(): void {
     this.map.invalidateSize();
   }
 
-  public renderAlreadyDownloadedData(): any {
+  /***
+   * Renders data on modal map which was already present on the main map
+   * @returns {void}
+   */
+  public renderAlreadyDownloadedData(): void {
     let obj: any = {};
     let elements = [];
     this.storageSrv.elementsMap.forEach((element) => {
@@ -56,43 +68,67 @@ export class ModalMapService {
     this.renderTransformedGeojsonDataForRouteWizard(transformed, this.map);
   }
 
-  public processAllDownloadedOnMainMap(): any {
-    for (let res of this.savedContinousQueryResponses) {
+  /***
+   *Used when modal is closed,
+   *  all data downloaded for modal map is processed for main application
+   * @returns {void}
+   */
+  public processAllDownloadedOnMainMap(): void {
+    for (let res of this.savedContinuousQueryResponses) {
       this.processSrv.processResponse(res);
     }
   }
 
-  public renderTransformedGeojsonDataForRouteWizard(transformedGeojson: any, map: L.Map): void {
-    this.ptLayerModal = L.geoJSON(transformedGeojson, {
+  /***
+   * Renders data on modal map
+   * @param transformedGeoJSON
+   * @param {Map} map
+   */
+  public renderTransformedGeojsonDataForRouteWizard(transformedGeoJSON: any, map: L.Map): void {
+    this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
       filter: (feature) => {
-        if (this.elementsRenderedModalMap.has(feature.id)) {
-          return false;
-        } else {
-          return true;
-        }
+        return !this.elementsRenderedModalMap.has(feature.id);
       },
       onEachFeature: (feature, layer) => {
         this.elementsRenderedModalMap.add(feature.id);
-        this.enableDragForRouteWizard(feature, layer);
+        this.enableClickForRouteWizardMap(feature, layer);
       },
       pointToLayer: (feature, latlng) => {
         return this.mapSrv.stylePoint(feature, latlng);
       },
     });
+
     console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayerModal);
     this.ptLayerModal.addTo(map);
   }
 
-  public enableDragForRouteWizard(feature: any, layer: any): any {
-    layer.on('click', (e) => {
-      this.handleAutoRouteModalMarkerClick(feature);
+  /***
+   * Enables click of nodes for modal map
+   * @param feature
+   * @param layer
+   * @returns {void}
+   */
+  public enableClickForRouteWizardMap(feature: any, layer: any): void {
+    layer.on('click', () => {
+      this.handleRouteWizardMarkerClick(feature);
     });
   }
 
-  private handleAutoRouteModalMarkerClick(feature: any): any {
+  /***
+   * Handles map click
+   * @param feature
+   * @returns {void}
+   */
+  private handleRouteWizardMarkerClick(feature: any): void {
     const featureId: number = this.mapSrv.getFeatureIdFromMarker(feature);
     this.autoRouteMapNodeClick.emit(featureId);
   }
+
+  /***
+   * Returns all stops/platforms on the given map
+   * @param {Map} map
+   * @returns {any[]}
+   */
   public findStopsInBounds(map: L.Map): any[] {
     let stopsInBounds = [];
     this.modalMapElementsMap.forEach((stop) => {
@@ -106,11 +142,11 @@ export class ModalMapService {
   }
 
   /***
-   * forms an array of route refs from nodes, also removes duplicates
-   * @param stopsInBounds
-   * @returns {any}
+   * Forms an array of route refs from nodes, also removes duplicates
+   * @param stopsInBoundsIDs
+   * @returns {any[]}
    */
-  public getRouteRefsFromNodes(stopsInBoundsIDs: any): any {
+  public getRouteRefsFromNodes(stopsInBoundsIDs: any): any[] {
     let withRouteRefTag = [];
     let ref_map;
     let refValues       = [];
@@ -121,7 +157,7 @@ export class ModalMapService {
       }
     }
     if (withRouteRefTag.length !== 0) {
-      ref_map = ModalMapService.getIndividualRouteRefs(withRouteRefTag);
+      ref_map = RouteWizardService.getIndividualRouteRefs(withRouteRefTag);
       Array.from(ref_map).map(([key]) => {
         refValues.push(key);
       });
@@ -129,7 +165,12 @@ export class ModalMapService {
     return refValues;
   }
 
-  public processMultipleNodeDataResponse(response: any): any {
+  /***
+   * Processes multiple node data
+   * @param response
+   * @returns {void}
+   */
+  public processMultipleNodeDataResponse(response: any): void {
     let stopsInBounds       = this.findStopsInBounds(this.map);
     let nodeRefs            = this.getRouteRefsFromNodes(stopsInBounds);
     let refsOfRoutes: any[] = [];
@@ -141,20 +182,25 @@ export class ModalMapService {
         refsOfRoutes.push(element.tags.ref);
       }
     }
-    let uniqueRefsOfRoutes = ModalMapService.removeDuplicatesFromArray(refsOfRoutes);
-    let notAddedRefs       = ModalMapService.compareArrays(nodeRefs, uniqueRefsOfRoutes);
+    let uniqueRefsOfRoutes = RouteWizardService.removeDuplicatesFromArray(refsOfRoutes);
+    let notAddedRefs       = RouteWizardService.compareArrays(nodeRefs, uniqueRefsOfRoutes);
     notAddedRefs           = this.filterPreviouslyAddedRefs(notAddedRefs);
 
     if (notAddedRefs.length !== 0) {
-      this.routesRecieved.emit(this.getStopsForNewRoutes(notAddedRefs));
+      this.routesReceived.emit(this.getStopsForNewRoutes(notAddedRefs));
     } else {
-      this.routesRecieved.emit(null);
+      this.routesReceived.emit(null);
     }
   }
 
+  /***
+   * Filters newly added ref from suggested refs
+   * @param {any[]} refs
+   * @returns {any}
+   */
   private filterPreviouslyAddedRefs(refs: any[]): any {
     let index;
-    this.modalMapElementsMap.forEach((element) =>{
+    this.modalMapElementsMap.forEach((element) => {
       if (element.type === 'relation'
         && element.tags.public_transport !== 'stop_area' &&
         element.tags.ref
@@ -168,13 +214,18 @@ export class ModalMapService {
     return refs;
   }
 
+  /***
+   * Returns stops for given refs
+   * @param notAddedRefs
+   * @returns {any}
+   */
   private getStopsForNewRoutes(notAddedRefs: any): any {
     let stopsForNewRoutes = new Map();
     this.modalMapElementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport) && stop.tags.route_ref) {
         let stops: any[] = [];
         stops.push(stop);
-        let refMap = ModalMapService.getIndividualRouteRefs(stops);
+        let refMap = RouteWizardService.getIndividualRouteRefs(stops);
         let individualRefs = [];
         Array.from(refMap).map(([key]) => { individualRefs.push(key); });
         individualRefs.forEach((val) =>  {
@@ -193,12 +244,23 @@ export class ModalMapService {
     return stopsForNewRoutes;
   }
 
+  /***
+   * Removes duplicates from array
+   * @param {any[]} arr
+   * @returns {any}
+   */
   private static removeDuplicatesFromArray(arr: any[]): any {
     return arr.filter((value, index, self) => {
       return self.indexOf(value) === index;
     });
   }
 
+  /***
+   * Compares arrays and returns refs not added in route refs
+   * @param nodeRefs
+   * @param routeRefs
+   * @returns {any}
+   */
   private static compareArrays(nodeRefs: any, routeRefs: any): any {
     let notAdded = [];
     for (let itemA of nodeRefs) {
@@ -215,7 +277,12 @@ export class ModalMapService {
     }
     return notAdded;
   }
-// to go back , just check which function was a part of component and revert var too
+
+  /***
+   * Get individual refs from stops's route_ref
+   * @param {any[]} stops
+   * @returns {any}
+   */
   public static getIndividualRouteRefs(stops: any[]): any {
     let refs = [];
     for (let stop of stops) {
@@ -237,18 +304,14 @@ export class ModalMapService {
     return ref_map;
   }
 
-  // public findMissingRoutes(): any {
-  //   if (this.mapSrv.map.getZoom() > 8) {
-  //     this.overpassSrv.requestNewOverpassDataForModalMap(true);
-  //   } else {
-  //     alert('Not sufficient zoom level');
-  //   }
-  // }
-
+  /***
+   * Highlights route's members on map
+   * @param members
+   */
   public highlightRoute(members: any): void {
     this.mapSrv.clearHighlight(this.map);
     let routeMembers = members;
-    this.assignRolesToMembers(routeMembers);
+    RouteWizardService.assignRolesToMembers(routeMembers);
     let rel                           = {
       members: routeMembers,
       tags   : { name: 'nil' },
@@ -259,7 +322,12 @@ export class ModalMapService {
     this.adjustZoomForRoute(routeMembers);
   }
 
-  public assignRolesToMembers(members: any): any{
+  /***
+   * Assign roles to members for new route
+   * @param members
+   * @returns {any}
+   */
+  public static assignRolesToMembers(members: any): any {
     let probableRole: string = '';
     for (let member of members) {
       switch (member.tags.public_transport) {
@@ -278,7 +346,11 @@ export class ModalMapService {
     }
   }
 
-  private adjustZoomForRoute(members: any): any {
+  /***
+   * Adjust zoom to fit all members of route on map
+   * @param members
+   */
+  private adjustZoomForRoute(members: any): void {
     let latlngs: L.LatLng[] = [];
     for (let member of members) {
       latlngs.push(L.latLng(member.lat, member.lon));
@@ -286,18 +358,32 @@ export class ModalMapService {
     this.map.fitBounds(L.latLngBounds(latlngs));
   }
 
-  public checkMemberCount(members: any): any {
+  /***
+   * Checks member count, for avoiding single member routes
+   * @param members
+   * @returns {any}
+   */
+  public static checkMemberCount(members: any): any {
     return members.length !== 1;
   }
 
-  public highlightFirstRoute(canStopsConnect: any, canPlatformsConnect: any): any {
+  /***
+   * Handles highlighting of first route on starting of Step
+   * @param connectObj
+   */
+  public highlightFirstRoute(connectObj: any): void {
     let members  = this.routesMap.get(this.routesMap.keys().next().value);
-    let countObj = this.countNodeType(members);
-    this.useAndSetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount, canStopsConnect, canPlatformsConnect);
+    let countObj = RouteWizardService.countNodeType(members);
+    this.useAndSetAvailableConnectivity(countObj, connectObj);
     this.highlightRoute(members);
   }
 
-  public countNodeType(members: any): any {
+  /***
+   * Returns member counts (stops, platforms)
+   * @param members
+   * @returns {any}
+   */
+  public static countNodeType(members: any): any {
     let stopsCount     = 0;
     let platformsCount = 0;
     for (let member of members) {
@@ -311,32 +397,44 @@ export class ModalMapService {
     return { stopsCount, platformsCount };
   }
 
-  public useAndSetAvailableConnectivity(stopsCount: number, platformsCount: number, canStopsConnect: any, canPlatformsConnect: any): any {
-    let connectObj = this.resetAvailableConnectivity(stopsCount, platformsCount);
+  /***
+   * Sets available connectivity, uses stop connectivity by default,
+   * uses platforms if not available
+   * @param countObj
+   * @param connectivityObj
+   * @returns {any}
+   */
+  public useAndSetAvailableConnectivity(countObj: any, connectivityObj: any): any {
+    let connectObj = this.resetAvailableConnectivity(countObj);
     if (connectObj.canStopsConnect) {
-      this.setHighlightType('Stops', canStopsConnect, canPlatformsConnect);
+      this.setHighlightType('Stops', connectivityObj);
     } else if (connectObj.canPlatformsConnect) {
-      this.setHighlightType('Platforms', canStopsConnect, canPlatformsConnect);
+      this.setHighlightType('Platforms', connectivityObj);
     }
   }
-  private resetAvailableConnectivity(stopsCount: number, platformsCount: number): any {
+
+  /***
+   * Resets available connectivity
+   * @param countObj
+   * @returns {any}
+   */
+  private resetAvailableConnectivity(countObj: any): any {
     let canStopsConnect;
     let canPlatformsConnect;
-    if (stopsCount > 1) {
-     canStopsConnect = true;
-    } else {
-      canStopsConnect = false;
-    }
-    if (platformsCount > 1) {
-      canPlatformsConnect = true;
-    } else {
-      canPlatformsConnect = false;
-    }
+
+    countObj.stopsCount > 1 ? canStopsConnect = true : canStopsConnect = false;
+    countObj.platformsCount > 1 ? canPlatformsConnect = true : canPlatformsConnect = false;
+
     this.refreshAvailableConnectivity.emit({ canStopsConnect , canPlatformsConnect });
     return { canStopsConnect , canPlatformsConnect };
   }
 
-  public filterEmptyTags(route: any): any {
+  /***
+   * Filters out empty tags before saving route
+   * @param route
+   * @returns {any}
+   */
+  public static filterEmptyTags(route: any): any {
     let tags = route.tags;
     for (let property in tags) {
       if (tags.hasOwnProperty(property)) {
@@ -348,7 +446,12 @@ export class ModalMapService {
     return tags;
   }
 
-  public highlightMembers(members: any[]): any {
+  /***
+   * Highlights members of route with circle
+   * @param {any[]} members
+   * @returns {void}
+   */
+  public highlightMembers(members: any[]): void {
     for (let member of members) {
       const latlng = { lat: member.lat, lng: member.lon };
       let circle   = L.circleMarker(latlng, {
@@ -361,11 +464,20 @@ export class ModalMapService {
     }
   }
 
-  public clearMembersHighlight(): any {
+  /***
+   * Clears member's highlight
+   * @returns {any}
+   */
+  public clearMembersHighlight(): void {
     this.membersHighlightLayerGroup.clearLayers();
   }
 
-  public formRelMembers(toAddNodes: any): any {
+  /***
+   * Forms object for new route's members
+   * @param toAddNodes
+   * @returns {any}
+   */
+  public static formRelMembers(toAddNodes: any): any {
     let relMembers = [];
     for (let node of toAddNodes) {
       relMembers.push({
@@ -377,7 +489,15 @@ export class ModalMapService {
     return relMembers;
   }
 
-  public createChangeTag(action: string, key: any, event: any, newRoute: any): any {
+  /***
+   * Fired when tags are modified
+   * @param {string} action
+   * @param key
+   * @param event
+   * @param newRoute
+   * @returns {any}
+   */
+  public static modifiesTags(action: string, key: any, event: any, newRoute: any): any {
     switch (action) {
       case 'change tag':
         newRoute.tags[key] = event.target.value;
@@ -393,7 +513,12 @@ export class ModalMapService {
     return newRoute;
   }
 
-  private styleButtons(type: string): any {
+  /***
+   * Styles show connectivity buttons
+   * @param {string} type
+   * @returns {any}
+   */
+  private static styleButtons(type: string): any {
     switch (type) {
       case 'Stops':
         document.getElementById(type).style.backgroundColor        = 'cornflowerblue';
@@ -406,21 +531,37 @@ export class ModalMapService {
     }
   }
 
-  public filterRoutesMap(routesMap: any): any {
+  /***
+   * Filters routes with one member
+   * @param routesMap
+   */
+  public filterRoutesMap(routesMap: any): void {
     routesMap.forEach((value, key) => {
-      if (this.checkMemberCount(value)) {
+      if (RouteWizardService.checkMemberCount(value)) {
         this.routesMap.set(key, value);
       }
     });
   }
 
-  public viewSuggestedRoute(ref: any, canStopsConnect: any, canPlatformsConnect: any): any {
+  /***
+   * View suggested route
+   * @param ref
+   * @param connectObj
+   * @returns {void}
+   */
+  public viewSuggestedRoute(ref: any, connectObj: any): void {
     let members = this.routesMap.get(ref);
-    let countObj = this.countNodeType(members);
-    this.useAndSetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount, canStopsConnect, canPlatformsConnect);
+    let countObj = RouteWizardService.countNodeType(members);
+    this.useAndSetAvailableConnectivity(countObj, connectObj);
     this.highlightRoute(members);
   }
 
+  /***
+   * Removes member from route
+   * @param {string} toRemoveMemberID
+   * @param addedNewRouteMembers
+   * @returns {any}
+   */
   public removeMember(toRemoveMemberID: string, addedNewRouteMembers: any): any {
     let members = [];
     let index;
@@ -434,8 +575,8 @@ export class ModalMapService {
     if (index > -1) {
       addedNewRouteMembers.splice(index, 1);
     }
-    let countObj = this.countNodeType(addedNewRouteMembers);
-    this.resetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
+    let countObj = RouteWizardService.countNodeType(addedNewRouteMembers);
+    this.resetAvailableConnectivity(countObj);
     addedNewRouteMembers = [...addedNewRouteMembers];
     this.mapSrv.clearHighlight(this.map);
     this.clearMembersHighlight();
@@ -444,12 +585,18 @@ export class ModalMapService {
     return addedNewRouteMembers;
   }
 
+  /***
+   * Adds new member to route
+   * @param newMember
+   * @param addedNewRouteMembers
+   * @returns {any}
+   */
   public addNewMemberToRoute(newMember: any, addedNewRouteMembers: any): any {
     let members = [];
     members.push(newMember);
     addedNewRouteMembers = addedNewRouteMembers.concat(members);
-    let countObj = this.countNodeType(addedNewRouteMembers);
-    this.resetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
+    let countObj = RouteWizardService.countNodeType(addedNewRouteMembers);
+    this.resetAvailableConnectivity(countObj);
     this.mapSrv.clearHighlight(this.map);
     this.clearMembersHighlight();
     this.highlightRoute(addedNewRouteMembers);
@@ -458,31 +605,44 @@ export class ModalMapService {
     return addedNewRouteMembers;
   }
 
-  public setHighlightType(type: string, canStopsConnect: any, canPlatformsConnect: any): boolean {
-  switch (type) {
-  case 'Stops':
-    if (canStopsConnect) {
-      this.mapSrv.highlightType = 'Stops';
-      return true;
+  /***
+   * Sets highlight type for highlighting route on map
+   * @param {string} type
+   * @param connectivityObj
+   * @returns {boolean}
+   */
+  public setHighlightType(type: string, connectivityObj: any): boolean {
+    switch (type) {
+      case 'Stops':
+        if (connectivityObj.canStopsConnect) {
+          this.mapSrv.highlightType = 'Stops';
+          return true;
+        }
+        break;
+      case 'Platforms':
+        if (connectivityObj.canPlatformsConnect) {
+          this.mapSrv.highlightType = 'Platforms';
+          return true;
+        }
+        break;
+      default:
+        return false;
     }
-    break;
-  case 'Platforms':
-    if (canPlatformsConnect) {
-      this.mapSrv.highlightType = 'Platforms';
-      return true;
-    }
-    break;
-  default:
-    return false;
   }
-}
 
-  public showConnectivity(type: string, canStopsConnect: any, canPlatFormsConnect: any, addedNewRouteMembers: any): any {
+  /***
+   * Changes connectivity of route on map
+   * @param {string} type
+   * @param connectivityObj
+   * @param addedNewRouteMembers
+   * @returns {void}
+   */
+  public showConnectivity(type: string, connectivityObj: any, addedNewRouteMembers: any): void {
     this.mapSrv.clearHighlight(this.map);
-    let countObj = this.countNodeType(addedNewRouteMembers);
-    this.resetAvailableConnectivity(countObj.stopsCount, countObj.platformsCount);
-    this.setHighlightType(type, canStopsConnect, canPlatFormsConnect);
+    let countObj = RouteWizardService.countNodeType(addedNewRouteMembers);
+    this.resetAvailableConnectivity(countObj);
+    this.setHighlightType(type, connectivityObj);
     this.highlightRoute(addedNewRouteMembers);
-    this.styleButtons(type);
+    RouteWizardService.styleButtons(type);
   }
 }

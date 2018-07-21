@@ -8,7 +8,7 @@ import { ErrorHighlightService } from './error-highlight.service';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
-import { ModalMapService } from './modal-map.service';
+import { RouteWizardService } from './route-wizard.service';
 
 import { WarnService } from './warn.service';
 
@@ -42,7 +42,7 @@ export class OverpassService {
     private warnSrv: WarnService,
     private ngRedux: NgRedux<IAppState>,
     public appActions: AppActions,
-    private modalMapSrv: ModalMapService,
+    private routeWizardSrv: RouteWizardService,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -293,7 +293,7 @@ export class OverpassService {
   public async initDownloaderForModalMap(map: L.Map): Promise<void> {
     this.setupAreaReference(map);
     if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
-      this.requestNewOverpassDataForModalMap(false);
+      this.requestNewOverpassDataForRouteWizard(false);
     }
   }
 
@@ -798,6 +798,11 @@ export class OverpassService {
     });
   }
 
+  /***
+   * Downloads multiple node data for error highlight
+   * @param toDownload
+   * @returns {any}
+   */
   private downloadMultipleNodeData(toDownload: any): any {
     let requestBody = `
       [out:json][timeout:25];
@@ -844,8 +849,11 @@ export class OverpassService {
         });
   }
 
-
-  public requestNewOverpassDataForModalMap(findRoutes: boolean): void {
+  /***
+   * Continuous query for auto route wizard
+   * @param {boolean} findRoutes
+   */
+  public requestNewOverpassDataForRouteWizard(findRoutes: boolean): void {
     const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
     this.httpClient
       .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
@@ -854,22 +862,22 @@ export class OverpassService {
       })
       .subscribe(
         (res: IOverpassResponse) => {
-          this.modalMapSrv.savedContinousQueryResponses.push(res);
+          this.routeWizardSrv.savedContinuousQueryResponses.push(res);
           for (let element of res.elements) {
-            if (!this.modalMapSrv.modalMapElementsMap.has(element.id)) {
-              this.modalMapSrv.modalMapElementsMap.set(element.id, element); }
+            if (!this.routeWizardSrv.modalMapElementsMap.has(element.id)) {
+              this.routeWizardSrv.modalMapElementsMap.set(element.id, element); }
           }
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           let transformed = this.osmtogeojson(res);
-          this.modalMapSrv.renderTransformedGeojsonDataForRouteWizard(transformed, this.modalMapSrv.map);
+          this.routeWizardSrv.renderTransformedGeojsonDataForRouteWizard(transformed, this.routeWizardSrv.map);
           this.warnSrv.showSuccess();
           if (findRoutes) {
-            let stopsInBounds = this.modalMapSrv.findStopsInBounds(this.modalMapSrv.map);
-            let routeRefs = this.modalMapSrv.getRouteRefsFromNodes(stopsInBounds);
+            let stopsInBounds = this.routeWizardSrv.findStopsInBounds(this.routeWizardSrv.map);
+            let routeRefs = this.routeWizardSrv.getRouteRefsFromNodes(stopsInBounds);
             if (routeRefs.length !== 0) {
-              this.getMultipleNodeDataForAutoRoute(stopsInBounds);
+              this.getMultipleNodeDataForRouteWizard(stopsInBounds);
             } else {
-              this.modalMapSrv.routesRecieved.emit(null);
+              this.routeWizardSrv.routesReceived.emit(null);
             }
           }
         },
@@ -880,7 +888,12 @@ export class OverpassService {
       );
   }
 
-  private getMultipleNodeDataForAutoRoute(idsArr: any): any {
+  /***
+   * Multiple node data download for route wizard
+   * @param idsArr
+   * @returns {any}
+   */
+  private getMultipleNodeDataForRouteWizard(idsArr: any): any {
     let requestBody = `
       [out:json][timeout:25];
       (
@@ -897,8 +910,8 @@ export class OverpassService {
           if (!res) {
             return alert('No response from API. Try to select element again please.');
           }
-          this.modalMapSrv.savedMultipleNodeDataResponses.push(res);
-          this.modalMapSrv.processMultipleNodeDataResponse(res);
+          this.routeWizardSrv.savedMultipleNodeDataResponses.push(res);
+          this.routeWizardSrv.processMultipleNodeDataResponse(res);
           this.warnSrv.showSuccess();
         },
         (err) => {
