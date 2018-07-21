@@ -89,7 +89,13 @@ export class RouteWizardService {
   public renderTransformedGeojsonDataForRouteWizard(transformedGeoJSON: any, map: L.Map): void {
     this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
       filter: (feature) => {
-        return !this.elementsRenderedModalMap.has(feature.id);
+        if (!this.elementsRenderedModalMap.has(feature.id) &&
+          'public_transport' in feature.properties && feature.id[0] === 'n'
+        ) {
+          return true;
+        } else {
+          return false;
+        }
       },
       onEachFeature: (feature, layer) => {
         this.elementsRenderedModalMap.add(feature.id);
@@ -313,8 +319,9 @@ export class RouteWizardService {
   /***
    * Highlights route's members on map
    * @param members
+   * @param adjustZoom
    */
-  public highlightRoute(members: any): void {
+  public highlightRoute(members: any, adjustZoom: boolean): void {
     this.mapSrv.clearHighlight(this.map);
     let routeMembers = members;
     RouteWizardService.assignRolesToMembers(routeMembers);
@@ -325,7 +332,9 @@ export class RouteWizardService {
     this.storageSrv.stopsForRoute     = [];
     this.storageSrv.platformsForRoute = [];
     this.mapSrv.showRoute(rel, this.map, this.modalMapElementsMap);
-    this.adjustZoomForRoute(routeMembers);
+    if (adjustZoom) {
+      this.adjustZoomForRoute(routeMembers);
+    }
   }
 
   /***
@@ -380,8 +389,8 @@ export class RouteWizardService {
   public highlightFirstRoute(connectObj: any): void {
     let members  = this.routesMap.get(this.routesMap.keys().next().value);
     let countObj = RouteWizardService.countNodeType(members);
-    this.useAndSetAvailableConnectivity(countObj, connectObj);
-    this.highlightRoute(members);
+    this.useAndSetAvailableConnectivity(countObj);
+    this.highlightRoute(members, true);
   }
 
   /***
@@ -410,12 +419,12 @@ export class RouteWizardService {
    * @param connectivityObj
    * @returns {any}
    */
-  public useAndSetAvailableConnectivity(countObj: any, connectivityObj: any): any {
+  public useAndSetAvailableConnectivity(countObj: any): any {
     let connectObj = this.resetAvailableConnectivity(countObj);
     if (connectObj.canStopsConnect) {
-      this.setHighlightType('Stops', connectivityObj);
+      this.setHighlightType('Stops', connectObj);
     } else if (connectObj.canPlatformsConnect) {
-      this.setHighlightType('Platforms', connectivityObj);
+      this.setHighlightType('Platforms', connectObj);
     }
   }
 
@@ -558,8 +567,8 @@ export class RouteWizardService {
   public viewSuggestedRoute(ref: any, connectObj: any): void {
     let members = this.routesMap.get(ref);
     let countObj = RouteWizardService.countNodeType(members);
-    this.useAndSetAvailableConnectivity(countObj, connectObj);
-    this.highlightRoute(members);
+    this.useAndSetAvailableConnectivity(countObj);
+    this.highlightRoute(members, true);
   }
 
   /***
@@ -586,7 +595,7 @@ export class RouteWizardService {
     addedNewRouteMembers = [...addedNewRouteMembers];
     this.mapSrv.clearHighlight(this.map);
     this.clearMembersHighlight();
-    this.highlightRoute(addedNewRouteMembers);
+    this.highlightRoute(addedNewRouteMembers, false);
     this.highlightMembers(addedNewRouteMembers);
     return addedNewRouteMembers;
   }
@@ -605,7 +614,7 @@ export class RouteWizardService {
     this.resetAvailableConnectivity(countObj);
     this.mapSrv.clearHighlight(this.map);
     this.clearMembersHighlight();
-    this.highlightRoute(addedNewRouteMembers);
+    this.highlightRoute(addedNewRouteMembers, false);
     this.highlightMembers(addedNewRouteMembers);
     addedNewRouteMembers = [...addedNewRouteMembers];
     return addedNewRouteMembers;
@@ -648,7 +657,7 @@ export class RouteWizardService {
     let countObj = RouteWizardService.countNodeType(addedNewRouteMembers);
     this.resetAvailableConnectivity(countObj);
     this.setHighlightType(type, connectivityObj);
-    this.highlightRoute(addedNewRouteMembers);
+    this.highlightRoute(addedNewRouteMembers, true);
     RouteWizardService.styleButtons(type);
   }
 

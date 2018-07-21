@@ -166,12 +166,8 @@ export class RouteWizardComponent {
     this.addedNewRouteMembers       = this.routeWizardSrv.routesMap.get(ref);
     this.selectTab(3);
     let countObj = RouteWizardService.countNodeType(this.addedNewRouteMembers);
-    this.routeWizardSrv.useAndSetAvailableConnectivity(countObj,
-      {
-        canStopsConnect    : this.canStopsConnect,
-        canPlatformsConnect: this.canPlatformsConnect,
-      });
-    this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers);
+    this.routeWizardSrv.useAndSetAvailableConnectivity(countObj);
+    this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers, true);
     this.routeWizardSrv.highlightMembers(this.addedNewRouteMembers);
   }
 
@@ -229,7 +225,7 @@ export class RouteWizardComponent {
    */
   public reorderMembers(): void {
     this.mapSrv.clearHighlight(this.routeWizardSrv.map);
-    this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers);
+    this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers, false);
   }
 
   /***
@@ -286,7 +282,9 @@ export class RouteWizardComponent {
         this.viewSuggestedRoute(this.newRoutesRefs[0]);
         break;
       case '3':
-        this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers);
+        let countObj = RouteWizardService.countNodeType(this.addedNewRouteMembers);
+        this.routeWizardSrv.useAndSetAvailableConnectivity(countObj);
+        this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers, true);
         this.routeWizardSrv.highlightMembers(this.addedNewRouteMembers);
         break;
     }
