@@ -29,7 +29,7 @@ export class RouteWizardService {
   public membersHighlightLayerGroup    = L.layerGroup();
 
   constructor(private storageSrv: StorageService,
-              private mapSrv: MapService,
+              public mapSrv: MapService,
               private modalService: BsModalService,
               private processSrv: ProcessService) {
     this.modalService.onShown.subscribe(() => {
