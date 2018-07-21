@@ -4,9 +4,8 @@ import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
-import {AutoTasksService} from '../../services/auto-route-creation/auto-tasks.service';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
-import {RouteModalComponent} from '../route-modal/route-modal.component';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { RouteModalComponent } from '../route-modal/route-modal.component';
 
 @Component({
   selector: 'settings',
