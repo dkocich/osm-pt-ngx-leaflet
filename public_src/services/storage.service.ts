@@ -49,6 +49,8 @@ export class StorageService {
 
   public nameErrorsObj: any[]                      = [];
   public refErrorsObj: any[]                       = [];
+  public wayErrorsObj: any[]                       = [];
+
   public currentIndex                            = 0;
   public refreshErrorObjects: EventEmitter<object> = new EventEmitter();
 

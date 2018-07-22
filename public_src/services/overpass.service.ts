@@ -128,9 +128,10 @@ export class OverpassService {
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
+
           let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
           if (errorCorrectionMode) {
-            if (errorCorrectionMode.refSuggestions === null) {
+            if (errorCorrectionMode.refSuggestions === null && errorCorrectionMode.waySuggestions === null) {
               this.errorHighlightSrv.countNameErrors();
               this.appActions.actSetErrorCorrectionMode({
                 nameSuggestions: {
@@ -138,24 +139,46 @@ export class OverpassService {
                   startCorrection: false,
                 },
                 refSuggestions : null,
+                waySuggestions : null,
               });
             } else {
-              let toDownload = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
-              if (this.errorHighlightSrv.isMobileDevice() || toDownload.length === 0) {
-                this.errorHighlightSrv.countNameErrors();
-                this.errorHighlightSrv.countRefErrors();
-                this.appActions.actSetErrorCorrectionMode({
-                  nameSuggestions: {
-                    found          : true,
-                    startCorrection: false,
-                  },
-                  refSuggestions : {
-                    found          : true,
-                    startCorrection: false,
-                  },
-                });
+              if (this.errorHighlightSrv.isMobileDevice()) {
+                  this.errorHighlightSrv.countNameErrors();
+                  this.errorHighlightSrv.countRefErrors();
+                  this.appActions.actSetErrorCorrectionMode({
+                    nameSuggestions: {
+                      found          : true,
+                      startCorrection: false,
+                    },
+                    refSuggestions : {
+                      found          : true,
+                      startCorrection: false,
+                    },
+                    waySuggestions : null,
+                  });
               } else {
-                this.downloadMultipleNodeData(toDownload);
+                let toDownload = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
+                if (toDownload.length === 0) {
+                    this.errorHighlightSrv.countNameErrors();
+                    this.errorHighlightSrv.countRefErrors();
+                    this.errorHighlightSrv.countWayErrors();
+                    this.appActions.actSetErrorCorrectionMode({
+                      nameSuggestions: {
+                        found          : true,
+                        startCorrection: false,
+                      },
+                      refSuggestions : {
+                        found          : true,
+                        startCorrection: false,
+                      },
+                      waySuggestions : {
+                        found          : true,
+                        startCorrection: false,
+                      },
+                    });
+                } else {
+                    this.downloadMultipleNodeData(toDownload);
+                }
               }
             }
           }
@@ -824,9 +847,14 @@ export class OverpassService {
               found          : true,
               startCorrection: false,
             },
+            waySuggestions : {
+              found          : true,
+              startCorrection: false,
+            },
           });
           this.errorHighlightSrv.countNameErrors();
           this.errorHighlightSrv.countRefErrors();
+          this.errorHighlightSrv.countWayErrors();
         },
         (err) => {
           this.warnSrv.showError();

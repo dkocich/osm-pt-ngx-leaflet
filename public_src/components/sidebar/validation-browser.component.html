@@ -50,6 +50,18 @@
           </ng-container>
         </li>
 
+        <li class="list-group-item clearfix" *ngIf="view('way-errors-menu-item')">
+          <ng-container *ngIf="wayErrorsObj.length !==0">
+            {{wayErrorsObj.length}} {{'parent way errors' | translate }}
+            <button class="btn btn-default pull-right" (click)="startWayCorrection()">{{'Start Correction' | translate
+              }}
+            </button>
+          </ng-container>
+          <ng-container *ngIf="wayErrorsObj.length ===0">
+            {{ 'No parent way suggestions available' | translate }}
+          </ng-container>
+        </li>
+
       </ul>
 
     </ng-container>
@@ -87,6 +99,27 @@
           </li>
         </ng-container>
       </ul>
+    </ng-container>
+
+    <ng-container *ngIf="view('way-error-list')">
+
+      <ul class="list-group scrollable-panel">
+        <ng-container *ngFor="let wayError of wayErrorsObj; let i = index">
+          <li (click)="jumpToLocation(i)" id='{{ wayError.stop.id }}-way-error-list-id' class="list-group-item"
+              [style.background-color]="i===0 ? 'lightblue':'white'">
+            {{i +1}}. Platform
+            <ng-container *ngIf="wayError.wayIDs.length > 1">
+              [ Connected to {{wayError.wayIDs.length}} ways ]
+            </ng-container>
+            <ng-container *ngIf="wayError.wayIDs.length === 1">
+              [ Connected to {{wayError.wayIDs.length}} way ]
+            </ng-container>
+            <i *ngIf="wayError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="wayError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
+          </li>
+        </ng-container>
+      </ul>
+
     </ng-container>
 
   </ng-container>

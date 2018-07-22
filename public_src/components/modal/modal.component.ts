@@ -10,7 +10,7 @@ import { WarnService } from '../../services/warn.service';
 import * as L from 'leaflet';
 
 import { IPtRelation } from '../../core/ptRelation.interface';
-import { IErrorObject, IRefErrorObject } from '../../core/errorObject.interface';
+import { INameErrorObject, IRefErrorObject, IWayErrorObject } from '../../core/errorObject.interface';
 
 @Component({
   selector: 'modal-content',
@@ -28,8 +28,9 @@ export class ModalComponent {
   @ViewChildren('chosenRef') chosenRefS;
   @ViewChildren('newlyAddedValue') newlyAddedValue;
 
-  public nameErrorObject: IErrorObject;
+  public nameErrorObject: INameErrorObject;
   public refErrorObject: IRefErrorObject;
+  public wayErrorObject: IWayErrorObject;
 
   public removedNearbySuggestions: any[]  = [];
   public removedMissingSuggestions: any[] = [];
@@ -41,12 +42,16 @@ export class ModalComponent {
   public missingRefRels: any[];
   public nearbyRels: any[];
 
+  public osmtogeojson: any = require('osmtogeojson');
+
   constructor(public bsModalRef: BsModalRef,
               private editSrv: EditService,
               private storageSrv: StorageService,
               private mapSrv: MapService,
               private warnSrv: WarnService,
-              ) { }
+  ) {
+  }
+
   /***
    * Executed on click of save button for adding new name tag
    * @param {string} name
@@ -64,7 +69,7 @@ export class ModalComponent {
       popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
       let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
       popupArr[0].setContent(popupContent);
-      this.nameErrorObject.corrected                                          = 'true';
+      this.nameErrorObject.corrected                                        = 'true';
       this.storageSrv.nameErrorsObj[this.storageSrv.currentIndex].corrected = 'true';
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
       this.warnSrv.showGenericSuccess();
@@ -89,7 +94,7 @@ export class ModalComponent {
     refsForTag = refsForTag.concat(this.newAddedRefs);
     refsForTag = refsForTag.filter((v, i, a) => {
       return a.indexOf(v) === i;
-    }) ;
+    });
     refsForTag.sort();
     if (refsForTag.length !== 0) {
       refsForTag.forEach((item, index) => {
@@ -117,6 +122,38 @@ export class ModalComponent {
     }
   }
 
+  saveWayError(): void {
+    this.createChangeForWayError();
+    let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
+    MapService.addHoverListenersToPopUp(popUpElement);
+    this.mapSrv.popUpArr   = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
+    let popupContent       = L.DomUtil.create('div', 'content');
+    popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+    let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
+    popupArr[0].setContent(popupContent);
+    this.wayErrorObject.corrected                                        = 'true';
+    this.storageSrv.wayErrorsObj[this.storageSrv.currentIndex].corrected = 'true';
+    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'way as parent' });
+    this.rerenderPlatformAsStop();
+    this.warnSrv.showGenericSuccess();
+    this.bsModalRef.hide();
+  }
+
+  /***
+   * Re-renders platform as stop
+   * @returns {any}
+   */
+  private rerenderPlatformAsStop(): any {
+    this.mapSrv.map.removeLayer(this.getLayerFromMap(this.wayErrorObject.stop.id));
+    this.storageSrv.elementsRendered.delete('node/' + this.wayErrorObject.stop.id);
+    let obj: any = {};
+    let elements = [];
+    elements.push(this.storageSrv.elementsMap.get(this.wayErrorObject.stop.id));
+    obj.elements    = elements;
+    let transformed = this.osmtogeojson(obj);
+    this.mapSrv.renderTransformedGeojsonData(transformed);
+  }
+
   /***
    * Closes the currently opened modal
    * @returns {void}
@@ -139,6 +176,22 @@ export class ModalComponent {
       };
       this.editSrv.addChange(this.storageSrv.currentElement, 'add tag', change);
     }
+  }
+
+  private createChangeForWayError(): void {
+    let change: any;
+    change = {
+      from: {
+        key  : 'public_transport',
+        value: this.wayErrorObject.stop.tags['public_transport'],
+      },
+      to  : {
+        key  : 'public_transport',
+        value: 'stop_position',
+      },
+    };
+
+    this.editSrv.addChange(this.wayErrorObject.stop, 'change tag', change);
   }
 
   /***
@@ -366,9 +419,23 @@ export class ModalComponent {
       case 'missing refs':
         return 'List of routes which have the stop/platform as a member but reference is not added in route_ref tag of the stop/platform.' +
           'Select from the list to add to the route_ref tag';
-      default :
-        alert ('fix me');
-        return '';
     }
+  }
+
+  /***
+   * Get layer from map from given stop ID
+   * @param {number} stopID
+   * @returns {any}
+   */
+  private getLayerFromMap(stopID: number): any{
+    let matchedLayer = null;
+    this.mapSrv.map.eachLayer((layer) => {
+      if (layer['_latlng']  && layer['feature']) {
+        if (this.mapSrv.getFeatureIdFromMarker(layer['feature']) === stopID) {
+          matchedLayer = layer;
+        }
+      }
+    });
+    return matchedLayer;
   }
 }
