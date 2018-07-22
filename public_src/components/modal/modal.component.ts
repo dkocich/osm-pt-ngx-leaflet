@@ -10,7 +10,7 @@ import { WarnService } from '../../services/warn.service';
 import * as L from 'leaflet';
 
 import { IPtRelation } from '../../core/ptRelation.interface';
-import { IErrorObject, IRefErrorObject } from '../../core/errorObject.interface';
+import { INameErrorObject, IRefErrorObject } from '../../core/errorObject.interface';
 
 @Component({
   selector: 'modal-content',
@@ -28,7 +28,7 @@ export class ModalComponent {
   @ViewChildren('chosenRef') chosenRefS;
   @ViewChildren('newlyAddedValue') newlyAddedValue;
 
-  public nameErrorObject: IErrorObject;
+  public nameErrorObject: INameErrorObject;
   public refErrorObject: IRefErrorObject;
 
   public removedNearbySuggestions: any[]  = [];

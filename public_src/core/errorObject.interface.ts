@@ -1,6 +1,6 @@
 import { IPtStop } from './ptStop.interface';
 
-export interface IErrorObject {
+export interface INameErrorObject {
   stop: IPtStop;
   corrected: string;
 }

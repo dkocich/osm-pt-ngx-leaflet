@@ -15,7 +15,7 @@ import { ConfService } from '../../services/conf.service';
 
 import { IPtStop } from '../../core/ptStop.interface';
 import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
-import { IErrorObject, IRefErrorObject } from '../../core/errorObject.interface';
+import { INameErrorObject, IRefErrorObject } from '../../core/errorObject.interface';
 
 @Component({
   selector: 'validation-browser',
@@ -36,7 +36,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
 
 
   public refErrorsObj: IRefErrorObject[];
-  public nameErrorsObj: IErrorObject[];
+  public nameErrorsObj: INameErrorObject[];
   @Input() suggestionsBrowserOptions: ISuggestionsBrowserOptions;
   public errorCorrectionModeSubscription;
   public errorCorrectionMode: ISuggestionsBrowserOptions;

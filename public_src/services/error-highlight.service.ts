@@ -16,13 +16,13 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import { ModalComponent } from '../components/modal/modal.component';
 
-import { IErrorObject, IRefErrorObject } from '../core/errorObject.interface';
+import { INameErrorObject, IRefErrorObject } from '../core/errorObject.interface';
 import { ISuggestionsBrowserOptions } from '../core/editingOptions.interface';
 
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
-  public nameErrorsObj: IErrorObject[] = [];
+  public nameErrorsObj: INameErrorObject[] = [];
   public refErrorsObj: IRefErrorObject[] = [];
   public currentIndex = 0;
   public currentMode: string;
@@ -150,7 +150,7 @@ export class ErrorHighlightService {
    * Opens up modal
    * @returns {void}
    */
-  public openModalWithComponentForName(errorObject: IErrorObject): void {
+  public openModalWithComponentForName(errorObject: INameErrorObject): void {
     const featureId = Number(errorObject.stop.id);
     const element   = this.processSrv.getElementById(featureId);
     const latlng = { lat: element.lat, lng: element.lon };
@@ -218,7 +218,7 @@ export class ErrorHighlightService {
 
     this.storageSrv.elementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-        let errorObj: IErrorObject = { stop, corrected: 'false' };
+        let errorObj: INameErrorObject = { stop, corrected: 'false' };
         if (!stop.tags['name'] && this.mapSrv.map.getBounds().contains(stop)) {
           this.nameErrorsObj.push(errorObj);
         }
@@ -544,7 +544,7 @@ export class ErrorHighlightService {
    * @param errorObj
    * @returns {void}
    */
-  public addSinglePopUp(errorObj: IErrorObject | IRefErrorObject): void {
+  public addSinglePopUp(errorObj: INameErrorObject | IRefErrorObject): void {
     let stop = errorObj['stop'];
     this.mapSrv.removePopUps();
     let latlng = { lat: stop.lat, lng: stop.lon };
