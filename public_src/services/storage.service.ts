@@ -47,8 +47,8 @@ export class StorageService {
   public completelyDownloadedPlatformsIDB = new Set();
   public queriedRoutesForMastersIDB       = new Set();
 
-  public nameErrorsO: any[]                      = [];
-  public refErrorsO: any[]                       = [];
+  public nameErrorsObj: any[]                      = [];
+  public refErrorsObj: any[]                       = [];
   public currentIndex                            = 0;
   public refreshErrorObjects: EventEmitter<object> = new EventEmitter();
 

@@ -24,27 +24,27 @@
         <ul class="list-group">
 
           <li class="list-group-item clearfix" *ngIf="errorCorrectMode.nameSuggestions.found">
-            <ng-container *ngIf="nameErrorsO.length !==0">
-              {{nameErrorsO.length}} {{'name tag errors' | translate }}
+            <ng-container *ngIf="nameErrorsObj.length !==0">
+              {{nameErrorsObj.length}} {{'name tag errors' | translate }}
               <button class="btn btn-default pull-right" (click)="startNameCorrection()">{{'Start Correction' | translate }}
               </button>
             </ng-container>
-            <ng-container *ngIf="nameErrorsO.length ===0">
-              No missing name suggestions available
+            <ng-container *ngIf="nameErrorsObj.length ===0">
+              {{ 'No missing name suggestions available' | translate}}
             </ng-container>
 
           </li>
 
           <li class="list-group-item clearfix" *ngIf="errorCorrectMode.refSuggestions &&
       errorCorrectMode.refSuggestions.found">
-            <ng-container *ngIf="refErrorsO.length !==0">
-              {{refErrorsO.length}} {{'route references tag errors' | translate }}
+            <ng-container *ngIf="refErrorsObj.length !==0">
+              {{refErrorsObj.length}} {{'route references tag errors' | translate }}
               <button class="btn btn-default pull-right" (click)="startRefCorrection()">{{'Start Correction' | translate
                 }}
               </button>
             </ng-container>
-            <ng-container *ngIf="refErrorsO.length ===0">
-              No missing ref suggestions available
+            <ng-container *ngIf="refErrorsObj.length ===0">
+              {{ 'No missing ref suggestions available' | translate }}
             </ng-container>
           </li>
 
@@ -55,7 +55,7 @@
     <ng-container *ngIf="(errorCorrectionMode$ | async) as errorCorrectMode">
       <ng-container *ngIf="errorCorrectMode.nameSuggestions.startCorrection">
         <ul class="list-group scrollable-panel">
-          <ng-container *ngFor="let nameError of nameErrorsO; let i = index">
+          <ng-container *ngFor="let nameError of nameErrorsObj; let i = index">
             <li (click)="jumpToLocation(i)" id='{{ nameError.stop.id }}-name-error-list-id' class="list-group-item"
                 [style.background-color]="i===0 ? 'lightblue':'white'">
               {{i +1}}. {{getNodeType(nameError.stop)}}
@@ -70,15 +70,15 @@
     <ng-container *ngIf="(errorCorrectionMode$ | async) as errorCorrectMode">
       <ng-container *ngIf="errorCorrectMode.refSuggestions && errorCorrectMode.refSuggestions.startCorrection">
         <ul class="list-group scrollable-panel">
-          <ng-container *ngFor="let refError of refErrorsO; let i = index">
+          <ng-container *ngFor="let refError of refErrorsObj; let i = index">
             <li (click)="jumpToLocation(i)" id='{{ refError.stop.id }}-ref-error-list-id' class="list-group-item"
                 [style.background-color]="i===0 ? 'lightblue':'white'">
               {{i +1}}. {{getNodeType(refError.stop)}}
               <ng-container *ngIf="refError.missingConnectedRefs !== null">
-                [ {{refError.totalConnectedRefs - refError.missingConnectedRefs}} / {{refError.totalConnectedRefs}} refs added ]
+                [ {{refError.totalConnectedRefs - refError.missingConnectedRefs}} / {{refError.totalConnectedRefs}} {{ 'refs added' | translate }} ]
               </ng-container>
               <ng-container *ngIf="!refError.missingConnectedRefs && !refError.totalConnectedRefs ">
-                 Missing route_ref Tag
+                 {{'Missing route_ref Tag' | translate }}
               </ng-container>
               <i *ngIf="refError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
               <i *ngIf="refError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>

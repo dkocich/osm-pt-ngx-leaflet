@@ -65,7 +65,7 @@ export class ModalComponent {
       let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
       popupArr[0].setContent(popupContent);
       this.nameErrorObject.corrected                                          = 'true';
-      this.storageSrv.nameErrorsO[this.storageSrv.currentIndex].corrected = 'true';
+      this.storageSrv.nameErrorsObj[this.storageSrv.currentIndex].corrected = 'true';
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
       this.warnSrv.showGenericSuccess();
     } else {
@@ -332,7 +332,7 @@ export class ModalComponent {
       popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
     }
     this.refErrorObject.corrected = val;
-    this.storageSrv.refErrorsO[this.storageSrv.currentIndex].corrected = val;
+    this.storageSrv.refErrorsObj[this.storageSrv.currentIndex].corrected = val;
     let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
     popupArr[0].setContent(popupContent);
   }

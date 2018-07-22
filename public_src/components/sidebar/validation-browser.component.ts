@@ -27,8 +27,8 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<object>;
   @select(['app', 'switchMode']) public readonly switchMode$: Observable<boolean>;
 
-  public refErrorsO: IRefErrorObject[];
-  public nameErrorsO: IErrorObject[];
+  public refErrorsObj: IRefErrorObject[];
+  public nameErrorsObj: IErrorObject[];
   @Input() suggestionsBrowserOptions: ISuggestionsBrowserOptions;
   public errorCorrectionModeSubscription;
   public errorCorrectionMode: ISuggestionsBrowserOptions;
@@ -46,11 +46,11 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
       const { typeOfErrorObject } = data;
       if (typeOfErrorObject === 'missing name') {
-        this.nameErrorsO = this.storageSrv.nameErrorsO;
+        this.nameErrorsObj = this.storageSrv.nameErrorsObj;
       }
 
       if (typeOfErrorObject === 'missing ref') {
-        this.refErrorsO = this.storageSrv.refErrorsO;
+        this.refErrorsObj = this.storageSrv.refErrorsObj;
       }
     });
 
@@ -67,8 +67,8 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
    * @returns {void}
    */
   public startValidation(): void {
-    this.nameErrorsO = [];
-    this.refErrorsO = [];
+    this.nameErrorsObj = [];
+    this.refErrorsObj = [];
 
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForErrors) {
       this.overpassSrv.requestNewOverpassData();
@@ -106,7 +106,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
 
   /***
    * Starts ref correction
-   * @returns {any}
+   * @returns {void}
    */
   public startRefCorrection(): void {
     if (this.errorCorrectionMode.refSuggestions) {
