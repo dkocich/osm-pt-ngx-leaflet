@@ -10,3 +10,11 @@ export interface IRefErrorObject {
   totalConnectedRefs: number;
   missingConnectedRefs: number;
 }
+
+export interface IParentWayErrorObject {
+  stop: IPtStop;
+  corrected: string;
+  totalConnectedRefs: number;
+  missingConnectedRefs: number;
+}
+
