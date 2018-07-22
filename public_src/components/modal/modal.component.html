@@ -158,3 +158,17 @@
     </div>
   </div>
 </ng-container>
+
+<ng-container *ngIf="error === 'way as parent'">
+  <div class="modal-body text-center">
+    <h4 *ngIf="wayErrorObject.corrected === 'false'">
+     Do you want to change platform to stop position?
+    </h4>
+  </div>
+  <div class="modal-footer">
+    <p>
+      <button type="button" class="btn btn-default" (click)="close()">{{'Cancel' | translate }}</button>
+      <button type="button" class="btn btn-primary" (click)="saveWayError()">{{'Yes' | translate}}</button>
+    </p>
+  </div>
+</ng-container>

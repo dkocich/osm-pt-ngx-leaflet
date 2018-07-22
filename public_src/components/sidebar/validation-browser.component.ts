@@ -15,7 +15,7 @@ import { ConfService } from '../../services/conf.service';
 
 import { IPtStop } from '../../core/ptStop.interface';
 import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
-import { INameErrorObject, IRefErrorObject } from '../../core/errorObject.interface';
+import { INameErrorObject, IRefErrorObject, IWayErrorObject } from '../../core/errorObject.interface';
 
 @Component({
   selector: 'validation-browser',
@@ -29,6 +29,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
 
   public refErrorsObj: IRefErrorObject[];
   public nameErrorsObj: INameErrorObject[];
+  public wayErrorsObj: IWayErrorObject[];
   @Input() suggestionsBrowserOptions: ISuggestionsBrowserOptions;
   public errorCorrectionModeSubscription;
   public errorCorrectionMode: ISuggestionsBrowserOptions;
@@ -52,6 +53,10 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
       if (typeOfErrorObject === 'missing ref') {
         this.refErrorsObj = this.storageSrv.refErrorsObj;
       }
+
+      if (typeOfErrorObject === 'way as parent') {
+        this.wayErrorsObj = this.storageSrv.wayErrorsObj;
+      }
     });
 
     this.errorCorrectionModeSubscription = ngRedux.select<ISuggestionsBrowserOptions>(['app', 'errorCorrectionMode'])
@@ -73,7 +78,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
   public startValidation(): void {
     this.nameErrorsObj = [];
     this.refErrorsObj = [];
-
+    this.wayErrorsObj = [];
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForErrors) {
       this.overpassSrv.requestNewOverpassData();
     } else {
@@ -86,16 +91,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public startNameCorrection(): void {
-    if (this.errorCorrectionMode.refSuggestions) {
-    this.appActions.actSetErrorCorrectionMode(
-      {
-        nameSuggestions: {
-          found          : true,
-          startCorrection: true,
-        },
-        refSuggestions : this.errorCorrectionMode.refSuggestions,
-      }); }
-      else {
+    if (this.errorCorrectionMode.nameSuggestions) {
       this.appActions.actSetErrorCorrectionMode(
         {
           nameSuggestions: {
@@ -103,9 +99,24 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
             startCorrection: true,
           },
           refSuggestions : this.errorCorrectionMode.refSuggestions,
+          waySuggestions : this.errorCorrectionMode.waySuggestions,
         });
     }
     this.errorHighlightSrv.missingTagError('name');
+  }
+
+  public startWayCorrection(): void {
+    if (this.errorCorrectionMode.waySuggestions) {
+      this.appActions.actSetErrorCorrectionMode(
+        {
+          waySuggestions: {
+            found          : true,
+            startCorrection: true,
+          },
+          refSuggestions : this.errorCorrectionMode.refSuggestions,
+          nameSuggestions : this.errorCorrectionMode.nameSuggestions,
+        }); }
+    this.errorHighlightSrv.missingTagError('way');
   }
 
   /**
@@ -121,15 +132,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
             found          : true,
             startCorrection: true,
           },
-        });
-    } else {
-      this.appActions.actSetErrorCorrectionMode(
-        {
-          nameSuggestions: {
-            found          : true,
-            startCorrection: false,
-          },
-          refSuggestions : this.errorCorrectionMode.refSuggestions,
+          waySuggestions: this.errorCorrectionMode.waySuggestions,
         });
     }
     this.errorHighlightSrv.missingTagError('ref');
@@ -171,31 +174,39 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
    */
   public view(name: string): boolean {
     switch (name) {
-      case 'name-error-list':
-        return this.errorCorrectionMode &&
-          this.errorCorrectionMode.nameSuggestions.startCorrection;
       case 'name-errors-menu-item':
         return this.errorCorrectionMode &&
           this.errorCorrectionMode.nameSuggestions.found;
-      case 'ref-error-list':
-        return this.errorCorrectionMode &&
-          this.errorCorrectionMode.refSuggestions &&
-          this.errorCorrectionMode.refSuggestions.startCorrection;
       case 'ref-errors-menu-item' :
         return this.errorCorrectionMode &&
           this.errorCorrectionMode.refSuggestions &&
           this.errorCorrectionMode.refSuggestions.found;
+      case 'way-errors-menu-item':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.waySuggestions &&
+          this.errorCorrectionMode.waySuggestions.found;
+      case 'name-error-list':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.nameSuggestions.startCorrection;
+      case 'ref-error-list':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.refSuggestions &&
+          this.errorCorrectionMode.refSuggestions.startCorrection;
+      case 'way-error-list':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.waySuggestions &&
+          this.errorCorrectionMode.waySuggestions.startCorrection;
       case 'menu':
         return this.errorCorrectionMode &&
           (this.errorCorrectionMode.refSuggestions ? (!this.errorCorrectionMode.refSuggestions.startCorrection) : true) &&
+          (this.errorCorrectionMode.waySuggestions ? (!this.errorCorrectionMode.waySuggestions.startCorrection) : true) &&
           !this.errorCorrectionMode.nameSuggestions.startCorrection;
       case 'find-errors-option':
         return this.errorCorrectionMode &&
           !this.errorCorrectionMode.nameSuggestions.startCorrection &&
-          ((this.errorCorrectionMode.refSuggestions) ? (!this.errorCorrectionMode.refSuggestions.startCorrection) : true);
-      default:
-        alert('fix me');
-        return false;
+          ((this.errorCorrectionMode.refSuggestions) ? (!this.errorCorrectionMode.refSuggestions.startCorrection) : true) &&
+          ((this.errorCorrectionMode.waySuggestions) ? (!this.errorCorrectionMode.waySuggestions.startCorrection) : true);
+
     }
   }
 
