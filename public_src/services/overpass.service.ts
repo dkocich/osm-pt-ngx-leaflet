@@ -795,7 +795,7 @@ export class OverpassService {
       );
       (._;<;);
       out meta;`;
-    console.log('query', requestBody);
+    console.log('LOG.(overpass s.) Multiple node data download query', requestBody);
     requestBody = this.replaceBboxString(requestBody.trim());
     this.httpClient
       .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
