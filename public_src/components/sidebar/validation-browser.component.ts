@@ -22,10 +22,18 @@ import { IErrorObject, IRefErrorObject } from '../../core/errorObject.interface'
   templateUrl: './validation-browser.component.html',
   styleUrls: ['./validation-browser.component.less'],
 })
-export class ValidationBrowserComponent implements OnInit, OnDestroy{
+export class ValidationBrowserComponent implements OnInit, OnDestroy {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<object>;
   @select(['app', 'switchMode']) public readonly switchMode$: Observable<boolean>;
+
+  // name start correction
+  // ref suggestions
+  // ref start correction
+  //
+  //
+  //
+
 
   public refErrorsObj: IRefErrorObject[];
   public nameErrorsObj: IErrorObject[];
@@ -171,4 +179,40 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
   ngOnDestroy(): void {
     this.errorCorrectionModeSubscription.unsubscribe();
   }
+
+  /***
+   * Determines if given window should bw viewed
+   * @param {string} name
+   * @returns {boolean}
+   */
+  view(name: string): boolean {
+    switch (name) {
+      case 'name-error-list':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.nameSuggestions.startCorrection;
+      case 'name-errors-menu-item':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.nameSuggestions.found;
+      case 'ref-error-list':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.refSuggestions &&
+          this.errorCorrectionMode.refSuggestions.startCorrection;
+      case 'ref-errors-menu-item' :
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.refSuggestions &&
+          this.errorCorrectionMode.refSuggestions.found;
+      case 'menu':
+        return this.errorCorrectionMode &&
+          (this.errorCorrectionMode.refSuggestions ? (!this.errorCorrectionMode.refSuggestions.startCorrection) : true) &&
+          !this.errorCorrectionMode.nameSuggestions.startCorrection;
+      case 'find-errors-option':
+        return this.errorCorrectionMode &&
+          !this.errorCorrectionMode.nameSuggestions.startCorrection &&
+          ((this.errorCorrectionMode.refSuggestions) ? (!this.errorCorrectionMode.refSuggestions.startCorrection) : true);
+      default:
+        alert('fix me');
+        return false;
+    }
+  }
+
 }

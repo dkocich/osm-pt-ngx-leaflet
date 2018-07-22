@@ -345,9 +345,9 @@ export class ErrorHighlightService {
 
   /***
    * Moves to previous location
-   * @returns {any}
+   * @returns {void}
    */
-  previousLocation(): any {
+  previousLocation(): void {
 
     if (this.currentMode === 'name') {
 
@@ -592,9 +592,9 @@ export class ErrorHighlightService {
   /***
    * Jumps to error
    * @param {number} index
-   * @returns {any}
+   * @returns {void}
    */
-  public jumpToLocation(index: number): any {
+  public jumpToLocation(index: number): void {
     let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
     if (errorCorrectionMode.nameSuggestions.startCorrection) {
       document.getElementById(this.nameErrorsObj[this.currentIndex].stop.id.toString() + '-name-error-list-id')
@@ -610,7 +610,8 @@ export class ErrorHighlightService {
     }
 
     if (errorCorrectionMode.refSuggestions && errorCorrectionMode.refSuggestions.startCorrection) {
-      document.getElementById(this.refErrorsObj[this.currentIndex].stop.id.toString() + '-ref-error-list-id').style.backgroundColor = 'white';
+      document.getElementById(this.refErrorsObj[this.currentIndex].stop.id.toString() + '-ref-error-list-id')
+        .style.backgroundColor = 'white';
       this.currentIndex = index;
       this.storageSrv.currentIndex = index;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing ref' });
@@ -652,7 +653,7 @@ export class ErrorHighlightService {
     this.storageSrv.elementsMap.forEach((element) => {
       if ((element.type === 'relation') && !(element.tags.public_transport === 'stop_area') && (element.members)) {
           for (let member of element.members) {
-            if (member.ref === id && element.tags.ref && /^\d+$/.test(element.tags.ref)) {
+            if (member.ref === id && element.tags.ref) {
               parentRels.push(element);
             }
           }

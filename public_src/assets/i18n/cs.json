@@ -61,6 +61,7 @@
   "Highlight Modes": "Highlight Modes",
   "Incomplete relation (click to download it by reference ID)...": "Incomplete relation (click to download it by reference ID)...",
   "Info": "Info",
+  "List of nearby routes (within 1/2 km) which do not have the given stop/platform as a member.Select from the list to add the node as a member.Please note that route_ref of the node tag will also be updated accordingly." : "List of nearby routes (within 1/2 km) which do not have the given stop/platform as a member.Select from the list to add the node as a member.Please note that route_ref of the node tag will also be updated accordingly.",
   "Login": "Přihlásit",
   "Logout": "Odhlásit",
   "missing name tags": "missing name tags",

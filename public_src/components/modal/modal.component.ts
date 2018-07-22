@@ -25,18 +25,18 @@ export class ModalComponent {
   public suggestedNames: string[];
   public error: string;
 
-  @ViewChildren('chosenRef') chosenRefS ;
-  @ViewChildren('newlyAddedValue') newlyAddedValue ;
+  @ViewChildren('chosenRef') chosenRefS;
+  @ViewChildren('newlyAddedValue') newlyAddedValue;
 
   public nameErrorObject: IErrorObject;
   public refErrorObject: IRefErrorObject;
 
-  public removedNearbySuggestions: any[] = [];
+  public removedNearbySuggestions: any[]  = [];
   public removedMissingSuggestions: any[] = [];
 
-  public addedMissingSuggestionsRefs: any[] = [];
+  public addedMissingSuggestionsRefs: any[]    = [];
   public addedFromNearbySuggestionsRefs: any[] = [];
-  public newAddedRefs: any[] = [];
+  public newAddedRefs: any[]                   = [];
 
   public missingRefRels: any[];
   public nearbyRels: any[];
@@ -267,9 +267,9 @@ export class ModalComponent {
   /***
    * adds given node as child member of routes
    * @param addedFromNearbySuggestionsRefs
-   * @returns {any}
+   * @returns {void}
    */
-  private addToMembers(addedFromNearbySuggestionsRefs: any): any {
+  private addToMembers(addedFromNearbySuggestionsRefs: any): void {
 
     if (addedFromNearbySuggestionsRefs.length !== 0) {
       for (let relation of addedFromNearbySuggestionsRefs) {
@@ -335,5 +335,40 @@ export class ModalComponent {
     this.storageSrv.refErrorsObj[this.storageSrv.currentIndex].corrected = val;
     let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
     popupArr[0].setContent(popupContent);
+  }
+
+  /***
+   * Determines if new refs were added
+   * @returns {boolean}
+   */
+  viewAddedRefs(): boolean {
+    return this.newAddedRefs.length !== 0 ||
+      this.addedMissingSuggestionsRefs.length !== 0 ||
+      this.addedFromNearbySuggestionsRefs.length !== 0;
+  }
+
+  /***
+   * Returns tool tip text
+   * @param {string} name
+   * @returns {string}
+   */
+  getTooltipText(name: string): string {
+    switch (name) {
+      case  'nearby rels':
+        return 'List of nearby routes (within 1/2 km) which ' +
+          'do not have the given stop/platform as a member.' +
+          'Select from the list to add the node as a member.' +
+          'Please note that route_ref of the node tag will also be updated accordingly.';
+      case 'added refs':
+        return 'Added References';
+      case 'add new ref':
+        return 'Enter new reference';
+      case 'missing refs':
+        return 'List of routes which have the stop/platform as a member but reference is not added in route_ref tag of the stop/platform.' +
+          'Select from the list to add to the route_ref tag';
+      default :
+        alert ('fix me');
+        return '';
+    }
   }
 }

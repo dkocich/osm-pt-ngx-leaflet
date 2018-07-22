@@ -18,7 +18,7 @@
           <p class="pull-left">{{name}}</p>
         </td>
         <td>
-          <button (click)="v.value = name">{{'Use' | translate }}</button>
+          <button class="btn btn-default" (click)="v.value = name">{{'Use' | translate }}</button>
         </td>
       </tr>
     </table>
@@ -40,14 +40,14 @@
     <div class="panel-group">
       <ng-container class="content panel panel-body panel-default">
 
-        <ng-container *ngIf="(newAddedRefs.length !==0 || addedMissingSuggestionsRefs.length !==0 || addedFromNearbySuggestionsRefs.length !== 0)">
+        <ng-container *ngIf="viewAddedRefs()">
           <h5 class="pull-left"> {{'Added references' | translate }}
             <i class="fa fa-question-circle" aria-hidden="true" container="body"
-               tooltip="Added References"></i>
+               tooltip="{{ getTooltipText('added refs') | translate }}"></i>
           </h5>
         </ng-container>
 
-        <ul class="list-group scrollable-panel" *ngIf="(newAddedRefs.length !==0 || addedMissingSuggestionsRefs.length !==0 || addedFromNearbySuggestionsRefs.length !== 0)">
+        <ul class="list-group scrollable-panel" *ngIf="viewAddedRefs()">
 
           <li class="list-group-item list-group-item-success" *ngFor="let ref of newAddedRefs">
             {{'Ref' | translate }}: {{ref}}
@@ -74,6 +74,7 @@
                  (click)="removeNearbySuggestedRefValue(rel)"></i>
             </a>
           </li>
+
         </ul>
       </ng-container>
 
@@ -82,7 +83,7 @@
           <tbody>
           <h5 class="pull-left"> {{'Enter new reference' | translate }}
             <i class="fa fa-question-circle" aria-hidden="true"
-               tooltip="Enter new ref for selected node"></i>
+               tooltip="{{ getTooltipText('add new ref') | translate }}"></i>
           </h5>
           <tr>
             <td>
@@ -108,7 +109,7 @@
         <ng-container *ngIf="!(missingRefRels.length === 0)">
           <h5 class="pull-left"> {{ 'Missing routes' | translate }}
             <i class="fa fa-question-circle" aria-hidden="true" container="body"
-               tooltip="List of routes which have the stop/platform as a member but reference is not added in route_ref tag of the stop/platform. Select from the list to add to the route_ref tag"></i>
+               tooltip=" {{ getTooltipText('missing refs') | translate }}"></i>
           </h5>
         </ng-container>
 
@@ -128,7 +129,7 @@
 
         <ng-container *ngIf="(nearbyRels.length !== 0)">
           <h5 class="pull-left"> {{ 'Nearby routes' | translate }} <i class="fa fa-question-circle" aria-hidden="true" container="body"
-                                                  tooltip="List of nearby routes (within 1/2 km) which do not have the given stop/platform as a member. Select from the list to add the node as a member. Please note that route_ref of the node tag will also be updated accordingly. "></i>
+                                                  tooltip="{{ getTooltipText('nearby rels') | translate }}"></i>
           </h5>
         </ng-container>
         <ul *ngIf="nearbyRels.length !== 0" class="list-group scrollable-panel">
