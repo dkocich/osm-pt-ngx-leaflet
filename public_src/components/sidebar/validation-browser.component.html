@@ -29,8 +29,8 @@
         <li class="list-group-item clearfix" *ngIf="view('name-errors-menu-item')">
           <ng-container *ngIf="nameErrorsObj.length !==0">
             {{nameErrorsObj.length}} {{'name tag errors' | translate }}
-            <button class="btn btn-default pull-right" (click)="startNameCorrection()">{{'Start Correction' | translate
-              }}
+            <button class="btn btn-default pull-right" (click)="startNameCorrection()">
+              {{'Start Correction' | translate}}
             </button>
           </ng-container>
           <ng-container *ngIf="nameErrorsObj.length ===0">
@@ -41,8 +41,8 @@
         <li class="list-group-item clearfix" *ngIf="view('ref-errors-menu-item')">
           <ng-container *ngIf="refErrorsObj.length !==0">
             {{refErrorsObj.length}} {{'route references tag errors' | translate }}
-            <button class="btn btn-default pull-right" (click)="startRefCorrection()">{{'Start Correction' | translate
-              }}
+            <button class="btn btn-default pull-right" (click)="startRefCorrection()">
+              {{'Start Correction' | translate}}
             </button>
           </ng-container>
           <ng-container *ngIf="refErrorsObj.length ===0">

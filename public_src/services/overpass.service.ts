@@ -128,7 +128,7 @@ export class OverpassService {
           this.processSrv.processResponse(res);
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
-          let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
+          const errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
           if (errorCorrectionMode) {
             if (errorCorrectionMode.refSuggestions === null) {
               this.errorHighlightSrv.countNameErrors();

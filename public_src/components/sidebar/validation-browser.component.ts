@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 
-import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
 
@@ -26,14 +26,6 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<object>;
   @select(['app', 'switchMode']) public readonly switchMode$: Observable<boolean>;
-
-  // name start correction
-  // ref suggestions
-  // ref start correction
-  //
-  //
-  //
-
 
   public refErrorsObj: IRefErrorObject[];
   public nameErrorsObj: INameErrorObject[];
@@ -68,6 +60,10 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
   }
   public ngOnInit(): void {
     this.appActions.actSetErrorCorrectionMode(this.suggestionsBrowserOptions);
+  }
+
+  public ngOnDestroy(): void {
+    this.errorCorrectionModeSubscription.unsubscribe();
   }
 
   /**
@@ -112,7 +108,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     this.errorHighlightSrv.missingTagError('name');
   }
 
-  /***
+  /**
    * Starts ref correction
    * @returns {void}
    */
@@ -138,6 +134,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     }
     this.errorHighlightSrv.missingTagError('ref');
   }
+
   /**
    * Moves to the next location
    */
@@ -167,25 +164,12 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     this.errorHighlightSrv.jumpToLocation(index);
   }
 
-  private getNodeType(stop: IPtStop): string {
-    if (stop.tags.public_transport === 'platform') {
-      return 'platform';
-    }
-    if (stop.tags.public_transport === 'stop_position' || stop.tags.highway === 'bus_stop') {
-      return 'stop';
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.errorCorrectionModeSubscription.unsubscribe();
-  }
-
-  /***
+  /**
    * Determines if given window should bw viewed
    * @param {string} name
    * @returns {boolean}
    */
-  view(name: string): boolean {
+  public view(name: string): boolean {
     switch (name) {
       case 'name-error-list':
         return this.errorCorrectionMode &&
@@ -215,4 +199,12 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getNodeType(stop: IPtStop): string {
+    if (stop.tags.public_transport === 'platform') {
+      return 'platform';
+    }
+    if (stop.tags.public_transport === 'stop_position' || stop.tags.highway === 'bus_stop') {
+      return 'stop';
+    }
+  }
 }
