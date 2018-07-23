@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { PtTags } from '../../core/ptTags.class';
-import { IRouteBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interface';
+import { IRouteBrowserOptions, ISuggestionsBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interface';
 
 import { Observable } from 'rxjs';
 
@@ -10,7 +10,8 @@ import { AppActions } from '../../store/app/actions';
 
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-import {IAppState} from '../../store/model';
+
+import { IAppState } from '../../store/model';
 
 @Component({
   providers  : [],
@@ -23,7 +24,7 @@ import {IAppState} from '../../store/model';
 })
 export class BeginnerComponent {
   @select(['app', 'beginnerView']) public readonly beginnerView$: Observable<string>;
-  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
+  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<ISuggestionsBrowserOptions>;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   public expectedKeys                               = PtTags.expectedKeys;
   public routeBrowserOptions: IRouteBrowserOptions  = {
@@ -41,6 +42,14 @@ export class BeginnerComponent {
     limitedKeys     : true,
     allowedKeys     : this.expectedKeys.filter(this.filterRouteKeysForBeginner),
     makeKeysReadOnly: true,
+  };
+
+  public suggestionsBrowserOptions: ISuggestionsBrowserOptions = {
+    nameSuggestions: {
+      found          : false,
+      startCorrection: false,
+    },
+    refSuggestions   : null,
   };
 
   constructor(private appActions: AppActions,
@@ -77,24 +86,22 @@ export class BeginnerComponent {
     this.processSrv.exploreStop(this.storageSrv.currentElement, false, true, true);
   }
 
+  /***
+   * Determines whether given component should be viewed
+   * @param {string} windowName
+   * @returns {boolean}
+   */
   public shouldView(windowName: string): boolean {
 
-    let beginnerView =  this.ngRedux.getState()['app']['beginnerView'];
-    let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
-    let editing = this.ngRedux.getState()['app']['editing'];
+    let beginnerView = this.ngRedux.getState()['app']['beginnerView'];
+    let editing      = this.ngRedux.getState()['app']['editing'];
 
     switch (windowName) {
-
-       case 'route-browser':
-         return (beginnerView === 'stop' ||
-           errorCorrectionMode === 'find errors' ||
-           errorCorrectionMode === 'menu' ||
-           errorCorrectionMode === null);
+      case 'route-browser':
+        return (beginnerView === 'stop');
 
       case 'tag-browser':
-        return (errorCorrectionMode === 'find errors' ||
-          errorCorrectionMode === 'menu' ||
-          errorCorrectionMode === null);
+        return true;
 
       case 'validation-browser':
         return (beginnerView === 'stop' && editing);
@@ -102,7 +109,5 @@ export class BeginnerComponent {
       default:
         return false;
     }
-
   }
-
 }

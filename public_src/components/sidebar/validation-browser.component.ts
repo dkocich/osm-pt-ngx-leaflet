@@ -1,8 +1,9 @@
-import { AppActions } from '../../store/app/actions';
-
-import { Component } from '@angular/core';
-import { select } from '@angular-redux/store';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
+
+import { IAppState } from '../../store/model';
+import { AppActions } from '../../store/app/actions';
 
 import { BsModalService } from 'ngx-bootstrap';
 
@@ -11,20 +12,26 @@ import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { StorageService } from '../../services/storage.service';
 import { ConfService } from '../../services/conf.service';
+
 import { IPtStop } from '../../core/ptStop.interface';
+import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
+import { INameErrorObject, IRefErrorObject } from '../../core/errorObject.interface';
 
 @Component({
   selector: 'validation-browser',
   templateUrl: './validation-browser.component.html',
   styleUrls: ['./validation-browser.component.less'],
 })
-export class ValidationBrowserComponent {
+export class ValidationBrowserComponent implements OnInit, OnDestroy {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
+  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<object>;
   @select(['app', 'switchMode']) public readonly switchMode$: Observable<boolean>;
 
-  public refErrorsO;
-  public nameErrorsO;
+  public refErrorsObj: IRefErrorObject[];
+  public nameErrorsObj: INameErrorObject[];
+  @Input() suggestionsBrowserOptions: ISuggestionsBrowserOptions;
+  public errorCorrectionModeSubscription;
+  public errorCorrectionMode: ISuggestionsBrowserOptions;
 
   constructor(
     private errorHighlightSrv: ErrorHighlightService,
@@ -33,19 +40,30 @@ export class ValidationBrowserComponent {
     private overpassSrv: OverpassService,
     public appActions: AppActions,
     public storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
   ) {
 
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
       const { typeOfErrorObject } = data;
       if (typeOfErrorObject === 'missing name') {
-        this.nameErrorsO = this.storageSrv.nameErrorsO;
+        this.nameErrorsObj = this.storageSrv.nameErrorsObj;
       }
 
       if (typeOfErrorObject === 'missing ref') {
-        this.refErrorsO = this.storageSrv.refErrorsO;
+        this.refErrorsObj = this.storageSrv.refErrorsObj;
       }
     });
 
+    this.errorCorrectionModeSubscription = ngRedux.select<ISuggestionsBrowserOptions>(['app', 'errorCorrectionMode'])
+      .subscribe((data) => this.errorCorrectionMode = data);
+
+  }
+  public ngOnInit(): void {
+    this.appActions.actSetErrorCorrectionMode(this.suggestionsBrowserOptions);
+  }
+
+  public ngOnDestroy(): void {
+    this.errorCorrectionModeSubscription.unsubscribe();
   }
 
   /**
@@ -53,10 +71,10 @@ export class ValidationBrowserComponent {
    * @returns {void}
    */
   public startValidation(): void {
-    this.refErrorsO = [];
-    this.nameErrorsO = [];
+    this.nameErrorsObj = [];
+    this.refErrorsObj = [];
+
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForErrors) {
-      this.appActions.actSetErrorCorrectionMode('find errors');
       this.overpassSrv.requestNewOverpassData();
     } else {
       alert('Not sufficient zoom level');
@@ -68,14 +86,55 @@ export class ValidationBrowserComponent {
    * @returns {void}
    */
   public startNameCorrection(): void {
-    this.appActions.actSetErrorCorrectionMode('missing name tag');
+    if (this.errorCorrectionMode.refSuggestions) {
+    this.appActions.actSetErrorCorrectionMode(
+      {
+        nameSuggestions: {
+          found          : true,
+          startCorrection: true,
+        },
+        refSuggestions : this.errorCorrectionMode.refSuggestions,
+      }); }
+      else {
+      this.appActions.actSetErrorCorrectionMode(
+        {
+          nameSuggestions: {
+            found          : true,
+            startCorrection: true,
+          },
+          refSuggestions : this.errorCorrectionMode.refSuggestions,
+        });
+    }
     this.errorHighlightSrv.missingTagError('name');
   }
 
-  public startRefCorrection(): any {
-    this.appActions.actSetErrorCorrectionMode('missing ref tag');
+  /**
+   * Starts ref correction
+   * @returns {void}
+   */
+  public startRefCorrection(): void {
+    if (this.errorCorrectionMode.refSuggestions) {
+      this.appActions.actSetErrorCorrectionMode(
+        {
+          nameSuggestions: this.errorCorrectionMode.nameSuggestions,
+          refSuggestions : {
+            found          : true,
+            startCorrection: true,
+          },
+        });
+    } else {
+      this.appActions.actSetErrorCorrectionMode(
+        {
+          nameSuggestions: {
+            found          : true,
+            startCorrection: false,
+          },
+          refSuggestions : this.errorCorrectionMode.refSuggestions,
+        });
+    }
     this.errorHighlightSrv.missingTagError('ref');
   }
+
   /**
    * Moves to the next location
    */
@@ -95,10 +154,6 @@ export class ValidationBrowserComponent {
    */
   public quit(): void {
     this.errorHighlightSrv.quit();
-    this.storageSrv.currentElement = null;
-    this.storageSrv.currentElementsChange.emit(
-      JSON.parse(JSON.stringify(null)),
-    );
   }
 
   /**
@@ -107,6 +162,41 @@ export class ValidationBrowserComponent {
    */
   public jumpToLocation(index: number): void {
     this.errorHighlightSrv.jumpToLocation(index);
+  }
+
+  /**
+   * Determines if given window should bw viewed
+   * @param {string} name
+   * @returns {boolean}
+   */
+  public view(name: string): boolean {
+    switch (name) {
+      case 'name-error-list':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.nameSuggestions.startCorrection;
+      case 'name-errors-menu-item':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.nameSuggestions.found;
+      case 'ref-error-list':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.refSuggestions &&
+          this.errorCorrectionMode.refSuggestions.startCorrection;
+      case 'ref-errors-menu-item' :
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.refSuggestions &&
+          this.errorCorrectionMode.refSuggestions.found;
+      case 'menu':
+        return this.errorCorrectionMode &&
+          (this.errorCorrectionMode.refSuggestions ? (!this.errorCorrectionMode.refSuggestions.startCorrection) : true) &&
+          !this.errorCorrectionMode.nameSuggestions.startCorrection;
+      case 'find-errors-option':
+        return this.errorCorrectionMode &&
+          !this.errorCorrectionMode.nameSuggestions.startCorrection &&
+          ((this.errorCorrectionMode.refSuggestions) ? (!this.errorCorrectionMode.refSuggestions.startCorrection) : true);
+      default:
+        alert('fix me');
+        return false;
+    }
   }
 
   private getNodeType(stop: IPtStop): string {

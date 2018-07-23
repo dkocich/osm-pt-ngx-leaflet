@@ -7,7 +7,7 @@
     </div>
     <relation-browser></relation-browser>
   </accordion-group>
-  <accordion-group #a2 [isOpen]="">
+  <accordion-group #a2 [isOpen]="false">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-tags" aria-hidden="true"></i>&nbsp;{{ 'Tags' | translate }}
       <i class="pull-right float-xs-right fa"
@@ -15,7 +15,7 @@
     </div>
     <tag-browser [tagBrowserOptions]="tagBrowserOptions"></tag-browser>
   </accordion-group>
-  <accordion-group #a3 [isOpen]="true">
+  <accordion-group #a3 [isOpen]="false">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-road" aria-hidden="true"></i>&nbsp;{{ 'Routes' | translate }}
       <i class="pull-right float-xs-right fa"
@@ -23,12 +23,20 @@
     </div>
     <route-browser [routeBrowserOptions]='routeBrowserOptions'></route-browser>
   </accordion-group>
-  <accordion-group #a4 [isOpen]="true">
+  <accordion-group #a4 [isOpen]="false">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{ 'Stops/platforms' | translate }}
       <i class="pull-right float-xs-right fa"
          [ngClass]="{'fa-chevron-down': a4?.isOpen, 'fa-chevron-right': !a4?.isOpen}"></i>
     </div>
     <stop-browser></stop-browser>
+  </accordion-group>
+  <accordion-group #a3 [isOpen]="false" *ngIf="editing$ | async">
+    <div accordion-heading class="text-center text-uppercase">
+      {{ 'Suggestions for quick edit' | translate }}
+      <i class="pull-right float-xs-right fa " aria-hidden="true"
+         [ngClass]="{'fa-chevron-down': a2?.isOpen, 'fa-chevron-right': !a2?.isOpen}"></i>
+    </div>
+    <validation-browser [suggestionsBrowserOptions] = 'suggestionsBrowserOptions' ></validation-browser>
   </accordion-group>
 </accordion>
