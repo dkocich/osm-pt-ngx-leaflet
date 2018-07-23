@@ -14,7 +14,9 @@ export interface ITagBrowserOptions {
 export interface ISuggestionsBrowserOptions {
   nameSuggestions: ISuggestions;
   refSuggestions: ISuggestions;
+  waySuggestions: ISuggestions;
 }
+
 export interface ISuggestions {
   found: boolean;
   startCorrection: boolean;
