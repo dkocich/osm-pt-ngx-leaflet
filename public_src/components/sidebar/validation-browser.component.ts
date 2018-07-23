@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 
-import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
 
@@ -67,6 +67,10 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     this.appActions.actSetErrorCorrectionMode(this.suggestionsBrowserOptions);
   }
 
+  public ngOnDestroy(): void {
+    this.errorCorrectionModeSubscription.unsubscribe();
+  }
+
   /**
    * Counts and list all errors
    * @returns {void}
@@ -115,7 +119,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     this.errorHighlightSrv.missingTagError('way');
   }
 
-  /***
+  /**
    * Starts ref correction
    * @returns {void}
    */
@@ -133,6 +137,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     }
     this.errorHighlightSrv.missingTagError('ref');
   }
+
   /**
    * Moves to the next location
    */
@@ -162,21 +167,12 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     this.errorHighlightSrv.jumpToLocation(index);
   }
 
-  private getNodeType(stop: IPtStop): string {
-    if (stop.tags.public_transport === 'platform') {
-      return 'platform';
-    }
-    if (stop.tags.public_transport === 'stop_position' || stop.tags.highway === 'bus_stop') {
-      return 'stop';
-    }
-  }
-
-  /***
+  /**
    * Determines if given window should bw viewed
    * @param {string} name
    * @returns {boolean}
    */
-  view(name: string): boolean {
+  public view(name: string): boolean {
     switch (name) {
       case 'name-errors-menu-item':
         return this.errorCorrectionMode &&
@@ -214,8 +210,12 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.errorCorrectionModeSubscription.unsubscribe();
+  private getNodeType(stop: IPtStop): string {
+    if (stop.tags.public_transport === 'platform') {
+      return 'platform';
+    }
+    if (stop.tags.public_transport === 'stop_position' || stop.tags.highway === 'bus_stop') {
+      return 'stop';
+    }
   }
-
 }

@@ -6,9 +6,10 @@ import { MapService } from '../../services/map.service';
 import { StorageService } from '../../services/storage.service';
 
 import { ModalDirective } from 'ngx-bootstrap';
-import { select } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
+import { IAppState } from '../../store/model';
 
 @Component({
   providers: [],
@@ -25,7 +26,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editModal') public editModal: ModalDirective;
   public totalEditSteps: number = 0;
   public currentEditStep: number = 0;
-  public editing: boolean = false;
   public creatingElementOfType: string = '';
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
 
@@ -35,6 +35,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private editSrv: EditService,
     private mapSrv: MapService,
     private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
   ) {
     //
   }
@@ -46,7 +47,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
       this.totalEditSteps = data.total;
     });
     this.mapSrv.map.on('click', (event: MouseEvent) => {
-      if (this.editing && this.creatingElementOfType !== '') {
+      if (this.ngRedux.getState()['app']['editing'] && this.creatingElementOfType !== '') {
         this.editSrv.createElement(this.creatingElementOfType, event);
         this.creatingElementOfType = '';
       }
@@ -147,10 +148,11 @@ export class EditorComponent implements OnInit, AfterViewInit {
    * Activates editing mode (locally/globally).
    */
   private toggleEditMode(): void {
-    this.editing = !this.editing;
-    this.editSrv.editingMode.emit(this.editing);
-    this.mapSrv.editingMode = this.editing;
-    if (this.editing) {
+    this.appActions.actToggleEditing();
+    let editing = this.ngRedux.getState()['app']['editing'];
+    this.editSrv.editingMode.emit(editing);
+    this.mapSrv.editingMode = editing;
+    if (editing) {
       setTimeout(() => {
         this.mapSrv.disableMouseEvent('edits-backward-btn');
         this.mapSrv.disableMouseEvent('edits-forward-btn');
