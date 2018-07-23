@@ -2,6 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { IOsmElement } from '../core/osmElement.interface';
+import { INameErrorObject, IRefErrorObject, IWayErrorObject } from '../core/errorObject.interface';
 
 @Injectable()
 export class StorageService {
@@ -47,8 +48,9 @@ export class StorageService {
   public completelyDownloadedPlatformsIDB = new Set();
   public queriedRoutesForMastersIDB       = new Set();
 
-  public nameErrorsO: any[]                      = [];
-  public refErrorsO: any[]                       = [];
+  public nameErrorsObj: INameErrorObject[] = [];
+  public refErrorsObj: IRefErrorObject[]   = [];
+  public wayErrorsObj: IWayErrorObject[]   = [];
   public currentIndex                            = 0;
   public refreshErrorObjects: EventEmitter<object> = new EventEmitter();
   // public elementsRenderedModalMap = new Set();

@@ -39,6 +39,10 @@ export class ExpertComponent {
       found             : false,
       startCorrection   : false,
     },
+    waySuggestions   : {
+      found             : false,
+      startCorrection   : false,
+    },
   };
 
 }

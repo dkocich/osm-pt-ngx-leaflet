@@ -50,6 +50,7 @@ export class BeginnerComponent {
       startCorrection: false,
     },
     refSuggestions   : null,
+    waySuggestions   : null,
   };
 
   constructor(private appActions: AppActions,

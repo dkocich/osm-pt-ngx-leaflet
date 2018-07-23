@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 
-import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
 
@@ -15,20 +15,21 @@ import { ConfService } from '../../services/conf.service';
 
 import { IPtStop } from '../../core/ptStop.interface';
 import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
-import { IErrorObject, IRefErrorObject } from '../../core/errorObject.interface';
+import { INameErrorObject, IRefErrorObject, IWayErrorObject } from '../../core/errorObject.interface';
 
 @Component({
   selector: 'validation-browser',
   templateUrl: './validation-browser.component.html',
   styleUrls: ['./validation-browser.component.less'],
 })
-export class ValidationBrowserComponent implements OnInit, OnDestroy{
+export class ValidationBrowserComponent implements OnInit, OnDestroy {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<object>;
   @select(['app', 'switchMode']) public readonly switchMode$: Observable<boolean>;
 
-  public refErrorsO: IRefErrorObject[];
-  public nameErrorsO: IErrorObject[];
+  public refErrorsObj: IRefErrorObject[];
+  public nameErrorsObj: INameErrorObject[];
+  public wayErrorsObj: IWayErrorObject[];
   @Input() suggestionsBrowserOptions: ISuggestionsBrowserOptions;
   public errorCorrectionModeSubscription;
   public errorCorrectionMode: ISuggestionsBrowserOptions;
@@ -46,11 +47,15 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
       const { typeOfErrorObject } = data;
       if (typeOfErrorObject === 'missing name') {
-        this.nameErrorsO = this.storageSrv.nameErrorsO;
+        this.nameErrorsObj = this.storageSrv.nameErrorsObj;
       }
 
       if (typeOfErrorObject === 'missing ref') {
-        this.refErrorsO = this.storageSrv.refErrorsO;
+        this.refErrorsObj = this.storageSrv.refErrorsObj;
+      }
+
+      if (typeOfErrorObject === 'way as parent') {
+        this.wayErrorsObj = this.storageSrv.wayErrorsObj;
       }
     });
 
@@ -62,14 +67,18 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
     this.appActions.actSetErrorCorrectionMode(this.suggestionsBrowserOptions);
   }
 
+  public ngOnDestroy(): void {
+    this.errorCorrectionModeSubscription.unsubscribe();
+  }
+
   /**
    * Counts and list all errors
    * @returns {void}
    */
   public startValidation(): void {
-    this.nameErrorsO = [];
-    this.refErrorsO = [];
-
+    this.nameErrorsObj = [];
+    this.refErrorsObj = [];
+    this.wayErrorsObj = [];
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForErrors) {
       this.overpassSrv.requestNewOverpassData();
     } else {
@@ -82,16 +91,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
    * @returns {void}
    */
   public startNameCorrection(): void {
-    if (this.errorCorrectionMode.refSuggestions) {
-    this.appActions.actSetErrorCorrectionMode(
-      {
-        nameSuggestions: {
-          found          : true,
-          startCorrection: true,
-        },
-        refSuggestions : this.errorCorrectionMode.refSuggestions,
-      }); }
-      else {
+    if (this.errorCorrectionMode.nameSuggestions) {
       this.appActions.actSetErrorCorrectionMode(
         {
           nameSuggestions: {
@@ -99,14 +99,29 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
             startCorrection: true,
           },
           refSuggestions : this.errorCorrectionMode.refSuggestions,
+          waySuggestions : this.errorCorrectionMode.waySuggestions,
         });
     }
     this.errorHighlightSrv.missingTagError('name');
   }
 
-  /***
+  public startWayCorrection(): void {
+    if (this.errorCorrectionMode.waySuggestions) {
+      this.appActions.actSetErrorCorrectionMode(
+        {
+          waySuggestions: {
+            found          : true,
+            startCorrection: true,
+          },
+          refSuggestions : this.errorCorrectionMode.refSuggestions,
+          nameSuggestions : this.errorCorrectionMode.nameSuggestions,
+        }); }
+    this.errorHighlightSrv.missingTagError('way');
+  }
+
+  /**
    * Starts ref correction
-   * @returns {any}
+   * @returns {void}
    */
   public startRefCorrection(): void {
     if (this.errorCorrectionMode.refSuggestions) {
@@ -117,19 +132,12 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
             found          : true,
             startCorrection: true,
           },
-        });
-    } else {
-      this.appActions.actSetErrorCorrectionMode(
-        {
-          nameSuggestions: {
-            found          : true,
-            startCorrection: false,
-          },
-          refSuggestions : this.errorCorrectionMode.refSuggestions,
+          waySuggestions: this.errorCorrectionMode.waySuggestions,
         });
     }
     this.errorHighlightSrv.missingTagError('ref');
   }
+
   /**
    * Moves to the next location
    */
@@ -159,6 +167,49 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
     this.errorHighlightSrv.jumpToLocation(index);
   }
 
+  /**
+   * Determines if given window should bw viewed
+   * @param {string} name
+   * @returns {boolean}
+   */
+  public view(name: string): boolean {
+    switch (name) {
+      case 'name-errors-menu-item':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.nameSuggestions.found;
+      case 'ref-errors-menu-item' :
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.refSuggestions &&
+          this.errorCorrectionMode.refSuggestions.found;
+      case 'way-errors-menu-item':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.waySuggestions &&
+          this.errorCorrectionMode.waySuggestions.found;
+      case 'name-error-list':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.nameSuggestions.startCorrection;
+      case 'ref-error-list':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.refSuggestions &&
+          this.errorCorrectionMode.refSuggestions.startCorrection;
+      case 'way-error-list':
+        return this.errorCorrectionMode &&
+          this.errorCorrectionMode.waySuggestions &&
+          this.errorCorrectionMode.waySuggestions.startCorrection;
+      case 'menu':
+        return this.errorCorrectionMode &&
+          (this.errorCorrectionMode.refSuggestions ? (!this.errorCorrectionMode.refSuggestions.startCorrection) : true) &&
+          (this.errorCorrectionMode.waySuggestions ? (!this.errorCorrectionMode.waySuggestions.startCorrection) : true) &&
+          !this.errorCorrectionMode.nameSuggestions.startCorrection;
+      case 'find-errors-option':
+        return this.errorCorrectionMode &&
+          !this.errorCorrectionMode.nameSuggestions.startCorrection &&
+          ((this.errorCorrectionMode.refSuggestions) ? (!this.errorCorrectionMode.refSuggestions.startCorrection) : true) &&
+          ((this.errorCorrectionMode.waySuggestions) ? (!this.errorCorrectionMode.waySuggestions.startCorrection) : true);
+
+    }
+  }
+
   private getNodeType(stop: IPtStop): string {
     if (stop.tags.public_transport === 'platform') {
       return 'platform';
@@ -166,9 +217,5 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy{
     if (stop.tags.public_transport === 'stop_position' || stop.tags.highway === 'bus_stop') {
       return 'stop';
     }
-  }
-
-  ngOnDestroy(): void {
-    this.errorCorrectionModeSubscription.unsubscribe();
   }
 }
