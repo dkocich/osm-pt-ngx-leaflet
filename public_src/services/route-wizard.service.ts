@@ -1,14 +1,14 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import {EventEmitter, Injectable, OnDestroy} from '@angular/core';
 
 import { MapService } from './map.service';
 import { StorageService } from './storage.service';
-import { BsModalService } from 'ngx-bootstrap';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import { ProcessService } from './process.service';
 
 import * as L from 'leaflet';
 
 @Injectable()
-export class RouteWizardService {
+export class RouteWizardService implements OnDestroy{
   public map;
   public routes = [];
   public ptLayerModal;
@@ -28,23 +28,28 @@ export class RouteWizardService {
   public routesMap: Map<string, any[]> = new Map();
   public membersHighlightLayerGroup    = L.layerGroup();
 
+  public modalRefRouteWiz: BsModalRef;
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,
-              private modalService: BsModalService,
-              private processSrv: ProcessService) {
-    this.modalService.onShown.subscribe(() => {
-      this.onShownModal();
-    });
-    this.modalService.onHidden.subscribe(() => {
-      this.processAllDownloadedOnMainMap();
-      this.storageSrv.currentElement = null;
-      this.storageSrv.currentElementsChange.emit(
-        JSON.parse(JSON.stringify(null)),
-      );
-      this.storageSrv.stopsForRoute     = [];
-      this.storageSrv.platformsForRoute = [];
-      this.mapSrv.highlightType         = 'Stops';
-    });
+              // private modalService: BsModalService,
+              private processSrv: ProcessService,
+              ) {
+    // this.modalService.onShown.subscribe((data) => {
+    //   console.log('data', data);
+    //   // if(this.modalRefRouteWiz.content)
+    //   this.onShownModal();
+    //   console.log('ok', this.modalRefRouteWiz.content);
+    // });
+    // this.modalService.onHidden.subscribe(() => {
+    //   this.processAllDownloadedOnMainMap();
+    //   this.storageSrv.currentElement = null;
+    //   this.storageSrv.currentElementsChange.emit(
+    //     JSON.parse(JSON.stringify(null)),
+    //   );
+    //   this.storageSrv.stopsForRoute     = [];
+    //   this.storageSrv.platformsForRoute = [];
+    //   this.mapSrv.highlightType         = 'Stops';
+    // });
   }
 
   /***
@@ -678,5 +683,9 @@ export class RouteWizardService {
       }
     });
     return refsOfRoutes;
+  }
+
+  ngOnDestroy(): any {
+
   }
 }

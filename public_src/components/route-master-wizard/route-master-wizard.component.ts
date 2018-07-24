@@ -10,6 +10,7 @@ import { WarnService } from '../../services/warn.service';
 import { StorageService } from '../../services/storage.service';
 
 import { Subject } from 'rxjs/Subject';
+import {ConfService} from '../../services/conf.service';
 
 @Component({
   selector: 'route-master-wizard',
@@ -47,7 +48,7 @@ export class RouteMasterWizardComponent {
               // private routeWizardSrv: RouteWizardService,
               private processSrv: ProcessService,
               private editSrv: EditService,
-              public bsModalRef: BsModalRef) {
+              public modalRefRouteMasterWiz: BsModalRef) {
 
   }
 
@@ -84,7 +85,19 @@ export class RouteMasterWizardComponent {
       .debounceTime(500)
       .distinctUntilChanged()
       .subscribe(() => {
-        this.overpassSrv.initDownloaderForModalMap(this.routeMasterWizardSrv.map);
+        this.overpassSrv.initDownloaderForModalMapRMW(this.routeMasterWizardSrv.map);
       });
+  }
+
+  /**
+   * Finds suggestions in current bounds
+   * @returns {void}
+   */
+  public findMissingRouteMasters(): void {
+    if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForRouteMasterWizard) {
+      this.overpassSrv.requestNewOverpassDataForWizard(true);
+    } else {
+      alert('Not sufficient zoom level');
+    }
   }
 }

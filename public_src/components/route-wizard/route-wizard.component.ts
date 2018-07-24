@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
 
 import { StorageService } from '../../services/storage.service';
 import { MapService } from '../../services/map.service';
@@ -10,9 +10,10 @@ import { EditService } from '../../services/edit.service';
 import { ConfService } from '../../services/conf.service';
 
 import * as L from 'leaflet';
-import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
+import {BsModalRef, BsModalService, TabsetComponent} from 'ngx-bootstrap';
 
 import { Subject } from 'rxjs/Subject';
+import {AppActions} from '../../store/app/actions';
 
 @Component({
   selector: 'route-wizard',
@@ -23,7 +24,7 @@ import { Subject } from 'rxjs/Subject';
   templateUrl: './route-wizard.component.html',
 })
 
-export class RouteWizardComponent {
+export class RouteWizardComponent implements OnDestroy{
 
   public map: L.Map;
   public newRoutesRefs              = [];
@@ -40,6 +41,9 @@ export class RouteWizardComponent {
   public canPlatformsConnect = false;
   public currentlyViewedRef  = null;
 
+  public onShownSubscription;
+  public onHiddenSubscription;
+
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
 
   constructor(private storageSrv: StorageService,
@@ -49,7 +53,10 @@ export class RouteWizardComponent {
               private routeWizardSrv: RouteWizardService,
               private processSrv: ProcessService,
               private editSrv: EditService,
-              public bsModalRef: BsModalRef,
+              public modalRefRouteWiz: BsModalRef,
+              private modalService: BsModalService,
+              public appActions: AppActions,
+
   ) {
 
     this.routeWizardSrv.routesReceived.subscribe((routesMap) => {
@@ -81,8 +88,23 @@ export class RouteWizardComponent {
     });
 
     this.routeWizardSrv.refreshAvailableConnectivity.subscribe((data) => {
-      this.canStopsConnect = data.canStopsConnect;
+      this.canStopsConnect     = data.canStopsConnect;
       this.canPlatformsConnect = data.canPlatformsConnect;
+    });
+
+    this.onShownSubscription = this.modalService.onShown.subscribe((data) => {
+      this.routeWizardSrv.onShownModal();
+    });
+
+    this.onHiddenSubscription = this.modalService.onHidden.subscribe(() => {
+      this.routeWizardSrv.processAllDownloadedOnMainMap();
+      this.storageSrv.currentElement = null;
+      this.storageSrv.currentElementsChange.emit(
+        JSON.parse(JSON.stringify(null)),
+      );
+      this.storageSrv.stopsForRoute     = [];
+      this.storageSrv.platformsForRoute = [];
+      this.mapSrv.highlightType         = 'Stops';
     });
   }
 
@@ -129,7 +151,7 @@ export class RouteWizardComponent {
    */
   public findMissingRoutes(): void {
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForRouteWizard) {
-      this.overpassSrv.requestNewOverpassDataForRouteWizard(true);
+      this.overpassSrv.requestNewOverpassDataForWizard(true);
     } else {
       alert('Not sufficient zoom level');
     }
@@ -268,7 +290,8 @@ export class RouteWizardComponent {
     let change            = { from: undefined, to: this.newRoute };
     this.routeWizardSrv.modalMapElementsMap.set(this.newRoute.id, this.newRoute);
     this.editSrv.addChange(this.newRoute, 'add route', change);
-    this.bsModalRef.hide();
+    this.modalRefRouteWiz.hide();
+    this.appActions.actSetWizardMode(null);
   }
 
   /***
@@ -306,5 +329,10 @@ export class RouteWizardComponent {
       canStopsConnect    : this.canStopsConnect,
       canPlatformsConnect: this.canPlatformsConnect,
     }, this.addedNewRouteMembers);
+  }
+
+  public ngOnDestroy(): void {
+    this.onHiddenSubscription.unsubscribe();
+    this.onShownSubscription.unsubscribe();
   }
 }

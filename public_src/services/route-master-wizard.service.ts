@@ -131,4 +131,126 @@ export class RouteMasterWizardService {
     this.autoRouteMapNodeClick.emit(featureId);
   }
 
+  /***
+   * Renders data on modal map
+   * @param transformedGeoJSON
+   * @param {Map} map
+   */
+  public renderTransformedGeojsonData(transformedGeoJSON: any, map: L.Map): void {
+    this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
+      filter: (feature) => {
+        if (!this.elementsRenderedModalMap.has(feature.id) &&
+          'public_transport' in feature.properties && feature.id[0] === 'n'
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      onEachFeature: (feature, layer) => {
+        this.elementsRenderedModalMap.add(feature.id);
+        this.enableClickForRouteMasterWizardMap(feature, layer);
+      },
+      pointToLayer: (feature, latlng) => {
+        return this.mapSrv.stylePoint(feature, latlng);
+      },
+    });
+
+    console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayerModal);
+    this.ptLayerModal.addTo(map);
+  }
+
+  private handleRouteWizardMarkerClick(feature: any): void {
+    const featureId: number = this.mapSrv.getFeatureIdFromMarker(feature);
+    this.autoRouteMapNodeClick.emit(featureId);
+  }
+
+  /***
+   * Returns all stops/platforms on the given map
+   * @param {Map} map
+   * @returns {any[]}
+   */
+  public findStopsInBounds(map: L.Map): any[] {
+    let stopsInBounds = [];
+    this.modalMapElementsMap.forEach((stop) => {
+      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+        if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
+          stopsInBounds.push(stop.id);
+        }
+      }
+    });
+    return stopsInBounds;
+  }
+
+  public findCountToBeComparedRels(response: any): any {
+    let newDownloadedRoutes = [];
+    let oldDownloadedRoutes = [];
+    if (response) {
+      for (let element of response['elements']) {
+        if ((element.type === 'relation')
+          && !(element.tags.public_transport === 'stop_area'
+            &&  element.tags.public_transport === 'ref')
+          && (element.members)) {
+          oldDownloadedRoutes.push(element);
+        }
+      }
+    } else {
+      this.modalMapElementsMap.forEach((element) => {
+        if ((element.type === 'relation')
+          && !(element.tags.public_transport === 'stop_area'
+            &&  element.tags.public_transport === 'ref')
+          && (element.members)
+        && this.checkMembersInBounds(element)) {
+          newDownloadedRoutes.push(element);
+        }
+      });
+
+      let rels = newDownloadedRoutes.concat(oldDownloadedRoutes);
+      let relsMap =  new Map();
+      rels.forEach((rel) => {
+        let noOfMembers = rel['members'].length;
+        let inBounds = 0;
+        for (let member of rel['members']) {
+          let latlng = { lat: member.lat, lng: member.lon };
+          if (this.map.getBounds().contains(latlng)) {
+              inBounds++;
+          }
+        }
+        let percentCoverage = (inBounds / noOfMembers) * 100;
+        relsMap.set(rel.id,  percentCoverage);
+      });
+
+      return relsMap;
+    }
+  }
+
+  public checkMembersInBounds(relation: any): boolean {
+    let flag = false;
+    relation['members'].forEach((member) => {
+      let latlng = { lat: member.lat, lng: member.lon };
+      if (this.map.getBounds().contains(latlng)) {
+        flag = true;
+      }
+    });
+    return flag;
+  }
+
+  public findMissingRouteMasters(res: any): any {
+    for (let element of res['elements']) {
+      if (!this.storageSrv.elementsMap.has(element.id)) {
+        console.log('LOG (processing s.) New element added:', element);
+        this.storageSrv.elementsMap.set(element.id, element);
+        this.storageSrv.elementsDownloaded.add(element.id);
+      }
+    }
+    let missingRMsMap = new Map();
+    for (let rel of relations) {
+      for (let rm of routeMasters) {
+        if (rel.id === rm.ref) {
+
+        }
+      }
+    }
+
+  }
 }

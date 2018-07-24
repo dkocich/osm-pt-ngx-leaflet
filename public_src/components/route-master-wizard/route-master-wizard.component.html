@@ -1,7 +1,7 @@
 <div id="container">
   <div class="modal-header">
     <h4 class="modal-title pull-left"> Route Master Creation wizard</h4>
-    <i class="pull-right fa fa-times" aria-hidden="true" (click)="bsModalRef.hide()"></i>
+    <i class="pull-right fa fa-times" aria-hidden="true" (click)="modalRefRouteMasterWiz.hide()"></i>
   </div>
   <div class="modal-body text-center ">
     <div class="row full-height">
@@ -9,6 +9,18 @@
         <div id="master-route-wizard-modal-map">
         </div>
       </div>
+      <div class="col-md-7 full-height">
+        <div class="panel panel-default full-height right-panel">
+          <div class="panel-body">
+            <div>
+      <tabset [justified]="true" type="pills" #stepTabs>
+        <tab heading="Step 1" >
+          <p class="text-success step-1-text">Zoom into the required area on the map and find suggested
+            routes </p>
+          <button class="btn btn-default" type="submit" (click)="findMissingRouteMasters()">Find suggestions</button>
+        </tab>
+      </tabset>
+            </div>
     </div>
   </div>
 </div>

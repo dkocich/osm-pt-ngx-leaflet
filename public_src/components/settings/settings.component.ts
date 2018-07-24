@@ -21,7 +21,8 @@ export class SettingsComponent {
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
   @select(['app', 'goodConnectMode']) public readonly goodConnectMode$: Observable<boolean>;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-  modalRef: BsModalRef;
+  modalRefRouteWiz: BsModalRef;
+  modalRefRouteMasterWiz: BsModalRef;
 
   constructor(
     public appActions: AppActions,
@@ -44,10 +45,15 @@ export class SettingsComponent {
   }
 
   public createAutomaticRoute(): any {
-    this.modalRef = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+    this.modalRefRouteWiz = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+    console.log(this.modalRefRouteWiz.content, 'zxc');
+    this.appActions.actSetWizardMode('route wizard');
+
   }
 
   public createAutomaticRouteMaster(): any {
-    this.modalRef = this.modalService.show(RouteMasterWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+    this.modalRefRouteMasterWiz = this.modalService.show(RouteMasterWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+    this.appActions.actSetWizardMode('route master wizard');
+
   }
 }
