@@ -14,7 +14,6 @@ import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
 
 import { Subject } from 'rxjs/Subject';
 
-
 @Component({
   selector: 'route-wizard',
   styleUrls: [
@@ -60,14 +59,21 @@ export class RouteWizardComponent {
         this.routeWizardSrv.routesMap = new Map();
         this.newRoutesRefs         = [];
         this.routeWizardSrv.filterRoutesMap(routesMap);
-        this.routeWizardSrv.highlightFirstRoute({ canStopsConnect : this.canStopsConnect, canPlatformsConnect : this.canPlatformsConnect });
-        this.routeWizardSrv.routesMap.forEach((value, key) => {
-          this.newRoutesRefs.push(key);
-        });
-        this.currentlyViewedRef = this.newRoutesRefs[0];
-        this.selectTab(2);
+        if (this.routeWizardSrv.routesMap.size !== 0) {
+          this.routeWizardSrv.highlightFirstRoute(
+            {
+              canStopsConnect    : this.canStopsConnect,
+              canPlatformsConnect: this.canPlatformsConnect,
+            });
+          this.routeWizardSrv.routesMap.forEach((value, key) => {
+            this.newRoutesRefs.push(key);
+          });
+          this.currentlyViewedRef = this.newRoutesRefs[0];
+          this.selectTab(2);
+        } else {
+          alert('No suggestions available for the chosen map bounds. Please select again.');
+        }
       }
-
     });
 
     this.routeWizardSrv.autoRouteMapNodeClick.subscribe((featureId) => {
