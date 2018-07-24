@@ -925,6 +925,7 @@ export class OverpassService {
       );
   }
 
+
   /***
    * Multiple node data download for route wizard
    * @param idsArr
@@ -959,4 +960,88 @@ export class OverpassService {
           throw new Error(err.toString());
         });
   }
+
+  /***
+   * Multiple node data download for route wizard
+   * @param idsArr
+   * @returns {any}
+   */
+  private getMultipleNodeDataForRouteMasterWizard(idsArr: any): any {
+    let requestBody = `
+      [out:json][timeout:25];
+      (
+       node(id:${idsArr});
+      );
+      (._;<;);
+      out meta;`;
+    console.log('LOG (overpass s.) Querying multiple nodes', requestBody);
+    requestBody = this.replaceBboxString(requestBody.trim());
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          if (!res) {
+            return alert('No response from API. Try to select element again please.');
+          }
+          for (let id of idsArr) {
+            this.routeWizardSrv.nodesFullyDownloaded.add(id);
+          }
+          this.routeWizardSrv.savedMultipleNodeDataResponses.push(res);
+          this.routeWizardSrv.findMissingRoutes(res);
+          this.warnSrv.showSuccess();
+        },
+        (err) => {
+          this.warnSrv.showError();
+          throw new Error(err.toString());
+        });
+  }
+
+
+  /***
+   * Continuous query for auto route wizard
+   * @param {boolean} findRoutes
+   */
+  public requestNewOverpassDataForRouteMasterWizard(findRoutes: boolean): void {
+    const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
+    this.httpClient
+      .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
+        responseType: 'json',
+        headers     : Utils.HTTP_HEADERS,
+      })
+      .subscribe(
+        (res: IOverpassResponse) => {
+          this.routeWizardSrv.savedContinuousQueryResponses.push(res);
+          for (let element of res.elements) {
+            if (!this.routeWizardSrv.modalMapElementsMap.has(element.id)) {
+              this.routeWizardSrv.modalMapElementsMap.set(element.id, element); }
+          }
+          this.dbSrv.addArea(this.areaReference.areaPseudoId);
+          let transformed = this.osmtogeojson(res);
+          this.routeWizardSrv.renderTransformedGeojsonDataForRouteWizard(transformed, this.routeWizardSrv.map);
+          this.warnSrv.showSuccess();
+          if (findRoutes) {
+            let stopsInBounds = this.routeWizardSrv.findStopsInBounds(this.routeWizardSrv.map);
+            let toDownload = stopsInBounds.filter((stop) => {
+              return !(this.routeWizardSrv.nodesFullyDownloaded.has(stop));
+            });
+            let routeRefs = this.routeWizardSrv.getRouteRefsFromNodes(stopsInBounds);
+            if (routeRefs.length !== 0) {
+              if (toDownload.length !== 0) {
+                this.getMultipleNodeDataForRouteWizard(toDownload);
+              } else {
+                this.routeWizardSrv.findMissingRoutes(null);
+              }
+
+            } else {
+              this.routeWizardSrv.routesReceived.emit(null);
+            }
+          }
+        },
+        (err) => {
+          this.warnSrv.showError();
+          console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
+        },
+      );
+  }
+
 }

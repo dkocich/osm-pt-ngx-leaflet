@@ -5,7 +5,9 @@ import { AppActions } from '../../store/app/actions';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+
 import { RouteWizardComponent } from '../route-wizard/route-wizard.component';
+import { RouteMasterWizardComponent } from '../route-master-wizard/route-master-wizard.component';
 
 @Component({
   selector: 'settings',
@@ -43,5 +45,9 @@ export class SettingsComponent {
 
   public createAutomaticRoute(): any {
     this.modalRef = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+  }
+
+  public createAutomaticRouteMaster(): any {
+    this.modalRef = this.modalService.show(RouteMasterWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
   }
 }
