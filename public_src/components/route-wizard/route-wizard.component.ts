@@ -184,7 +184,7 @@ export class RouteWizardComponent {
   private selectTab(step: number): void {
     this.stepTabs.tabs[step - 1].disabled = false;
     this.stepTabs.tabs[step - 1].active   = true;
-    for (let i = step + 1; i < 5; i++) {
+    for (let i = step + 1; i < 5 && i !== 0 ; i++) {
       this.stepTabs.tabs[i - 1].disabled = true;
     }
   }
