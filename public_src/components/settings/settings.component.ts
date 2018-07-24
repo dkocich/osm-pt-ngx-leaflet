@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { RouteWizardComponent } from '../route-wizard/route-wizard.component';
 
 @Component({
   selector: 'settings',
@@ -16,10 +18,13 @@ import { ErrorHighlightService } from '../../services/error-highlight.service';
 export class SettingsComponent {
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
   @select(['app', 'goodConnectMode']) public readonly goodConnectMode$: Observable<boolean>;
+  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  modalRef: BsModalRef;
 
   constructor(
     public appActions: AppActions,
     private errorHighlightSrv: ErrorHighlightService,
+    private modalService: BsModalService,
   ) {
     //
   }
@@ -34,5 +39,9 @@ export class SettingsComponent {
     this.errorHighlightSrv.quit();
     this.appActions.actSetAdvancedExpMode(advancedExpMode);
     localStorage.setItem('advancedMode', JSON.stringify(advancedExpMode));
+  }
+
+  public createAutomaticRoute(): any {
+    this.modalRef = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
   }
 }

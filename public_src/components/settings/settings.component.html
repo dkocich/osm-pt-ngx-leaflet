@@ -41,4 +41,19 @@
       </div>
     </a>
   </li>
+
+  <li *ngIf="(editing$ | async) && (advancedExpMode$ | async)">
+    <a href="#">
+      <div class="btn-group" role="group" aria-label="...">
+        <button type="button" class="btn btn-default btn-xs"
+                tooltip="{{ 'Route Creation Wizard' | translate }}"
+                container="body" placement="bottom"
+                [class.btn-success]="true"
+                (click)="createAutomaticRoute()">
+          <i class="fa fa-star" aria-hidden="true"></i>
+         Route Creation Wizard
+        </button>
+      </div>
+    </a>
+  </li>
 </ul>

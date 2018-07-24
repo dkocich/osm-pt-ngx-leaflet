@@ -8,10 +8,12 @@ import { ErrorHighlightService } from './error-highlight.service';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
+import { RouteWizardService } from './route-wizard.service';
+
 import { WarnService } from './warn.service';
 
 import { create } from 'xmlbuilder';
-import { LatLng } from 'leaflet';
+import * as L from 'leaflet';
 
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { IAreaRef } from '../core/areaRef.interface';
@@ -27,18 +29,20 @@ export class OverpassService {
   public changeset;
   private changeset_id: string;
   private areaReference: IAreaRef;
+  public osmtogeojson: any = require('osmtogeojson');
 
   constructor(
     private authSrv: AuthService,
     private dbSrv: DbService,
     private errorHighlightSrv: ErrorHighlightService,
     private httpClient: HttpClient,
-    private mapSrv: MapService,
-    private ngRedux: NgRedux<IAppState>,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    private mapSrv: MapService,
     private warnSrv: WarnService,
+    private ngRedux: NgRedux<IAppState>,
     public appActions: AppActions,
+    private routeWizardSrv: RouteWizardService,
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -182,7 +186,7 @@ export class OverpassService {
               }
             }
           }
-            // FIXME
+          // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
         },
@@ -302,10 +306,17 @@ export class OverpassService {
     this.putChangeset(this.changeset, testUpload);
   }
 
-  public async initDownloader(): Promise<void> {
-    this.setupAreaReference();
-    if (this.minZoomLevelIsValid() && await this.shouldDownloadMissingArea()) {
+  public async initDownloader(map: L.Map): Promise<void> {
+    this.setupAreaReference(map);
+    if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
       this.requestNewOverpassData();
+    }
+  }
+
+  public async initDownloaderForModalMap(map: L.Map): Promise<void> {
+    this.setupAreaReference(map);
+    if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
+      this.requestNewOverpassDataForRouteWizard(false);
     }
   }
 
@@ -332,8 +343,8 @@ export class OverpassService {
     }
   }
 
-  private setupAreaReference(): void {
-    const viewCenter: LatLng = this.mapSrv.map.getCenter();
+  private setupAreaReference(map: L.Map): void {
+    const viewCenter: L.LatLng = map.getCenter();
     const south: string = (Math.floor(viewCenter.lat / 0.05) * 0.05).toFixed(2);
     const west: string = (Math.floor(viewCenter.lng / 0.05) * 0.05).toFixed(2);
     const north: string = (Number(south) + 0.05).toFixed(2);
@@ -342,8 +353,8 @@ export class OverpassService {
     this.areaReference = { areaPseudoId, overpassBox: [south, west, north, east], viewCenter };
   }
 
-  private minZoomLevelIsValid(): boolean {
-    return this.mapSrv.map.getZoom() > ConfService.minDownloadZoom;
+  private minZoomLevelIsValid(map: L.Map): boolean {
+    return map.getZoom() > ConfService.minDownloadZoom;
   }
 
   private async shouldDownloadMissingArea(): Promise<boolean> {
@@ -438,7 +449,7 @@ export class OverpassService {
           const transformedGeojson = this.mapSrv.osmtogeojson(res);
           // FIXME save all requests...
           // this.storageSrv.localGeojsonStorage = transformedGeojson;
-          this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
+          this.mapSrv.renderTransformedGeojsonData(transformedGeojson, this.mapSrv.map);
           this.dbSrv.addResponseToIDB(res, 'route', rel.id).catch((err) => {
             console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
               ' in adding related metadata to IDB for route with id : ' + rel.id);
@@ -810,6 +821,11 @@ export class OverpassService {
     });
   }
 
+  /***
+   * Downloads multiple node data for error highlight
+   * @param toDownload
+   * @returns {any}
+   */
   private downloadMultipleNodeData(toDownload: any): any {
     let requestBody = `
       [out:json][timeout:25];
@@ -819,7 +835,7 @@ export class OverpassService {
       (._;<;);
       out meta;`;
     console.log('LOG.(overpass s.) Multiple node data download query', requestBody);
-    requestBody = this.replaceBboxString(requestBody.trim());
+    requestBody     = this.replaceBboxString(requestBody.trim());
     this.httpClient
       .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
@@ -835,9 +851,9 @@ export class OverpassService {
 
           for (const element of res['elements']) {
             if (!this.storageSrv.elementsMap.has(element.id)) {
-              this.storageSrv.elementsMap.set(element.id, element); }
+              this.storageSrv.elementsMap.set(element.id, element);
+            }
           }
-
           this.appActions.actSetErrorCorrectionMode({
             nameSuggestions: {
               found          : true,
@@ -859,6 +875,88 @@ export class OverpassService {
         (err) => {
           this.warnSrv.showError();
           throw new Error(JSON.stringify(err));
+        });
+  }
+
+  /***
+   * Continuous query for auto route wizard
+   * @param {boolean} findRoutes
+   */
+  public requestNewOverpassDataForRouteWizard(findRoutes: boolean): void {
+    const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
+    this.httpClient
+      .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
+        responseType: 'json',
+        headers     : Utils.HTTP_HEADERS,
+      })
+      .subscribe(
+        (res: IOverpassResponse) => {
+          this.routeWizardSrv.savedContinuousQueryResponses.push(res);
+          for (let element of res.elements) {
+            if (!this.routeWizardSrv.modalMapElementsMap.has(element.id)) {
+              this.routeWizardSrv.modalMapElementsMap.set(element.id, element); }
+          }
+          this.dbSrv.addArea(this.areaReference.areaPseudoId);
+          let transformed = this.osmtogeojson(res);
+          this.routeWizardSrv.renderTransformedGeojsonDataForRouteWizard(transformed, this.routeWizardSrv.map);
+          this.warnSrv.showSuccess();
+          if (findRoutes) {
+            let stopsInBounds = this.routeWizardSrv.findStopsInBounds(this.routeWizardSrv.map);
+            let toDownload = stopsInBounds.filter((stop) => {
+              return !(this.routeWizardSrv.nodesFullyDownloaded.has(stop));
+            });
+            let routeRefs = this.routeWizardSrv.getRouteRefsFromNodes(stopsInBounds);
+            if (routeRefs.length !== 0) {
+              if (toDownload.length !== 0) {
+                this.getMultipleNodeDataForRouteWizard(toDownload);
+              } else {
+                this.routeWizardSrv.findMissingRoutes(null);
+              }
+
+            } else {
+              this.routeWizardSrv.routesReceived.emit(null);
+            }
+          }
+        },
+        (err) => {
+          this.warnSrv.showError();
+          console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
+        },
+      );
+  }
+
+  /***
+   * Multiple node data download for route wizard
+   * @param idsArr
+   * @returns {any}
+   */
+  private getMultipleNodeDataForRouteWizard(idsArr: any): any {
+    let requestBody = `
+      [out:json][timeout:25];
+      (
+       node(id:${idsArr});
+      );
+      (._;<;);
+      out meta;`;
+    console.log('LOG (overpass s.) Querying multiple nodes', requestBody);
+    requestBody = this.replaceBboxString(requestBody.trim());
+    this.httpClient
+      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .subscribe(
+        (res) => {
+          if (!res) {
+            return alert('No response from API. Try to select element again please.');
+          }
+          for (let id of idsArr) {
+            this.routeWizardSrv.nodesFullyDownloaded.add(id);
+          }
+          this.routeWizardSrv.savedMultipleNodeDataResponses.push(res);
+          this.routeWizardSrv.findMissingRoutes(res);
+          this.warnSrv.showSuccess();
+        },
+        (err) => {
+          this.warnSrv.showError();
+          throw new Error(err.toString());
         });
   }
 }

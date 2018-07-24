@@ -151,7 +151,7 @@ export class ModalComponent {
     elements.push(this.storageSrv.elementsMap.get(this.wayErrorObject.stop.id));
     obj.elements    = elements;
     let transformed = this.osmtogeojson(obj);
-    this.mapSrv.renderTransformedGeojsonData(transformed);
+    this.mapSrv.renderTransformedGeojsonData(transformed, this.mapSrv.map);
   }
 
   /***

@@ -7,7 +7,7 @@ import 'zone.js/dist/long-stack-trace-zone';
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,6 +22,8 @@ import {
   ModalModule,
   TooltipModule,
   TypeaheadModule,
+  SortableModule,
+  TabsModule,
 } from 'ngx-bootstrap';
 
 import { Angulartics2Module } from 'angulartics2';
@@ -45,6 +47,7 @@ import { TagBrowserComponent } from './components/sidebar/tag-browser.component'
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
 import { ValidationBrowserComponent } from './components/sidebar/validation-browser.component';
+import { RouteWizardComponent } from './components/route-wizard/route-wizard.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
@@ -57,6 +60,7 @@ import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
 import { StorageService } from './services/storage.service';
 import { WarnService } from './services/warn.service';
+import { RouteWizardService } from './services/route-wizard.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -83,7 +87,7 @@ const conditional_providers = [
 
 @NgModule({
   bootstrap: [AppComponent],
-  entryComponents: [ModalComponent],
+  entryComponents: [RouteWizardComponent, AppComponent, ModalComponent],
   declarations: [
     AppComponent,
     AuthComponent,
@@ -95,15 +99,15 @@ const conditional_providers = [
     NavigatorComponent,
     RelationBrowserComponent,
     RouteBrowserComponent,
-    SettingsComponent,
     StopBrowserComponent,
     TagBrowserComponent,
     ToolbarComponent,
     TransporterComponent,
+    SettingsComponent,
+    RouteWizardComponent,
     ValidationBrowserComponent,
 
     KeysPipe,
-
   ],
   imports: [
     AccordionModule.forRoot(),
@@ -134,6 +138,9 @@ const conditional_providers = [
       positionClass: 'toast-bottom-right',
       maxOpened: 1,
     }),
+    SortableModule.forRoot(),
+    TabsModule.forRoot(),
+    ReactiveFormsModule,
   ],
   providers: [
     ...conditional_providers,
@@ -149,6 +156,7 @@ const conditional_providers = [
     ProcessService,
     StorageService,
     WarnService,
+    RouteWizardService,
 
     KeysPipe,
 

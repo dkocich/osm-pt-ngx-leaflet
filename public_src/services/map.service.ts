@@ -34,7 +34,7 @@ export class MapService {
   public popUpLayerGroup: L.LayerGroup;
   public currentPopUpFeatureId: number;
   public errorLocations: L.LatLngExpression [] = [];
-
+  // public autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
   constructor(
     private confSrv: ConfService,
     private httpClient: HttpClient,
@@ -228,7 +228,8 @@ export class MapService {
    * Renders GeoJson data on the map.
    * @param transformedGeojson
    */
-  public renderTransformedGeojsonData(transformedGeojson: any): void {
+  public renderTransformedGeojsonData(transformedGeojson: any, map: L.Map): void {
+    console.log('transformed geojson', transformedGeojson);
     this.ptLayer = L.geoJSON(transformedGeojson, {
       filter: (feature) => {
         // filter away already rendered elements
@@ -256,7 +257,8 @@ export class MapService {
       },
     });
     console.log('LOG (map s.) Adding PTlayer to map again', this.ptLayer);
-    this.ptLayer.addTo(this.map);
+
+    this.ptLayer.addTo(map);
   }
 
   /**
@@ -354,25 +356,25 @@ export class MapService {
   /**
    * Clears active map highlight (stop markers, route lines).
    */
-  public clearHighlight(): void {
+  public clearHighlight(map: L.Map): void {
     if (this.markerFrom !== undefined) {
-      this.map.removeLayer(this.markerFrom);
+      map.removeLayer(this.markerFrom);
       this.markerFrom = undefined;
     }
     if (this.markerTo !== undefined) {
-      this.map.removeLayer(this.markerTo);
+      map.removeLayer(this.markerTo);
       this.markerTo = undefined;
     }
     if (this.highlight !== undefined) {
-      this.map.removeLayer(this.highlight);
+      map.removeLayer(this.highlight);
       this.highlight = undefined;
     }
     if (this.highlightFill !== undefined) {
-      this.map.removeLayer(this.highlightFill);
-      this.highlightFill = undefined;
+     map.removeLayer(this.highlightFill);
+     this.highlightFill = undefined;
     }
     if (this.highlightStroke !== undefined) {
-      this.map.removeLayer(this.highlightStroke);
+      map.removeLayer(this.highlightStroke);
       this.highlightStroke = undefined;
     }
   }
@@ -382,8 +384,8 @@ export class MapService {
    * @param refId
    * @returns {{lat: number, lng: number}}
    */
-  public findCoordinates(refId: number): L.LatLngExpression {
-    const element = this.storageSrv.elementsMap.get(refId);
+  public findCoordinates(refId: number, map: any): L.LatLngExpression {
+    const element = map.get(refId);
     if (!element) {
       console.log('Warning - elem. not found ', refId, JSON.stringify(element));
     } else {
@@ -439,7 +441,7 @@ export class MapService {
         ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
         this.storageSrv.stopsForRoute.push(member.ref);
-        const latlng: L.LatLngExpression = this.findCoordinates(member.ref);
+        const latlng: L.LatLngExpression = this.findCoordinates(member.ref, this.storageSrv.elementsMap);
         if (latlng) {
           latlngs.push(latlng);
         }
@@ -484,26 +486,37 @@ export class MapService {
    * @param rel
    * @returns {boolean}
    */
-  public showRoute(rel: any): boolean {
+  public showRoute(rel: any, map: L.Map, elementsMap: any): boolean {
     for (const member of rel.members) {
       if (
         member.type === 'node' &&
         ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
-        this.storageSrv.stopsForRoute.push(member.ref);
+
+        if (member.ref) {
+          this.storageSrv.stopsForRoute.push(member.ref);
+        }
+        if (member.id) {
+          this.storageSrv.stopsForRoute.push(member.id);
+        }
       } else if (
         member.type === 'node' &&
         ['platform', 'platform_entry_only', 'platform_exit_only']
           .indexOf(member.role) > -1
       ) {
-        this.storageSrv.platformsForRoute.push(member.ref);
+        if (member.ref) {
+          this.storageSrv.platformsForRoute.push(member.ref);
+        }
+        if (member.id) {
+          this.storageSrv.platformsForRoute.push(member.id);
+        }
+
       } else if (member.type === 'way') {
         this.storageSrv.waysForRoute.push(member.ref);
       } else if (member.type === 'relation') {
         this.storageSrv.relationsForRoute.push(member.ref);
       }
     }
-
     // setup highlight type
     if (
       this.storageSrv.stopsForRoute.length === 0 &&
@@ -522,10 +535,9 @@ export class MapService {
         memberRefs = this.storageSrv.platformsForRoute;
         break;
     }
-
     const latlngs = Array();
     for (const ref of memberRefs) {
-      const latlng: L.LatLngExpression = this.findCoordinates(ref);
+      const latlng: L.LatLngExpression = this.findCoordinates(ref, elementsMap);
       if (latlng) {
         latlngs.push(latlng);
       }
@@ -546,7 +558,7 @@ export class MapService {
       this.highlight = L.layerGroup([
         this.highlightStroke,
         this.highlightFill,
-      ]).addTo(this.map);
+      ]).addTo(map);
       return true;
     } else {
       if (rel.members.length <= 1) {
@@ -578,11 +590,12 @@ export class MapService {
     let latlngFrom;
     switch (this.highlightType) {
       case 'Stops':
-        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0]); // get first and last ID reference
+        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0],this.storageSrv.elementsMap); // get first and last ID reference
         return latlngFrom;
       case 'Platforms':
         latlngFrom = this.findCoordinates(
           this.storageSrv.platformsForRoute[0],
+          this.storageSrv.elementsMap,
         ); // get first and last ID reference
         return latlngFrom;
     }
@@ -596,6 +609,7 @@ export class MapService {
           this.storageSrv.stopsForRoute[
             this.storageSrv.stopsForRoute.length - 1
           ],
+          this.storageSrv.elementsMap,
         );
         return latlngTo;
       case 'Platforms':
@@ -603,6 +617,7 @@ export class MapService {
           this.storageSrv.platformsForRoute[
             this.storageSrv.platformsForRoute.length - 1
           ],
+          this.storageSrv.elementsMap,
         );
         return latlngTo;
     }
@@ -650,7 +665,7 @@ export class MapService {
    * @param latlng
    * @returns {any}
    */
-  private stylePoint(feature: any, latlng: any): any {
+  public stylePoint(feature: any, latlng: any): any {
     let iconUrl = 'assets/marker-icon.png';
     let shadowUrl = '';
     const fp = feature.properties;
