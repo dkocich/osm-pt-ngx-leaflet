@@ -1,15 +1,20 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 
 import { AuthService } from '../../services/auth.service';
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
 import { StorageService } from '../../services/storage.service';
 
-import { ModalDirective } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService, ModalDirective } from 'ngx-bootstrap';
+
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
+
 import { AppActions } from '../../store/app/actions';
 import { IAppState } from '../../store/model';
+
+import { RouteWizardComponent } from '../route-wizard/route-wizard.component';
+import { RouteMasterWizardComponent } from '../route-master-wizard/route-master-wizard.component';
 
 @Component({
   providers: [],
@@ -27,6 +32,9 @@ export class EditorComponent implements OnInit, AfterViewInit {
   public currentEditStep: number = 0;
   public creatingElementOfType: string = '';
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  modalRefRouteWiz: BsModalRef;
+  modalRefRouteMasterWiz: BsModalRef;
 
   constructor(
     public appActions: AppActions,
@@ -35,6 +43,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private mapSrv: MapService,
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
+    private modalService: BsModalService,
   ) {
     //
   }
@@ -160,5 +169,15 @@ export class EditorComponent implements OnInit, AfterViewInit {
         this.mapSrv.disableMouseEvent('platform-btn');
       }, 250);
     }
+  }
+
+  private routeCreationWizard(): any {
+    this.modalRefRouteWiz = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+    this.appActions.actSetWizardMode('route wizard');
+  }
+
+  private routeMasterCreationWizard(): any {
+    this.modalRefRouteMasterWiz = this.modalService.show(RouteMasterWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+    this.appActions.actSetWizardMode('route master wizard');
   }
 }

@@ -20,6 +20,7 @@ export class ConfService {
   public static readonly minDownloadZoom               = 15;
   public static readonly minDownloadZoomForErrors      = 13;
   public static readonly minDownloadZoomForRouteWizard = 8;
+  public static readonly minDownloadZoomForRouteMasterWizard = 8;
   public static readonly minDownloadDistance           = 1500;
 
   public static readonly geocodingApiUrl = 'http://api.ipstack.com/';

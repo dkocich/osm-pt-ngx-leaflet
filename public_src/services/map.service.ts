@@ -27,7 +27,7 @@ export class MapService {
   public markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
   public membersHighlightLayer: any = undefined;
   private ptLayer: any;
-  private highlightFill: any = undefined;
+  public highlightFill: any = undefined;
   private highlight: any = undefined;
   private markerFrom: any = undefined;
   private markerTo: any = undefined;
@@ -897,5 +897,22 @@ export class MapService {
         layerA.setText(null);
       }
     });
+  }
+
+  /***
+   * Returns all stops/platforms on the given map
+   * @param {Map} map
+   * @returns {any[]}
+   */
+  public findStopsInBounds(map: L.Map, elementsMap: any): any[] {
+    let stopsInBounds = [];
+    elementsMap.forEach((stop) => {
+      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+        if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
+          stopsInBounds.push(stop.id);
+        }
+      }
+    });
+    return stopsInBounds;
   }
 }
