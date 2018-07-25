@@ -46,7 +46,7 @@ export class SettingsComponent {
 
   public createAutomaticRoute(): any {
     this.modalRefRouteWiz = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
-    console.log(this.modalRefRouteWiz.content, 'zxc');
+    // console.log(this.modalRefRouteWiz.content, 'zxc');
     this.appActions.actSetWizardMode('route wizard');
 
   }
@@ -54,6 +54,5 @@ export class SettingsComponent {
   public createAutomaticRouteMaster(): any {
     this.modalRefRouteMasterWiz = this.modalService.show(RouteMasterWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
     this.appActions.actSetWizardMode('route master wizard');
-
   }
 }

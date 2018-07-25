@@ -281,11 +281,10 @@ export class OverpassService {
             console.error(err);
             throw new Error(JSON.stringify(err));
           });
-          let wizardMode = this.ngRedux.getState()['app']['wizardMode'];
-          if (wizardMode === 'route master wizard') {
-            this.routeMasterWizardSrv.findMissingRouteMasters(res);
-          }
-
+          // let wizardMode = this.ngRedux.getState()['app']['wizardMode'];
+          // if (wizardMode === 'route master wizard') {
+          //   this.routeMasterWizardSrv.findMissingRouteMasters(res);
+          // }
 
         },
         (err) => {
@@ -902,6 +901,10 @@ export class OverpassService {
    * @param {boolean} findRoutes
    */
   public requestNewOverpassDataForWizard(find: boolean): void {
+    console.log('run');
+    // to do mas map
+    this.setupAreaReference(this.routeMasterWizardSrv.map);
+
     const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
     this.httpClient
       .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
@@ -942,7 +945,7 @@ export class OverpassService {
           }
 
           if (wizardMode === 'route master wizard') {
-            console.log('ran');
+            console.log('overpass  s,  response continuous query : ', res);
 
             this.routeMasterWizardSrv.savedContinuousQueryResponses.push(res);
             for (let element of res.elements) {
@@ -950,26 +953,35 @@ export class OverpassService {
                 this.routeMasterWizardSrv.modalMapElementsMap.set(element.id, element);
               }
             }
+            console.log('overpass s, res added to map, map npw:', this.routeMasterWizardSrv.modalMapElementsMap);
             this.dbSrv.addArea(this.areaReference.areaPseudoId);
             let transformed = this.osmtogeojson(res);
             this.routeMasterWizardSrv.renderTransformedGeojsonData(transformed, this.routeMasterWizardSrv.map);
             this.warnSrv.showSuccess();
 
             if (find) {
-              let stopsInBounds = this.routeMasterWizardSrv.findStopsInBounds(this.routeWizardSrv.map);
+              console.log('over pass serv.  cont query : find is true');
+              let stopsInBounds = this.routeMasterWizardSrv.findStopsInBounds(this.routeMasterWizardSrv.map);
+              console.log('over pass serv. stops in bounds', stopsInBounds);
               let toDownload    = stopsInBounds.filter((stop) => {
                 return !(this.routeMasterWizardSrv.nodesFullyDownloaded.has(stop));
               });
-
+              console.log(' over pass serv. already fully downloaded ;',
+                this.routeMasterWizardSrv.nodesFullyDownloaded, 'therefore to download', toDownload);
 
               // let routeRefs     = this.routeWizardSrv.getRouteRefsFromNodes(stopsInBounds);
               // if (routeRefs.length !== 0) {
               if (toDownload.length !== 0) {
+                console.log('over pass serv. to download length not zero');
                 this.getMultipleNodeDataForRouteWizard(toDownload);
               } else {
-                let relsMap = this.routeMasterWizardSrv.findCountToBeComparedRels(null);
+                console.log('to download length zero');
+
+                let relsMap = this.routeMasterWizardSrv.findToBeComparedRels(null);
+                console.log('relations to be compared: ', relsMap);
                 if (relsMap.size !== 0) {
-                  this.getRouteMasters(relsMap.keys());
+                  console.log('relations to be compared not zero getting route masters: ');
+                  // this.getRouteMasters(relsMap.keys());
                 }
               }
             }
@@ -1004,6 +1016,7 @@ export class OverpassService {
       .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
         (res) => {
+          console.log(' multiple node data res', res);
           if (!res) {
             return alert('No response from API. Try to select element again please.');
           }
@@ -1017,14 +1030,32 @@ export class OverpassService {
             this.routeWizardSrv.findMissingRoutes(res);
           }
 
-          if (wizardMode === 'master route wizard') {
+          if (wizardMode === 'route master wizard') {
+            console.log('wizard');
             for (let id of idsArr) {
               this.routeMasterWizardSrv.nodesFullyDownloaded.add(id);
             }
             this.routeMasterWizardSrv.savedMultipleNodeDataResponses.push(res);
-            let relsMap = this.routeMasterWizardSrv.findCountToBeComparedRels(null);
+            console.log('before adding multiple node data res to map', this.routeMasterWizardSrv.modalMapElementsMap);
+
+            for(let element of res['elements']) {
+              if(!this.routeMasterWizardSrv.modalMapElementsMap.has(element.id)){
+                // console.log('true')
+                this.routeMasterWizardSrv.modalMapElementsMap.set(element.id, element);
+
+              }
+
+              // console.log('element', element);
+            }
+            console.log('after adding multiple node data res to map', this.routeMasterWizardSrv.modalMapElementsMap);
+            let relsMap = this.routeMasterWizardSrv.findToBeComparedRels(null);
+            console.log('relsMap', relsMap);
             if (relsMap.size !== 0) {
-              this.getRouteMasters(relsMap.keys());
+              console.log('keys', relsMap.keys());
+              let keys: any = Array.from(relsMap.keys());
+              console.log(' arr keys', Array.from(relsMap.keys()));
+
+              this.getRouteMastersWizard(keys);
             }
           }
 
@@ -1036,16 +1067,15 @@ export class OverpassService {
         });
   }
 
-
   /**
    * Downloads route_master relations for currently added route relations.
    * @minNumOfRelations: number
    */
-  public getRouteMasters(): void {
+  public getRouteMastersWizard(resIDs: number[]): void {
     let requestBody: string = `
             [out:json][timeout:25][bbox:{{bbox}}];
             (
-              rel(id:${routesNotQueriedNotInIDB.join(', ')});
+              rel(id:${resIDs.join(', ')});
               <<;
             );
             out meta;`;
@@ -1065,9 +1095,20 @@ export class OverpassService {
           }
           console.log('LOG (overpass s.) Response for route_master from Overpass API');
           console.log(res);
-          this.warnSrv.showSuccess();
-          this.processSrv.processMastersResponse(res);
-          this.routeMasterWizardSrv.findMissingRouteMasters(res);
+
+          res['elements'].forEach((element) => {
+            if (!this.storageSrv.elementsMap.has(element.id)) {
+              // console.log('LOG (processing s.) New element added:', element);
+              this.storageSrv.elementsMap.set(element.id, element);
+              this.storageSrv.elementsDownloaded.add(element.id);
+            }
+          });
+          let wizardMode = this.ngRedux.getState()['app']['wizardMode'];
+          if (wizardMode === 'route master wizard') {
+            console.log('route master wizard rm rqst');
+            this.routeMasterWizardSrv.findMissingRouteMasters(res);
+          }
+
         },
         (err) => {
           this.warnSrv.showError();

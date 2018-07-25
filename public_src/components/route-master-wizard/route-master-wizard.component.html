@@ -19,8 +19,66 @@
             routes </p>
           <button class="btn btn-default" type="submit" (click)="findMissingRouteMasters()">Find suggestions</button>
         </tab>
-      </tabset>
+        <tab heading="Step 2">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <p class="text-success">Select from the following suggested routes </p>
             </div>
+            <div class="panel-body ">
+              <accordion [closeOthers]="true">
+                <accordion-group *ngFor="let ref of getKeys(newRMsMap)" >
+                  <div accordion-heading class="clearfix" (click)="selectRM(ref)">
+                   {{ref}}
+                  </div>
+                  <ul >
+                  <li class="list-group-item clearfix" *ngFor="let route of getValue(ref)" (click)="viewRoute(route.id,route.percentCoverage, ref)">
+                    <span>  {{route.id}} {{route.percentCoverage}}</span>
+                  </li>
+                  </ul>
+                </accordion-group>
+              </accordion>
+            </div>
+
+            <div class="panel-footer clearfix">
+              <button class="btn btn-default pull-right" type="submit" (click)="useRouteMaster()" >Use
+                Route Master
+              </button>
+            </div>
+          </div>
+        </tab>
+
+        <tab heading="Step 3" ">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <p class="text-success"> Remove routes if necessary.</p>
+            </div>
+            <div class="panel-body ">
+              <button class="btn btn-default pull-right" id='Stops' [disabled]="!canStopsConnect"
+                      (click)="showConnectivity('Stops')"
+                      [ngStyle]="{'background-color' : mapSrv.highlightType ==='Stops' ? 'cornflowerblue': 'white'}">
+                Stops
+              </button>
+              <button class="btn btn-default pull-right" id='Platforms' [disabled]="!canPlatformsConnect"
+                      (click)="showConnectivity('Platforms')"
+                      [ngStyle]="{'background-color' : mapSrv.highlightType ==='Platforms' ? 'cornflowerblue': 'white'}">
+                Platforms
+              </button>
+               Ref : {{usedRM.next().keys()}}
+              <ul>
+                <li *ngFor="let route of getRoutesOfUsedRM()">
+
+                </li>
+              </ul>
+            </div>
+            <div class="panel-footer clearfix">
+              <button class="btn btn-default pull-right" (click)="saveStep3()">Done</button>
+            </div>
+          </div>
+
+
+        </tab>
+      </tabset>
+    </div>
     </div>
   </div>
 </div>

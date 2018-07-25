@@ -1,15 +1,15 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import * as L from 'leaflet';
 import { RouteMasterWizardService } from '../../services/route-master-wizard.service';
 import { MapService } from '../../services/map.service';
-import { BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
 import { EditService } from '../../services/edit.service';
 import { ProcessService } from '../../services/process.service';
 import { OverpassService } from '../../services/overpass.service';
 import { WarnService } from '../../services/warn.service';
 import { StorageService } from '../../services/storage.service';
 
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import {ConfService} from '../../services/conf.service';
 
 @Component({
@@ -24,21 +24,24 @@ import {ConfService} from '../../services/conf.service';
 export class RouteMasterWizardComponent {
 
   public map: L.Map;
-  public newRoutesRefs              = [];
   public osmtogeojson: any          = require('osmtogeojson');
   private startEventProcessing      = new Subject<L.LeafletEvent>();
-  public newRoute: any              = {};
-  public newRouteMembersSuggestions = [];
-  public addedNewRouteMembers       = [];
 
   @Input() public tagKey: string   = '';
   @Input() public tagValue: string = '';
 
   public canStopsConnect     = false;
   public canPlatformsConnect = false;
-  public currentlyViewedRef  = null;
 
-  // @ViewChild('stepTabs') stepTabs: TabsetComponent;
+  // public currentlyViewedRouteRef  = null;
+
+  public selectedRM = null;
+  public newRMsMap = new Map();
+
+  public usedRM =  null;
+  public addedRMs = null;
+  
+  @ViewChild('stepTabs') stepTabs: TabsetComponent;
 
   constructor(private routeMasterWizardSrv: RouteMasterWizardService,
               private storageSrv: StorageService,
@@ -49,7 +52,11 @@ export class RouteMasterWizardComponent {
               private processSrv: ProcessService,
               private editSrv: EditService,
               public modalRefRouteMasterWiz: BsModalRef) {
+this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
+  this.newRMsMap = newRMsMap;
+  this.selectTab(2);
 
+});
   }
 
   public ngOnInit(): void {
@@ -100,4 +107,61 @@ export class RouteMasterWizardComponent {
       alert('Not sufficient zoom level');
     }
   }
+
+  /***
+   * Jumps to step when tab directly clicked
+   * @param {string} step
+   * @returns {void}
+   */
+  // public jumpToStep(step: string): void {
+  //   switch (step) {
+  //     case '1':
+  //       // this.routeMasterWizardSrv.clearMembersHighlight();
+  //       this.mapSrv.clearHighlight(this.routeMasterWizardSrv.map);
+  //       break;
+  //     case '2':
+  //       this.routeMasterWizardSrv.clearMembersHighlight();
+  //       this.mapSrv.clearHighlight(this.routeMasterWizardSrv.map);
+  //       // this.viewSuggestedRouteMaster(this.newSuggestedRMs[0]);
+  //       break;
+  //   }
+  // }
+
+  private selectTab(step: number): void {
+    this.stepTabs.tabs[step - 1].disabled = false;
+    this.stepTabs.tabs[step - 1].active   = true;
+    for (let i = step + 1; i < 5 && i !== 0 ; i++) {
+      console.log('i-1', i - 1);
+      this.stepTabs.tabs[i - 1].disabled = true;
+    }
+  }
+
+  public getKeys(map: any): any{
+    let refs = [];
+    this.newRMsMap.forEach((value, key) => {
+      refs.push(key);
+    });
+    return refs;
+  }
+
+  public getValue(ref: string): any {
+    return this.newRMsMap.get(ref);
+  }
+
+  private viewRoute(routeID: any, percentageCoverage: any, ref: any): any {
+    this.selectRM(ref);
+    if (percentageCoverage === 100){
+      this.routeMasterWizardSrv.viewRoute(routeID, { canStopsConnect : this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
+    }
+  }
+
+  private selectRM(ref: string): any {
+   this.usedRM = this.newRMsMap.get(ref);
+  }
+
+  private getRoutesOfUsedRM() : any {
+    this.selectTab(3);
+
+  }
+
 }
