@@ -33,6 +33,10 @@ export class ToolbarComponent implements OnInit {
 
   public currentElement: IOsmElement;
   public stats = { s: 0, r: 0, a: 0, m: 0 };
+  public routeLabelShown = false;
+  public enableRouteLabels = false;
+  public selectedRoute = null;
+
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
 
   constructor(
@@ -59,6 +63,15 @@ export class ToolbarComponent implements OnInit {
     this.storageSrv.stats.subscribe((data) => (this.stats = data));
     this.mapSrv.highlightTypeEmitter.subscribe((data) => {
       this.htRadioModel = data.highlightType;
+    });
+    this.mapSrv.enableRouteLabelsOption.subscribe((rel) => {
+      if (rel) {
+        this.selectedRoute = rel;
+        this.enableRouteLabels = true;
+      } else {
+        this.routeLabelShown = false;
+        this.enableRouteLabels = false;
+      }
     });
   }
 
@@ -137,6 +150,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   private clearHighlight(): void {
+    this.enableRouteLabels = false;
     return this.mapSrv.clearHighlight(this.mapSrv.map);
   }
 
@@ -166,5 +180,21 @@ export class ToolbarComponent implements OnInit {
 
   private isDisabled(): boolean {
     return this.currentElement.id < 0;
+  }
+
+  public toggleRouteInfoLabels(): void {
+   if (!this.routeLabelShown) {
+     this.mapSrv.showRouteInfoLabels(this.storageSrv.currentElement);
+     this.routeLabelShown = true;
+   }  else {
+     this.mapSrv.clearSingleRouteInfoLabels();
+     this.routeLabelShown = false;
+   }
+  }
+
+  public hasRef(): boolean {
+    if (this.storageSrv.currentElement.tags.ref) {
+      return true;
+    }
   }
 }

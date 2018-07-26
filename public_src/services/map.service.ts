@@ -5,6 +5,7 @@ import { ConfService } from './conf.service';
 import { StorageService } from './storage.service';
 
 import * as L from 'leaflet';
+import 'leaflet-textpath';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
@@ -33,7 +34,7 @@ export class MapService {
   public popUpArr = [];
   public popUpLayerGroup: L.LayerGroup;
   public currentPopUpFeatureId: number;
-  public errorLocations: L.LatLngExpression [] = [];
+  public enableRouteLabelsOption: EventEmitter<any> = new EventEmitter();
   // public autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
   constructor(
     private confSrv: ConfService,
@@ -377,6 +378,7 @@ export class MapService {
       map.removeLayer(this.highlightStroke);
       this.highlightStroke = undefined;
     }
+    this.enableRouteLabelsOption.emit(null);
   }
 
   /**
@@ -455,6 +457,7 @@ export class MapService {
       this.highlightFill = L.polyline(latlngs, Utils.HIGHLIGHT_FILL).bindTooltip(
         rel.tags.name,
       );
+      this.showRouteInfoLabels(rel);
       if (this.highlight) {
         this.highlight.addLayer(L.layerGroup([this.highlightFill]));
       } else {
@@ -559,6 +562,7 @@ export class MapService {
         this.highlightStroke,
         this.highlightFill,
       ]).addTo(map);
+      this.enableRouteLabelsOption.emit(rel);
       return true;
     } else {
       if (rel.members.length <= 1) {
@@ -851,4 +855,14 @@ export class MapService {
     L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
 
+  public showRouteInfoLabels(rel: any): void {
+    if (rel.tags.ref) {
+      let textString = '     ' + rel.tags.ref + '     ';
+      this.highlightFill.setText(textString, { repeat: true, attributes: { fill: 'blue' } });
+    }
+  }
+
+  public clearSingleRouteInfoLabels(): void {
+    this.highlightFill.setText(null);
+  }
 }
