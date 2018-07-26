@@ -295,7 +295,7 @@ export class RouteMasterWizardService {
 
     let filteredMap =  new Map();
     this.newRMsMap.forEach((value, key) => {
-      if(value.length >= 2){
+      if (value.length >= 2) {
        filteredMap.set(key, value);
       }
     });

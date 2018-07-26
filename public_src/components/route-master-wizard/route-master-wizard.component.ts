@@ -38,9 +38,11 @@ export class RouteMasterWizardComponent {
   public selectedRM = null;
   public newRMsMap = new Map();
 
-  public usedRM =  null;
-  public addedRMs = null;
-  
+  public usedRM =  [];
+
+  public addedRoutes = [];
+  public suggestedRoutes = [];
+
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
 
   constructor(private routeMasterWizardSrv: RouteMasterWizardService,
@@ -130,7 +132,7 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
   private selectTab(step: number): void {
     this.stepTabs.tabs[step - 1].disabled = false;
     this.stepTabs.tabs[step - 1].active   = true;
-    for (let i = step + 1; i < 5 && i !== 0 ; i++) {
+    for (let i = step + 1; i < 5; i++) {
       console.log('i-1', i - 1);
       this.stepTabs.tabs[i - 1].disabled = true;
     }
@@ -150,8 +152,9 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
 
   private viewRoute(routeID: any, percentageCoverage: any, ref: any): any {
     this.selectRM(ref);
-    if (percentageCoverage === 100){
-      this.routeMasterWizardSrv.viewRoute(routeID, { canStopsConnect : this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
+    if (percentageCoverage === 100) {
+      this.routeMasterWizardSrv.viewRoute(routeID,
+        { canStopsConnect : this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
     }
   }
 
@@ -159,8 +162,15 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
    this.usedRM = this.newRMsMap.get(ref);
   }
 
-  private getRoutesOfUsedRM() : any {
+  private getRoutesOfUsedRM(): any {
     this.selectTab(3);
+  }
+
+  private removeRouteMember(): any{
+
+  }
+
+  private saveStep3(): any{
 
   }
 

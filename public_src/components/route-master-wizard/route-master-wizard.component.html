@@ -13,72 +13,89 @@
         <div class="panel panel-default full-height right-panel">
           <div class="panel-body">
             <div>
-      <tabset [justified]="true" type="pills" #stepTabs>
-        <tab heading="Step 1" >
-          <p class="text-success step-1-text">Zoom into the required area on the map and find suggested
-            routes </p>
-          <button class="btn btn-default" type="submit" (click)="findMissingRouteMasters()">Find suggestions</button>
-        </tab>
-        <tab heading="Step 2">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <p class="text-success">Select from the following suggested routes </p>
-            </div>
-            <div class="panel-body ">
-              <accordion [closeOthers]="true">
-                <accordion-group *ngFor="let ref of getKeys(newRMsMap)" >
-                  <div accordion-heading class="clearfix" (click)="selectRM(ref)">
-                   {{ref}}
+              <tabset [justified]="true" type="pills" #stepTabs>
+                <tab heading="Step 1">
+                  <p class="text-success step-1-text">Zoom into the required area on the map and find suggested
+                    routes </p>
+                  <button class="btn btn-default" type="submit" (click)="findMissingRouteMasters()">Find suggestions
+                  </button>
+                </tab>
+                <tab heading="Step 2">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <p class="text-success">Select from the following suggested routes </p>
+                    </div>
+                    <div class="panel-body ">
+                      <accordion [closeOthers]="true">
+                        <accordion-group *ngFor="let ref of getKeys(newRMsMap)">
+                          <div accordion-heading class="clearfix" (click)="selectRM(ref)">
+                            {{ref}}
+                          </div>
+                          <ul>
+                            <li class="list-group-item clearfix" *ngFor="let route of getValue(ref)"
+                                (click)="viewRoute(route.id,route.percentCoverage, ref)">
+                              <span>  {{route.id}} {{route.percentCoverage}}</span>
+                            </li>
+                          </ul>
+                        </accordion-group>
+                      </accordion>
+                    </div>
+
+                    <div class="panel-footer clearfix">
+                      <button class="btn btn-default pull-right" type="submit" (click)="useRouteMaster()">Use
+                        Route Master
+                      </button>
+                    </div>
                   </div>
-                  <ul >
-                  <li class="list-group-item clearfix" *ngFor="let route of getValue(ref)" (click)="viewRoute(route.id,route.percentCoverage, ref)">
-                    <span>  {{route.id}} {{route.percentCoverage}}</span>
-                  </li>
-                  </ul>
-                </accordion-group>
-              </accordion>
-            </div>
+                </tab>
 
-            <div class="panel-footer clearfix">
-              <button class="btn btn-default pull-right" type="submit" (click)="useRouteMaster()" >Use
-                Route Master
-              </button>
-            </div>
-          </div>
-        </tab>
-
-        <tab heading="Step 3" ">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <p class="text-success"> Remove routes if necessary.</p>
-            </div>
-            <div class="panel-body ">
-              <button class="btn btn-default pull-right" id='Stops' [disabled]="!canStopsConnect"
-                      (click)="showConnectivity('Stops')"
-                      [ngStyle]="{'background-color' : mapSrv.highlightType ==='Stops' ? 'cornflowerblue': 'white'}">
-                Stops
-              </button>
-              <button class="btn btn-default pull-right" id='Platforms' [disabled]="!canPlatformsConnect"
-                      (click)="showConnectivity('Platforms')"
-                      [ngStyle]="{'background-color' : mapSrv.highlightType ==='Platforms' ? 'cornflowerblue': 'white'}">
-                Platforms
-              </button>
-               Ref : {{usedRM.next().keys()}}
-              <ul>
-                <li *ngFor="let route of getRoutesOfUsedRM()">
-
-                </li>
-              </ul>
-            </div>
-            <div class="panel-footer clearfix">
-              <button class="btn btn-default pull-right" (click)="saveStep3()">Done</button>
+                <tab heading="Step 3">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <p class="text-success"> Remove routes if necessary.</p>
+                  </div>
+                  <div class="panel-body ">
+                    <!--<button class="btn btn-default pull-right" id='Stops' [disabled]="!canStopsConnect"-->
+                            <!--(click)="showConnectivity('Stops')"-->
+                            <!--[ngStyle]="{'background-color' : mapSrv.highlightType ==='Stops' ? 'cornflowerblue': 'white'}">-->
+                      <!--Stops-->
+                    <!--</button>-->
+                    <!--<button class="btn btn-default pull-right" id='Platforms' [disabled]="!canPlatformsConnect"-->
+                            <!--(click)="showConnectivity('Platforms')"-->
+                            <!--[ngStyle]="{'background-color' : mapSrv.highlightType ==='Platforms' ? 'cornflowerblue': 'white'}">-->
+                      <!--Platforms-->
+                    <!--</button>-->
+                    Ref :
+                    <div class="scrollable-panel" *ngIf="usedRM.length !== 0">
+                      <bs-sortable
+                        [(ngModel)]="usedRM"
+                        itemClass="sortable-item"
+                        itemActiveClass="sortable-item-active"
+                        placeholderItem="Drag here"
+                        placeholderClass="sortable-item"
+                        wrapperClass="sortable-wrapper"
+                        [itemTemplate]="itemTemplate">
+                      </bs-sortable>
+                    </div>
+                  </div>
+                  <div class="panel-footer clearfix">
+                    <button class="btn btn-default pull-right" (click)="saveStep3()">Done</button>
+                  </div>
+                </div>
+                </tab>
+              </tabset>
             </div>
           </div>
-
-
-        </tab>
-      </tabset>
+        </div>
+      </div>
     </div>
-    </div>
+
   </div>
 </div>
+
+<ng-template #itemTemplate let-item="item" let-index="index">
+  <li class="list-group-item"> {{index + 1}} .]
+    <i class="fa fa-times pull-right"  aria-hidden="true"></i>
+  </li>
+
+</ng-template>
