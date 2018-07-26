@@ -314,7 +314,7 @@ export class ErrorHighlightService {
           if (this.mapSrv.map.getBounds().contains(stop)) {
             let parentWaysIDs = [];
             this.storageSrv.elementsMap.forEach((ele) => {
-              if (ele.type === 'way' && ele.nodes.includes(stop.id)) {
+              if (ele.type === 'way' && ele.tags.highway && ele.nodes.includes(stop.id)) {
                 parentWaysIDs.push(ele.id);
               }
             });
