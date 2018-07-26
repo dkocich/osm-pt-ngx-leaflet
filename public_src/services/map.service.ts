@@ -858,7 +858,7 @@ export class MapService {
   public showRouteInfoLabels(rel: any): void {
     if (rel.tags.ref) {
       let textString = '     ' + rel.tags.ref + '     ';
-      this.highlightFill.setText(textString, { repeat: true, attributes: { fill: 'blue' } });
+      this.highlightFill.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
     }
   }
 
