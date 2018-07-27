@@ -901,9 +901,13 @@ export class OverpassService {
    * @param {boolean} findRoutes
    */
   public requestNewOverpassDataForWizard(find: boolean): void {
-    console.log('run');
-    // to do mas map
-    this.setupAreaReference(this.routeMasterWizardSrv.map);
+    console.log('request new overpass data');
+    let wizardMode = this.ngRedux.getState()['app']['wizardMode'];
+    if (wizardMode === 'route wizard'){
+      this.setupAreaReference(this.routeWizardSrv.map);
+    } else if (wizardMode === 'route master wizard') {
+      this.setupAreaReference(this.routeMasterWizardSrv.map);
+    }
 
     const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
     this.httpClient
@@ -956,7 +960,7 @@ export class OverpassService {
             console.log('overpass s, res added to map, map npw:', this.routeMasterWizardSrv.modalMapElementsMap);
             this.dbSrv.addArea(this.areaReference.areaPseudoId);
             let transformed = this.osmtogeojson(res);
-            this.routeMasterWizardSrv.renderTransformedGeojsonData(transformed, this.routeMasterWizardSrv.map);
+            this.routeMasterWizardSrv.renderTransformedGeojsonDataRouteMasterWizard(transformed, this.routeMasterWizardSrv.map);
             this.warnSrv.showSuccess();
 
             if (find) {

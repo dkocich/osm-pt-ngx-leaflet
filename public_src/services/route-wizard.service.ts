@@ -31,25 +31,23 @@ export class RouteWizardService implements OnDestroy{
   public modalRefRouteWiz: BsModalRef;
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,
-              // private modalService: BsModalService,
+              private modalService: BsModalService,
               private processSrv: ProcessService,
               ) {
-    // this.modalService.onShown.subscribe((data) => {
-    //   console.log('data', data);
-    //   // if(this.modalRefRouteWiz.content)
-    //   this.onShownModal();
-    //   console.log('ok', this.modalRefRouteWiz.content);
-    // });
-    // this.modalService.onHidden.subscribe(() => {
-    //   this.processAllDownloadedOnMainMap();
-    //   this.storageSrv.currentElement = null;
-    //   this.storageSrv.currentElementsChange.emit(
-    //     JSON.parse(JSON.stringify(null)),
-    //   );
-    //   this.storageSrv.stopsForRoute     = [];
-    //   this.storageSrv.platformsForRoute = [];
-    //   this.mapSrv.highlightType         = 'Stops';
-    // });
+    this.modalService.onShown.subscribe((data) => {
+      console.log('data', data);
+      this.onShownModal();
+    });
+    this.modalService.onHidden.subscribe(() => {
+      this.processAllDownloadedOnMainMap();
+      this.storageSrv.currentElement = null;
+      this.storageSrv.currentElementsChange.emit(
+        JSON.parse(JSON.stringify(null)),
+      );
+      this.storageSrv.stopsForRoute     = [];
+      this.storageSrv.platformsForRoute = [];
+      this.mapSrv.highlightType         = 'Stops';
+    });
   }
 
   /***
@@ -57,7 +55,9 @@ export class RouteWizardService implements OnDestroy{
    * @returns {void}
    */
   public onShownModal(): void {
-    this.map.invalidateSize();
+    if (this.map) {
+      this.map.invalidateSize();
+    }
   }
 
   /***
@@ -81,6 +81,7 @@ export class RouteWizardService implements OnDestroy{
    * @returns {void}
    */
   public processAllDownloadedOnMainMap(): void {
+    console.log('rwsw', this.savedContinuousQueryResponses);
     for (let res of this.savedContinuousQueryResponses) {
       this.processSrv.processResponse(res);
     }

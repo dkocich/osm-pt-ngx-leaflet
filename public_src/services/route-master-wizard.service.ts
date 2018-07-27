@@ -62,7 +62,9 @@ export class RouteMasterWizardService {
    * @returns {void}
    */
   public onShownModal(): void {
-    this.map.invalidateSize();
+    if (this.map) {
+      this.map.invalidateSize();
+    }
   }
 
   /***
@@ -120,6 +122,35 @@ export class RouteMasterWizardService {
   }
 
   /***
+   * Renders data on modal map
+   * @param transformedGeoJSON
+   * @param {Map} map
+   */
+  // public renderTransformedGeojsonData(transformedGeoJSON: any, map: L.Map): void {
+  //   this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
+  //     filter       : (feature) => {
+  //       if (!this.elementsRenderedModalMap.has(feature.id) &&
+  //         'public_transport' in feature.properties && feature.id[0] === 'n'
+  //       ) {
+  //         return true;
+  //       } else {
+  //         return false;
+  //       }
+  //     },
+  //     onEachFeature: (feature, layer) => {
+  //       this.elementsRenderedModalMap.add(feature.id);
+  //       this.enableClickForRouteMasterWizardMap(feature, layer);
+  //     },
+  //     pointToLayer : (feature, latlng) => {
+  //       return this.mapSrv.stylePoint(feature, latlng);
+  //     },
+  //   });
+  //
+  //   console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayerModal);
+  //   this.ptLayerModal.addTo(map);
+  // }
+
+  /***
    * Enables click of nodes for modal map
    * @param feature
    * @param layer
@@ -139,35 +170,6 @@ export class RouteMasterWizardService {
   private handleRouteMasterWizardMarkerClick(feature: any): void {
     const featureId: number = this.mapSrv.getFeatureIdFromMarker(feature);
     this.autoRouteMapNodeClick.emit(featureId);
-  }
-
-  /***
-   * Renders data on modal map
-   * @param transformedGeoJSON
-   * @param {Map} map
-   */
-  public renderTransformedGeojsonData(transformedGeoJSON: any, map: L.Map): void {
-    this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
-      filter       : (feature) => {
-        if (!this.elementsRenderedModalMap.has(feature.id) &&
-          'public_transport' in feature.properties && feature.id[0] === 'n'
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      },
-      onEachFeature: (feature, layer) => {
-        this.elementsRenderedModalMap.add(feature.id);
-        this.enableClickForRouteMasterWizardMap(feature, layer);
-      },
-      pointToLayer : (feature, latlng) => {
-        return this.mapSrv.stylePoint(feature, latlng);
-      },
-    });
-
-    console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayerModal);
-    this.ptLayerModal.addTo(map);
   }
 
   private handleRouteWizardMarkerClick(feature: any): void {
@@ -234,7 +236,7 @@ export class RouteMasterWizardService {
           // if (this.map.getBounds().contains(latlng)) {
           //   inBounds++;
           // }
-          if(this.nodesFullyDownloaded.has(element.id)){
+          if (this.nodesFullyDownloaded.has(element.id)) {
             fullyDownloaded ++ ;
           }
         }
@@ -271,7 +273,7 @@ export class RouteMasterWizardService {
         this.modalMapElementsMap.set(element.id, element);
       }
     }
-    this.modalMapElementsMap.forEach((element) =>{
+    this.modalMapElementsMap.forEach((element) => {
       if (element.tags.type === 'route_master' && element.tags.ref) {
         RMRefs.push(element.tags.ref);
       }

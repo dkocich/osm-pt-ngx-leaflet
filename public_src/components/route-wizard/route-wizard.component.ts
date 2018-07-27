@@ -92,20 +92,7 @@ export class RouteWizardComponent implements OnDestroy{
       this.canPlatformsConnect = data.canPlatformsConnect;
     });
 
-    this.onShownSubscription = this.modalService.onShown.subscribe((data) => {
-      this.routeWizardSrv.onShownModal();
-    });
 
-    this.onHiddenSubscription = this.modalService.onHidden.subscribe(() => {
-      this.routeWizardSrv.processAllDownloadedOnMainMap();
-      this.storageSrv.currentElement = null;
-      this.storageSrv.currentElementsChange.emit(
-        JSON.parse(JSON.stringify(null)),
-      );
-      this.storageSrv.stopsForRoute     = [];
-      this.storageSrv.platformsForRoute = [];
-      this.mapSrv.highlightType         = 'Stops';
-    });
   }
 
   public ngOnInit(): void {
@@ -332,7 +319,7 @@ export class RouteWizardComponent implements OnDestroy{
   }
 
   public ngOnDestroy(): void {
-    this.onHiddenSubscription.unsubscribe();
-    this.onShownSubscription.unsubscribe();
+    // this.onHiddenSubscription.unsubscribe();
+    // this.onShownSubscription.unsubscribe();
   }
 }
