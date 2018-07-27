@@ -294,6 +294,7 @@ export class RouteMasterWizardService {
         }
       }
     });
+    console.log('new rm map before filtering', this.newRMsMap);
 
     let filteredMap =  new Map();
     this.newRMsMap.forEach((value, key) => {
@@ -329,6 +330,10 @@ export class RouteMasterWizardService {
     // let countObj = RouteMasterWizardService.countNodeType(memberElements);
     // this.useAndSetAvailableConnectivity(countObj);
     // this.highlightRoute(memberElements, true);
+    this.mapSrv.clearHighlight(this.map);
+    this.storageSrv.stopsForRoute     = [];
+    this.storageSrv.platformsForRoute = [];
+    console.log('highlight', this.mapSrv.highlightFill);
     this.mapSrv.showRoute(route, this.map, this.modalMapElementsMap);
 
   }

@@ -37,12 +37,13 @@
                               <span>  {{route.id}} {{route.percentCoverage}}</span>
                             </li>
                           </ul>
+                          <button (click)="useRouteMaster(ref) ">Use RM </button>
                         </accordion-group>
                       </accordion>
                     </div>
 
                     <div class="panel-footer clearfix">
-                      <button class="btn btn-default pull-right" type="submit" (click)="useRouteMaster()">Use
+                      <button class="btn btn-default pull-right" type="submit" >Use
                         Route Master
                       </button>
                     </div>
@@ -83,6 +84,62 @@
                   </div>
                 </div>
                 </tab>
+
+                <tab heading="Step 4">
+
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <p class="text-success"> Add tags for the new route master. </p>
+                    </div>
+                    <div class="panel-body">
+                      <div class="content panel panel-body panel-default scrollable-panel">
+                        <table
+                          class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
+                          <tbody>
+                          <tr *ngFor="let tag of RMTags | keys; ">
+
+                            <td>
+                              <input type="text" value="{{tag.key}}" data-type="key" [readonly]="true">
+                            </td>
+                            <td>
+                              <input type="text" value="{{tag.value}}" data-type="value"
+                                     (blur)="createChangeTag('change tag', tag.key, $event)">
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-danger fa fa-minus"
+                                      aria-hidden="true" container="body"
+                                      tooltip="{{ 'Remove tag' | translate }}"
+                                      (click)="createChangeTag('remove tag', tag.key)">
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input #k class="form-control" type="text" minlength="1"
+                                     placeholder="{{ 'Add new tag' | translate }}" [ngModel]="tagKey">
+                            </td>
+                            <td>
+                              <input #v class="form-control" type="text" minlength="1"
+                                     placeholder="{{ 'Add new value' | translate }}">
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-primary fa fa-plus" aria-hidden="true" container="body"
+                                      tooltip="{{ 'Create a new tag' | translate }}"
+                                      (click)="createChangeTag('add tag', k.value, v.value)">
+                              </button>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="panel-footer clearfix">
+                      <button class="btn btn-default pull-right" (click)="saveStep4()"> Save Route</button>
+                    </div>
+                  </div>
+
+
+                </tab>
               </tabset>
             </div>
           </div>
@@ -94,8 +151,10 @@
 </div>
 
 <ng-template #itemTemplate let-item="item" let-index="index">
-  <li class="list-group-item"> {{index + 1}} .]
-    <i class="fa fa-times pull-right"  aria-hidden="true"></i>
+  <li class="list-group-item"> {{index + 1}} {{getWholeRoute(item.value.id).tags.ref}} {{item.value.id}}
+    <i class="fa fa-search pull-right"  aria-hidden="true" (click)="viewRoute(item.value.id,item.value.percentCoverage, getWholeRoute(item.value.id).tags.ref)"></i>
+
+    <i class="fa fa-times pull-right"  aria-hidden="true" (click)="removeRoute(item.value.id)"></i>
   </li>
 
 </ng-template>

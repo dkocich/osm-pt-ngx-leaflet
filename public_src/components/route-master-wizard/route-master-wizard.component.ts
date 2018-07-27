@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild} from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { RouteMasterWizardService } from '../../services/route-master-wizard.service';
 import { MapService } from '../../services/map.service';
@@ -10,7 +10,9 @@ import { WarnService } from '../../services/warn.service';
 import { StorageService } from '../../services/storage.service';
 
 import { Subject } from 'rxjs';
-import {ConfService} from '../../services/conf.service';
+import { ConfService } from '../../services/conf.service';
+import { RouteWizardService } from '../../services/route-wizard.service';
+import { AppActions } from '../../store/app/actions';
 
 @Component({
   selector: 'route-master-wizard',
@@ -36,12 +38,27 @@ export class RouteMasterWizardComponent {
   // public currentlyViewedRouteRef  = null;
 
   public selectedRM = null;
+  // key = ref, value array of routes which have those refs
   public newRMsMap = new Map();
 
   public usedRM =  [];
 
   public addedRoutes = [];
   public suggestedRoutes = [];
+
+  public RMTags = {
+      type                      : 'route_master',
+      route_master                    : 'bus',
+      ref                         : '',
+      'public_transport:version': '2',
+      network                   : '',
+      operator                  : '',
+      name                      : '',
+      from                      : '',
+      to                        : '',
+      wheelchair                : '',
+      colour                    : '' ,
+  };
 
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
 
@@ -50,6 +67,7 @@ export class RouteMasterWizardComponent {
               public mapSrv: MapService,
               private warnSrv: WarnService,
               private overpassSrv: OverpassService,
+              public appActions: AppActions,
               // private routeWizardSrv: RouteWizardService,
               private processSrv: ProcessService,
               private editSrv: EditService,
@@ -138,7 +156,7 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
     }
   }
 
-  public getKeys(map: any): any{
+  public getKeys(map: any): any {
     let refs = [];
     this.newRMsMap.forEach((value, key) => {
       refs.push(key);
@@ -151,7 +169,8 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
   }
 
   private viewRoute(routeID: any, percentageCoverage: any, ref: any): any {
-    this.selectRM(ref);
+    // this.selectRM(ref);
+
     if (percentageCoverage === 100) {
       this.routeMasterWizardSrv.viewRoute(routeID,
         { canStopsConnect : this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
@@ -159,19 +178,91 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
   }
 
   private selectRM(ref: string): any {
-   this.usedRM = this.newRMsMap.get(ref);
+   // this.usedRM = this.newRMsMap.get(ref);
   }
 
   private getRoutesOfUsedRM(): any {
     this.selectTab(3);
   }
 
-  private removeRouteMember(): any{
+  private removeRouteMember(): any {
 
   }
 
-  private saveStep3(): any{
-
+  private saveStep3(): any {
+    this.selectTab(4);
   }
 
+  private useRouteMaster(ref: any): any {
+    this.usedRM = this.newRMsMap.get(ref);
+    console.log('userd rm', this.usedRM);
+    this.mapSrv.clearHighlight(this.routeMasterWizardSrv.map);
+    this.selectTab(3);
+  }
+
+  public getWholeRoute(id: any): any {
+    return this.routeMasterWizardSrv.modalMapElementsMap.get(id);
+  }
+
+  public removeRoute(id: any): any {
+    // for(let rel of this.usedRM){
+    //   if(rel.id === id){
+    //     this.usedRM.splice()
+    //   }
+    // }
+    console.log('delete', id);
+    console.log('delete before', this.usedRM);
+    let newRM: any = [];
+    newRM = newRM.concat(this.usedRM);
+    newRM.forEach((rel, i) => {
+      if (rel.id === id) {
+        newRM.splice(i, 1);
+      }
+    });
+    this.usedRM = newRM;
+    console.log('delete after', this.usedRM);
+  }
+
+  public  modifiesTags(action: string, key: any, event: any, tags: any): any {
+    switch (action) {
+      case 'change tag':
+        tags[key] = event.target.value;
+        break;
+      case 'remove tag':
+        delete tags[key];
+        break;
+      case 'add tag':
+        tags[key] = event;
+        break;
+    }
+    tags = { ...tags };
+    return tags;
+  }
+
+  public createChangeTag(action: string, key: any, event: any): any {
+    this.RMTags = this.modifiesTags(action, key, event, this.RMTags);
+    if (action === 'add tag') {
+      this.tagKey             = '';
+      this.tagValue           = '';
+    }
+  }
+
+  public saveStep4(): any {
+    let newRM = {
+      id       : this.editSrv.findNewId(),
+      timestamp: new Date().toISOString().split('.')[0] + 'Z',
+      version  : 1,
+      changeset: -999,
+      uid      : Number(localStorage.getItem('id')),
+      user     : localStorage.getItem('display_name'),
+      type     : 'relation',
+      members  : this.usedRM,
+      tags     : this.RMTags,
+    };
+    let change            = { from: undefined, to: newRM };
+    this.routeMasterWizardSrv.modalMapElementsMap.set(newRM.id, newRM);
+    this.editSrv.addChange(newRM, 'add route', change);
+    this.modalRefRouteMasterWiz.hide();
+    this.appActions.actSetWizardMode(null);
+  }
 }

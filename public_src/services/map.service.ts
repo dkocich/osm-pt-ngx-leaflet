@@ -26,7 +26,7 @@ export class MapService {
   public markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
   public membersHighlightLayer: any = undefined;
   private ptLayer: any;
-  private highlightFill: any = undefined;
+  public highlightFill: any = undefined;
   private highlight: any = undefined;
   private markerFrom: any = undefined;
   private markerTo: any = undefined;
