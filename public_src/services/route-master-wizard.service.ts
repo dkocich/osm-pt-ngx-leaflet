@@ -21,11 +21,12 @@ export class RouteMasterWizardService {
 
   public savedMultipleNodeDataResponses = [];
   public savedContinuousQueryResponses  = [];
+  public savedMasterQueryResponses      = [];
 
   public elementsRenderedModalMap = new Set();
   public nodesFullyDownloaded     = new Set();
 
-  public routesMap: Map<string, any[]>                   = new Map();
+  // public routesMap: Map<string, any[]>                   = new Map();
   public relsMap                                         = new Map();
   public newRMsMap                                       = new Map();
 
@@ -81,6 +82,12 @@ export class RouteMasterWizardService {
   public processAllDownloadedOnMainMap(): void {
     for (let res of this.savedContinuousQueryResponses) {
       this.processSrv.processResponse(res);
+    }
+    for (let res of this.savedMultipleNodeDataResponses) {
+      this.processSrv.processNodeResponse(res);
+    }
+    for (let res of this.savedMasterQueryResponses) {
+      this.processSrv.processMastersResponse(res);
     }
   }
 

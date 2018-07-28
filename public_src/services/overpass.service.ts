@@ -1033,7 +1033,7 @@ export class OverpassService {
             console.log('LOG (overpass s.) Relations to be compared ( at least one member in map bounds): ', relsMap);
             if (relsMap.size !== 0) {
               let keys: any = Array.from(relsMap.keys());
-              this.getRouteMastersWizard(keys);
+              this.getRouteMastersForWizard(keys);
             } else {
               alert('Sorry, no suggestions found for the selected area.');
             }
@@ -1051,7 +1051,7 @@ export class OverpassService {
    * Downloads route_master relations for currently added route relations.
    * @minNumOfRelations: number
    */
-  public getRouteMastersWizard(resIDs: number[]): void {
+  public getRouteMastersForWizard(resIDs: number[]): void {
     let requestBody: string = `
             [out:json][timeout:25][bbox:{{bbox}}];
             (
@@ -1085,6 +1085,7 @@ export class OverpassService {
           let wizardMode = this.ngRedux.getState()['app']['wizardMode'];
           if (wizardMode === 'route master wizard') {
             this.routeMasterWizardSrv.findMissingRouteMasters(res);
+            this.routeMasterWizardSrv.savedMasterQueryResponses.push(res);
           }
         },
         (err) => {

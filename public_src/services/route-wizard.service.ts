@@ -84,6 +84,9 @@ export class RouteWizardService {
     for (let res of this.savedContinuousQueryResponses) {
       this.processSrv.processResponse(res);
     }
+    for (let res of this.savedMultipleNodeDataResponses) {
+      this.processSrv.processNodeResponse(res);
+    }
   }
 
   /**
