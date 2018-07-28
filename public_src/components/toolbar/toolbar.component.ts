@@ -14,6 +14,8 @@ import { IOsmElement } from '../../core/osmElement.interface';
 import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 
+import { IPtRelation } from '../../core/ptRelation.interface';
+
 @Component({
   providers: [],
   selector: 'toolbar',
@@ -34,8 +36,7 @@ export class ToolbarComponent implements OnInit {
   public currentElement: IOsmElement;
   public stats = { s: 0, r: 0, a: 0, m: 0 };
   public routeLabelShown = false;
-  public enableRouteLabels = false;
-  public selectedRoute = null;
+  public enableInfoRouteLabels = false;
 
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
 
@@ -64,13 +65,12 @@ export class ToolbarComponent implements OnInit {
     this.mapSrv.highlightTypeEmitter.subscribe((data) => {
       this.htRadioModel = data.highlightType;
     });
-    this.mapSrv.enableRouteLabelsOption.subscribe((rel) => {
+    this.mapSrv.enableInfoRouteLabelsOption.subscribe((rel: IPtRelation) => {
       if (rel) {
-        this.selectedRoute = rel;
-        this.enableRouteLabels = true;
+        this.enableInfoRouteLabels = true;
       } else {
         this.routeLabelShown = false;
-        this.enableRouteLabels = false;
+        this.enableInfoRouteLabels = false;
       }
     });
   }
@@ -150,7 +150,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   private clearHighlight(): void {
-    this.enableRouteLabels = false;
+    this.enableInfoRouteLabels = false;
     return this.mapSrv.clearHighlight(this.mapSrv.map);
   }
 
@@ -193,8 +193,6 @@ export class ToolbarComponent implements OnInit {
   }
 
   public hasRef(): boolean {
-    if (this.storageSrv.currentElement.tags.ref) {
-      return true;
-    }
+    return this.storageSrv.currentElement.tags.ref !== undefined;
   }
 }

@@ -34,7 +34,7 @@ export class MapService {
   public popUpArr = [];
   public popUpLayerGroup: L.LayerGroup;
   public currentPopUpFeatureId: number;
-  public enableRouteLabelsOption: EventEmitter<any> = new EventEmitter();
+  public enableInfoRouteLabelsOption: EventEmitter<any> = new EventEmitter();
   // public autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
   constructor(
     private confSrv: ConfService,
@@ -378,7 +378,7 @@ export class MapService {
       map.removeLayer(this.highlightStroke);
       this.highlightStroke = undefined;
     }
-    this.enableRouteLabelsOption.emit(null);
+    this.enableInfoRouteLabelsOption.emit(null);
   }
 
   /**
@@ -562,7 +562,7 @@ export class MapService {
         this.highlightStroke,
         this.highlightFill,
       ]).addTo(map);
-      this.enableRouteLabelsOption.emit(rel);
+      this.enableInfoRouteLabelsOption.emit(rel);
       return true;
     } else {
       if (rel.members.length <= 1) {
@@ -594,7 +594,7 @@ export class MapService {
     let latlngFrom;
     switch (this.highlightType) {
       case 'Stops':
-        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0],this.storageSrv.elementsMap); // get first and last ID reference
+        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0], this.storageSrv.elementsMap); // get first and last ID reference
         return latlngFrom;
       case 'Platforms':
         latlngFrom = this.findCoordinates(
