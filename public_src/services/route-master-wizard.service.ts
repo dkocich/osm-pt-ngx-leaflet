@@ -26,7 +26,6 @@ export class RouteMasterWizardService {
   public nodesFullyDownloaded     = new Set();
 
   public routesMap: Map<string, any[]>                   = new Map();
-  public refreshAvailableConnectivity: EventEmitter<any> = new EventEmitter();
   public relsMap                                         = new Map();
   public newRMsMap                                       = new Map();
 
@@ -85,7 +84,7 @@ export class RouteMasterWizardService {
     }
   }
 
-  /***
+  /**
    * Renders data on modal map
    * @param transformedGeoJSON
    * @param {Map} map
@@ -131,11 +130,6 @@ export class RouteMasterWizardService {
    * @returns {void}
    */
   private handleRouteMasterWizardMarkerClick(feature: any): void {
-    const featureId: number = this.mapSrv.getFeatureIdFromMarker(feature);
-    this.autoRouteMapNodeClick.emit(featureId);
-  }
-
-  private handleRouteWizardMarkerClick(feature: any): void {
     const featureId: number = this.mapSrv.getFeatureIdFromMarker(feature);
     this.autoRouteMapNodeClick.emit(featureId);
   }
@@ -187,7 +181,6 @@ export class RouteMasterWizardService {
     console.log('LOG (route master wizard s.) refs of routes relations to be compared:', refOfRels);
     this.relsMap = relsMap;
     return relsMap;
-
   }
 
   public checkMembersInBounds(relation: any): boolean {
@@ -255,7 +248,7 @@ export class RouteMasterWizardService {
 
   /***
    * View suggested route
-   * @param ref
+   * @param routeID
    * @param connectObj
    * @returns {void}
    */
@@ -267,136 +260,4 @@ export class RouteMasterWizardService {
     this.mapSrv.showRoute(route, this.map, this.modalMapElementsMap);
   }
 
-  /***
-   * Sets available connectivity, uses stop connectivity by default,
-   * uses platforms if not available
-   * @param countObj
-   * @param connectivityObj
-   * @returns {any}
-   */
-  public useAndSetAvailableConnectivity(countObj: any): any {
-    let connectObj = this.resetAvailableConnectivity(countObj);
-    if (connectObj.canStopsConnect) {
-      this.setHighlightType('Stops', connectObj);
-    } else if (connectObj.canPlatformsConnect) {
-      this.setHighlightType('Platforms', connectObj);
-    }
-  }
-
-  /***
-   * Highlights route's members on map
-   * @param members
-   * @param adjustZoom
-   */
-  public highlightRoute(members: any, adjustZoom: boolean): void {
-    this.mapSrv.clearHighlight(this.map);
-    let routeMembers = members;
-    RouteMasterWizardService.assignRolesToMembers(routeMembers);
-    let rel                           = {
-      members: routeMembers,
-      tags   : { name: 'nil' },
-    };
-    this.storageSrv.stopsForRoute     = [];
-    this.storageSrv.platformsForRoute = [];
-    this.mapSrv.showRoute(rel, this.map, this.modalMapElementsMap);
-    if (adjustZoom) {
-      this.adjustZoomForRoute(routeMembers);
-    }
-  }
-
-  /***
-   * Resets available connectivity
-   * @param countObj
-   * @returns {any}
-   */
-  private resetAvailableConnectivity(countObj: any): any {
-    let canStopsConnect;
-    let canPlatformsConnect;
-
-    countObj.stopsCount > 1 ? canStopsConnect = true : canStopsConnect = false;
-    countObj.platformsCount > 1 ? canPlatformsConnect = true : canPlatformsConnect = false;
-
-    this.refreshAvailableConnectivity.emit({ canStopsConnect, canPlatformsConnect });
-    return { canStopsConnect, canPlatformsConnect };
-  }
-
-  /***
-   * Sets highlight type for highlighting route on map
-   * @param {string} type
-   * @param connectivityObj
-   * @returns {boolean}
-   */
-  public setHighlightType(type: string, connectivityObj: any): boolean {
-    switch (type) {
-      case 'Stops':
-        if (connectivityObj.canStopsConnect) {
-          this.mapSrv.highlightType = 'Stops';
-          return true;
-        }
-        break;
-      case 'Platforms':
-        if (connectivityObj.canPlatformsConnect) {
-          this.mapSrv.highlightType = 'Platforms';
-          return true;
-        }
-        break;
-      default:
-        return false;
-    }
-  }
-
-  /***
-   * Adjust zoom to fit all members of route on map
-   * @param members
-   */
-  private adjustZoomForRoute(members: any): void {
-    let latlngs: L.LatLng[] = [];
-    for (let member of members) {
-      latlngs.push(L.latLng(member.lat, member.lon));
-    }
-    this.map.fitBounds(L.latLngBounds(latlngs));
-  }
-
-  /***
-   * Returns member counts (stops, platforms)
-   * @param members
-   * @returns {any}
-   */
-  public static countNodeType(members: any): any {
-    let stopsCount     = 0;
-    let platformsCount = 0;
-    for (let member of members) {
-      if (member.tags.public_transport === 'stop_position') {
-        stopsCount++;
-      }
-      if (member.tags.public_transport === 'platform') {
-        platformsCount++;
-      }
-    }
-    return { stopsCount, platformsCount };
-  }
-
-  /***
-   * Assign roles to members for new route
-   * @param members
-   * @returns {any}
-   */
-  public static assignRolesToMembers(members: any): any {
-    let probableRole: string = '';
-    for (let member of members) {
-      switch (member.tags.public_transport) {
-        case 'platform':
-        case 'station':
-          probableRole = 'platform';
-          break;
-        case 'stop_position':
-          probableRole = 'stop';
-          break;
-        default:
-          alert('FIXME: suspicious role - ');
-          probableRole = 'stop';
-      }
-      member.role = probableRole;
-    }
-  }
 }

@@ -1,14 +1,15 @@
-import {EventEmitter, Injectable, OnDestroy} from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 
 import { MapService } from './map.service';
 import { StorageService } from './storage.service';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import { ProcessService } from './process.service';
+
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import * as L from 'leaflet';
 
 @Injectable()
-export class RouteWizardService implements OnDestroy{
+export class RouteWizardService {
   public map;
   public routes = [];
   public ptLayerModal;
@@ -35,7 +36,6 @@ export class RouteWizardService implements OnDestroy{
               private processSrv: ProcessService,
               ) {
     this.modalService.onShown.subscribe((data) => {
-      console.log('data', data);
       this.onShownModal();
     });
     this.modalService.onHidden.subscribe(() => {
@@ -50,7 +50,7 @@ export class RouteWizardService implements OnDestroy{
     });
   }
 
-  /***
+  /**
    * Fired when modal has rendered
    * @returns {void}
    */
@@ -60,7 +60,7 @@ export class RouteWizardService implements OnDestroy{
     }
   }
 
-  /***
+  /**
    * Renders data on modal map which was already present on the main map
    * @returns {void}
    */
@@ -75,19 +75,18 @@ export class RouteWizardService implements OnDestroy{
     this.renderTransformedGeojsonDataForRouteWizard(transformed, this.map);
   }
 
-  /***
-   *Used when modal is closed,
-   *  all data downloaded for modal map is processed for main application
+  /**
+   * Used when modal is closed,
+   * all data downloaded for modal map is processed for main application
    * @returns {void}
    */
   public processAllDownloadedOnMainMap(): void {
-    console.log('rwsw', this.savedContinuousQueryResponses);
     for (let res of this.savedContinuousQueryResponses) {
       this.processSrv.processResponse(res);
     }
   }
 
-  /***
+  /**
    * Renders data on modal map
    * @param transformedGeoJSON
    * @param {Map} map
@@ -116,7 +115,7 @@ export class RouteWizardService implements OnDestroy{
     this.ptLayerModal.addTo(map);
   }
 
-  /***
+  /**
    * Enables click of nodes for modal map
    * @param feature
    * @param layer
@@ -128,7 +127,7 @@ export class RouteWizardService implements OnDestroy{
     });
   }
 
-  /***
+  /**
    * Handles map click
    * @param feature
    * @returns {void}
@@ -138,8 +137,7 @@ export class RouteWizardService implements OnDestroy{
     this.autoRouteMapNodeClick.emit(featureId);
   }
 
-
-  /***
+  /**
    * Forms an array of route refs from nodes, also removes duplicates
    * @param stopsInBoundsIDs
    * @returns {any[]}
@@ -163,7 +161,7 @@ export class RouteWizardService implements OnDestroy{
     return refValues;
   }
 
-  /***
+  /**
    * Processes multiple node data
    * @param downloadedResponse
    * @returns {void}
@@ -195,7 +193,7 @@ export class RouteWizardService implements OnDestroy{
     }
   }
 
-  /***
+  /**
    * Filters newly added ref from suggested refs
    * @param {any[]} refs
    * @returns {any}
@@ -216,7 +214,7 @@ export class RouteWizardService implements OnDestroy{
     return refs;
   }
 
-  /***
+  /**
    * Returns stops for given refs
    * @param notAddedRefs
    * @returns {any}
@@ -246,7 +244,7 @@ export class RouteWizardService implements OnDestroy{
     return stopsForNewRoutes;
   }
 
-  /***
+  /**
    * Removes duplicates from array
    * @param {any[]} arr
    * @returns {any}
@@ -257,7 +255,7 @@ export class RouteWizardService implements OnDestroy{
     });
   }
 
-  /***
+  /**
    * Compares arrays and returns refs not added in route refs
    * @param nodeRefs
    * @param routeRefs
@@ -280,7 +278,7 @@ export class RouteWizardService implements OnDestroy{
     return notAdded;
   }
 
-  /***
+  /**
    * Get individual refs from stops's route_ref
    * @param {any[]} stops
    * @returns {any}
@@ -306,7 +304,7 @@ export class RouteWizardService implements OnDestroy{
     return ref_map;
   }
 
-  /***
+  /**
    * Highlights route's members on map
    * @param members
    * @param adjustZoom
@@ -327,7 +325,7 @@ export class RouteWizardService implements OnDestroy{
     }
   }
 
-  /***
+  /**
    * Assign roles to members for new route
    * @param members
    * @returns {any}
@@ -351,7 +349,7 @@ export class RouteWizardService implements OnDestroy{
     }
   }
 
-  /***
+  /**
    * Adjust zoom to fit all members of route on map
    * @param members
    */
@@ -363,7 +361,7 @@ export class RouteWizardService implements OnDestroy{
     this.map.fitBounds(L.latLngBounds(latlngs));
   }
 
-  /***
+  /**
    * Checks member count, for avoiding single member routes
    * @param members
    * @returns {any}
@@ -372,7 +370,7 @@ export class RouteWizardService implements OnDestroy{
     return members.length !== 1;
   }
 
-  /***
+  /**
    * Handles highlighting of first route on starting of Step
    * @param connectObj
    */
@@ -383,7 +381,7 @@ export class RouteWizardService implements OnDestroy{
     this.highlightRoute(members, true);
   }
 
-  /***
+  /**
    * Returns member counts (stops, platforms)
    * @param members
    * @returns {any}
@@ -402,11 +400,10 @@ export class RouteWizardService implements OnDestroy{
     return { stopsCount, platformsCount };
   }
 
-  /***
+  /**
    * Sets available connectivity, uses stop connectivity by default,
    * uses platforms if not available
    * @param countObj
-   * @param connectivityObj
    * @returns {any}
    */
   public useAndSetAvailableConnectivity(countObj: any): any {
@@ -418,7 +415,7 @@ export class RouteWizardService implements OnDestroy{
     }
   }
 
-  /***
+  /**
    * Resets available connectivity
    * @param countObj
    * @returns {any}
@@ -434,7 +431,7 @@ export class RouteWizardService implements OnDestroy{
     return { canStopsConnect , canPlatformsConnect };
   }
 
-  /***
+  /**
    * Filters out empty tags before saving route
    * @param route
    * @returns {any}
@@ -451,7 +448,7 @@ export class RouteWizardService implements OnDestroy{
     return tags;
   }
 
-  /***
+  /**
    * Highlights members of route with circle
    * @param {any[]} members
    * @returns {void}
@@ -469,7 +466,7 @@ export class RouteWizardService implements OnDestroy{
     }
   }
 
-  /***
+  /**
    * Clears member's highlight
    * @returns {any}
    */
@@ -477,7 +474,7 @@ export class RouteWizardService implements OnDestroy{
     this.membersHighlightLayerGroup.clearLayers();
   }
 
-  /***
+  /**
    * Forms object for new route's members
    * @param toAddNodes
    * @returns {any}
@@ -494,7 +491,7 @@ export class RouteWizardService implements OnDestroy{
     return relMembers;
   }
 
-  /***
+  /**
    * Fired when tags are modified
    * @param {string} action
    * @param key
@@ -518,7 +515,7 @@ export class RouteWizardService implements OnDestroy{
     return newRoute;
   }
 
-  /***
+  /**
    * Styles show connectivity buttons
    * @param {string} type
    * @returns {any}
@@ -536,7 +533,7 @@ export class RouteWizardService implements OnDestroy{
     }
   }
 
-  /***
+  /**
    * Filters routes with one member
    * @param routesMap
    */
@@ -548,7 +545,7 @@ export class RouteWizardService implements OnDestroy{
     });
   }
 
-  /***
+  /**
    * View suggested route
    * @param ref
    * @param connectObj
@@ -561,7 +558,7 @@ export class RouteWizardService implements OnDestroy{
     this.highlightRoute(members, true);
   }
 
-  /***
+  /**
    * Removes member from route
    * @param {string} toRemoveMemberID
    * @param addedNewRouteMembers
@@ -590,7 +587,7 @@ export class RouteWizardService implements OnDestroy{
     return addedNewRouteMembers;
   }
 
-  /***
+  /**
    * Adds new member to route
    * @param newMember
    * @param addedNewRouteMembers
@@ -610,7 +607,7 @@ export class RouteWizardService implements OnDestroy{
     return addedNewRouteMembers;
   }
 
-  /***
+  /**
    * Sets highlight type for highlighting route on map
    * @param {string} type
    * @param connectivityObj
@@ -635,7 +632,7 @@ export class RouteWizardService implements OnDestroy{
     }
   }
 
-  /***
+  /**
    * Changes connectivity of route on map
    * @param {string} type
    * @param connectivityObj
@@ -651,7 +648,7 @@ export class RouteWizardService implements OnDestroy{
     RouteWizardService.styleButtons(type);
   }
 
-  /***
+  /**
    * Fetches ref of relations already downloaded
    * @returns {any}
    */
@@ -668,9 +665,5 @@ export class RouteWizardService implements OnDestroy{
       }
     });
     return refsOfRoutes;
-  }
-
-  ngOnDestroy(): any {
-
   }
 }

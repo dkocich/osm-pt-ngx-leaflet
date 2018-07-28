@@ -1,17 +1,20 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 
 import { AuthService } from '../../services/auth.service';
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
 import { StorageService } from '../../services/storage.service';
 
-import {BsModalRef, BsModalService, ModalDirective} from 'ngx-bootstrap';
+import { BsModalRef, BsModalService, ModalDirective } from 'ngx-bootstrap';
+
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
+
 import { AppActions } from '../../store/app/actions';
 import { IAppState } from '../../store/model';
-import {RouteWizardComponent} from '../route-wizard/route-wizard.component';
-import {RouteMasterWizardComponent} from '../route-master-wizard/route-master-wizard.component';
+
+import { RouteWizardComponent } from '../route-wizard/route-wizard.component';
+import { RouteMasterWizardComponent } from '../route-master-wizard/route-master-wizard.component';
 
 @Component({
   providers: [],
@@ -21,7 +24,6 @@ import {RouteMasterWizardComponent} from '../route-master-wizard/route-master-wi
     '../../styles/main.less',
   ],
   templateUrl: './editor.component.html',
-  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class EditorComponent implements OnInit, AfterViewInit {

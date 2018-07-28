@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 
 import { StorageService } from '../../services/storage.service';
 import { MapService } from '../../services/map.service';
@@ -10,10 +10,10 @@ import { EditService } from '../../services/edit.service';
 import { ConfService } from '../../services/conf.service';
 
 import * as L from 'leaflet';
-import {BsModalRef, BsModalService, TabsetComponent} from 'ngx-bootstrap';
+import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
 
-import { Subject } from 'rxjs/Subject';
-import {AppActions} from '../../store/app/actions';
+import { Subject } from 'rxjs';
+import { AppActions } from '../../store/app/actions';
 
 @Component({
   selector: 'route-wizard',
@@ -24,7 +24,7 @@ import {AppActions} from '../../store/app/actions';
   templateUrl: './route-wizard.component.html',
 })
 
-export class RouteWizardComponent implements OnDestroy{
+export class RouteWizardComponent {
 
   public map: L.Map;
   public newRoutesRefs              = [];
@@ -41,9 +41,6 @@ export class RouteWizardComponent implements OnDestroy{
   public canPlatformsConnect = false;
   public currentlyViewedRef  = null;
 
-  public onShownSubscription;
-  public onHiddenSubscription;
-
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
 
   constructor(private storageSrv: StorageService,
@@ -54,7 +51,6 @@ export class RouteWizardComponent implements OnDestroy{
               private processSrv: ProcessService,
               private editSrv: EditService,
               public modalRefRouteWiz: BsModalRef,
-              private modalService: BsModalService,
               public appActions: AppActions,
 
   ) {
@@ -91,8 +87,6 @@ export class RouteWizardComponent implements OnDestroy{
       this.canStopsConnect     = data.canStopsConnect;
       this.canPlatformsConnect = data.canPlatformsConnect;
     });
-
-
   }
 
   public ngOnInit(): void {
@@ -318,8 +312,4 @@ export class RouteWizardComponent implements OnDestroy{
     }, this.addedNewRouteMembers);
   }
 
-  public ngOnDestroy(): void {
-    // this.onHiddenSubscription.unsubscribe();
-    // this.onShownSubscription.unsubscribe();
-  }
 }

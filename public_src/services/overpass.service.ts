@@ -46,7 +46,6 @@ export class OverpassService {
     public appActions: AppActions,
     private routeWizardSrv: RouteWizardService,
     private routeMasterWizardSrv: RouteMasterWizardService,
-
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -118,7 +117,6 @@ export class OverpassService {
       const missingElements = data['missingElements'];
       this.getRelationData(rel, missingElements);
     });
-
   }
 
   /**
@@ -219,7 +217,6 @@ export class OverpassService {
       // do not query masters if all relations are already known
       return;
     }
-
     const routesQueriedInIDB:       number[] = [];
     const routesNotQueriedNotInIDB: number[] = [];
 

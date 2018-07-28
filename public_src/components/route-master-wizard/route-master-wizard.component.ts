@@ -131,12 +131,12 @@ export class RouteMasterWizardComponent {
     }
   }
 
-  /***
+  /**
    * Returns array of keys from map
    * @param map
-   * @returns {any}
+   * @returns {any[]}
    */
-  public getKeys(map: any): any {
+  public getKeys(map: any): any[] {
     let refs = [];
     this.newRMsMap.forEach((value, key) => {
       refs.push(key);
@@ -152,9 +152,9 @@ export class RouteMasterWizardComponent {
    * Highlights the route on map
    * @param routeID
    * @param percentageCoverage
-   * @returns {any}
+   * @returns {void}
    */
-  public viewRoute(routeID: any, percentageCoverage: any): any {
+  public viewRoute(routeID: any, percentageCoverage: any): void {
     if (percentageCoverage === 100) {
       this.routeMasterWizardSrv.viewRoute(routeID,
         { canStopsConnect: this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
@@ -163,15 +163,15 @@ export class RouteMasterWizardComponent {
     }
   }
 
-  /***
+  /**
    * For miving from step 3 to 4
-   * @returns {any}
+   * @returns {void}
    */
-  public saveStep3(): any {
+  public saveStep3(): void {
     this.selectTab(4);
   }
 
-  public useRouteMaster(ref: any): any {
+  public useRouteMaster(ref: any): void {
     this.usedRM = this.newRMsMap.get(ref);
     this.mapSrv.clearHighlight(this.routeMasterWizardSrv.map);
     this.selectTab(3);
@@ -181,7 +181,7 @@ export class RouteMasterWizardComponent {
     return this.routeMasterWizardSrv.modalMapElementsMap.get(id);
   }
 
-  public removeRoute(id: any): any {
+  public removeRoute(id: any): void {
     let newRM: any = [];
     newRM          = newRM.concat(this.usedRM);
     newRM.forEach((rel, i) => {
@@ -208,7 +208,7 @@ export class RouteMasterWizardComponent {
     return tags;
   }
 
-  public createChangeTag(action: string, key: any, event: any): any {
+  public createChangeTag(action: string, key: any, event: any): void {
     this.RMTags = this.modifiesTags(action, key, event, this.RMTags);
     if (action === 'add tag') {
       this.tagKey   = '';
@@ -218,9 +218,9 @@ export class RouteMasterWizardComponent {
 
   /**
    * Final step for saving the route master
-   * @returns {any}
+   * @returns {void}
    */
-  public saveStep4(): any {
+  public saveStep4(): void {
     let newRM  = {
       id       : this.editSrv.findNewId(),
       timestamp: new Date().toISOString().split('.')[0] + 'Z',
@@ -239,12 +239,12 @@ export class RouteMasterWizardComponent {
     this.appActions.actSetWizardMode(null);
   }
 
-  /***
+  /**
    * returns colors for the list items according to percentage coverage area
    * @param percentageCoverage
-   * @returns {any}
+   * @returns {string}
    */
-  public getListItemColor(percentageCoverage: any): any {
+  public getListItemColor(percentageCoverage: any): string {
     switch (true) {
       case percentageCoverage === 100:
         return 'lightgreen';
