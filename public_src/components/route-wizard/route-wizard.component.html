@@ -22,14 +22,15 @@
                 <tab heading="Step 2" (select)="jumpToStep('2')">
                   <div class="panel panel-default">
                     <div class="panel-heading">
-                      <p class="text-success">Select from the following suggested routes </p>
+                      <p class="text-success"> Select from the following suggested routes </p>
                     </div>
                     <div class="panel-body ">
                       <ul class="list-group scrollable-panel clearfix" *ngIf="newRoutesRefs.length !== 0">
                         <li class="list-group-item clearfix" *ngFor="let ref of newRoutesRefs"
-                        [ngStyle]="{'background-color' : getListBackgroundColor(ref) }"
-                        (click)="viewSuggestedRoute(ref)">
-                          <span> Route Ref: {{ref}}</span>
+                            [ngStyle]="{'background-color' : currentlyViewedRef === ref ? 'cornflowerblue': 'white'}"
+                            (click)="viewSuggestedRoute(ref)">
+                          <span [ngStyle]="{'color' : getTextColorForSuggestedRoutes(ref)}">
+                            <strong> Route Ref: {{ref}} </strong></span>
                         </li>
                       </ul>
                     </div>

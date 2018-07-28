@@ -309,21 +309,21 @@ export class RouteWizardComponent {
   }
 
   /**
-   * Determines the color by which the list item should be highlighted for suggested new routes
+   * Determines the color by which the text should be highlighted for suggested new routes
    * @param {string} ref
    * @returns {string}
    */
-  public getListBackgroundColor(ref: string): string {
+  public getTextColorForSuggestedRoutes(ref: string): string {
     let color = '';
     this.routeWizardSrv.routesMap.forEach((members, suggestedRef) => {
       if (suggestedRef === ref) {
         let membersLength = members.length;
         if (membersLength > 10) {
-          color = 'lightgreen';
+          color = 'green';
         } else if (membersLength < 10 && membersLength > 5) {
-          color = 'lightcoral';
+          color = 'orange';
         } else {
-          color = 'lightsalmon';
+          color = 'red';
         }
       }
     });
