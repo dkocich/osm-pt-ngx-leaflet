@@ -138,22 +138,6 @@ export class RouteWizardService implements OnDestroy{
     this.autoRouteMapNodeClick.emit(featureId);
   }
 
-  /***
-   * Returns all stops/platforms on the given map
-   * @param {Map} map
-   * @returns {any[]}
-   */
-  public findStopsInBounds(map: L.Map): any[] {
-    let stopsInBounds = [];
-    this.modalMapElementsMap.forEach((stop) => {
-      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-        if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
-          stopsInBounds.push(stop.id);
-        }
-      }
-    });
-    return stopsInBounds;
-  }
 
   /***
    * Forms an array of route refs from nodes, also removes duplicates
@@ -185,7 +169,7 @@ export class RouteWizardService implements OnDestroy{
    * @returns {void}
    */
   public findMissingRoutes(downloadedResponse: any): void {
-    let stopsInBounds       = this.findStopsInBounds(this.map);
+    let stopsInBounds       = this.mapSrv.findStopsInBounds(this.map, this.modalMapElementsMap);
     let nodeRefs            = this.getRouteRefsFromNodes(stopsInBounds);
     let refsOfRoutes: any[] = [];
     if (downloadedResponse) {
@@ -676,7 +660,7 @@ export class RouteWizardService implements OnDestroy{
     this.modalMapElementsMap.forEach((element) => {
       if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {
         for (let member of element.members) {
-          let stopsInBoundsIDs = this.findStopsInBounds(this.map);
+          let stopsInBoundsIDs = this.mapSrv.findStopsInBounds(this.map, this.modalMapElementsMap);
           if (stopsInBoundsIDs.includes(member.id)) {
             refsOfRoutes.push(element.tags.ref);
           }

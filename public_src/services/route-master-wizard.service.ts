@@ -8,8 +8,6 @@ import { ProcessService } from './process.service';
 import * as L from 'leaflet';
 import { IPtRelation } from '../core/ptRelation.interface';
 
-// import {RouteWizardService} from './route-wizard.service';
-
 @Injectable()
 export class RouteMasterWizardService {
   public map;
@@ -28,15 +26,9 @@ export class RouteMasterWizardService {
   public nodesFullyDownloaded     = new Set();
 
   public routesMap: Map<string, any[]>                   = new Map();
-  public membersHighlightLayerGroup                      = L.layerGroup();
   public refreshAvailableConnectivity: EventEmitter<any> = new EventEmitter();
-
-  // all routes which have at least one member in bounds
-  // map - key id, value percent coverage
-  public relsMap = new Map();
-
-  // key = ref, value array of routes which have those refs
-  public newRMsMap = new Map();
+  public relsMap                                         = new Map();
+  public newRMsMap                                       = new Map();
 
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,
@@ -79,7 +71,7 @@ export class RouteMasterWizardService {
     });
     obj.elements    = elements;
     let transformed = this.osmtogeojson(obj);
-    this.renderTransformedGeojsonDataRouteMasterWizard(transformed, this.map);
+    this.renderTransformedGeojsonDataRMWizard(transformed, this.map);
   }
 
   /***
@@ -98,7 +90,7 @@ export class RouteMasterWizardService {
    * @param transformedGeoJSON
    * @param {Map} map
    */
-  public renderTransformedGeojsonDataRouteMasterWizard(transformedGeoJSON: any, map: L.Map): void {
+  public renderTransformedGeojsonDataRMWizard(transformedGeoJSON: any, map: L.Map): void {
     this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
       filter       : (feature) => {
         if (!this.elementsRenderedModalMap.has(feature.id) &&
@@ -120,35 +112,6 @@ export class RouteMasterWizardService {
     console.log('LOG (route master wizard s.) Adding PT layer to modal map again', this.ptLayerModal);
     this.ptLayerModal.addTo(map);
   }
-
-  /***
-   * Renders data on modal map
-   * @param transformedGeoJSON
-   * @param {Map} map
-   */
-  // public renderTransformedGeojsonData(transformedGeoJSON: any, map: L.Map): void {
-  //   this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
-  //     filter       : (feature) => {
-  //       if (!this.elementsRenderedModalMap.has(feature.id) &&
-  //         'public_transport' in feature.properties && feature.id[0] === 'n'
-  //       ) {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     },
-  //     onEachFeature: (feature, layer) => {
-  //       this.elementsRenderedModalMap.add(feature.id);
-  //       this.enableClickForRouteMasterWizardMap(feature, layer);
-  //     },
-  //     pointToLayer : (feature, latlng) => {
-  //       return this.mapSrv.stylePoint(feature, latlng);
-  //     },
-  //   });
-  //
-  //   console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayerModal);
-  //   this.ptLayerModal.addTo(map);
-  // }
 
   /***
    * Enables click of nodes for modal map
@@ -177,23 +140,6 @@ export class RouteMasterWizardService {
     this.autoRouteMapNodeClick.emit(featureId);
   }
 
-  /***
-   * Returns all stops/platforms on the given map
-   * @param {Map} map
-   * @returns {any[]}
-   */
-  public findStopsInBounds(map: L.Map): any[] {
-    let stopsInBounds = [];
-    this.modalMapElementsMap.forEach((stop) => {
-      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-        if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
-          stopsInBounds.push(stop.id);
-        }
-      }
-    });
-    return stopsInBounds;
-  }
-
   public findToBeComparedRels(response: any): any {
     let newDownloadedRoutes = [];
     let oldDownloadedRoutes = [];
@@ -207,8 +153,6 @@ export class RouteMasterWizardService {
         }
       }
     }
-
-    // console.log('modal map',this.modalMapElementsMap );
     this.modalMapElementsMap.forEach((element) => {
       if ((element.type === 'relation')
         && !(element.tags.public_transport === 'stop_area')
@@ -218,33 +162,29 @@ export class RouteMasterWizardService {
         oldDownloadedRoutes.push(element);
       }
     });
-    console.log('new relations', newDownloadedRoutes, 'old', oldDownloadedRoutes);
+    console.log('LOG (route master wizard s.) Newly downloaded relations',
+      newDownloadedRoutes, 'old already present relations', oldDownloadedRoutes);
 
     let rels      = newDownloadedRoutes.concat(oldDownloadedRoutes);
     let relsMap   = new Map();
     let refOfRels = [];
     rels.forEach((rel) => {
-      let noOfMembers = rel['members'].length;
-      let fullyDownloaded    = 0;
+      let noOfMembers     = rel['members'].length;
+      let fullyDownloaded = 0;
       for (let member of rel['members']) {
         let memberEle = this.modalMapElementsMap.get(member.ref);
         if (this.modalMapElementsMap.has(member.ref) && memberEle.type === 'node') {
           let element = this.modalMapElementsMap.get(member.ref);
           refOfRels.push(rel.tags.ref);
-          // let latlng = { lat: element.lat, lng: element.lon };
-          // console.log('ltlng', latlng);
-          // if (this.map.getBounds().contains(latlng)) {
-          //   inBounds++;
-          // }
           if (this.nodesFullyDownloaded.has(element.id)) {
-            fullyDownloaded ++ ;
+            fullyDownloaded++;
           }
         }
       }
       let percentCoverage = (fullyDownloaded / noOfMembers) * 100;
       relsMap.set(rel.id, percentCoverage);
     });
-    console.log('ref s of routes red', refOfRels);
+    console.log('LOG (route master wizard s.) refs of routes relations to be compared:', refOfRels);
     this.relsMap = relsMap;
     return relsMap;
 
@@ -265,8 +205,8 @@ export class RouteMasterWizardService {
   }
 
   public findMissingRouteMasters(res: any): any {
-    this.newRMsMap = new Map();
-    let RMRefs: string[]    = [];
+    this.newRMsMap       = new Map();
+    let RMRefs: string[] = [];
 
     for (let element of res['elements']) {
       if (!this.modalMapElementsMap.has(element.id)) {
@@ -279,7 +219,7 @@ export class RouteMasterWizardService {
       }
     });
 
-    console.log('Refs of route masters', RMRefs);
+    console.log('LOG (route master wizard s.) Refs of route masters to be compared:', RMRefs);
 
     this.relsMap.forEach((value, key) => {
       let rel = this.modalMapElementsMap.get(key);
@@ -294,18 +234,23 @@ export class RouteMasterWizardService {
         }
       }
     });
-    console.log('new rm map before filtering', this.newRMsMap);
 
-    let filteredMap =  new Map();
+    let filteredMap = new Map();
     this.newRMsMap.forEach((value, key) => {
       if (value.length >= 2) {
-       filteredMap.set(key, value);
+        filteredMap.set(key, value);
       }
     });
     this.newRMsMap = filteredMap;
-    console.log('map after filter', this.newRMsMap);
-    this.newRoutesMapReceived.emit(this.newRMsMap);
-    console.log('new RM\'s Map', this.newRMsMap);
+    console.log('LOG (route master wizard s.) Route masters for suggestions after ' +
+      'filtering RM\'s withsingle route suggestions', this.newRMsMap);
+    if (this.newRMsMap.size !== 0) {
+      this.newRoutesMapReceived.emit(this.newRMsMap);
+    } else {
+      alert('Sorry, no suggestions found for the selected area.');
+    }
+
+    console.log('LOG (route master wizard s.) Route masters map for suggestions RM\'s', this.newRMsMap);
   }
 
   /***
@@ -316,26 +261,10 @@ export class RouteMasterWizardService {
    */
   public viewRoute(routeID: any, connectObj: any): void {
     let route = this.modalMapElementsMap.get(routeID);
-    // console.log('route', route);
-    // let members        = route['members'];
-    // let memberElements = [];
-    // for (let member of members) {
-    //   if(this.modalMapElementsMap.has(member.ref)){
-    //     memberElements.push(this.modalMapElementsMap.get(member.ref));
-    //   }
-    //
-    // }
-    //
-    // console.log('memebers', memberElements);
-    // let countObj = RouteMasterWizardService.countNodeType(memberElements);
-    // this.useAndSetAvailableConnectivity(countObj);
-    // this.highlightRoute(memberElements, true);
     this.mapSrv.clearHighlight(this.map);
     this.storageSrv.stopsForRoute     = [];
     this.storageSrv.platformsForRoute = [];
-    console.log('highlight', this.mapSrv.highlightFill);
     this.mapSrv.showRoute(route, this.map, this.modalMapElementsMap);
-
   }
 
   /***
@@ -427,6 +356,7 @@ export class RouteMasterWizardService {
     }
     this.map.fitBounds(L.latLngBounds(latlngs));
   }
+
   /***
    * Returns member counts (stops, platforms)
    * @param members

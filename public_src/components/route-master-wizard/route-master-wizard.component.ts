@@ -1,17 +1,20 @@
 import { Component, Input, ViewChild } from '@angular/core';
+
 import * as L from 'leaflet';
-import { RouteMasterWizardService } from '../../services/route-master-wizard.service';
-import { MapService } from '../../services/map.service';
+import { Subject } from 'rxjs';
+
 import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
+
 import { EditService } from '../../services/edit.service';
 import { ProcessService } from '../../services/process.service';
 import { OverpassService } from '../../services/overpass.service';
 import { WarnService } from '../../services/warn.service';
 import { StorageService } from '../../services/storage.service';
-
-import { Subject } from 'rxjs';
+import { RouteMasterWizardService } from '../../services/route-master-wizard.service';
+import { MapService } from '../../services/map.service';
 import { ConfService } from '../../services/conf.service';
-import { RouteWizardService } from '../../services/route-wizard.service';
+
+
 import { AppActions } from '../../store/app/actions';
 
 @Component({
@@ -26,38 +29,26 @@ import { AppActions } from '../../store/app/actions';
 export class RouteMasterWizardComponent {
 
   public map: L.Map;
-  public osmtogeojson: any          = require('osmtogeojson');
-  private startEventProcessing      = new Subject<L.LeafletEvent>();
+  public osmtogeojson: any     = require('osmtogeojson');
+  private startEventProcessing = new Subject<L.LeafletEvent>();
 
   @Input() public tagKey: string   = '';
   @Input() public tagValue: string = '';
 
   public canStopsConnect     = false;
   public canPlatformsConnect = false;
-
-  // public currentlyViewedRouteRef  = null;
-
-  public selectedRM = null;
-  // key = ref, value array of routes which have those refs
-  public newRMsMap = new Map();
-
-  public usedRM =  [];
-
-  public addedRoutes = [];
-  public suggestedRoutes = [];
+  public newRMsMap           = new Map();
+  public usedRM              = [];
 
   public RMTags = {
-      type                      : 'route_master',
-      route_master                    : 'bus',
-      ref                         : '',
-      'public_transport:version': '2',
-      network                   : '',
-      operator                  : '',
-      name                      : '',
-      from                      : '',
-      to                        : '',
-      wheelchair                : '',
-      colour                    : '' ,
+    type                      : 'route_master',
+    route_master              : 'bus',
+    ref                       : '',
+    'public_transport:version': '2',
+    name                      : '',
+    operator                  : '',
+    network                   : '',
+    colour                    : '',
   };
 
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
@@ -68,21 +59,19 @@ export class RouteMasterWizardComponent {
               private warnSrv: WarnService,
               private overpassSrv: OverpassService,
               public appActions: AppActions,
-              // private routeWizardSrv: RouteWizardService,
               private processSrv: ProcessService,
               private editSrv: EditService,
               public modalRefRouteMasterWiz: BsModalRef) {
-this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
-  this.newRMsMap = newRMsMap;
-  this.selectTab(2);
+    this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
+      this.newRMsMap = newRMsMap;
+      this.selectTab(2);
 
-});
+    });
   }
 
   public ngOnInit(): void {
-    // this.selectTab(1);
     this.routeMasterWizardSrv.elementsRenderedModalMap = new Set();
-    this.map                                 = L.map('master-route-wizard-modal-map', {
+    this.map                                           = L.map('master-route-wizard-modal-map', {
       center       : this.mapSrv.map.getCenter(),
       layers       : [L.tileLayer(
         'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
@@ -120,7 +109,7 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
    * Finds suggestions in current bounds
    * @returns {void}
    */
-  public findMissingRouteMasters(): void {
+  public findSuggestions(): void {
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForRouteMasterWizard) {
       this.overpassSrv.requestNewOverpassDataForWizard(true);
     } else {
@@ -128,25 +117,11 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
     }
   }
 
-  /***
+  /**
    * Jumps to step when tab directly clicked
    * @param {string} step
    * @returns {void}
    */
-  // public jumpToStep(step: string): void {
-  //   switch (step) {
-  //     case '1':
-  //       // this.routeMasterWizardSrv.clearMembersHighlight();
-  //       this.mapSrv.clearHighlight(this.routeMasterWizardSrv.map);
-  //       break;
-  //     case '2':
-  //       this.routeMasterWizardSrv.clearMembersHighlight();
-  //       this.mapSrv.clearHighlight(this.routeMasterWizardSrv.map);
-  //       // this.viewSuggestedRouteMaster(this.newSuggestedRMs[0]);
-  //       break;
-  //   }
-  // }
-
   private selectTab(step: number): void {
     this.stepTabs.tabs[step - 1].disabled = false;
     this.stepTabs.tabs[step - 1].active   = true;
@@ -156,6 +131,11 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
     }
   }
 
+  /***
+   * Returns array of keys from map
+   * @param map
+   * @returns {any}
+   */
   public getKeys(map: any): any {
     let refs = [];
     this.newRMsMap.forEach((value, key) => {
@@ -168,34 +148,31 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
     return this.newRMsMap.get(ref);
   }
 
-  private viewRoute(routeID: any, percentageCoverage: any, ref: any): any {
-    // this.selectRM(ref);
-
+  /**
+   * Highlights the route on map
+   * @param routeID
+   * @param percentageCoverage
+   * @returns {any}
+   */
+  public viewRoute(routeID: any, percentageCoverage: any): any {
     if (percentageCoverage === 100) {
       this.routeMasterWizardSrv.viewRoute(routeID,
-        { canStopsConnect : this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
+        { canStopsConnect: this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
+    } else {
+      alert('Cannot highlight the route as it has not been downloaded completly');
     }
   }
 
-  private selectRM(ref: string): any {
-   // this.usedRM = this.newRMsMap.get(ref);
-  }
-
-  private getRoutesOfUsedRM(): any {
-    this.selectTab(3);
-  }
-
-  private removeRouteMember(): any {
-
-  }
-
-  private saveStep3(): any {
+  /***
+   * For miving from step 3 to 4
+   * @returns {any}
+   */
+  public saveStep3(): any {
     this.selectTab(4);
   }
 
-  private useRouteMaster(ref: any): any {
+  public useRouteMaster(ref: any): any {
     this.usedRM = this.newRMsMap.get(ref);
-    console.log('userd rm', this.usedRM);
     this.mapSrv.clearHighlight(this.routeMasterWizardSrv.map);
     this.selectTab(3);
   }
@@ -205,25 +182,17 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
   }
 
   public removeRoute(id: any): any {
-    // for(let rel of this.usedRM){
-    //   if(rel.id === id){
-    //     this.usedRM.splice()
-    //   }
-    // }
-    console.log('delete', id);
-    console.log('delete before', this.usedRM);
     let newRM: any = [];
-    newRM = newRM.concat(this.usedRM);
+    newRM          = newRM.concat(this.usedRM);
     newRM.forEach((rel, i) => {
       if (rel.id === id) {
         newRM.splice(i, 1);
       }
     });
     this.usedRM = newRM;
-    console.log('delete after', this.usedRM);
   }
 
-  public  modifiesTags(action: string, key: any, event: any, tags: any): any {
+  public modifiesTags(action: string, key: any, event: any, tags: any): any {
     switch (action) {
       case 'change tag':
         tags[key] = event.target.value;
@@ -242,13 +211,17 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
   public createChangeTag(action: string, key: any, event: any): any {
     this.RMTags = this.modifiesTags(action, key, event, this.RMTags);
     if (action === 'add tag') {
-      this.tagKey             = '';
-      this.tagValue           = '';
+      this.tagKey   = '';
+      this.tagValue = '';
     }
   }
 
+  /**
+   * Final step for saving the route master
+   * @returns {any}
+   */
   public saveStep4(): any {
-    let newRM = {
+    let newRM  = {
       id       : this.editSrv.findNewId(),
       timestamp: new Date().toISOString().split('.')[0] + 'Z',
       version  : 1,
@@ -259,10 +232,28 @@ this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
       members  : this.usedRM,
       tags     : this.RMTags,
     };
-    let change            = { from: undefined, to: newRM };
+    let change = { from: undefined, to: newRM };
     this.routeMasterWizardSrv.modalMapElementsMap.set(newRM.id, newRM);
     this.editSrv.addChange(newRM, 'add route', change);
     this.modalRefRouteMasterWiz.hide();
     this.appActions.actSetWizardMode(null);
+  }
+
+  /***
+   * returns colors for the list items according to percentage coverage area
+   * @param percentageCoverage
+   * @returns {any}
+   */
+  public getListItemColor(percentageCoverage: any): any {
+    switch (true) {
+      case percentageCoverage === 100:
+        return 'lightgreen';
+      case (percentageCoverage < 50):
+        return 'lightcoral';
+      case (percentageCoverage < 100 && percentageCoverage > 50):
+        return 'lightsalmon';
+      default:
+        return '';
+    }
   }
 }

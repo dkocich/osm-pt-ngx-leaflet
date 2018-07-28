@@ -851,4 +851,21 @@ export class MapService {
     L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
 
+  /***
+   * Returns all stops/platforms on the given map
+   * @param {Map} map
+   * @returns {any[]}
+   */
+  public findStopsInBounds(map: L.Map, elementsMap: any): any[] {
+    let stopsInBounds = [];
+    elementsMap.forEach((stop) => {
+      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+        if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
+          stopsInBounds.push(stop.id);
+        }
+      }
+    });
+    return stopsInBounds;
+  }
+
 }

@@ -21,7 +21,7 @@ import {RouteMasterWizardComponent} from '../route-master-wizard/route-master-wi
     '../../styles/main.less',
   ],
   templateUrl: './editor.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class EditorComponent implements OnInit, AfterViewInit {
