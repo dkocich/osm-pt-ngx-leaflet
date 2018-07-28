@@ -27,8 +27,8 @@
                     <div class="panel-body ">
                       <ul class="list-group scrollable-panel clearfix" *ngIf="newRoutesRefs.length !== 0">
                         <li class="list-group-item clearfix" *ngFor="let ref of newRoutesRefs"
-                            [ngStyle]="{'background-color' : currentlyViewedRef === ref ? 'cornflowerblue': 'white'}"
-                            (click)="viewSuggestedRoute(ref)">
+                        [ngStyle]="{'background-color' : getListBackgroundColor(ref) }"
+                        (click)="viewSuggestedRoute(ref)">
                           <span> Route Ref: {{ref}}</span>
                         </li>
                       </ul>

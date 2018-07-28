@@ -12,7 +12,7 @@ import { ConfService } from '../../services/conf.service';
 import * as L from 'leaflet';
 import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
 
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'route-wizard',
@@ -57,7 +57,7 @@ export class RouteWizardComponent {
         alert('No suggestions available for the chosen map bounds. Please select again.');
       } else {
         this.routeWizardSrv.routesMap = new Map();
-        this.newRoutesRefs         = [];
+        this.newRoutesRefs            = [];
         this.routeWizardSrv.filterRoutesMap(routesMap);
         if (this.routeWizardSrv.routesMap.size !== 0) {
           this.routeWizardSrv.highlightFirstRoute(
@@ -219,9 +219,9 @@ export class RouteWizardComponent {
   /***
    * View suggested route on map
    * @param ref
-   * @returns {any}
+   * @returns {void}
    */
-  private viewSuggestedRoute(ref: any): any {
+  private viewSuggestedRoute(ref: string): void {
   this.currentlyViewedRef = ref;
   this.routeWizardSrv.viewSuggestedRoute(ref, { canStopsConnect : this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
   }
@@ -236,9 +236,9 @@ export class RouteWizardComponent {
 
   /***
    * Saves step 3 of adding members
-   * @returns {any}
+   * @returns {void}
    */
-  public saveStep3(): any {
+  public saveStep3(): void {
    this.selectTab(4);
   }
 
@@ -247,9 +247,9 @@ export class RouteWizardComponent {
    * @param {string} action
    * @param key
    * @param event
-   * @returns {any}
+   * @returns {void}
    */
-  public createChangeTag(action: string, key: any, event: any): any {
+  public createChangeTag(action: string, key: any, event: any): void {
     this.newRoute = RouteWizardService.modifiesTags(action, key, event, this.newRoute);
     if (action === 'add tag') {
       this.tagKey             = '';
@@ -299,12 +299,34 @@ export class RouteWizardComponent {
   /****
    * Changes connectivity of route on map
    * @param {string} type
-   * @returns {any}
+   * @returns {void}
    */
-  public showConnectivity(type: string): any {
+  public showConnectivity(type: string): void {
     this.routeWizardSrv.showConnectivity(type, {
       canStopsConnect    : this.canStopsConnect,
       canPlatformsConnect: this.canPlatformsConnect,
     }, this.addedNewRouteMembers);
+  }
+
+  /**
+   * Determines the color by which the list item should be highlighted for suggested new routes
+   * @param {string} ref
+   * @returns {string}
+   */
+  public getListBackgroundColor(ref: string): string {
+    let color = '';
+    this.routeWizardSrv.routesMap.forEach((members, suggestedRef) => {
+      if (suggestedRef === ref) {
+        let membersLength = members.length;
+        if (membersLength > 10) {
+          color = 'lightgreen';
+        } else if (membersLength < 10 && membersLength > 5) {
+          color = 'lightcoral';
+        } else {
+          color = 'lightsalmon';
+        }
+      }
+    });
+    return color;
   }
 }
