@@ -14,7 +14,7 @@ import { IOsmElement } from '../../core/osmElement.interface';
 import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 
-import { IPtRelation } from '../../core/ptRelation.interface';
+import * as L from 'leaflet';
 
 @Component({
   providers: [],
@@ -37,6 +37,9 @@ export class ToolbarComponent implements OnInit {
   public stats = { s: 0, r: 0, a: 0, m: 0 };
   public routeLabelShown = false;
   public enableInfoRouteLabels = false;
+
+  public singleRelID = null;
+  public multipleRelsHighlightsAndIDs: Map<number, L.Polyline> = null;
 
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
 
@@ -65,10 +68,22 @@ export class ToolbarComponent implements OnInit {
     this.mapSrv.highlightTypeEmitter.subscribe((data) => {
       this.htRadioModel = data.highlightType;
     });
-    this.mapSrv.enableInfoRouteLabelsOption.subscribe((rel: IPtRelation) => {
-      if (rel) {
-        this.enableInfoRouteLabels = true;
-      } else {
+    this.mapSrv.enableInfoRouteLabelsOption.subscribe((data: {type: string, id: number, highlightFill: L.Polyline}) => {
+        if (data && data.type === 'single') {
+          this.singleRelID = data.id;
+          this.enableInfoRouteLabels = true;
+        }
+        if (data && data.type === 'multiple') {
+          console.log('node');
+          if (!this.multipleRelsHighlightsAndIDs) {
+            this.multipleRelsHighlightsAndIDs = new Map();
+          }
+          this.multipleRelsHighlightsAndIDs.set(data.id, data.highlightFill);
+          this.enableInfoRouteLabels = true;
+        }
+        if (!data) {
+        this.singleRelID = null;
+        this.multipleRelsHighlightsAndIDs = null;
         this.routeLabelShown = false;
         this.enableInfoRouteLabels = false;
       }
@@ -116,7 +131,6 @@ export class ToolbarComponent implements OnInit {
   }
 
   private changeHighlight(): void {
-    console.log('change highlight');
     if (
       this.highlightIsActive() &&
       this.htRadioModel !== this.mapSrv.highlightType
@@ -182,17 +196,30 @@ export class ToolbarComponent implements OnInit {
     return this.currentElement.id < 0;
   }
 
+  /**
+   * Handles toggling of route info labels
+   */
   public toggleRouteInfoLabels(): void {
    if (!this.routeLabelShown) {
-     this.mapSrv.showRouteInfoLabels(this.storageSrv.currentElement);
+     if (this.storageSrv.currentElement.type === 'node') {
+       this.mapSrv.showMultipleRouteInfoLabels(this.multipleRelsHighlightsAndIDs);
+     } else if (this.storageSrv.currentElement.type === 'relation') {
+       console.log('should be rel', this.storageSrv.currentElement);
+       this.mapSrv.showRouteInfoLabels(this.singleRelID);
+     }
      this.routeLabelShown = true;
    }  else {
      this.mapSrv.clearSingleRouteInfoLabels();
+     this.mapSrv.clearMultipleRouteInfoLabels();
      this.routeLabelShown = false;
    }
   }
 
   public hasRef(): boolean {
     return this.storageSrv.currentElement.tags.ref !== undefined;
+  }
+
+  public clear(): void {
+    this.mapSrv.clearMultipleRouteInfoLabels();
   }
 }

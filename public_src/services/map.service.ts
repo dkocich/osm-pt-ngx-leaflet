@@ -417,6 +417,8 @@ export class MapService {
       for (const rel of filteredRelationsForStop) {
         this.showRoutes(rel);
       }
+
+      console.log('highlight', this.highlight);
     }
   }
 
@@ -457,9 +459,10 @@ export class MapService {
       this.highlightFill = L.polyline(latlngs, Utils.HIGHLIGHT_FILL).bindTooltip(
         rel.tags.name,
       );
-      this.showRouteInfoLabels(rel);
+      this.enableInfoRouteLabelsOption.emit({ type: 'multiple', id: rel.id, highlightFill: this.highlightFill });
+      console.log('emitted');
       if (this.highlight) {
-        this.highlight.addLayer(L.layerGroup([this.highlightFill]));
+        this.highlight.addLayer(this.highlightFill);
       } else {
         this.highlight = L.layerGroup([this.highlightFill]);
       }
@@ -562,7 +565,7 @@ export class MapService {
         this.highlightStroke,
         this.highlightFill,
       ]).addTo(map);
-      this.enableInfoRouteLabelsOption.emit(rel);
+      this.enableInfoRouteLabelsOption.emit({ type: 'single', id: rel.id, highlightFill: this.highlightFill });
       return true;
     } else {
       if (rel.members.length <= 1) {
@@ -657,7 +660,7 @@ export class MapService {
       },
     );
     if (this.highlight) {
-      this.highlight.addLayer(L.layerGroup([this.markerFrom, this.markerTo]));
+      this.highlight.addLayer(this.markerFrom, this.markerTo);
     } else {
       this.highlight = L.layerGroup([this.markerFrom, this.markerTo]);
     }
@@ -855,14 +858,47 @@ export class MapService {
     L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
 
-  public showRouteInfoLabels(rel: any): void {
+  /**
+   * Displays route info labels for the case of single route highlight
+   * @param {number} relID
+   */
+  public showRouteInfoLabels(relID: number): void {
+    let rel = this.storageSrv.elementsMap.get(relID);
     if (rel.tags.ref) {
       let textString = '     ' + rel.tags.ref + '     ';
       this.highlightFill.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
     }
   }
 
+  /**
+   * Handles displaying route info labels for the case of multiple route highlight
+   * @param {Map<number, Polyline>} relHighlightsAndIDs
+   */
+  public showMultipleRouteInfoLabels(relHighlightsAndIDs: Map<number, L.Polyline>): void {
+    relHighlightsAndIDs.forEach((highlight, id) => {
+      let rel        = this.storageSrv.elementsMap.get(id);
+      let textString = '     ' + rel.tags.ref + '     ';
+      let layer: any =  highlight;
+      layer.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
+    });
+  }
+
+  /**
+   * Clears the info label for single route highlight case
+   */
   public clearSingleRouteInfoLabels(): void {
     this.highlightFill.setText(null);
+  }
+
+  /**
+   * Clears the info labels for the case of multiple route highlights
+   */
+  public clearMultipleRouteInfoLabels(): void {
+    this.highlight.eachLayer((layer: L.Layer) => {
+      if (layer instanceof L.Polyline) {
+        let layerA: any = layer;
+        layerA.setText(null);
+      }
+    });
   }
 }
