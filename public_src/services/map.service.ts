@@ -5,6 +5,7 @@ import { ConfService } from './conf.service';
 import { StorageService } from './storage.service';
 
 import * as L from 'leaflet';
+import 'leaflet-textpath';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
@@ -33,7 +34,7 @@ export class MapService {
   public popUpArr = [];
   public popUpLayerGroup: L.LayerGroup;
   public currentPopUpFeatureId: number;
-  public errorLocations: L.LatLngExpression [] = [];
+  public enableInfoRouteLabelsOption: EventEmitter<any> = new EventEmitter();
   // public autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
   constructor(
     private confSrv: ConfService,
@@ -377,6 +378,7 @@ export class MapService {
       map.removeLayer(this.highlightStroke);
       this.highlightStroke = undefined;
     }
+    this.enableInfoRouteLabelsOption.emit(null);
   }
 
   /**
@@ -455,8 +457,9 @@ export class MapService {
       this.highlightFill = L.polyline(latlngs, Utils.HIGHLIGHT_FILL).bindTooltip(
         rel.tags.name,
       );
+      this.enableInfoRouteLabelsOption.emit({ type: 'multiple', id: rel.id, highlightFill: this.highlightFill });
       if (this.highlight) {
-        this.highlight.addLayer(L.layerGroup([this.highlightFill]));
+        this.highlight.addLayer(this.highlightFill);
       } else {
         this.highlight = L.layerGroup([this.highlightFill]);
       }
@@ -559,6 +562,7 @@ export class MapService {
         this.highlightStroke,
         this.highlightFill,
       ]).addTo(map);
+      this.enableInfoRouteLabelsOption.emit({ type: 'single', id: rel.id, highlightFill: this.highlightFill });
       return true;
     } else {
       if (rel.members.length <= 1) {
@@ -590,7 +594,7 @@ export class MapService {
     let latlngFrom;
     switch (this.highlightType) {
       case 'Stops':
-        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0],this.storageSrv.elementsMap); // get first and last ID reference
+        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0], this.storageSrv.elementsMap); // get first and last ID reference
         return latlngFrom;
       case 'Platforms':
         latlngFrom = this.findCoordinates(
@@ -653,7 +657,7 @@ export class MapService {
       },
     );
     if (this.highlight) {
-      this.highlight.addLayer(L.layerGroup([this.markerFrom, this.markerTo]));
+      this.highlight.addLayer(this.markerFrom, this.markerTo);
     } else {
       this.highlight = L.layerGroup([this.markerFrom, this.markerTo]);
     }
@@ -851,6 +855,50 @@ export class MapService {
     L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
 
+  /**
+   * Displays route info labels for the case of single route highlight
+   * @param {number} relID
+   */
+  public showRouteInfoLabels(relID: number): void {
+    let rel = this.storageSrv.elementsMap.get(relID);
+    if (rel.tags.ref) {
+      let textString = '     ' + rel.tags.ref + '     ';
+      this.highlightFill.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
+    }
+  }
+
+  /**
+   * Handles displaying route info labels for the case of multiple route highlight
+   * @param {Map<number, Polyline>} relHighlightsAndIDs
+   */
+  public showMultipleRouteInfoLabels(relHighlightsAndIDs: Map<number, L.Polyline>): void {
+    relHighlightsAndIDs.forEach((highlight, id) => {
+      let rel        = this.storageSrv.elementsMap.get(id);
+      let textString = '     ' + rel.tags.ref + '     ';
+      let layer: any =  highlight;
+      layer.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
+    });
+  }
+
+  /**
+   * Clears the info label for single route highlight case
+   */
+  public clearSingleRouteInfoLabels(): void {
+    this.highlightFill.setText(null);
+  }
+
+  /**
+   * Clears the info labels for the case of multiple route highlights
+   */
+  public clearMultipleRouteInfoLabels(): void {
+    this.highlight.eachLayer((layer: L.Layer) => {
+      if (layer instanceof L.Polyline) {
+        let layerA: any = layer;
+        layerA.setText(null);
+      }
+    });
+  }
+
   /***
    * Returns all stops/platforms on the given map
    * @param {Map} map
@@ -867,5 +915,4 @@ export class MapService {
     });
     return stopsInBounds;
   }
-
 }
