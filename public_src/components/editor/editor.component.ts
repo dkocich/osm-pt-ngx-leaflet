@@ -19,7 +19,6 @@ import { IAppState } from '../../store/model';
     '../../styles/main.less',
   ],
   templateUrl: './editor.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class EditorComponent implements OnInit, AfterViewInit {
