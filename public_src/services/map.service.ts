@@ -863,7 +863,7 @@ export class MapService {
     let rel = this.storageSrv.elementsMap.get(relID);
     if (rel.tags.ref) {
       let textString = '     ' + rel.tags.ref + '     ';
-      this.highlightFill.setText(textString, { repeat: true, orientation: 'flip' , attributes: { fill: 'blue', stroke: 'black' } });
+      this.highlightFill.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
     }
   }
 
