@@ -17,7 +17,7 @@
 <transporter></transporter>
 
 
-<button class="btn btn-primary on-map route-labels-btn" *ngIf="enableInfoRouteLabels" [disabled]="storageSrv.currentElement.type === 'relation' && !hasRef()"
+<button class="btn btn-primary on-map route-labels-btn" *ngIf="enableInfoRouteLabels" [disabled]="storageSrv.currentElement && storageSrv.currentElement.type === 'relation' && !hasRef()"
         (click)="toggleRouteInfoLabels()">
   <i class="fa fa-info-circle" aria-hidden="true"></i>
 </button>

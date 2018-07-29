@@ -14,8 +14,9 @@ import { RouteMasterWizardService } from '../../services/route-master-wizard.ser
 import { MapService } from '../../services/map.service';
 import { ConfService } from '../../services/conf.service';
 
-
 import { AppActions } from '../../store/app/actions';
+
+import { IOsmElement } from '../../core/osmElement.interface';
 
 @Component({
   selector: 'route-master-wizard',
@@ -31,14 +32,12 @@ export class RouteMasterWizardComponent {
   public map: L.Map;
   public osmtogeojson: any     = require('osmtogeojson');
   private startEventProcessing = new Subject<L.LeafletEvent>();
+  public usedRM                = [];
 
   @Input() public tagKey: string   = '';
   @Input() public tagValue: string = '';
 
-  public canStopsConnect     = false;
-  public canPlatformsConnect = false;
-  public newRMsMap           = new Map();
-  public usedRM              = [];
+  public newRMsMap: Map<string, Array<{ id: number, percentCoverage: number }>> = new Map();
 
   public RMTags = {
     type                      : 'route_master',
@@ -93,7 +92,7 @@ export class RouteMasterWizardComponent {
     L.control.scale().addTo(this.map);
     this.routeMasterWizardSrv.map = this.map;
     this.routeMasterWizardSrv.renderAlreadyDownloadedData();
-    this.routeMasterWizardSrv.modalMapElementsMap = new Map<any, any>(this.storageSrv.elementsMap);
+    this.routeMasterWizardSrv.modalMapElementsMap = new Map<number, IOsmElement>(this.storageSrv.elementsMap);
     this.routeMasterWizardSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
       this.startEventProcessing.next(event);
     });
@@ -133,10 +132,9 @@ export class RouteMasterWizardComponent {
 
   /**
    * Returns array of keys from map
-   * @param map
-   * @returns {any[]}
+   * @returns {string[]}
    */
-  public getKeys(map: any): any[] {
+  public getKeys(): string[] {
     let refs = [];
     this.newRMsMap.forEach((value, key) => {
       refs.push(key);
@@ -144,7 +142,7 @@ export class RouteMasterWizardComponent {
     return refs;
   }
 
-  public getValue(ref: string): any {
+  public getValue(ref: string): Array<{ id: number, percentCoverage: number }> {
     return this.newRMsMap.get(ref);
   }
 
@@ -154,36 +152,35 @@ export class RouteMasterWizardComponent {
    * @param percentageCoverage
    * @returns {void}
    */
-  public viewRoute(routeID: any, percentageCoverage: any): void {
+  public viewRoute(routeID: number, percentageCoverage: number): void {
     if (percentageCoverage === 100) {
-      this.routeMasterWizardSrv.viewRoute(routeID,
-        { canStopsConnect: this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
+      this.routeMasterWizardSrv.viewRoute(routeID);
     } else {
       alert('Cannot highlight the route as it has not been downloaded completly');
     }
   }
 
   /**
-   * For miving from step 3 to 4
+   * For moving from step 3 to 4
    * @returns {void}
    */
   public saveStep3(): void {
     this.selectTab(4);
   }
 
-  public useRouteMaster(ref: any): void {
+  public useRouteMaster(ref: string): void {
     this.usedRM = this.newRMsMap.get(ref);
     this.mapSrv.clearHighlight(this.routeMasterWizardSrv.map);
     this.selectTab(3);
   }
 
-  public getWholeRoute(id: any): any {
+  public getWholeRoute(id: number): IOsmElement {
     return this.routeMasterWizardSrv.modalMapElementsMap.get(id);
   }
 
-  public removeRoute(id: any): void {
-    let newRM: any = [];
-    newRM          = newRM.concat(this.usedRM);
+  public removeRoute(id: number): void {
+    let newRM = [];
+    newRM          = [ ...newRM, ...this.usedRM ];
     newRM.forEach((rel, i) => {
       if (rel.id === id) {
         newRM.splice(i, 1);
@@ -192,10 +189,10 @@ export class RouteMasterWizardComponent {
     this.usedRM = newRM;
   }
 
-  public modifiesTags(action: string, key: any, event: any, tags: any): any {
+  public modifiesTags(action: string, key: string, event: FocusEvent, tags: object): any {
     switch (action) {
       case 'change tag':
-        tags[key] = event.target.value;
+        tags[key] = (event.target as HTMLInputElement).value;
         break;
       case 'remove tag':
         delete tags[key];
@@ -208,7 +205,7 @@ export class RouteMasterWizardComponent {
     return tags;
   }
 
-  public createChangeTag(action: string, key: any, event: any): void {
+  public createChangeTag(action: string, key: string, event?: FocusEvent): void {
     this.RMTags = this.modifiesTags(action, key, event, this.RMTags);
     if (action === 'add tag') {
       this.tagKey   = '';
@@ -244,7 +241,7 @@ export class RouteMasterWizardComponent {
    * @param percentageCoverage
    * @returns {string}
    */
-  public getListItemColor(percentageCoverage: any): string {
+  public getListItemColor(percentageCoverage: number): string {
     switch (true) {
       case percentageCoverage === 100:
         return 'lightgreen';

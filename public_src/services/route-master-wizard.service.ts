@@ -6,7 +6,10 @@ import { BsModalService } from 'ngx-bootstrap';
 import { ProcessService } from './process.service';
 
 import * as L from 'leaflet';
+
 import { IPtRelation } from '../core/ptRelation.interface';
+import { IOverpassResponse } from '../core/overpassResponse.interface';
+import { IOsmElement } from '../core/osmElement.interface';
 
 @Injectable()
 export class RouteMasterWizardService {
@@ -16,8 +19,7 @@ export class RouteMasterWizardService {
   public osmtogeojson: any   = require('osmtogeojson');
   public modalMapElementsMap = new Map();
 
-  public autoRouteMapNodeClick: EventEmitter<number>                    = new EventEmitter();
-  public newRoutesMapReceived: EventEmitter<Map<string, IPtRelation[]>> = new EventEmitter();
+  public newRoutesMapReceived: EventEmitter<Map<string, Array<{ id: number, percentCoverage: number }>>> = new EventEmitter();
 
   public savedMultipleNodeDataResponses = [];
   public savedContinuousQueryResponses  = [];
@@ -26,9 +28,8 @@ export class RouteMasterWizardService {
   public elementsRenderedModalMap = new Set();
   public nodesFullyDownloaded     = new Set();
 
-  // public routesMap: Map<string, any[]>                   = new Map();
-  public relsMap                                         = new Map();
-  public newRMsMap                                       = new Map();
+  public relsMap                                                                   = new Map();
+  public newRMsMap: Map<string, Array<{ id: number, percentCoverage: number }>>    = new Map();
 
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,
@@ -40,9 +41,7 @@ export class RouteMasterWizardService {
     this.modalService.onHidden.subscribe(() => {
       this.processAllDownloadedOnMainMap();
       this.storageSrv.currentElement = null;
-      this.storageSrv.currentElementsChange.emit(
-        JSON.parse(JSON.stringify(null)),
-      );
+      this.storageSrv.currentElementsChange.emit(null);
       this.storageSrv.stopsForRoute     = [];
       this.storageSrv.platformsForRoute = [];
       this.mapSrv.highlightType         = 'Stops';
@@ -64,8 +63,8 @@ export class RouteMasterWizardService {
    * @returns {void}
    */
   public renderAlreadyDownloadedData(): void {
-    let obj: any = {};
-    let elements = [];
+    const obj: { elements: IOsmElement[] } = { elements : null };
+    const elements: IOsmElement[] = [];
     this.storageSrv.elementsMap.forEach((element) => {
       elements.push(element);
     });
@@ -99,17 +98,12 @@ export class RouteMasterWizardService {
   public renderTransformedGeojsonDataRMWizard(transformedGeoJSON: any, map: L.Map): void {
     this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
       filter       : (feature) => {
-        if (!this.elementsRenderedModalMap.has(feature.id) &&
+        return (!this.elementsRenderedModalMap.has(feature.id) &&
           'public_transport' in feature.properties && feature.id[0] === 'n'
-        ) {
-          return true;
-        } else {
-          return false;
-        }
+        );
       },
-      onEachFeature: (feature, layer) => {
+      onEachFeature: (feature) => {
         this.elementsRenderedModalMap.add(feature.id);
-        this.enableClickForRouteMasterWizardMap(feature, layer);
       },
       pointToLayer : (feature, latlng) => {
         return this.mapSrv.stylePoint(feature, latlng);
@@ -119,46 +113,23 @@ export class RouteMasterWizardService {
     this.ptLayerModal.addTo(map);
   }
 
-  /***
-   * Enables click of nodes for modal map
-   * @param feature
-   * @param layer
-   * @returns {void}
-   */
-  public enableClickForRouteMasterWizardMap(feature: any, layer: any): void {
-    layer.on('click', () => {
-      this.handleRouteMasterWizardMarkerClick(feature);
-    });
-  }
-
-  /***
-   * Handles map click
-   * @param feature
-   * @returns {void}
-   */
-  private handleRouteMasterWizardMarkerClick(feature: any): void {
-    const featureId: number = this.mapSrv.getFeatureIdFromMarker(feature);
-    this.autoRouteMapNodeClick.emit(featureId);
-  }
-
-  public findToBeComparedRels(response: any): any {
+  public findToBeComparedRels(response: IOverpassResponse): Map<number, number> {
     let newDownloadedRoutes = [];
     let oldDownloadedRoutes = [];
     if (response) {
-      for (let element of response['elements']) {
+      for (let element of response.elements) {
         if ((element.type === 'relation')
-          && !(element.tags.public_transport === 'stop_area'
-            && element.tags.public_transport === 'ref')
-          && (element.members)) {
+          && !((element.tags.public_transport === 'stop_area'))
+          && (element['members'])) {
           newDownloadedRoutes.push(element);
         }
       }
     }
-    this.modalMapElementsMap.forEach((element) => {
+    this.modalMapElementsMap.forEach((element: IOsmElement) => {
       if ((element.type === 'relation')
         && !(element.tags.public_transport === 'stop_area')
         && element.tags.ref
-        && (element.members)
+        && (element['members'])
         && this.checkMembersInBounds(element)) {
         oldDownloadedRoutes.push(element);
       }
@@ -166,13 +137,13 @@ export class RouteMasterWizardService {
     console.log('LOG (route master wizard s.) Newly downloaded relations',
       newDownloadedRoutes, 'old already present relations', oldDownloadedRoutes);
 
-    let rels      = newDownloadedRoutes.concat(oldDownloadedRoutes);
+    let rels      = [ ...newDownloadedRoutes, ...oldDownloadedRoutes ];
     let relsMap   = new Map();
     let refOfRels = [];
-    rels.forEach((rel) => {
-      let noOfMembers     = rel['members'].length;
+    rels.forEach((rel: IPtRelation) => {
+      let noOfMembers     = rel.members.length;
       let fullyDownloaded = 0;
-      for (let member of rel['members']) {
+      for (let member of rel.members) {
         let memberEle = this.modalMapElementsMap.get(member.ref);
         if (this.modalMapElementsMap.has(member.ref) && memberEle.type === 'node') {
           let element = this.modalMapElementsMap.get(member.ref);
@@ -190,7 +161,7 @@ export class RouteMasterWizardService {
     return relsMap;
   }
 
-  public checkMembersInBounds(relation: any): boolean {
+  public checkMembersInBounds(relation: IOsmElement): boolean {
     let flag = false;
     relation['members'].forEach((member) => {
       if (this.modalMapElementsMap.has(member.ref) && this.modalMapElementsMap.get(member.ref).type === 'node') {
@@ -204,7 +175,7 @@ export class RouteMasterWizardService {
     return flag;
   }
 
-  public findMissingRouteMasters(res: any): any {
+  public findMissingRouteMasters(res: IOverpassResponse): void {
     this.newRMsMap       = new Map();
     let RMRefs: string[] = [];
 
@@ -254,12 +225,11 @@ export class RouteMasterWizardService {
   }
 
   /***
-   * View suggested route
+   * Highlight selected member route of currently selected route master on map
    * @param routeID
-   * @param connectObj
    * @returns {void}
    */
-  public viewRoute(routeID: any, connectObj: any): void {
+  public viewRoute(routeID: number): void {
     let route = this.modalMapElementsMap.get(routeID);
     this.mapSrv.clearHighlight(this.map);
     this.storageSrv.stopsForRoute     = [];

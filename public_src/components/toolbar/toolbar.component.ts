@@ -48,7 +48,7 @@ export class ToolbarComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
-    private storageSrv: StorageService,
+    public storageSrv: StorageService,
   ) {
     this.downloading = true;
     this.filtering = this.confSrv.cfgFilterLines;

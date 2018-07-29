@@ -16,5 +16,5 @@ export interface IAppState {
   errorCorrectionMode: ISuggestionsBrowserOptions;
   beginnerView: string;
   switchMode: boolean;
-  wizardMode: string;
+  wizardMode: string | null | 'router wizard' | 'router master wizard';
 }

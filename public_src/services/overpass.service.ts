@@ -23,8 +23,8 @@ import { Utils } from '../core/utils.class';
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
-import {RouteMasterWizardComponent} from '../components/route-master-wizard/route-master-wizard.component';
-import {RouteMasterWizardService} from './route-master-wizard.service';
+
+import { RouteMasterWizardService } from './route-master-wizard.service';
 
 @Injectable()
 export class OverpassService {
@@ -322,7 +322,6 @@ export class OverpassService {
       this.requestNewOverpassDataForWizard((false));
     }
   }
-
 
   public async initDownloaderForModalMapRMW(map: L.Map): Promise<void> {
     this.setupAreaReference(map);
@@ -890,12 +889,12 @@ export class OverpassService {
 
   /***
    * Continuous query for auto route wizard
-   * @param {boolean} findRoutes
+   * @param {boolean} find: boolean
    */
   public requestNewOverpassDataForWizard(find: boolean): void {
     console.log('LOG. (overpass s.) Requesting new overpass data for wizard modal map');
     let wizardMode = this.ngRedux.getState()['app']['wizardMode'];
-    if (wizardMode === 'route wizard'){
+    if (wizardMode === 'route wizard') {
       this.setupAreaReference(this.routeWizardSrv.map);
     } else if (wizardMode === 'route master wizard') {
       this.setupAreaReference(this.routeMasterWizardSrv.map);
@@ -970,8 +969,9 @@ export class OverpassService {
                 let relsMap = this.routeMasterWizardSrv.findToBeComparedRels(null);
                 console.log('LOG. (overpass  s.) Relations to be compared: ', relsMap);
                 if (relsMap.size !== 0) {
-                  console.log('relations to be compared not zero getting route masters: ');
-                  this.getRouteMasters(relsMap.keys());
+                  console.log('LOG. (overpass  s.) Relations to be compared not zero getting route masters: ');
+                  let keys: number[] = Array.from(relsMap.keys());
+                  this.getRouteMastersForWizard(keys);
                 } else {
                   alert('Sorry, no suggestions found for the selected area.');
                 }
@@ -989,9 +989,9 @@ export class OverpassService {
   /***
    * Multiple node data download for route wizard
    * @param idsArr
-   * @returns {any}
+   * @returns {void}
    */
-  private getMultipleNodeDataForWizard(idsArr: any): any {
+  private getMultipleNodeDataForWizard(idsArr: number[]): void {
     let requestBody = `
       [out:json][timeout:25];
       (
@@ -1004,7 +1004,7 @@ export class OverpassService {
     this.httpClient
       .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
-        (res) => {
+        (res: IOverpassResponse) => {
           console.log('LOG (overpass s.) Multiple node data query response:', res);
           if (!res) {
             return alert('No response from API. Try to select element again please.');
@@ -1018,7 +1018,6 @@ export class OverpassService {
             this.routeWizardSrv.savedMultipleNodeDataResponses.push(res);
             this.routeWizardSrv.findMissingRoutes(res);
           }
-
           if (wizardMode === 'route master wizard') {
             for (let id of idsArr) {
               this.routeMasterWizardSrv.nodesFullyDownloaded.add(id);
@@ -1032,7 +1031,7 @@ export class OverpassService {
             let relsMap = this.routeMasterWizardSrv.findToBeComparedRels(res);
             console.log('LOG (overpass s.) Relations to be compared ( at least one member in map bounds): ', relsMap);
             if (relsMap.size !== 0) {
-              let keys: any = Array.from(relsMap.keys());
+              let keys: number[] = Array.from(relsMap.keys());
               this.getRouteMastersForWizard(keys);
             } else {
               alert('Sorry, no suggestions found for the selected area.');
@@ -1049,7 +1048,7 @@ export class OverpassService {
 
   /**
    * Downloads route_master relations for currently added route relations.
-   * @minNumOfRelations: number
+   * @minNumOfRelations: number[]
    */
   public getRouteMastersForWizard(resIDs: number[]): void {
     let requestBody: string = `
@@ -1067,7 +1066,7 @@ export class OverpassService {
     this.httpClient
       .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
       .subscribe(
-        (res) => {
+        (res: IOverpassResponse) => {
           if (!res) {
             return alert(
               'No response from API. Try to select other master relation again please.',
@@ -1076,7 +1075,7 @@ export class OverpassService {
           console.log('LOG (overpass s.) Response for route_master from Overpass API');
           console.log(res);
 
-          res['elements'].forEach((element) => {
+          res.elements.forEach((element) => {
             if (!this.storageSrv.elementsMap.has(element.id)) {
               this.storageSrv.elementsMap.set(element.id, element);
               this.storageSrv.elementsDownloaded.add(element.id);

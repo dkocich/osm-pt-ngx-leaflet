@@ -42,12 +42,12 @@
     <button id="button-basic" dropdownToggle type="button" class="btn btn-default dropdown-toggle on-map"
             aria-controls="dropdown-basic">
       <i class="fa fa-star" aria-hidden="true"></i>
-      Wizards <span class="caret"></span>
+      {{'Wizards' | translate }} <span class="caret"></span>
     </button>
     <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
         role="menu" aria-labelledby="button-basic">
-      <li role="menuitem" (click)="routeCreationWizard()"><a class="dropdown-item" >Route Creation Wizard</a></li>
-      <li role="menuitem" (click)="routeMasterCreationWizard()"><a class="dropdown-item">Route Master Creation Wizard</a></li>
+      <li role="menuitem" (click)="routeCreationWizard()"><a class="dropdown-item">{{'Route Creation Wizard' | translate}}</a></li>
+      <li role="menuitem" (click)="routeMasterCreationWizard()"><a class="dropdown-item">{{'Route Master Creation Wizard' | translate}}</a></li>
     </ul>
   </div>
 </div>

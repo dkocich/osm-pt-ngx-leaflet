@@ -1,6 +1,6 @@
 <div id="container">
   <div class="modal-header">
-    <h4 class="modal-title pull-left"> Route Master Creation wizard</h4>
+    <h4 class="modal-title pull-left">{{'Route Master Creation Wizard' | translate }}</h4>
     <i class="pull-right fa fa-times" aria-hidden="true" (click)="modalRefRouteMasterWiz.hide()"></i>
   </div>
   <div class="modal-body text-center ">
@@ -15,29 +15,27 @@
             <div>
               <tabset [justified]="true" type="pills" #stepTabs>
                 <tab heading="Step 1">
-                  <p class="text-success step-text">Zoom into the required area on the map and find suggested
-                    routes </p>
-                  <button class="btn btn-default" type="submit" (click)="findSuggestions()">Find suggestions
+                  <p class="text-success step-text">{{'Zoom into the required area on the map and find suggested route masters' | translate}}</p>
+                  <button class="btn btn-default" type="submit" (click)="findSuggestions()">{{'Find suggestions' | translate }}
                   </button>
                 </tab>
                 <tab heading="Step 2">
                   <accordion [closeOthers]="true">
-                    <accordion-group #a *ngFor="let ref of getKeys(newRMsMap)">
-                      <div accordion-heading class="clearfix" (click)="selectRM(ref)">
-                        Ref : {{ref}}
+                    <accordion-group #a *ngFor="let ref of getKeys()">
+                      <div accordion-heading class="clearfix">
+                        Ref:&nbsp;{{ref}}
                         <i class="pull-right float-xs-right fa"
                            [ngClass]="{'fa-chevron-down': a?.isOpen, 'fa-chevron-right': !a?.isOpen}"></i>
                       </div>
                       <ul class="suggested-rm-list">
                         <li class="list-group-item clearfix" *ngFor="let route of getValue(ref)"
                             [ngStyle]="{'background-color' : getListItemColor(route.percentCoverage) }"
-                            (click)="viewRoute(route.id,route.percentCoverage, ref)"
-                        >
-                          <span> Name : {{ getWholeRoute(route.id).tags.name }}</span>
+                            (click)="viewRoute(route.id,route.percentCoverage, ref)">
+                          <span> {{'Name'| translate }}:&nbsp;{{getWholeRoute(route.id).tags.name}}</span>
                         </li>
                       </ul>
-                      <button class="btn btn-default pull-right" type="submit" (click)="useRouteMaster(ref) ">Use Route
-                        Master
+                      <button class="btn btn-default pull-right" type="submit"
+                              (click)="useRouteMaster(ref) ">{{'Use Route Master' | translate }}
                       </button>
                     </accordion-group>
                   </accordion>
@@ -46,7 +44,7 @@
                 <tab heading="Step 3">
                   <div class="panel panel-default full-height right-panel">
                     <div class="panel-heading">
-                      <p class="text-success"> Remove routes if necessary.</p>
+                      <p class="text-success">{{'Remove routes if necessary.' | translate }}</p>
                     </div>
                     <div class="panel-body ">
                       <div class="scrollable-panel" *ngIf="usedRM.length !== 0">
@@ -62,7 +60,7 @@
                       </div>
                     </div>
                     <div class="panel-footer clearfix">
-                      <button class="btn btn-default pull-right" (click)="saveStep3()">Done</button>
+                      <button class="btn btn-default pull-right" (click)="saveStep3()">{{'Done' | translate}}</button>
                     </div>
                   </div>
                 </tab>
@@ -71,7 +69,7 @@
 
                   <div class="panel panel-default">
                     <div class="panel-heading">
-                      <p class="text-success"> Add tags for the new route master. </p>
+                      <p class="text-success">{{'Add tags for the new route master.' | translate}}</p>
                     </div>
                     <div class="panel-body">
                       <div class="content panel panel-body panel-default ">
@@ -116,7 +114,7 @@
                       </div>
                     </div>
                     <div class="panel-footer clearfix">
-                      <button class="btn btn-default pull-right" (click)="saveStep4()"> Save Route</button>
+                      <button class="btn btn-default pull-right" (click)="saveStep4()">{{'Save Route Master' | translate }}r</button>
                     </div>
                   </div>
                 </tab>
@@ -131,11 +129,10 @@
 </div>
 
 <ng-template #itemTemplate let-item="item" let-index="index">
-  <li class="list-group-item"> {{index + 1}}. Name : {{getWholeRoute(item.value.id).tags.name}} id :{{item.value.id}}
+  <li class="list-group-item"> {{index + 1}}.&nbsp;{{'Name' | translate}}:&nbsp;{{getWholeRoute(item.value.id).tags.name}}&nbsp;id:&nbsp;{{item.value.id}}
     <i class="fa fa-times pull-right" aria-hidden="true" (click)="removeRoute(item.value.id)"></i>
     <i class="fa fa-search pull-right" aria-hidden="true"
        (click)="viewRoute(item.value.id,item.value.percentCoverage, getWholeRoute(item.value.id).tags.ref)"></i>
-
   </li>
 
 </ng-template>
