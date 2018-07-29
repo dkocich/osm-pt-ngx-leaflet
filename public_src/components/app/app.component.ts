@@ -5,6 +5,7 @@ import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
 import * as L from 'leaflet';
 
 import { Spinkit } from 'ng-http-loader';
+import * as Driver from 'driver.js';
 
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Rx';
@@ -21,6 +22,7 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
+// import Driver = require('driver.js');
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -109,5 +111,11 @@ export class AppComponent implements OnInit {
 
   private showHelpModal(): void {
     this.helpModal.show();
+  }
+
+  private tutorials(): void {
+    const driver = new Driver();
+    console.log(document.getElementById('x'));
+    driver.highlight({     element: document.getElementById('x') });
   }
 }

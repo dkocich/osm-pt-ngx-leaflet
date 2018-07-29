@@ -74,6 +74,7 @@
     "core-js": "2.5.7",
     "cypress": "3.0.2",
     "dexie": "2.0.4",
+    "driver.js": "^0.6.2",
     "eslint": "4.19.1",
     "eslint-plugin-cypress": "2.0.1",
     "express": "4.16.3",

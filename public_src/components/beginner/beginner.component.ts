@@ -12,6 +12,7 @@ import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 
 import { IAppState } from '../../store/model';
+import * as Driver from 'driver.js';
 
 @Component({
   providers  : [],
@@ -110,5 +111,13 @@ export class BeginnerComponent {
       default:
         return false;
     }
+  }
+
+  public tuto(): any {
+    const driver = new Driver();
+    console.log(document.getElementById('zz'));
+    driver.highlight({     element: document.getElementById('zz') });
+    const activeElement = driver.getHighlightedElement();
+    console.log(activeElement);
   }
 }

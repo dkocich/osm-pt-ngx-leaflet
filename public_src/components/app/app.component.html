@@ -7,7 +7,7 @@
 
 <nav class="navbar navbar-default navbar-fixed-top hidden-xs" role="navigation">
   <div class="container-fluid">
-    <div class="navbar-header navbar-left">
+    <div id = 'y' class="navbar-header navbar-left">
       <a class="navbar-brand" href="#">
         <span class="text-capitalize">{{ 'OSM public transport editor' | translate }}</span></a>
     </div>
@@ -20,10 +20,14 @@
           <!--<i class="fa fa-info" aria-hidden="true"></i>&nbsp;{{ 'Help' | translate }} </a>-->
       <!--</li>-->
       <li>
+        <a target="_blank" (click)="tutorials()" rel="noopener">
+          <i class="fa fa-book" aria-hidden="true"></i>&nbsp;{{ 'Tutorials' | translate}}</a>
+      </li>
+      <li>
         <a href="https://github.com/dkocich/osm-pt-ngx-leaflet" target="_blank" rel="noopener">
           <i class="fa fa-github" aria-hidden="true"></i>&nbsp;{{ 'About' | translate}}</a>
       </li>
-      <li>
+      <li id = "x">
         <a href="https://osm-pt.blogspot.com/" target="_blank" rel="noopener">
           <i class="fa fa-book"></i>&nbsp;{{ 'Blog' | translate}}</a>
       </li>

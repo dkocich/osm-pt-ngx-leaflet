@@ -29,9 +29,12 @@
               "./node_modules/leaflet/dist/leaflet.css",
               "./node_modules/font-awesome/css/font-awesome.css",
               "./node_modules/dragula/dist/dragula.css",
-              "./node_modules/ngx-toastr/toastr.css"
+              "./node_modules/ngx-toastr/toastr.css",
+              "./node_modules/driver.js/dist/driver.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/driver.js/dist/driver.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -86,9 +89,12 @@
               "./node_modules/leaflet/dist/leaflet.css",
               "./node_modules/font-awesome/css/font-awesome.css",
               "./node_modules/dragula/dist/dragula.css",
-              "./node_modules/ngx-toastr/toastr.css"
+              "./node_modules/ngx-toastr/toastr.css",
+              "./node_modules/driver.js/dist/driver.min.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "./node_modules/driver.js/dist/driver.min.js"
+            ],
             "assets": [
               "public_src/assets",
               "public_src/land.html",
