@@ -417,8 +417,6 @@ export class MapService {
       for (const rel of filteredRelationsForStop) {
         this.showRoutes(rel);
       }
-
-      console.log('highlight', this.highlight);
     }
   }
 
@@ -460,7 +458,6 @@ export class MapService {
         rel.tags.name,
       );
       this.enableInfoRouteLabelsOption.emit({ type: 'multiple', id: rel.id, highlightFill: this.highlightFill });
-      console.log('emitted');
       if (this.highlight) {
         this.highlight.addLayer(this.highlightFill);
       } else {
@@ -866,7 +863,7 @@ export class MapService {
     let rel = this.storageSrv.elementsMap.get(relID);
     if (rel.tags.ref) {
       let textString = '     ' + rel.tags.ref + '     ';
-      this.highlightFill.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
+      this.highlightFill.setText(textString, { repeat: true, orientation: 'flip' , attributes: { fill: 'blue', stroke: 'black' } });
     }
   }
 

@@ -74,7 +74,6 @@ export class ToolbarComponent implements OnInit {
           this.enableInfoRouteLabels = true;
         }
         if (data && data.type === 'multiple') {
-          console.log('node');
           if (!this.multipleRelsHighlightsAndIDs) {
             this.multipleRelsHighlightsAndIDs = new Map();
           }
@@ -204,7 +203,6 @@ export class ToolbarComponent implements OnInit {
      if (this.storageSrv.currentElement.type === 'node') {
        this.mapSrv.showMultipleRouteInfoLabels(this.multipleRelsHighlightsAndIDs);
      } else if (this.storageSrv.currentElement.type === 'relation') {
-       console.log('should be rel', this.storageSrv.currentElement);
        this.mapSrv.showRouteInfoLabels(this.singleRelID);
      }
      this.routeLabelShown = true;
