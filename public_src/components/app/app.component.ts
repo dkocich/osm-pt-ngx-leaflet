@@ -6,6 +6,7 @@ import * as L from 'leaflet';
 
 import { Spinkit } from 'ng-http-loader';
 import * as Driver from 'driver.js';
+import * as introJs from 'intro.js';
 
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Rx';
@@ -57,6 +58,13 @@ export class AppComponent implements OnInit {
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());
     }
+    ngRedux.select<boolean>(['app', 'editing'])
+      .subscribe((data) => {
+        if(data){
+          introJs().start().goToStepNumber(2);
+        }
+      });
+
   }
 
   public ngOnInit(): any {
@@ -113,9 +121,21 @@ export class AppComponent implements OnInit {
     this.helpModal.show();
   }
 
-  private tutorials(): void {
-    const driver = new Driver();
-    console.log(document.getElementById('x'));
-    driver.highlight({     element: document.getElementById('x') });
+  private startTutorials(): void {
+    // introJs().setOption('showButtons', false);
+    if (this.ngRedux.getState()['app']['editing']) {
+      this.appActions.actToggleEditing();
+    }
+    introJs().start();
+    this.mapSrv.map.panTo((new L.LatLng(28.704, 77.1025)));
+
+    introJs().addSteps([{
+      element: document.getElementById(),
+      intro: "Ok, wasn't that fun?",
+      position: 'right',
+    }]);
+
+
   }
+
 }
