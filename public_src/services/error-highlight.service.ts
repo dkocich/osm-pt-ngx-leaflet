@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import * as L from 'leaflet';
 import * as MobileDetect from 'mobile-detect';
@@ -16,7 +16,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import { ModalComponent } from '../components/modal/modal.component';
 
-import { INameErrorObject, IRefErrorObject, IWayErrorObject } from '../core/errorObject.interface';
+import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject } from '../core/errorObject.interface';
 import { ISuggestionsBrowserOptions } from '../core/editingOptions.interface';
 
 @Injectable()
@@ -25,9 +25,10 @@ export class ErrorHighlightService {
   public nameErrorsObj: INameErrorObject[] = [];
   public refErrorsObj: IRefErrorObject[]   = [];
   public wayErrorsObj: IWayErrorObject[]   = [];
+  public PTvErrorsObj: IPTvErrorObject[]   = [];
 
   public currentIndex = 0;
-  public currentMode: string;
+  public currentMode: 'missing name tags' | 'missing refs' | 'way as parent' | 'PTv correction';
 
   constructor(
     private modalService: BsModalService,
@@ -41,27 +42,30 @@ export class ErrorHighlightService {
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
       const { typeOfErrorObject } = data;
       this.currentIndex = this.storageSrv.currentIndex;
-      if (typeOfErrorObject === 'missing name') {
+      if (typeOfErrorObject === 'missing name tags') {
         this.nameErrorsObj = this.storageSrv.nameErrorsObj;
       }
-      if (typeOfErrorObject === 'missing ref') {
+      if (typeOfErrorObject === 'missing refs') {
         this.refErrorsObj = this.storageSrv.refErrorsObj;
       }
       if (typeOfErrorObject === 'way as parent') {
         this.wayErrorsObj = this.storageSrv.wayErrorsObj;
+      }
+      if (typeOfErrorObject === 'PTv correction') {
+        this.PTvErrorsObj = this.storageSrv.PTvErrorsObj;
       }
     });
   }
 
   /***
    * Turns off marker click and starts switch location mode on
-   * @param {string} tag
+   * @param {string} errorName
    * @returns {void}
    */
-  public missingTagError(tag: string): void {
+  public startCorrection(errorName: 'missing name tags' | 'missing refs' | 'way as parent' | 'PTv correction'): void {
     this.storageSrv.currentIndex = 0;
-    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing ' + tag });
-    this.currentMode = tag;
+    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: errorName });
+    this.currentMode = errorName;
     this.mapSrv.popUpLayerGroup = null;
     this.mapSrv.popUpArr = [];
     let stop;
@@ -71,21 +75,27 @@ export class ErrorHighlightService {
       }
     });
     this.appActions.actToggleSwitchMode(true);
-    if (this.currentMode === 'name') {
+    if (this.currentMode === 'missing name tags') {
       stop = this.nameErrorsObj[0]['stop'];
       this.addSinglePopUp(this.nameErrorsObj[0]);
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
     }
 
-    if (this.currentMode === 'ref') {
+    if (this.currentMode === 'missing refs') {
       this.addSinglePopUp(this.refErrorsObj[0]);
       stop = this.refErrorsObj[0]['stop'];
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
     }
 
-    if (this.currentMode === 'way') {
+    if (this.currentMode === 'way as parent') {
       this.addSinglePopUp(this.wayErrorsObj[0]);
       stop = this.wayErrorsObj[0]['stop'];
+      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+    }
+
+    if (this.currentMode === 'PTv correction') {
+      this.addSinglePopUp(this.PTvErrorsObj[0]);
+      stop = this.PTvErrorsObj[0]['stop'];
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
     }
   }
@@ -142,6 +152,10 @@ export class ErrorHighlightService {
         if ((errorCorrectionMode.waySuggestions && errorCorrectionMode.waySuggestions.startCorrection)) {
           this.openModalWithComponentForWay(errorObj);
         }
+
+        if ((errorCorrectionMode.PTvSuggestions && errorCorrectionMode.PTvSuggestions.startCorrection)) {
+          this.openModalWithComponentForPTv(errorObj);
+        }
         this.storageSrv.currentElementsChange.emit(
           JSON.parse(JSON.stringify(element)),
         );
@@ -172,7 +186,7 @@ export class ErrorHighlightService {
     let suggestedNames = this.getMostUsedName(nearbyNodes);
 
     const initialState = {
-          error      : 'missing name tag',
+          error      : 'missing name tags',
           suggestedNames,
           nameErrorObject: errorObject,
         };
@@ -205,14 +219,14 @@ export class ErrorHighlightService {
 
     if (this.isMobileDevice()) {
       initialState = {
-        error      : 'missing ref tag',
+        error      : 'missing refs',
         missingRefRels,
         refErrorObject: errorObject,
       };
     } else {
       let nearbyRels = this.getNearbyRoutesSuggestions(latlng, missingRefRels);
       initialState = {
-        error      : 'missing ref tag',
+        error      : 'missing refs',
         missingRefRels,
         refErrorObject: errorObject,
         nearbyRels,
@@ -221,17 +235,33 @@ export class ErrorHighlightService {
     this.modalRef = this.modalService.show(ModalComponent, { initialState });
   }
 
-  /***
+  /**
    * Opens modal for way as parent error
    * @param {IWayErrorObject} errorObject
    */
   public openModalWithComponentForWay(errorObject: IWayErrorObject): void {
-    console.log('error objjjjjjj', errorObject);
     if (errorObject.corrected === 'false') {
       let initialState;
       initialState = {
         error      : 'way as parent',
         wayErrorObject: errorObject,
+      };
+
+      this.modalRef = this.modalService.show(ModalComponent, { initialState });
+    }
+
+  }
+
+  /**
+   * Opens modal for PTv errors
+   * @param {IWayErrorObject} errorObject
+   */
+  public openModalWithComponentForPTv(errorObject: IWayErrorObject): void {
+    if (errorObject.corrected === 'false') {
+      let initialState;
+      initialState = {
+        error      : 'PTv',
+        PTvErrorObject: errorObject,
       };
 
       this.modalRef = this.modalService.show(ModalComponent, { initialState });
@@ -255,7 +285,7 @@ export class ErrorHighlightService {
       }
     });
     this.storageSrv.nameErrorsObj = this.nameErrorsObj;
-    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
+    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name tags' });
 
   }
 
@@ -295,8 +325,7 @@ export class ErrorHighlightService {
       }
     });
     this.storageSrv.refErrorsObj = this.refErrorsObj;
-    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing ref' });
-
+    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing refs' });
   }
 
   /***
@@ -329,6 +358,23 @@ export class ErrorHighlightService {
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'way as parent' });
   }
 
+  public countPTvErrors(): void {
+    this.storageSrv.currentIndex = 0;
+    this.PTvErrorsObj = [];
+    this.storageSrv.PTvErrorsObj = [];
+
+    this.storageSrv.elementsMap.forEach((stop) => {
+      if (stop.type === 'node' && (stop.tags.highway && stop.tags.highway === 'bus_stop')) {
+        let errorObj: IPTvErrorObject = { stop, corrected: 'false' };
+        if (this.mapSrv.map.getBounds().contains(stop)) {
+            this.PTvErrorsObj.push(errorObj);
+        }
+      }
+    });
+    this.storageSrv.PTvErrorsObj = this.PTvErrorsObj;
+    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'PTv correction' });
+  }
+
   /***
    * Checks whether on Mobile/Desktop
    * @returns {boolean}
@@ -351,20 +397,25 @@ export class ErrorHighlightService {
     let typeOfErrorObject;
     let appendStringID;
     switch (this.currentMode) {
-      case 'name':
+      case 'missing name tags':
         errorsObj         = this.nameErrorsObj;
-        typeOfErrorObject = 'missing name';
+        typeOfErrorObject = this.currentMode;
         appendStringID    = '-name-error-list-id';
         break;
-      case 'ref':
+      case 'missing refs':
         errorsObj         = this.refErrorsObj;
-        typeOfErrorObject = 'missing ref';
+        typeOfErrorObject = this.currentMode;
         appendStringID    = '-ref-error-list-id';
         break;
-      case 'way':
+      case 'way as parent':
         errorsObj         = this.wayErrorsObj;
-        typeOfErrorObject = 'missing way';
+        typeOfErrorObject = this.currentMode;
         appendStringID    = '-way-error-list-id';
+        break;
+      case 'PTv correction':
+        errorsObj         = this.PTvErrorsObj;
+        typeOfErrorObject = this.currentMode;
+        appendStringID    = '-PTv-error-list-id';
         break;
     }
     if (this.currentIndex === (errorsObj.length - 1)) {
@@ -383,7 +434,7 @@ export class ErrorHighlightService {
       this.currentIndex++;
       this.storageSrv.currentIndex++;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
-      this.addSinglePopUp(this.refErrorsObj[this.currentIndex]);
+      this.addSinglePopUp(errorsObj[this.currentIndex]);
       let stop = errorsObj[this.currentIndex].stop;
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
 
@@ -404,20 +455,25 @@ export class ErrorHighlightService {
     let typeOfErrorObject;
     let appendStringID;
     switch (this.currentMode) {
-      case 'name':
+      case 'missing name tags':
         errorsObj         = this.nameErrorsObj;
-        typeOfErrorObject = 'missing name';
+        typeOfErrorObject = this.currentMode;
         appendStringID    = '-name-error-list-id';
         break;
-      case 'ref':
+      case 'missing refs':
         errorsObj         = this.refErrorsObj;
-        typeOfErrorObject = 'missing ref';
+        typeOfErrorObject = this.currentMode;
         appendStringID    = '-ref-error-list-id';
         break;
-      case 'way':
+      case 'way as parent':
         errorsObj         = this.wayErrorsObj;
-        typeOfErrorObject = 'missing way';
+        typeOfErrorObject = this.currentMode;
         appendStringID    = '-way-error-list-id';
+        break;
+      case 'PTv correction':
+        errorsObj         = this.PTvErrorsObj;
+        typeOfErrorObject = this.currentMode;
+        appendStringID    = '-PTv-error-list-id';
         break;
     }
 
@@ -461,6 +517,7 @@ export class ErrorHighlightService {
             startCorrection: false,
           },
           waySuggestions: errorCorrectionMode.waySuggestions,
+          PTvSuggestions: errorCorrectionMode.PTvSuggestions,
         });
       }
       if (errorCorrectionMode.nameSuggestions.startCorrection) {
@@ -471,13 +528,26 @@ export class ErrorHighlightService {
           },
           refSuggestions : errorCorrectionMode.refSuggestions,
           waySuggestions : errorCorrectionMode.waySuggestions,
+          PTvSuggestions : errorCorrectionMode.PTvSuggestions,
         });
       }
       if (errorCorrectionMode.waySuggestions && errorCorrectionMode.waySuggestions.startCorrection) {
         this.appActions.actSetErrorCorrectionMode({
           nameSuggestions: errorCorrectionMode.nameSuggestions,
           refSuggestions : errorCorrectionMode.refSuggestions,
+          PTvSuggestions : errorCorrectionMode.PTvSuggestions,
           waySuggestions : {
+            found          : true,
+            startCorrection: false,
+          },
+        });
+      }
+      if (errorCorrectionMode.PTvSuggestions && errorCorrectionMode.PTvSuggestions.startCorrection) {
+        this.appActions.actSetErrorCorrectionMode({
+          nameSuggestions: errorCorrectionMode.nameSuggestions,
+          refSuggestions : errorCorrectionMode.refSuggestions,
+          waySuggestions : errorCorrectionMode.waySuggestions,
+          PTvSuggestions : {
             found          : true,
             startCorrection: false,
           },
@@ -598,7 +668,7 @@ export class ErrorHighlightService {
    * @param errorObj
    * @returns {void}
    */
-  public addSinglePopUp(errorObj: INameErrorObject | IRefErrorObject | IWayErrorObject): void {
+  public addSinglePopUp(errorObj: INameErrorObject | IRefErrorObject | IWayErrorObject | IPTvErrorObject): void {
     let stop = errorObj['stop'];
     this.mapSrv.removePopUps();
     let latlng = { lat: stop.lat, lng: stop.lon };
@@ -655,7 +725,7 @@ export class ErrorHighlightService {
         .style.backgroundColor = 'white';
       this.currentIndex = index;
       this.storageSrv.currentIndex = index;
-      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
+      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name tags' });
       this.addSinglePopUp(this.nameErrorsObj[this.currentIndex]);
       let stop = this.nameErrorsObj[this.currentIndex].stop;
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
@@ -668,7 +738,7 @@ export class ErrorHighlightService {
         .style.backgroundColor = 'white';
       this.currentIndex = index;
       this.storageSrv.currentIndex = index;
-      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing ref' });
+      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing refs' });
       this.addSinglePopUp(this.refErrorsObj[this.currentIndex]);
       let stop = this.refErrorsObj[this.currentIndex].stop;
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
@@ -688,6 +758,20 @@ export class ErrorHighlightService {
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
       document.getElementById(this.wayErrorsObj[this.currentIndex]
         .stop.id.toString() + '-way-error-list-id')
+        .style.backgroundColor = 'lightblue';
+    }
+
+    if (errorCorrectionMode.PTvSuggestions && errorCorrectionMode.PTvSuggestions.startCorrection) {
+      document.getElementById(this.PTvErrorsObj[this.currentIndex].stop.id.toString() + '-PTv-error-list-id')
+        .style.backgroundColor = 'white';
+      this.currentIndex = index;
+      this.storageSrv.currentIndex = index;
+      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'PTv Correction' });
+      this.addSinglePopUp(this.PTvErrorsObj[this.currentIndex]);
+      let stop = this.PTvErrorsObj[this.currentIndex].stop;
+      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+      document.getElementById(this.PTvErrorsObj[this.currentIndex]
+        .stop.id.toString() + '-PTv-error-list-id')
         .style.backgroundColor = 'lightblue';
     }
   }

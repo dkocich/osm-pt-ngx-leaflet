@@ -17,3 +17,8 @@ export interface IWayErrorObject {
   corrected: string;
   wayIDs: number[];
 }
+
+export interface IPTvErrorObject {
+  stop: IPtStop;
+  corrected: string;
+}

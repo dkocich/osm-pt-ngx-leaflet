@@ -62,6 +62,18 @@
           </ng-container>
         </li>
 
+        <li class="list-group-item clearfix" *ngIf="view('PTv-errors-menu-item')">
+          <ng-container *ngIf="PTvErrorsObj.length !==0">
+            {{PTvErrorsObj.length}} {{'PTv2 errors' | translate }}
+            <button class="btn btn-default pull-right" (click)="startPTvCorrection()">{{'Start Correction' | translate
+              }}
+            </button>
+          </ng-container>
+          <ng-container *ngIf="PTvErrorsObj.length ===0">
+            {{ 'No PTv2 suggestions available' | translate }}
+          </ng-container>
+        </li>
+
       </ul>
 
     </ng-container>
@@ -116,6 +128,21 @@
             </ng-container>
             <i *ngIf="wayError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
             <i *ngIf="wayError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
+          </li>
+        </ng-container>
+      </ul>
+
+    </ng-container>
+
+    <ng-container *ngIf="view('PTv-error-list')">
+
+      <ul class="list-group scrollable-panel">
+        <ng-container *ngFor="let PTvError of PTvErrorsObj; let i = index">
+          <li (click)="jumpToLocation(i)" id='{{ PTvError.stop.id }}-PTv-error-list-id' class="list-group-item"
+              [style.background-color]="i===0 ? 'lightblue':'white'">
+            {{i +1}}. Platform
+            <i *ngIf="PTvError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="PTvError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
           </li>
         </ng-container>
       </ul>

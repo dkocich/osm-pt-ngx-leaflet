@@ -10,7 +10,7 @@ import { WarnService } from '../../services/warn.service';
 import * as L from 'leaflet';
 
 import { IPtRelation } from '../../core/ptRelation.interface';
-import { INameErrorObject, IRefErrorObject, IWayErrorObject } from '../../core/errorObject.interface';
+import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject } from '../../core/errorObject.interface';
 
 @Component({
   selector: 'modal-content',
@@ -31,6 +31,7 @@ export class ModalComponent {
   public nameErrorObject: INameErrorObject;
   public refErrorObject: IRefErrorObject;
   public wayErrorObject: IWayErrorObject;
+  public PTvErrorObject: IPTvErrorObject;
 
   public removedNearbySuggestions: any[]  = [];
   public removedMissingSuggestions: any[] = [];
@@ -58,7 +59,7 @@ export class ModalComponent {
    * @returns {void}
    */
 
-  private saveNameTag(name: string): void {
+  public saveNameTag(name: string): void {
     if (name.length !== 0) {
       this.createChangeForNameTag(name);
       this.bsModalRef.hide();
@@ -71,7 +72,7 @@ export class ModalComponent {
       popupArr[0].setContent(popupContent);
       this.nameErrorObject.corrected                                        = 'true';
       this.storageSrv.nameErrorsObj[this.storageSrv.currentIndex].corrected = 'true';
-      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name' });
+      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name tags' });
       this.warnSrv.showGenericSuccess();
     } else {
       alert('Entered name cannot be empty');
@@ -81,7 +82,7 @@ export class ModalComponent {
   /**
    * Saves ref correction
    */
-  private saveRefTag(): void {
+  public saveRefTag(): void {
     let refsForTag        = [];
     let refString: string = '';
 
@@ -115,14 +116,14 @@ export class ModalComponent {
       });
       this.checkErrorIfCorrected();
       this.refErrorObject.missingConnectedRefs = this.missingRefRels.length;
-      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing ref' });
+      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing refs' });
       this.warnSrv.showGenericSuccess();
     } else {
       alert('Nothing to save');
     }
   }
 
-  saveWayError(): void {
+  public saveWayError(): void {
     this.createChangeForWayError();
     let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
     MapService.addHoverListenersToPopUp(popUpElement);
@@ -135,6 +136,22 @@ export class ModalComponent {
     this.storageSrv.wayErrorsObj[this.storageSrv.currentIndex].corrected = 'true';
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'way as parent' });
     this.rerenderPlatformAsStop();
+    this.warnSrv.showGenericSuccess();
+    this.bsModalRef.hide();
+  }
+
+  public savePTvError(): void {
+    this.createChangeForPTvError();
+    let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
+    MapService.addHoverListenersToPopUp(popUpElement);
+    this.mapSrv.popUpArr   = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
+    let popupContent       = L.DomUtil.create('div', 'content');
+    popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+    let popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
+    popupArr[0].setContent(popupContent);
+    this.PTvErrorObject.corrected                                        = 'true';
+    this.storageSrv.PTvErrorsObj[this.storageSrv.currentIndex].corrected = 'true';
+    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'PTv correction' });
     this.warnSrv.showGenericSuccess();
     this.bsModalRef.hide();
   }
@@ -194,12 +211,22 @@ export class ModalComponent {
     this.editSrv.addChange(this.wayErrorObject.stop, 'change tag', change);
   }
 
-  /***
+  private createChangeForPTvError(): void {
+    let change: object;
+    this.storageSrv.currentElement.tags['public_transport'] = 'platform';
+    change                                      = {
+      key  : 'public_transport',
+      value: 'platform',
+    };
+    this.editSrv.addChange(this.storageSrv.currentElement, 'add tag', change);
+  }
+
+  /**
    * Adds suggested ref value to ref list
    * @param rel
    * @returns {void}
    */
-  private addMissingSuggestedRefValue(rel: IPtRelation): void {
+  public addMissingSuggestedRefValue(rel: IPtRelation): void {
     this.addedMissingSuggestionsRefs.push(rel);
     this.missingRefRels.forEach((item, ind) => {
       if (item.id === rel.id) {
@@ -208,7 +235,7 @@ export class ModalComponent {
     });
   }
 
-  /***
+  /**
    * adds selected nearby suggestion
    * @param rel
    * @returns {any}
@@ -222,7 +249,7 @@ export class ModalComponent {
     });
   }
 
-  /***
+  /**
    * Remove the added ref value (added from suggestions (missing) by user)
    * @param toRemoveRel
    */

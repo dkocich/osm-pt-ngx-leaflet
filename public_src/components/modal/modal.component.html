@@ -1,4 +1,4 @@
-<ng-container *ngIf="error === 'missing name tag'">
+<ng-container *ngIf="error === 'missing name tags'">
   <div class="modal-header">
     <h4 class="modal-title pull-left">{{'Enter name' | translate }}</h4>
   </div>
@@ -32,7 +32,7 @@
 </ng-container>
 
 
-<ng-container *ngIf="error === 'missing ref tag'">
+<ng-container *ngIf="error === 'missing refs'">
     <div class="modal-header">
     <h4 class="modal-title pull-left">{{'Route References Correction' | translate }}</h4>
   </div>
@@ -169,6 +169,22 @@
     <p>
       <button type="button" class="btn btn-default" (click)="close()">{{'Cancel' | translate }}</button>
       <button type="button" class="btn btn-primary" (click)="saveWayError()">{{'Yes' | translate}}</button>
+    </p>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="error === 'PTv'">
+  <div class="modal-body text-center">
+    <div *ngIf="PTvErrorObject.corrected === 'false'">
+      <h4>
+        {{'Do you want add the tag public_transport = platform' | translate }}
+      </h4>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <p>
+      <button type="button" class="btn btn-default" (click)="close()">{{'Cancel' | translate }}</button>
+      <button type="button" class="btn btn-primary" (click)="savePTvError()">{{'Yes' | translate}}</button>
     </p>
   </div>
 </ng-container>
