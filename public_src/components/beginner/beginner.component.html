@@ -2,7 +2,7 @@
   <i class="fa fa-caret-left  icon-2x" aria-hidden="true"> Back </i>
 </button>
 <accordion>
-  <accordion-group #a1 [isOpen]="false" *ngIf="shouldView('tag-browser')">
+  <accordion-group #a1 id = "tag-browser" [isOpen]="true" *ngIf="shouldView('tag-browser')">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-tags" aria-hidden="true"></i>
       <ng-container *ngIf="(beginnerView$ | async) === 'stop'"> {{ 'Tags' | translate }}</ng-container>

@@ -20,6 +20,7 @@ export class AppActions {
   static readonly SET_BEGINNER_VIEW = 'SET_BEGINNER_VIEW';
   static readonly TOGGLE_SWITCH_MODE = 'TOGGLE_SWITCH_MODE';
   static readonly SET_WIZARD_MODE = 'SET_WIZARD_MODE';
+  static readonly TOGGLE_TUTORIAL_MODE = 'TOGGLE_TUTORIAL_MODE';
 
   // basic sync action
   public actToggleEditing = (): Action => {
@@ -61,5 +62,9 @@ export class AppActions {
 
   public actSetWizardMode = (payload: string): Action => {
     return this.ngRedux.dispatch({ type: AppActions.SET_WIZARD_MODE, payload });
-  }
+  };
+
+  public actToggleTutorialMode = (payload: boolean): Action => {
+    return this.ngRedux.dispatch({ type: AppActions.TOGGLE_TUTORIAL_MODE, payload });
+  };
 }

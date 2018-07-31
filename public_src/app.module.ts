@@ -63,6 +63,7 @@ import { StorageService } from './services/storage.service';
 import { WarnService } from './services/warn.service';
 import { RouteWizardService } from './services/route-wizard.service';
 import { RouteMasterWizardService } from './services/route-master-wizard.service';
+import { TutorialService } from './services/tutorial.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -161,6 +162,7 @@ const conditional_providers = [
     WarnService,
     RouteWizardService,
     RouteMasterWizardService,
+    TutorialService,
 
     KeysPipe,
 

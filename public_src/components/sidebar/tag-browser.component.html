@@ -132,9 +132,6 @@
        <td>
           <input #v class="form-control" type="text" minlength="1"
                 placeholder="{{ 'Add new value' | translate }}"
-                 [ngModel]="tagValue"
-                 [typeahead]="expectedValues"
-                 (ngModelChange)="valueChange($event)"
                  (keyup.enter)="updateValue(v.value)"
                  (blur)="updateValue(v.value)"
                  required>
@@ -142,7 +139,7 @@
         <td>
           <button class="btn btn-sm btn-primary fa fa-plus" aria-hidden="true" container="body"
                   tooltip="{{ 'Create a new tag' | translate }}"
-                  (click)="addChangeBeginnerMode(key)">
+                  (click)="addChangeBeginnerMode(key, v.value)">
           </button>
         </td>
       </tr>

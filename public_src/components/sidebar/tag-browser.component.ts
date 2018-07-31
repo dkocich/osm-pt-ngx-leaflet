@@ -19,6 +19,7 @@ import { IOsmElement } from '../../core/osmElement.interface';
 import { PtTags } from '../../core/ptTags.class';
 import { ITagBrowserOptions } from '../../core/editingOptions.interface';
 import { IAppState } from '../../store/model';
+import {TutorialService} from '../../services/tutorial.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -49,6 +50,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
+    private tutorialSrv: TutorialService,
   ) {
     this.advancedExpModeSubscription = ngRedux.select<boolean>(['app', 'advancedExpMode'])
       .subscribe((data) => this.advancedExpMode = data);
@@ -212,14 +214,20 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
-  /***
+  /**
    * Adds tag for beginnerMode
    * @param {string} key
+   * @param {string} value
    * @returns {void}
    */
-  private addChangeBeginnerMode(key: string): void {
+  private addChangeBeginnerMode(key: string, value: string): void {
     this.tagKey = key;
+    this.tagValue = value;
     this.createChange('add tag');
+
+    if (this.ngRedux.getState()['app']['tutorialMode']) {
+      this.tutorialSrv.tutorialStepCompleted.emit(4);
+    }
   }
 
   ngOnDestroy(): void {
