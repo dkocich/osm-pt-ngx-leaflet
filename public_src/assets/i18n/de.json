@@ -36,6 +36,7 @@
   "Delete current changes": "Löschen Sie die aktuellen Änderungen",
   "Delete": "Löschen",
   "Disable current highlight": "Deaktivieren Sie die aktuelle Markierung",
+  "Do you want add the tag public_transport = platform?": "Do you want add the tag public_transport = platform?" ,
   "Done": "Done",
   "Download data from Overpass API": "Daten von der Overpass-API herunterladen",
   "Download data with current query and continue": "Daten mit aktueller Abfrage herunterladen und fortfahren",

@@ -49,8 +49,12 @@ export class BeginnerComponent {
       found          : false,
       startCorrection: false,
     },
-    refSuggestions   : null,
-    waySuggestions   : null,
+    refSuggestions : null,
+    waySuggestions : null,
+    PTvSuggestions : {
+      found          : false,
+      startCorrection: false,
+    },
   };
 
   constructor(private appActions: AppActions,

@@ -15,6 +15,7 @@ export interface ISuggestionsBrowserOptions {
   nameSuggestions: ISuggestions;
   refSuggestions: ISuggestions;
   waySuggestions: ISuggestions;
+  PTvSuggestions: ISuggestions;
 }
 
 export interface ISuggestions {

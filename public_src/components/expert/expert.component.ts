@@ -31,17 +31,21 @@ export class ExpertComponent {
   };
 
   public suggestionsBrowserOptions: ISuggestionsBrowserOptions = {
-    nameSuggestions     : {
-      found             : false,
-      startCorrection   : false,
+    nameSuggestions: {
+      found          : false,
+      startCorrection: false,
     },
-    refSuggestions      : {
-      found             : false,
-      startCorrection   : false,
+    refSuggestions : {
+      found          : false,
+      startCorrection: false,
     },
-    waySuggestions   : {
-      found             : false,
-      startCorrection   : false,
+    waySuggestions : {
+      found          : false,
+      startCorrection: false,
+    },
+    PTvSuggestions : {
+      found          : false,
+      startCorrection: false,
     },
   };
 
