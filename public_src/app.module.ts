@@ -48,6 +48,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
 import { ValidationBrowserComponent } from './components/sidebar/validation-browser.component';
 import { RouteWizardComponent } from './components/route-wizard/route-wizard.component';
+import { TutorialsComponent } from './components/tutorials/tutorials.component';
 
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
@@ -61,6 +62,7 @@ import { ProcessService } from './services/process.service';
 import { StorageService } from './services/storage.service';
 import { WarnService } from './services/warn.service';
 import { RouteWizardService } from './services/route-wizard.service';
+import { TutorialService } from './services/tutorial.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -106,6 +108,7 @@ const conditional_providers = [
     SettingsComponent,
     RouteWizardComponent,
     ValidationBrowserComponent,
+    TutorialsComponent,
 
     KeysPipe,
   ],
@@ -157,6 +160,7 @@ const conditional_providers = [
     StorageService,
     WarnService,
     RouteWizardService,
+    TutorialService,
 
     KeysPipe,
 

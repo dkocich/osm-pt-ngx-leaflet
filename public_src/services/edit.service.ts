@@ -291,7 +291,6 @@ export class EditService {
         break;
       case 'platform':
         newElement.tags = {
-          name            : '',
           public_transport: 'platform',
         };
         break;

@@ -10,6 +10,7 @@ export const INITIAL_STATE: IAppState = {
   errorCorrectionMode: null,
   beginnerView: 'stop',
   switchMode: false,
+  tutorialMode: false,
 };
 
 export function appReducer(state: IAppState = INITIAL_STATE, action: AnyAction): any {
@@ -48,6 +49,11 @@ export function appReducer(state: IAppState = INITIAL_STATE, action: AnyAction):
       return {
         ...state,
         switchMode: action.payload,
+      };
+    case AppActions.TOGGLE_TUTORIAL_MODE:
+      return {
+        ...state,
+        tutorialMode: action.payload,
       };
     default:
       // We don't care about any other actions right now.

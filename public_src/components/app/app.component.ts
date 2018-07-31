@@ -23,6 +23,7 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
+import {TutorialService} from '../../services/tutorial.service';
 // import Driver = require('driver.js');
 
 @Component({
@@ -43,6 +44,7 @@ export class AppComponent implements OnInit {
 
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  @select(['app', 'tutorialMode']) public readonly tutorialMode$: Observable<string>;
   private startEventProcessing = new Subject<L.LeafletEvent>();
 
   constructor(
@@ -54,6 +56,7 @@ export class AppComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
+    private tutorialSrv: TutorialService,
   ) {
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());
@@ -123,19 +126,25 @@ export class AppComponent implements OnInit {
 
   private startTutorials(): void {
     // introJs().setOption('showButtons', false);
-    if (this.ngRedux.getState()['app']['editing']) {
-      this.appActions.actToggleEditing();
+    // if (this.ngRedux.getState()['app']['editing']) {
+    //   this.appActions.actToggleEditing();
+    // }
+    // introJs().start();
+    // this.mapSrv.map.panTo((new L.LatLng(28.704, 77.1025)));
+    // introJs().addSteps([{
+    //   // element: document.getElementById(),
+    //   intro: "Ok, wasn't that fun?",
+    //   position: 'right',
+    // }]);
+    if (this.ngRedux.getState()['app']['advancedExpMode']) {
+     this.appActions.actToggleTutorialMode(false);
+    } else {
+      this.appActions.actToggleTutorialMode(true);
+      this.tutorialSrv.intro = introJs();
+      // this.tutorialsData = data;
+      // console.log('ds', data);
+      this.tutorialSrv.startTutorial('Add new platforms', 'beginner');
     }
-    introJs().start();
-    this.mapSrv.map.panTo((new L.LatLng(28.704, 77.1025)));
-
-    introJs().addSteps([{
-      element: document.getElementById(),
-      intro: "Ok, wasn't that fun?",
-      position: 'right',
-    }]);
-
-
   }
 
 }

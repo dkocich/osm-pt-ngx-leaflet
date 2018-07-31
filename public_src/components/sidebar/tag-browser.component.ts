@@ -212,13 +212,14 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
-  /***
-   * Adds tag for beginnerMode
+  /**
+   * Add tags for beginner mode
    * @param {string} key
-   * @returns {void}
+   * @param {string} value
    */
-  private addChangeBeginnerMode(key: string): void {
+  private addChangeBeginnerMode(key: string, value: string): void {
     this.tagKey = key;
+    this.tagValue = value;
     this.createChange('add tag');
   }
 

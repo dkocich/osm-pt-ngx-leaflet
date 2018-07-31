@@ -90,7 +90,7 @@ export class ErrorHighlightService {
     }
   }
 
-  /***
+  /**
    * Generates the popup content
    * @returns {object}
    */
@@ -114,7 +114,7 @@ export class ErrorHighlightService {
     return popupContent;
   }
 
-  /***
+  /**
    * Handles click events for popup
    * @param popUp
    * @param errorObj
@@ -159,7 +159,7 @@ export class ErrorHighlightService {
     });
   }
 
-  /***
+  /**
    * Opens up modal
    * @returns {void}
    */
@@ -179,7 +179,7 @@ export class ErrorHighlightService {
     this.modalRef = this.modalService.show(ModalComponent, { initialState });
   }
 
-  /***
+  /**
    * Opens up modal for ref
    * @returns {void}
    */
@@ -221,7 +221,7 @@ export class ErrorHighlightService {
     this.modalRef = this.modalService.show(ModalComponent, { initialState });
   }
 
-  /***
+  /**
    * Opens modal for way as parent error
    * @param {IWayErrorObject} errorObject
    */
@@ -238,7 +238,7 @@ export class ErrorHighlightService {
     }
 
   }
-  /***
+  /**
    * Counts and forms name error objects
    */
   public countNameErrors(): void {
@@ -259,7 +259,7 @@ export class ErrorHighlightService {
 
   }
 
-  /***
+  /**
    * Counts and forms ref error objects
    */
   public countRefErrors(): void {
@@ -299,7 +299,7 @@ export class ErrorHighlightService {
 
   }
 
-  /***
+  /**
    * Counts way errors
    * @returns {void}
    */
@@ -329,7 +329,7 @@ export class ErrorHighlightService {
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'way as parent' });
   }
 
-  /***
+  /**
    * Checks whether on Mobile/Desktop
    * @returns {boolean}
    */

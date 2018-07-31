@@ -8,6 +8,9 @@ import * as L from 'leaflet';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
+import {NgRedux} from '@angular-redux/store';
+import {IAppState} from '../store/model';
+import {TutorialService} from './tutorial.service';
 
 @Injectable()
 export class MapService {
@@ -39,6 +42,8 @@ export class MapService {
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
+    private tutorialSrv: TutorialService,
   ) {
     this.baseMaps = {
       Empty: L.tileLayer('', {

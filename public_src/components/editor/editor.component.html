@@ -2,8 +2,7 @@
         *ngIf="isAuthenticated()"
         tooltip="{{ 'Switch edit mode' | translate }}"
         [class.btn-primary]="editing$ | async"
-        (click)="toggleEditMode()" btnCheckbox
-        data-step ='1' data-intro = 'Click on the edit button'>
+        (click)="toggleEditMode()" btnCheckbox>
   <i class="fa fa-pencil" aria-hidden="true"></i>
 
 </button>
@@ -35,8 +34,7 @@
   <button id="platform-btn" type="button" class="btn btn-default on-map" container="body"
           tooltip="{{ 'Create a new platform' | translate }}"
           [class.btn-primary]="creatingElementOfType === 'platform'"
-          (click)="createElement('platform')"
-          data-step ='2' data-intro = 'Click on the platform button'>
+          (click)="createElement('platform')">
     <img src="/assets/transport/platform.png" alt="platform">&nbsp;{{ 'Platform' | translate }}
   </button>
 </div>

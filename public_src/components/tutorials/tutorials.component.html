@@ -1,0 +1,15 @@
+<div class="panel panel-info">
+  <div class="panel-heading">Tutorials</div>
+  <div class="panel-body">
+    <ng-container *ngIf="!(advancedExpMode$ | async)">
+      <ul class="list-group" *ngFor="let tutorial of tutorialsData['beginner']  | keys;">
+        <li class="list-group-item" (click)="startTutorial(tutorial.key,'beginner')">{{tutorial.key}}</li>
+      </ul>
+    </ng-container>
+    <ng-container *ngIf="(advancedExpMode$ | async)">
+      <ul class="list-group" *ngFor="let tutorial of tutorialsData['expert']  | keys;">
+        <li class="list-group-item">Add new platforms</li>
+      </ul>
+    </ng-container>
+  </div>
+</div>

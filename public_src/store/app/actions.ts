@@ -19,6 +19,7 @@ export class AppActions {
   static readonly SET_ERROR_CORRECTION_MODE = 'SET_ERROR_CORRECTION_MODE';
   static readonly SET_BEGINNER_VIEW = 'SET_BEGINNER_VIEW';
   static readonly TOGGLE_SWITCH_MODE = 'TOGGLE_SWITCH_MODE';
+  static readonly TOGGLE_TUTORIAL_MODE = 'TOGGLE_TUTORIAL_MODE';
   // basic sync action
   public actToggleEditing = (): Action => {
     return this.ngRedux.dispatch({
@@ -55,5 +56,9 @@ export class AppActions {
 
   public actToggleSwitchMode = (payload: boolean): Action => {
     return this.ngRedux.dispatch({ type: AppActions.TOGGLE_SWITCH_MODE, payload });
+  }
+
+  public actToggleTutorialMode = (payload: boolean): Action => {
+    return this.ngRedux.dispatch({ type: AppActions.TOGGLE_TUTORIAL_MODE, payload });
   }
 }

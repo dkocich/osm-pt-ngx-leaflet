@@ -1,0 +1,26 @@
+{
+  "beginner": {
+    "Add new platforms": [
+      {
+        "element": "#toggle-edit",
+        "intro": "Click on the edit button to start editing",
+        "position": "right"
+      },
+      {
+        "element": "#platform-btn",
+        "intro": "To add a new platform first click here on the platform button",
+        "position": "right"
+      },
+      {
+        "element": "#map",
+        "intro": "Click anywhere on the map to specify the location for the new platform",
+        "position": "right"
+      },
+      {
+        "element": "#tag-browser",
+        "intro": "Now try adding the name",
+        "position": "right"
+      }
+    ]
+  }
+}

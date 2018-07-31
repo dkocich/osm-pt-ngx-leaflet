@@ -16,4 +16,5 @@ export interface IAppState {
   errorCorrectionMode: ISuggestionsBrowserOptions;
   beginnerView: string;
   switchMode: boolean;
+  tutorialMode: boolean;
 }

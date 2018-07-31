@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
 import { StorageService } from '../../services/storage.service';
+import { TutorialService } from '../../services/tutorial.service';
 
 import { ModalDirective } from 'ngx-bootstrap';
 import { NgRedux, select } from '@angular-redux/store';
@@ -36,6 +37,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private mapSrv: MapService,
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
+    private tutorialSrv: TutorialService,
   ) {
     //
   }
@@ -50,6 +52,10 @@ export class EditorComponent implements OnInit, AfterViewInit {
       if (this.ngRedux.getState()['app']['editing'] && this.creatingElementOfType !== '') {
         this.editSrv.createElement(this.creatingElementOfType, event);
         this.creatingElementOfType = '';
+        console.log('till here');
+        if (this.ngRedux.getState()['app']['tutorialMode']) {
+          this.tutorialSrv.tutorialStepCompleted.emit(3);
+        }
       }
     });
   }
@@ -123,6 +129,10 @@ export class EditorComponent implements OnInit, AfterViewInit {
    */
   private createElement(type: string): void {
     this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
+    if(this.ngRedux.getState()['app']['tutorialMode']) {
+      this.tutorialSrv.tutorialStepCompleted.emit(2);
+    }
+
   }
 
   /**
@@ -161,5 +171,9 @@ export class EditorComponent implements OnInit, AfterViewInit {
         this.mapSrv.disableMouseEvent('platform-btn');
       }, 250);
     }
+    if(this.ngRedux.getState()['app']['tutorialMode']){
+      this.tutorialSrv.tutorialStepCompleted.emit(1);
+    }
+
   }
 }
