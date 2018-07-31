@@ -5,7 +5,6 @@ import { EditService } from '../../services/edit.service';
 import { StorageService } from '../../services/storage.service';
 import { MapService } from '../../services/map.service';
 import { WarnService } from '../../services/warn.service';
-import { IPtRelation } from '../../core/ptRelation.interface';
 import { ModalComponent } from './modal.component';
 
 describe('ModalComponent', () => {

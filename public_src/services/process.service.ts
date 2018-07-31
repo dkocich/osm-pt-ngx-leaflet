@@ -79,6 +79,7 @@ export class ProcessService {
   /**
    * Returns element with specific ID directly from mapped object.
    * @param featureId
+   * @param map
    */
   public getElementById(featureId: number, map: any): any {
     if (map.has(featureId)) {

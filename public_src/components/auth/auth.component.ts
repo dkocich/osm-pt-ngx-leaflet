@@ -27,28 +27,28 @@ export class AuthComponent {
 
   public isAuthenticated = (): void => {
     return this.authSrv.oauth.authenticated();
-  }
+  };
 
   private getDisplayName = (): string => {
     return this.storageSrv.getDisplayName();
-  }
+  };
 
   private authenticate = (): void => {
     this.authSrv.oauth.authenticate(this.gotAuthenticatedCallback);
-  }
+  };
 
   private gotAuthenticatedCallback = (err: any, response: any): void => {
     if (err) {
       throw new Error(JSON.stringify(err));
     }
     this.showDetails();
-  }
+  };
 
   private logout = (): void => {
     this.authSrv.oauth.logout();
     document.getElementById('display_name').innerHTML = '';
     this.storageSrv.clearLocalStorage();
-  }
+  };
 
   private done = (err: any, res: any): any => {
     if (err) {
@@ -70,7 +70,7 @@ export class AuthComponent {
     };
     this.storageSrv.setUserData(userDetails);
     // document.getElementById("display_name").innerHTML = userDetails["display_name"];
-  }
+  };
 
   private showDetails = (): void => {
     this.authSrv.oauth.xhr(
@@ -82,7 +82,7 @@ export class AuthComponent {
       },
       this.gotDetailsCallback.bind(this),
     );
-  }
+  };
 
   private gotDetailsCallback = (err: any, xmlResponse: any): void => {
     this.done(err, xmlResponse);

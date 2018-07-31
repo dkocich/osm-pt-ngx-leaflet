@@ -388,6 +388,7 @@ export class OverpassService {
   /**
    * Downloads all data for currently selected node.
    * @param featureId
+   * @param process
    */
   private getNodeDataOverpass(featureId: number, process: boolean): void {
     let requestBody = `

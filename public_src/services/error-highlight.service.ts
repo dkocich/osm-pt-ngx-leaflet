@@ -381,11 +381,7 @@ export class ErrorHighlightService {
    */
   public isMobileDevice(): boolean {
     let md = new MobileDetect(window.navigator.userAgent);
-    if (md.mobile()) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!md.mobile();
   }
 
   /***
@@ -586,7 +582,7 @@ export class ErrorHighlightService {
   /***
    * Nearby route suggestions
    * @param latlngm
-   * @param missingRefs
+   * @param missingRefRels
    * @returns {any[]}
    */
   public getNearbyRoutesSuggestions(latlngm: any, missingRefRels: any): any[] {
@@ -642,7 +638,7 @@ export class ErrorHighlightService {
     let maxCount = 1;
     for (let item of  array) {
       let el = item;
-      if (modeMap[el] == null) {
+      if (modeMap[el] === null) {
         modeMap[el] = 1;
       }
       else {

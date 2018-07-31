@@ -228,6 +228,7 @@ export class MapService {
   /**
    * Renders GeoJson data on the map.
    * @param transformedGeojson
+   * @param map
    */
   public renderTransformedGeojsonData(transformedGeojson: any, map: L.Map): void {
     console.log('transformed geojson', transformedGeojson);
@@ -384,6 +385,7 @@ export class MapService {
   /**
    * Returns coordinates for a stop specified by ID.
    * @param refId
+   * @param map
    * @returns {{lat: number, lng: number}}
    */
   public findCoordinates(refId: number, map: any): L.LatLngExpression {
@@ -487,6 +489,8 @@ export class MapService {
   /**
    * Builds and creates relation highlight.
    * @param rel
+   * @param map
+   * @param elementsMap
    * @returns {boolean}
    */
   public showRoute(rel: any, map: L.Map, elementsMap: any): boolean {
@@ -902,6 +906,7 @@ export class MapService {
   /***
    * Returns all stops/platforms on the given map
    * @param {Map} map
+   * @param elementsMap
    * @returns {any[]}
    */
   public findStopsInBounds(map: L.Map, elementsMap: any): any[] {

@@ -454,7 +454,7 @@ export class ModalComponent {
    * @param {number} stopID
    * @returns {any}
    */
-  private getLayerFromMap(stopID: number): any{
+  private getLayerFromMap(stopID: number): any {
     let matchedLayer = null;
     this.mapSrv.map.eachLayer((layer) => {
       if (layer['_latlng']  && layer['feature']) {

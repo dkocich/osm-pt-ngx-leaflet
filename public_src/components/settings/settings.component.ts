@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 @Component({
   selector: 'settings',

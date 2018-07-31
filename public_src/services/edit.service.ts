@@ -301,7 +301,7 @@ export class EditService {
           creatingElementOfType,
         );
     }
-    let change = {from: undefined, to: newElement};
+    let change = { from: undefined, to: newElement };
     this.addChange(newElement, 'add element', change);
   }
 
@@ -333,7 +333,7 @@ export class EditService {
         'public_transport:version': '2',
       },
     };
-    let change                     = {from: undefined, to: newRoute};
+    let change                     = { from: undefined, to: newRoute };
     this.addChange(newRoute, 'add route', change);
   }
 
@@ -373,7 +373,7 @@ export class EditService {
       this.storageSrv.idsHaveMaster.add(relId);
       this.storageSrv.queriedMasters.add(relId); // FIXME ? Is it rel or master
     }
-    let change = {from: undefined, to: newMasterRel};
+    let change = { from: undefined, to: newMasterRel };
     this.addChange(newMasterRel, 'create master', change);
   }
 
@@ -388,7 +388,7 @@ export class EditService {
       typeof routeMasterId, routeMasterId,
     );
     let routeMaster = this.storageSrv.elementsMap.get(routeMasterId);
-    let change: any = {from: JSON.parse(JSON.stringify(routeMaster.members))};
+    let change: any = { from: JSON.parse(JSON.stringify(routeMaster.members)) };
     let newMember   = {
       type: 'relation',
       ref : relId,
@@ -432,7 +432,7 @@ export class EditService {
     } else {
       this.mapSrv.clearCircleHighlight();
       const feature = this.storageSrv.elementsMap.get(featureId);
-      let change    = {from: JSON.parse(JSON.stringify(rel)), to: undefined}; // string to not influence toggle edits
+      let change    = { from: JSON.parse(JSON.stringify(rel)), to: undefined }; // string to not influence toggle edits
 
       let shouldPush: boolean;
       let memberIds = [];
@@ -841,7 +841,7 @@ export class EditService {
         mElem.lon   = edit.change.to.lon;
 
         const marker = this.storageSrv.markersMap.get(edit.id);
-        marker.setLatLng({lat: mElem.lat, lng: mElem.lon});
+        marker.setLatLng({ lat: mElem.lat, lng: mElem.lon });
         this.storageSrv.elementsMap.set(edit.id, mElem);
         break;
       case 'add route':
@@ -958,7 +958,7 @@ export class EditService {
         mElem.lon   = edit.change.from.lon;
 
         const marker = this.storageSrv.markersMap.get(edit.id);
-        marker.setLatLng({lat: mElem.lat, lng: mElem.lon});
+        marker.setLatLng({ lat: mElem.lat, lng: mElem.lon });
         this.storageSrv.elementsMap.set(edit.id, mElem);
         break;
       case 'add route':
