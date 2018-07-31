@@ -2,8 +2,9 @@ import { EventEmitter, Injectable } from '@angular/core';
 
 import { MapService } from './map.service';
 import { StorageService } from './storage.service';
-import { BsModalService } from 'ngx-bootstrap';
 import { ProcessService } from './process.service';
+
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import * as L from 'leaflet';
 
@@ -28,11 +29,13 @@ export class RouteWizardService {
   public routesMap: Map<string, any[]> = new Map();
   public membersHighlightLayerGroup    = L.layerGroup();
 
+  public modalRefRouteWiz: BsModalRef;
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,
               private modalService: BsModalService,
-              private processSrv: ProcessService) {
-    this.modalService.onShown.subscribe(() => {
+              private processSrv: ProcessService,
+              ) {
+    this.modalService.onShown.subscribe((data) => {
       this.onShownModal();
     });
     this.modalService.onHidden.subscribe(() => {
@@ -47,15 +50,17 @@ export class RouteWizardService {
     });
   }
 
-  /***
+  /**
    * Fired when modal has rendered
    * @returns {void}
    */
   public onShownModal(): void {
-    this.map.invalidateSize();
+    if (this.map) {
+      this.map.invalidateSize();
+    }
   }
 
-  /***
+  /**
    * Renders data on modal map which was already present on the main map
    * @returns {void}
    */
@@ -70,18 +75,21 @@ export class RouteWizardService {
     this.renderTransformedGeojsonDataForRouteWizard(transformed, this.map);
   }
 
-  /***
-   *Used when modal is closed,
-   *  all data downloaded for modal map is processed for main application
+  /**
+   * Used when modal is closed,
+   * all data downloaded for modal map is processed for main application
    * @returns {void}
    */
   public processAllDownloadedOnMainMap(): void {
     for (let res of this.savedContinuousQueryResponses) {
       this.processSrv.processResponse(res);
     }
+    for (let res of this.savedMultipleNodeDataResponses) {
+      this.processSrv.processNodeResponse(res);
+    }
   }
 
-  /***
+  /**
    * Renders data on modal map
    * @param transformedGeoJSON
    * @param {Map} map
@@ -110,7 +118,7 @@ export class RouteWizardService {
     this.ptLayerModal.addTo(map);
   }
 
-  /***
+  /**
    * Enables click of nodes for modal map
    * @param feature
    * @param layer
@@ -122,7 +130,7 @@ export class RouteWizardService {
     });
   }
 
-  /***
+  /**
    * Handles map click
    * @param feature
    * @returns {void}
@@ -132,24 +140,7 @@ export class RouteWizardService {
     this.autoRouteMapNodeClick.emit(featureId);
   }
 
-  /***
-   * Returns all stops/platforms on the given map
-   * @param {Map} map
-   * @returns {any[]}
-   */
-  public findStopsInBounds(map: L.Map): any[] {
-    let stopsInBounds = [];
-    this.modalMapElementsMap.forEach((stop) => {
-      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-        if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
-          stopsInBounds.push(stop.id);
-        }
-      }
-    });
-    return stopsInBounds;
-  }
-
-  /***
+  /**
    * Forms an array of route refs from nodes, also removes duplicates
    * @param stopsInBoundsIDs
    * @returns {any[]}
@@ -173,13 +164,13 @@ export class RouteWizardService {
     return refValues;
   }
 
-  /***
+  /**
    * Processes multiple node data
    * @param downloadedResponse
    * @returns {void}
    */
   public findMissingRoutes(downloadedResponse: any): void {
-    let stopsInBounds       = this.findStopsInBounds(this.map);
+    let stopsInBounds       = this.mapSrv.findStopsInBounds(this.map, this.modalMapElementsMap);
     let nodeRefs            = this.getRouteRefsFromNodes(stopsInBounds);
     let refsOfRoutes: any[] = [];
     if (downloadedResponse) {
@@ -205,7 +196,7 @@ export class RouteWizardService {
     }
   }
 
-  /***
+  /**
    * Filters newly added ref from suggested refs
    * @param {any[]} refs
    * @returns {any}
@@ -226,7 +217,7 @@ export class RouteWizardService {
     return refs;
   }
 
-  /***
+  /**
    * Returns stops for given refs
    * @param notAddedRefs
    * @returns {any}
@@ -256,7 +247,7 @@ export class RouteWizardService {
     return stopsForNewRoutes;
   }
 
-  /***
+  /**
    * Removes duplicates from array
    * @param {any[]} arr
    * @returns {any}
@@ -267,7 +258,7 @@ export class RouteWizardService {
     });
   }
 
-  /***
+  /**
    * Compares arrays and returns refs not added in route refs
    * @param nodeRefs
    * @param routeRefs
@@ -290,7 +281,7 @@ export class RouteWizardService {
     return notAdded;
   }
 
-  /***
+  /**
    * Get individual refs from stops's route_ref
    * @param {any[]} stops
    * @returns {any}
@@ -316,7 +307,7 @@ export class RouteWizardService {
     return ref_map;
   }
 
-  /***
+  /**
    * Highlights route's members on map
    * @param members
    * @param adjustZoom
@@ -337,7 +328,7 @@ export class RouteWizardService {
     }
   }
 
-  /***
+  /**
    * Assign roles to members for new route
    * @param members
    * @returns {any}
@@ -361,7 +352,7 @@ export class RouteWizardService {
     }
   }
 
-  /***
+  /**
    * Adjust zoom to fit all members of route on map
    * @param members
    */
@@ -373,7 +364,7 @@ export class RouteWizardService {
     this.map.fitBounds(L.latLngBounds(latlngs));
   }
 
-  /***
+  /**
    * Checks member count, for avoiding single member routes
    * @param members
    * @returns {any}
@@ -382,7 +373,7 @@ export class RouteWizardService {
     return members.length !== 1;
   }
 
-  /***
+  /**
    * Handles highlighting of first route on starting of Step
    * @param connectObj
    */
@@ -393,7 +384,7 @@ export class RouteWizardService {
     this.highlightRoute(members, true);
   }
 
-  /***
+  /**
    * Returns member counts (stops, platforms)
    * @param members
    * @returns {any}
@@ -412,11 +403,10 @@ export class RouteWizardService {
     return { stopsCount, platformsCount };
   }
 
-  /***
+  /**
    * Sets available connectivity, uses stop connectivity by default,
    * uses platforms if not available
    * @param countObj
-   * @param connectivityObj
    * @returns {any}
    */
   public useAndSetAvailableConnectivity(countObj: any): any {
@@ -428,7 +418,7 @@ export class RouteWizardService {
     }
   }
 
-  /***
+  /**
    * Resets available connectivity
    * @param countObj
    * @returns {any}
@@ -444,7 +434,7 @@ export class RouteWizardService {
     return { canStopsConnect , canPlatformsConnect };
   }
 
-  /***
+  /**
    * Filters out empty tags before saving route
    * @param route
    * @returns {any}
@@ -461,7 +451,7 @@ export class RouteWizardService {
     return tags;
   }
 
-  /***
+  /**
    * Highlights members of route with circle
    * @param {any[]} members
    * @returns {void}
@@ -479,7 +469,7 @@ export class RouteWizardService {
     }
   }
 
-  /***
+  /**
    * Clears member's highlight
    * @returns {any}
    */
@@ -487,7 +477,7 @@ export class RouteWizardService {
     this.membersHighlightLayerGroup.clearLayers();
   }
 
-  /***
+  /**
    * Forms object for new route's members
    * @param toAddNodes
    * @returns {any}
@@ -504,7 +494,7 @@ export class RouteWizardService {
     return relMembers;
   }
 
-  /***
+  /**
    * Fired when tags are modified
    * @param {string} action
    * @param key
@@ -528,7 +518,7 @@ export class RouteWizardService {
     return newRoute;
   }
 
-  /***
+  /**
    * Styles show connectivity buttons
    * @param {string} type
    * @returns {any}
@@ -546,7 +536,7 @@ export class RouteWizardService {
     }
   }
 
-  /***
+  /**
    * Filters routes with one member
    * @param routesMap
    */
@@ -558,7 +548,7 @@ export class RouteWizardService {
     });
   }
 
-  /***
+  /**
    * View suggested route
    * @param ref
    * @param connectObj
@@ -571,7 +561,7 @@ export class RouteWizardService {
     this.highlightRoute(members, true);
   }
 
-  /***
+  /**
    * Removes member from route
    * @param {string} toRemoveMemberID
    * @param addedNewRouteMembers
@@ -600,7 +590,7 @@ export class RouteWizardService {
     return addedNewRouteMembers;
   }
 
-  /***
+  /**
    * Adds new member to route
    * @param newMember
    * @param addedNewRouteMembers
@@ -620,7 +610,7 @@ export class RouteWizardService {
     return addedNewRouteMembers;
   }
 
-  /***
+  /**
    * Sets highlight type for highlighting route on map
    * @param {string} type
    * @param connectivityObj
@@ -645,7 +635,7 @@ export class RouteWizardService {
     }
   }
 
-  /***
+  /**
    * Changes connectivity of route on map
    * @param {string} type
    * @param connectivityObj
@@ -661,7 +651,7 @@ export class RouteWizardService {
     RouteWizardService.styleButtons(type);
   }
 
-  /***
+  /**
    * Fetches ref of relations already downloaded
    * @returns {any}
    */
@@ -670,7 +660,7 @@ export class RouteWizardService {
     this.modalMapElementsMap.forEach((element) => {
       if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {
         for (let member of element.members) {
-          let stopsInBoundsIDs = this.findStopsInBounds(this.map);
+          let stopsInBoundsIDs = this.mapSrv.findStopsInBounds(this.map, this.modalMapElementsMap);
           if (stopsInBoundsIDs.includes(member.id)) {
             refsOfRoutes.push(element.tags.ref);
           }

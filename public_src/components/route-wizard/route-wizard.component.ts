@@ -13,6 +13,7 @@ import * as L from 'leaflet';
 import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
 
 import { Subject } from 'rxjs';
+import { AppActions } from '../../store/app/actions';
 
 @Component({
   selector: 'route-wizard',
@@ -49,7 +50,9 @@ export class RouteWizardComponent {
               private routeWizardSrv: RouteWizardService,
               private processSrv: ProcessService,
               private editSrv: EditService,
-              public bsModalRef: BsModalRef,
+              public modalRefRouteWiz: BsModalRef,
+              public appActions: AppActions,
+
   ) {
 
     this.routeWizardSrv.routesReceived.subscribe((routesMap) => {
@@ -81,7 +84,7 @@ export class RouteWizardComponent {
     });
 
     this.routeWizardSrv.refreshAvailableConnectivity.subscribe((data) => {
-      this.canStopsConnect = data.canStopsConnect;
+      this.canStopsConnect     = data.canStopsConnect;
       this.canPlatformsConnect = data.canPlatformsConnect;
     });
   }
@@ -129,7 +132,7 @@ export class RouteWizardComponent {
    */
   public findMissingRoutes(): void {
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForRouteWizard) {
-      this.overpassSrv.requestNewOverpassDataForRouteWizard(true);
+      this.overpassSrv.requestNewOverpassDataForWizard(true);
     } else {
       alert('Not sufficient zoom level');
     }
@@ -268,7 +271,8 @@ export class RouteWizardComponent {
     let change            = { from: undefined, to: this.newRoute };
     this.routeWizardSrv.modalMapElementsMap.set(this.newRoute.id, this.newRoute);
     this.editSrv.addChange(this.newRoute, 'add route', change);
-    this.bsModalRef.hide();
+    this.modalRefRouteWiz.hide();
+    this.appActions.actSetWizardMode(null);
   }
 
   /***
@@ -329,4 +333,5 @@ export class RouteWizardComponent {
     });
     return color;
   }
+
 }
