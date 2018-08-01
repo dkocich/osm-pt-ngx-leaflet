@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
+import {ProcessService} from '../../services/process.service';
+import {StorageService} from '../../services/storage.service';
+import {MapService} from '../../services/map.service';
 
 @Component({
   selector: 'settings',
@@ -21,6 +24,9 @@ export class SettingsComponent {
   constructor(
     public appActions: AppActions,
     private errorHighlightSrv: ErrorHighlightService,
+    private processSrv: ProcessService,
+    private storageSrv: StorageService,
+    private mapSrv: MapService,
   ) {
     //
   }
@@ -32,7 +38,13 @@ export class SettingsComponent {
 
   public changeExpMode(advancedExpMode: boolean): void {
     this.appActions.actToggleSwitchMode(false);
-    this.errorHighlightSrv.quit();
+    this.processSrv.refreshSidebarView('cancel selection');
+    this.mapSrv.removePopUps();
+    this.storageSrv.currentElement = null;
+    this.storageSrv.currentElementsChange.emit(
+      JSON.parse(JSON.stringify(null)),
+    );
+    this.appActions.actSetErrorCorrectionMode(null);
     this.appActions.actSetAdvancedExpMode(advancedExpMode);
     localStorage.setItem('advancedMode', JSON.stringify(advancedExpMode));
   }

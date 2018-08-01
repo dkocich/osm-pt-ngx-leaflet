@@ -231,7 +231,6 @@ export class MapService {
    * @param map
    */
   public renderTransformedGeojsonData(transformedGeojson: any, map: L.Map): void {
-    console.log('transformed geojson', transformedGeojson);
     this.ptLayer = L.geoJSON(transformedGeojson, {
       filter: (feature) => {
         // filter away already rendered elements
@@ -832,11 +831,6 @@ export class MapService {
     if (this.popUpLayerGroup) {
       this.popUpLayerGroup.remove();
     }
-    this.map.eachLayer((layer) => {
-      if (layer['_latlng']  && layer['feature']) {
-        this.enableDrag(layer['feature'], layer);
-      }
-    });
   }
 
   /***

@@ -63,7 +63,7 @@ export class BeginnerComponent {
               private ngRedux: NgRedux<IAppState>) {
   }
 
-  /***
+  /**
    * Returns allowed keys (for tags) for beginner mode stops
    * @param {string} key
    * @returns {boolean}
@@ -72,7 +72,7 @@ export class BeginnerComponent {
     return key === 'name' || key === 'ref';
   }
 
-  /***
+  /**
    * Returns allowed keys (for tags) for beginner mode routes
    * @param {string} key
    * @returns {boolean}
@@ -81,7 +81,7 @@ export class BeginnerComponent {
     return key === 'name' || key === 'ref';
   }
 
-  /***
+  /**
    * Refreshes view for back button functionality
    */
   public back(): void {
@@ -91,7 +91,7 @@ export class BeginnerComponent {
     this.processSrv.exploreStop(this.storageSrv.currentElement, false, true, true);
   }
 
-  /***
+  /**
    * Determines whether given component should be viewed
    * @param {string} windowName
    * @returns {boolean}
