@@ -9,6 +9,9 @@ import 'leaflet-textpath';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
+import {NgRedux} from '@angular-redux/store';
+import {IAppState} from '../store/model';
+import {TutorialService} from './tutorial.service';
 
 @Injectable()
 export class MapService {
@@ -40,6 +43,8 @@ export class MapService {
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
+    // private tutorialSrv: TutorialService,
   ) {
     this.baseMaps = {
       Empty: L.tileLayer('', {
@@ -767,6 +772,8 @@ export class MapService {
   private handleMarkerClick(feature: any): void {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     this.markerClick.emit(featureId);
+    console.log('xx ran');
+
   }
 
   /**
@@ -776,7 +783,12 @@ export class MapService {
   private handleMembershipToggle(feature: any): void {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     const marker: object = feature.target; // FIXME DELETE?
+    console.log('azaz');
     this.markerMembershipToggleClick.emit({ featureId });
+    let rel = this.storageSrv.elementsMap.get(this.storageSrv.currentElement.id);
+    if (this.ngRedux.getState()['app']['tutorialMode'] === false && rel.members.length > 1) {
+      this.storageSrv.tutorialStepCompleted.emit(1);
+    }
   }
 
   /***

@@ -41,11 +41,14 @@
 </div>
 </div>
 <div id="sidebar">
-  <div *ngIf="!(advancedExpMode$ | async)">
+  <div *ngIf="!(advancedExpMode$ | async) && !((tutorialMode$ | async))">
     <beginner></beginner>
   </div>
-  <div *ngIf="(advancedExpMode$ | async)">
+  <div *ngIf="(advancedExpMode$ | async) && !((tutorialMode$ | async))">
     <expert></expert>
+  </div>
+  <div *ngIf="(tutorialMode$ | async)">
+  <tutorials></tutorials>
   </div>
 </div>
 

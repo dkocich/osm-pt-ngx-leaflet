@@ -4,7 +4,10 @@ import { IRouteBrowserOptions, ISuggestionsBrowserOptions, ITagBrowserOptions } 
 
 import { Observable } from 'rxjs';
 
-import {  select } from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
+import {IAppState} from '../../store/model';
+import {TutorialService} from '../../services/tutorial.service';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
   providers  : [],
@@ -17,7 +20,12 @@ import {  select } from '@angular-redux/store';
 })
 export class ExpertComponent {
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  constructor(private ngRedux: NgRedux<IAppState>,
+              private tutorialSrv: TutorialService,
+              private storageSrv: StorageService) {
 
+  }
+  public isRouteBrowserOpen = false;
   public routeBrowserOptions: IRouteBrowserOptions = {
     changeMembers     : true,
     createRoute       : true,
@@ -48,5 +56,11 @@ export class ExpertComponent {
       startCorrection: false,
     },
   };
+
+  private openBrowser(name: string): void{
+    if (name === 'route-browser' && this.ngRedux.getState()['app']['tutorialMode'] === false && this.isRouteBrowserOpen) {
+        this.storageSrv.tutorialStepCompleted.emit(4);
+    }
+  }
 
 }

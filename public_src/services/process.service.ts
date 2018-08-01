@@ -359,6 +359,7 @@ export class ProcessService {
         }
       });
     }
+    console.log('till here');
     // check if relation and all its members are downloaded -> get missing
     if (
       !this.storageSrv.elementsDownloaded.has(rel.id) &&
@@ -383,7 +384,7 @@ export class ProcessService {
         ' old) or (new & has some members)' + rel.id);
       console.log('condition is valid', rel.id, rel['members'].length);
       console.log('rel available : highlight type', this.mapSrv.highlightType);
-      this.downloadedMissingMembers(rel, true, zoomToElement);
+      this.downloadedMissingMembers(rel, zoomToElement, true);
       this.refreshTagView(rel);
       this.storageSrv.elementsDownloaded.add(rel.id);
     } else if (rel.id < 0) {
@@ -402,6 +403,7 @@ export class ProcessService {
         JSON.stringify(rel),
       );
     }
+    console.log('now till here');
     if (refreshMasterView) {
       // delete rel.members; // FIXME ??? - TOO MANY RELATIONS?
       this.refreshRelationView(rel);
@@ -584,13 +586,18 @@ export class ProcessService {
       }
       if (coords.length < 2) {
         // do not zoom to point
-        return alert(
-          'Problem occurred - not enough coordinates to fit into their boundaries.',
-        );
+        // commenting out the following alert the alert as when undoing the 'add members in a route' edit,
+        // the route will have a single member or no members, so we should not give this alert when that happens
+        // return alert(
+        //   'Problem occurred - not enough coordinates to fit into their boundaries.',
+        // );
+
+      } else {
+        const polyLine = L.polyline(coords); // zoom to coords of a relation
+        this.mapSrv.map.fitBounds(polyLine.getBounds());
+        console.log('LOG (processing s.) FitBounds to relation geometry');
       }
-      const polyLine = L.polyline(coords); // zoom to coords of a relation
-      this.mapSrv.map.fitBounds(polyLine.getBounds());
-      console.log('LOG (processing s.) FitBounds to relation geometry');
+
     }
   }
 

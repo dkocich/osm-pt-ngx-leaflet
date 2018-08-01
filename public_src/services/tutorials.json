@@ -1,6 +1,6 @@
 {
   "beginner": {
-    "Add new platforms": [
+    "Add new platform": [
       {
         "element": "#toggle-edit",
         "intro": "Click on the edit button to start editing",
@@ -24,6 +24,38 @@
       {
         "element": "last-step",
         "intro": "Good job, you have successfully added a platform. Click escape to exit"
+      }
+    ],
+    "Add new route": [
+      {
+        "element": "#toggle-edit",
+        "intro": "Click on the edit button to start editing",
+        "position": "right"
+      },
+      {
+        "element": "#route-browser",
+        "intro": "Click on the browser to open it",
+        "position": "right"
+      },
+      {
+        "element": "#create-route-btn",
+        "intro": "Click on the create route button",
+        "position": "right"
+      },
+      {
+        "element": "#toggle-members-edit-btn",
+        "intro": "Click on the toggle edit button button",
+        "position": "right"
+      },
+      {
+        "element": "#map",
+        "intro": "Click on any marker to add it to the new route",
+        "position": "right"
+      },
+      {
+        "element": "last-step",
+        "intro": "Good job! you have successfully created a route",
+        "position": "right"
       }
     ]
   }

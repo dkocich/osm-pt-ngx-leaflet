@@ -57,11 +57,14 @@ export class EditorComponent implements OnInit, AfterViewInit {
       this.totalEditSteps = data.total;
     });
     this.mapSrv.map.on('click', (event: MouseEvent) => {
+      console.log('yyy');
       if (this.ngRedux.getState()['app']['editing'] && this.creatingElementOfType !== '') {
         this.editSrv.createElement(this.creatingElementOfType, event);
         this.creatingElementOfType = '';
-        if (this.ngRedux.getState()['app']['tutorialMode']) {
-          this.tutorialSrv.tutorialStepCompleted.emit(3);
+        console.log('xxx');
+        if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+          console.log('emmitted');
+          this.storageSrv.tutorialStepCompleted.emit(3);
         }
       }
     });
@@ -136,8 +139,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
    */
   private createElement(type: string): void {
     this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
-    if(this.ngRedux.getState()['app']['tutorialMode']) {
-      this.tutorialSrv.tutorialStepCompleted.emit(2);
+    if(this.ngRedux.getState()['app']['tutorialMode'] === false) {
+      this.storageSrv.tutorialStepCompleted.emit(2);
     }
   }
 
@@ -177,8 +180,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
         this.mapSrv.disableMouseEvent('platform-btn');
       }, 250);
     }
-    if(this.ngRedux.getState()['app']['tutorialMode']){
-      this.tutorialSrv.tutorialStepCompleted.emit(1);
+    if(this.ngRedux.getState()['app']['tutorialMode'] === false){
+      this.storageSrv.tutorialStepCompleted.emit(1);
     }
   }
 

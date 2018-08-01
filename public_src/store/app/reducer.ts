@@ -11,7 +11,7 @@ export const INITIAL_STATE: IAppState = {
   beginnerView: 'stop',
   switchMode: false,
   wizardMode: null,
-  tutorialMode: false,
+  tutorialMode: null,
 };
 
 export function appReducer(state: IAppState = INITIAL_STATE, action: AnyAction): any {

@@ -24,7 +24,7 @@ import { AppActions } from '../../store/app/actions';
 import { TutorialService } from '../../services/tutorial.service';
 
 import * as introJs from 'intro.js';
-import {ModalComponent} from '../modal/modal.component';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
 
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
-  @select(['app', 'tutorialMode']) public readonly tutorialMode$: Observable<string>;
+  @select(['app', 'tutorialMode']) public readonly tutorialMode$: Observable<boolean>;
   private startEventProcessing = new Subject<L.LeafletEvent>();
 
   constructor(
@@ -117,12 +117,12 @@ export class AppComponent implements OnInit {
     this.helpModal.show();
   }
   private startTutorials(): void {
-    if (this.ngRedux.getState()['app']['advancedExpMode']) {
-      this.appActions.actToggleTutorialMode(false);
-    } else {
+    // if (this.ngRedux.getState()['app']['tutorialMode']) {
+    //   this.appActions.actToggleTutorialMode(null);
+    // } else {
       this.appActions.actToggleTutorialMode(true);
-      this.tutorialSrv.intro = introJs();
-      this.tutorialSrv.startTutorial('Add new platforms', 'beginner');
-    }
+      // this.tutorialSrv.intro = introJs();
+      // this.tutorialSrv.startTutorial('Add new platform', 'beginner');
+    // }
   }
 }

@@ -9,6 +9,9 @@ import { StorageService } from './storage.service';
 import { IPtStop } from '../core/ptStop.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtRelationNew } from '../core/ptRelationNew.interface';
+import {TutorialService} from './tutorial.service';
+import {NgRedux} from '@angular-redux/store';
+import {IAppState} from '../store/model';
 
 @Injectable()
 export class EditService {
@@ -23,6 +26,8 @@ export class EditService {
     private mapSrv: MapService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
+    // private tutorialSrv: TutorialService,
   ) {
 
     // local events
@@ -252,6 +257,10 @@ export class EditService {
     }
     this.storageSrv.syncEdits();
     this.updateCounter();
+    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+      this.storageSrv.tempStepAdded.emit(true);
+    }
+    console.log('emmitted');
   }
 
   /**
@@ -407,6 +416,7 @@ export class EditService {
    */
   private handleMarkerMembershipToggleClick(featureId: number): void {
     this.redrawMembersHighlight(featureId);
+
   }
 
   /**
@@ -628,6 +638,7 @@ export class EditService {
    */
   public step(direction: string): void {
     // TODO
+    console.log('current edir step',this.currentEditStep);
     if (direction === 'forward') {
       const edit = this.storageSrv.edits[this.currentEditStep - 1];
       console.log('LOG (editing s.) Moving forward in history');
@@ -636,6 +647,7 @@ export class EditService {
       const edit = this.storageSrv.edits[this.currentEditStep];
       console.log('LOG (editing s.) Moving backward in history');
       this.undoChange(edit);
+      console.log('done');
     }
   }
 
@@ -692,9 +704,11 @@ export class EditService {
    * @returns {boolean}
    */
   private shouldCombineChanges(editObj: any): boolean {
+
     const last = this.storageSrv.edits[
     this.storageSrv.edits.length - 1
       ];
+    console.log('decre emitted');
     switch (editObj.type) {
       case 'change tags':
         return (
@@ -717,6 +731,9 @@ export class EditService {
     const last = this.storageSrv.edits[
     this.storageSrv.edits.length - 1
       ];
+    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+      this.storageSrv.tempStepAdded.emit(false);
+    }
     switch (editObj.type) {
       case 'change tags':
         last['change'].to.key                                   = editObj.change.to.key;
@@ -724,8 +741,10 @@ export class EditService {
         this.storageSrv.edits[this.storageSrv.edits.length - 1] = last;
         break;
       case 'change members':
+        break;
       case 'toggle members':
         last['change'].to = editObj.change.to;
+
         break;
     }
   }
@@ -739,6 +758,7 @@ export class EditService {
       current: this.currentEditStep,
       total  : this.totalEditSteps,
     });
+
   }
 
   /**
@@ -936,6 +956,7 @@ export class EditService {
         this.processSrv.filterStopsByRelation(
           this.storageSrv.elementsMap.get(edit.id),
         );
+
         this.processSrv.exploreRelation(
           this.storageSrv.elementsMap.get(edit.id),
           false,
@@ -974,12 +995,14 @@ export class EditService {
         );
         this.storageSrv.elementsMap.set(edit.id, edit.change.from);
         this.processSrv.filterStopsByRelation(edit.change.from);
+        console.log('complete');
         this.processSrv.exploreRelation(
           edit.change.from,
           false,
           false,
-          true,
+          false,
         );
+        console.log('process completed');
         break;
       case 'create master':
         console.log(
@@ -993,12 +1016,17 @@ export class EditService {
         alert('Current change type was not recognized ' + JSON.stringify(edit));
     }
     const element = this.processSrv.getElementById(edit['id'], this.storageSrv.elementsMap);
+    console.log('1');
     if (edit.type === 'add element') {
       this.processSrv.exploreStop(element, false, false, false);
+      console.log('2');
     }
     if (edit.type !== 'add route') {
+      console.log('element', element);
       this.processSrv.zoomToElement(element);
+      console.log('3');
     }
+    console.log('undo change completed');
   }
 
   /**

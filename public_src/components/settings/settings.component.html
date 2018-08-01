@@ -1,5 +1,5 @@
 <ul class="nav navbar-nav navbar-left visible-lg">
-  <li>
+  <li id = "change-expert-mode">
     <a href="#">
       Mapper experience:
       <div class="btn-group" role="group" aria-label="...">
@@ -10,7 +10,7 @@
                 (click)="changeExpMode(false)">
           Beginner
         </button>
-        <button type="button" class="btn btn-default btn-xs"
+        <button  type="button" class="btn btn-default btn-xs"
                 tooltip="{{ 'Enable/disable advanced features of the editor' | translate }}"
                 container="body" placement="bottom"
                 [class.btn-primary]="advancedExpMode$ | async"

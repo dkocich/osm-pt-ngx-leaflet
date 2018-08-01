@@ -1,0 +1,12 @@
+<div class="panel panel-info">
+  <div class="panel-heading ">Tutorials
+    <i  (click)="quitTutorialMode()" class="fa fa-times pull-right " aria-hidden="true"></i>
+  </div>
+  <div class="panel-body">
+    <ng-container >
+      <ul class="list-group" *ngFor="let tutorial of tutorialsData['beginner']  | keys;">
+        <li class="list-group-item" (click)="startTutorial(tutorial.key,'beginner')">{{tutorial.key}}</li>
+      </ul>
+    </ng-container>
+  </div>
+</div>
