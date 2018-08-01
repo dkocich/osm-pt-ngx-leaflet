@@ -4,10 +4,11 @@ import { IRouteBrowserOptions, ISuggestionsBrowserOptions, ITagBrowserOptions } 
 
 import { Observable } from 'rxjs';
 
-import {NgRedux, select} from '@angular-redux/store';
-import {IAppState} from '../../store/model';
-import {TutorialService} from '../../services/tutorial.service';
-import {StorageService} from '../../services/storage.service';
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from '../../store/model';
+
+import { TutorialService } from '../../services/tutorial.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   providers  : [],
@@ -57,10 +58,9 @@ export class ExpertComponent {
     },
   };
 
-  private openBrowser(name: string): void{
+  public openBrowser(name: string): void{
     if (name === 'route-browser' && this.ngRedux.getState()['app']['tutorialMode'] === false && this.isRouteBrowserOpen) {
-        this.storageSrv.tutorialStepCompleted.emit(4);
+        this.storageSrv.tutorialStepCompleted.emit(true);
     }
   }
-
 }

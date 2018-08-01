@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
+
 import { Observable } from 'rxjs';
+
+import { NgRedux, select } from '@angular-redux/store';
 import { AppActions } from '../../store/app/actions';
+import { IAppState } from '../../store/model';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
-import {ProcessService} from '../../services/process.service';
-import {StorageService} from '../../services/storage.service';
-import {MapService} from '../../services/map.service';
-import {TutorialService} from '../../services/tutorial.service';
-import {IAppState} from '../../store/model';
+import { ProcessService } from '../../services/process.service';
+import { StorageService } from '../../services/storage.service';
+import { MapService } from '../../services/map.service';
+import { TutorialService } from '../../services/tutorial.service';
 
 @Component({
   selector: 'settings',
@@ -52,7 +54,7 @@ export class SettingsComponent {
     this.appActions.actSetAdvancedExpMode(advancedExpMode);
     localStorage.setItem('advancedMode', JSON.stringify(advancedExpMode));
     if (this.ngRedux.getState()['app']['tutorialMode'] === false && advancedExpMode) {
-      this.storageSrv.tutorialStepCompleted.emit(1);
+      this.storageSrv.tutorialStepCompleted.emit();
     }
   }
 }

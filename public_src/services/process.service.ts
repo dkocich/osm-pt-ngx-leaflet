@@ -359,7 +359,6 @@ export class ProcessService {
         }
       });
     }
-    console.log('till here');
     // check if relation and all its members are downloaded -> get missing
     if (
       !this.storageSrv.elementsDownloaded.has(rel.id) &&
@@ -403,7 +402,6 @@ export class ProcessService {
         JSON.stringify(rel),
       );
     }
-    console.log('now till here');
     if (refreshMasterView) {
       // delete rel.members; // FIXME ??? - TOO MANY RELATIONS?
       this.refreshRelationView(rel);
@@ -591,13 +589,11 @@ export class ProcessService {
         // return alert(
         //   'Problem occurred - not enough coordinates to fit into their boundaries.',
         // );
-
       } else {
         const polyLine = L.polyline(coords); // zoom to coords of a relation
         this.mapSrv.map.fitBounds(polyLine.getBounds());
         console.log('LOG (processing s.) FitBounds to relation geometry');
       }
-
     }
   }
 

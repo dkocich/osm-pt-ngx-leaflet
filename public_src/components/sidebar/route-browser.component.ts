@@ -14,7 +14,6 @@ import { NgRedux, select } from '@angular-redux/store';
 
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
-import {TutorialService} from '../../services/tutorial.service';
 
 @Component({
   providers: [],
@@ -49,7 +48,6 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
     private appActions: AppActions,
-    private tutorialSrv: TutorialService,
   ) {
     this.advancedExpModeSubscription = ngRedux.select<boolean>(['app', 'advancedExpMode'])
       .subscribe((data) => this.advancedExpMode = data);
@@ -95,7 +93,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
       this.mapSrv.clearCircleHighlight();
     }
     if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      this.storageSrv.tutorialStepCompleted.emit(1);
+      this.storageSrv.tutorialStepCompleted.emit(true);
     }
   }
 
@@ -172,7 +170,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   private createRoute(): void {
     this.editSrv.createRoute();
     if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      this.storageSrv.tutorialStepCompleted.emit(4);
+      this.storageSrv.tutorialStepCompleted.emit(true);
     }
   }
 

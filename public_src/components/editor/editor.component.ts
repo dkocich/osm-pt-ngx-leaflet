@@ -4,7 +4,6 @@ import { AuthService } from '../../services/auth.service';
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
 import { StorageService } from '../../services/storage.service';
-import { TutorialService } from '../../services/tutorial.service';
 
 import { BsModalRef, BsModalService, ModalDirective } from 'ngx-bootstrap';
 
@@ -45,7 +44,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
     private modalService: BsModalService,
-    private tutorialSrv: TutorialService,
   ) {
     //
   }
@@ -57,14 +55,11 @@ export class EditorComponent implements OnInit, AfterViewInit {
       this.totalEditSteps = data.total;
     });
     this.mapSrv.map.on('click', (event: MouseEvent) => {
-      console.log('yyy');
       if (this.ngRedux.getState()['app']['editing'] && this.creatingElementOfType !== '') {
         this.editSrv.createElement(this.creatingElementOfType, event);
         this.creatingElementOfType = '';
-        console.log('xxx');
         if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-          console.log('emmitted');
-          this.storageSrv.tutorialStepCompleted.emit(3);
+          this.storageSrv.tutorialStepCompleted.emit(true);
         }
       }
     });
@@ -139,8 +134,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
    */
   private createElement(type: string): void {
     this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
-    if(this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      this.storageSrv.tutorialStepCompleted.emit(2);
+    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+      this.storageSrv.tutorialStepCompleted.emit(true);
     }
   }
 
@@ -180,8 +175,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
         this.mapSrv.disableMouseEvent('platform-btn');
       }, 250);
     }
-    if(this.ngRedux.getState()['app']['tutorialMode'] === false){
-      this.storageSrv.tutorialStepCompleted.emit(1);
+    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+      this.storageSrv.tutorialStepCompleted.emit(true);
     }
   }
 

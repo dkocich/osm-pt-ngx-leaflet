@@ -9,9 +9,9 @@ import { StorageService } from './storage.service';
 import { IPtStop } from '../core/ptStop.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtRelationNew } from '../core/ptRelationNew.interface';
-import {TutorialService} from './tutorial.service';
-import {NgRedux} from '@angular-redux/store';
-import {IAppState} from '../store/model';
+
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from '../store/model';
 
 @Injectable()
 export class EditService {
@@ -27,7 +27,6 @@ export class EditService {
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
-    // private tutorialSrv: TutorialService,
   ) {
 
     // local events
@@ -260,7 +259,6 @@ export class EditService {
     if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
       this.storageSrv.tempStepAdded.emit(true);
     }
-    console.log('emmitted');
   }
 
   /**
@@ -1002,7 +1000,6 @@ export class EditService {
           false,
           false,
         );
-        console.log('process completed');
         break;
       case 'create master':
         console.log(

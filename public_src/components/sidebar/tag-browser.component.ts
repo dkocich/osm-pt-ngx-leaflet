@@ -19,7 +19,6 @@ import { IOsmElement } from '../../core/osmElement.interface';
 import { PtTags } from '../../core/ptTags.class';
 import { ITagBrowserOptions } from '../../core/editingOptions.interface';
 import { IAppState } from '../../store/model';
-import {TutorialService} from '../../services/tutorial.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -50,7 +49,6 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
-    private tutorialSrv: TutorialService,
   ) {
     this.advancedExpModeSubscription = ngRedux.select<boolean>(['app', 'advancedExpMode'])
       .subscribe((data) => this.advancedExpMode = data);
@@ -163,7 +161,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     this.cd.detectChanges();
     this.cd.markForCheck();
     if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      this.storageSrv.tutorialStepCompleted.emit(4);
+      this.storageSrv.tutorialStepCompleted.emit(true);
     }
   }
 
@@ -182,7 +180,6 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
       delete this.currentElement.tags[key];
       delete this.storageSrv.currentElement['tags'][key];
       this.editSrv.addChange(this.currentElement, 'remove tag', change);
-
     } else {
       return alert(
         'Problem occurred - unknown problem in toggle ' +
@@ -228,8 +225,6 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     this.tagKey = key;
     this.tagValue = value;
     this.createChange('add tag');
-
-
   }
 
   ngOnDestroy(): void {

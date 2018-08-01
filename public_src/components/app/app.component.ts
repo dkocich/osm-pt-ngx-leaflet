@@ -21,10 +21,6 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
-import { TutorialService } from '../../services/tutorial.service';
-
-import * as introJs from 'intro.js';
-import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -56,7 +52,6 @@ export class AppComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
-    private tutorialSrv: TutorialService,
   ) {
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());
@@ -116,13 +111,7 @@ export class AppComponent implements OnInit {
   private showHelpModal(): void {
     this.helpModal.show();
   }
-  private startTutorials(): void {
-    // if (this.ngRedux.getState()['app']['tutorialMode']) {
-    //   this.appActions.actToggleTutorialMode(null);
-    // } else {
+  public startTutorials(): void {
       this.appActions.actToggleTutorialMode(true);
-      // this.tutorialSrv.intro = introJs();
-      // this.tutorialSrv.startTutorial('Add new platform', 'beginner');
-    // }
   }
 }
