@@ -92,9 +92,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     } else {
       this.mapSrv.clearCircleHighlight();
     }
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      this.storageSrv.tutorialStepCompleted.emit(true);
-    }
+    this.storageSrv.tutorialStepCompleted.emit('click change members');
   }
 
   private hasMaster(relId: number): boolean {
@@ -123,24 +121,12 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
       this.processSrv.refreshTagView(rel);
       this.appActions.actSetBeginnerView('route');
       this.processSrv.exploreRelation(
-      this.storageSrv.elementsMap.get(rel.id),
+        this.storageSrv.elementsMap.get(rel.id),
         true,
         false,
         false,
       );
-      if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-        let title = this.storageSrv.currentTutorial;
-        switch (title) {
-          case 'Quick overview':
-            if (this.storageSrv.currentTutorialStep === 5) {
-              this.storageSrv.tutorialStepCompleted.emit(true);
-              let fn;
-              document.addEventListener('keydown', fn = (e) => {
-                this.leftKeyClick(e, fn);
-              });
-            }
-        }
-      }
+      this.storageSrv.tutorialStepCompleted.emit('click route from list');
     }
     else {
       this.processSrv.exploreRelation(
@@ -182,9 +168,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
 
   private createRoute(): void {
     this.editSrv.createRoute();
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      this.storageSrv.tutorialStepCompleted.emit(true);
-    }
+    this.storageSrv.tutorialStepCompleted.emit('click create route button');
   }
 
   private elementShouldBeEditable(): boolean {
@@ -248,18 +232,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
-  private leftKeyClick(event: any, fn: any): void {
-    if (event.key === 'ArrowRight') {
-      if (this.storageSrv.currentTutorial === 'Quick overview'){
-        if (this.storageSrv.currentTutorialStep === 7) {
-          document.removeEventListener('keydown', fn);
-          }
-         this.storageSrv.tutorialStepCompleted.emit(true);
-      }
-    }
-  }
-
   ngOnDestroy(): void {
-  this.advancedExpModeSubscription.unsubscribe();
+    this.advancedExpModeSubscription.unsubscribe();
   }
 }

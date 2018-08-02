@@ -106,7 +106,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
           }
           this.currentElement.tags[
             event.target.value
-          ] = this.currentElement.tags[key];
+            ] = this.currentElement.tags[key];
           delete this.currentElement.tags[key];
           break;
         case 'value':
@@ -160,9 +160,6 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     this.editSrv.addChange(this.currentElement, type, change);
     this.cd.detectChanges();
     this.cd.markForCheck();
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      this.storageSrv.tutorialStepCompleted.emit(true);
-    }
   }
 
   private updateKey(value: string): void {
@@ -183,7 +180,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     } else {
       return alert(
         'Problem occurred - unknown problem in toggle ' +
-          JSON.stringify(this.currentElement),
+        JSON.stringify(this.currentElement),
       );
     }
   }
@@ -225,6 +222,8 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     this.tagKey = key;
     this.tagValue = value;
     this.createChange('add tag');
+    this.storageSrv.tutorialStepCompleted.emit('add tag');
+
   }
 
   ngOnDestroy(): void {

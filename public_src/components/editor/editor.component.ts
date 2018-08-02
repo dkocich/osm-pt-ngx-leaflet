@@ -33,8 +33,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
   public creatingElementOfType: string = '';
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
-  modalRefRouteWiz: BsModalRef;
-  modalRefRouteMasterWiz: BsModalRef;
+                                 modalRefRouteWiz: BsModalRef;
+                                 modalRefRouteMasterWiz: BsModalRef;
 
   constructor(
     public appActions: AppActions,
@@ -58,9 +58,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
       if (this.ngRedux.getState()['app']['editing'] && this.creatingElementOfType !== '') {
         this.editSrv.createElement(this.creatingElementOfType, event);
         this.creatingElementOfType = '';
-        if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-          this.storageSrv.tutorialStepCompleted.emit(true);
-        }
+        this.storageSrv.tutorialStepCompleted.emit('click on map');
       }
     });
   }
@@ -134,9 +132,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
    */
   private createElement(type: string): void {
     this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      this.storageSrv.tutorialStepCompleted.emit(true);
-    }
+    this.storageSrv.tutorialStepCompleted.emit('click platform button');
+
   }
 
   /**
@@ -175,9 +172,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
         this.mapSrv.disableMouseEvent('platform-btn');
       }, 250);
     }
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      this.storageSrv.tutorialStepCompleted.emit(true);
-    }
+    this.storageSrv.tutorialStepCompleted.emit('toggle edit mode');
   }
 
   public routeCreationWizard(): void {

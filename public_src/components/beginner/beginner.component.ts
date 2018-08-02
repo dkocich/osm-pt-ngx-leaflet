@@ -90,29 +90,9 @@ export class BeginnerComponent {
     this.storageSrv.currentElement = this.storageSrv.selectedStopBeginnerMode;
     this.processSrv.refreshSidebarView('tag');
     this.processSrv.exploreStop(this.storageSrv.currentElement, false, true, true);
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      let title = this.storageSrv.currentTutorial;
-      switch (title) {
-        case 'Quick overview':
-          if (this.storageSrv.currentTutorialStep === 8) {
-            this.storageSrv.tutorialStepCompleted.emit(true);
-            let fn;
-            document.addEventListener('keydown', fn = (e) => {
-              this.leftKeyClick(e, fn);
-            });
-          }
-      }
-    }
+    this.storageSrv.tutorialStepCompleted.emit('click back button');
   }
 
-  private leftKeyClick(event: any, fn: any): void {
-    if (event.key === 'ArrowRight') {
-      if (this.storageSrv.currentTutorial === 'Quick overview' && this.storageSrv.currentTutorialStep === 9){
-        this.storageSrv.tutorialStepCompleted.emit(true);
-        document.removeEventListener('keydown', fn);
-    }
-  }
-}
 
   /**
    * Determines whether given component should be viewed

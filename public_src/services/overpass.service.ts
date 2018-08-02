@@ -207,35 +207,13 @@ export class OverpassService {
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
-          if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-            let title = this.storageSrv.currentTutorial;
-            switch (title) {
-              case 'Quick overview':
-                if (this.storageSrv.currentTutorialStep === 1) {
-                  this.storageSrv.tutorialStepCompleted.emit(true);
-                  let fn;
-                  document.addEventListener('keydown', fn = (e) => {
-                    this.leftKeyClick(e, fn);
-                  });
-                }
-            }
-          }
+          this.storageSrv.tutorialStepCompleted.emit('new continuous overpass data');
         },
         (err) => {
           this.warnSrv.showError();
           console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
         },
       );
-  }
-
-  private leftKeyClick(event: any, fn: any): void {
-    if (event.key === 'ArrowRight') {
-      if (this.storageSrv.currentTutorial === 'Quick overview' && this.storageSrv.currentTutorialStep === 2){
-        document.removeEventListener('keydown', fn);
-        this.mapSrv.map.setView(new L.LatLng(28.63299, 77.21937), 15);
-        this.storageSrv.tutorialStepCompleted.emit(true);
-      }
-    }
   }
 
   /**
@@ -990,7 +968,7 @@ export class OverpassService {
               } else {
                 this.routeWizardSrv.routesReceived.emit(null);
               }
-          }
+            }
           }
 
           if (wizardMode === 'route master wizard') {

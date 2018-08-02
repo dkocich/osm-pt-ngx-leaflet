@@ -60,7 +60,7 @@ export class ExpertComponent {
 
   public openBrowser(name: string): void{
     if (name === 'route-browser' && this.ngRedux.getState()['app']['tutorialMode'] === false && this.isRouteBrowserOpen) {
-        this.storageSrv.tutorialStepCompleted.emit(true);
+        this.storageSrv.tutorialStepCompleted.emit('open route browser expert');
     }
   }
 }

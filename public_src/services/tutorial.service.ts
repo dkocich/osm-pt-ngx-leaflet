@@ -11,6 +11,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { EditService } from './edit.service';
 import { StorageService } from './storage.service';
 import { MapService } from './map.service';
+import * as L from 'leaflet';
 
 @Injectable()
 export class TutorialService {
@@ -23,10 +24,13 @@ export class TutorialService {
               public editSrv: EditService,
               public storageSrv: StorageService,
               public mapSrv: MapService,
+              private ngRedux: NgRedux<IAppState>,
+
   ) {
-    this.storageSrv.tutorialStepCompleted.subscribe((completedStepNo) => {
-      if (completedStepNo) {
-        this.moveToNextStep();
+    this.storageSrv.tutorialStepCompleted.subscribe((action) => {
+      console.log('GOT');
+      if (action) {
+        this.handleStepCompletion(action);
       }
     });
     this.storageSrv.tempStepAdded.subscribe((added) => {
@@ -93,5 +97,105 @@ export class TutorialService {
       this.mapSrv.clearHighlight(this.mapSrv.map);
     }
 
+  }
+
+  private handleStepCompletion(action: string): void {
+    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+      let title = this.storageSrv.currentTutorial;
+      switch (title) {
+        case 'Add new route':
+          this.moveToNextStep();
+          break;
+        case 'Add new platform':
+          this.moveToNextStep();
+          break;
+        case 'Quick overview (beginner)':
+          this.handleQuickOverviewCompletion(action);
+          break;
+      }
+    }
+  }
+
+  private leftKeyClick(event: any, fn: any): void {
+    if (event.key === 'ArrowRight') {
+      let title = this.storageSrv.currentTutorial;
+      switch (title) {
+        case 'Quick overview (beginner)':
+          switch (this.storageSrv.currentTutorialStep) {
+            case 2 :
+              this.mapSrv.map.setView(new L.LatLng(28.63299, 77.21937), 19);
+              document.removeEventListener('keydown', fn);
+              console.log('REMOVED');
+              this.moveToNextStep();
+              break;
+            case 4 :
+              document.removeEventListener('keydown', fn);
+              this.moveToNextStep();
+              break;
+            case 6 :
+              this.moveToNextStep();
+              break;
+            case 7 :
+              document.removeEventListener('keydown', fn);
+              this.moveToNextStep();
+              break;
+            case 9 :
+              document.removeEventListener('keydown', fn);
+              this.moveToNextStep();
+              break;
+          }
+          break;
+      }
+    }
+  }
+
+  private handleQuickOverviewCompletion(action: string): void {
+    let fn;
+    switch (this.storageSrv.currentTutorialStep) {
+      case 1 :
+        if (action === 'new continuous overpass data') {
+          this.moveToNextStep();
+          document.addEventListener('keydown', fn = (e) => {
+            this.leftKeyClick(e, fn);
+          });
+        }
+        break;
+      case 2:
+        break;
+      case 3:
+        if (action === 'click map marker') {
+          this.moveToNextStep();
+          document.addEventListener('keydown', fn = (e) => {
+            this.leftKeyClick(e, fn);
+          });
+        }
+        break;
+      case 4 :
+        break;
+      case 5:
+        if (action === 'click route from list') {
+          this.moveToNextStep();
+          document.addEventListener('keydown', fn = (e) => {
+            this.leftKeyClick(e, fn);
+          });
+        }
+        break;
+      case 6:
+        break;
+      case 7 :
+        break;
+      case 8:
+        if (action === 'click back button') {
+          this.moveToNextStep();
+          document.addEventListener('keydown', fn = (e) => {
+            this.leftKeyClick(e, fn);
+          });
+        }
+        break;
+      case 9:
+        break;
+      case 10:
+        break;
+    }
   }
 }
