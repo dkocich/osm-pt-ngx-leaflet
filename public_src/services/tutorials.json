@@ -114,22 +114,57 @@
     "Quick overview (expert)": [
       {
         "element": "#toggle-edit",
-        "intro": "Click on the edit button to start editing.",
+        "intro": "<strong>Edit Button :</strong> Enables editing",
         "position": "right"
       },
       {
-        "element": "#toggle-edit",
-        "intro": "Click on the edit button to start editing.",
+        "element": "#tag-browser",
+        "intro": "<strong> Tag Browser :</strong> Used for displaying/editing tags of the selected element.",
         "position": "right"
       },
       {
-        "element": "#toggle-edit",
-        "intro": "Click on the edit button to start editing.",
+        "element": "#route-browser",
+        "intro": "<strong> Route Browser :</strong> Contains the list of routes (can be parent routes of a specific element or all the routes in the current map bounds) You can also create a new route, change it's members and download route masters from here.",
         "position": "right"
       },
       {
-        "element": "#toggle-edit",
-        "intro": "Click on the edit button to start editing.",
+        "element": "#relation-browser",
+        "intro": "<strong> Relation Browser :</strong> Displays all route masters. You can also create a new route master from here.",
+        "position": "right"
+      },
+      {
+        "element": "#stop-browser",
+        "intro": "<strong> Stop Browser :</strong> Depending on the selection, this window displays a list of all the stops in the current map bounds or for a specific route.",
+        "position": "right"
+      },
+      {
+        "element": "#suggestion-browser",
+        "intro": "<strong> Suggestions Browser :</strong> Use this browser to highlight the map using certain rules such as missing name tags. You this when you want to make some quick edits.",
+        "position": "right"
+      },
+      {
+        "element": "#platform-btn",
+        "intro": "<strong> Add platform button :</strong> Use this to start adding new platforms to the map.",
+        "position": "right"
+      },
+      {
+        "element": "#wizard-btn",
+        "intro": "<strong> Wizards :</strong> Route Creation Wizard and Route Master Creation Wizard are available under this option.",
+        "position": "right"
+      },
+      {
+        "element": "#undo-redo-btns",
+        "intro": "Use these to undo/redo your edits.",
+        "position": "right"
+      },
+      {
+        "element": "#edits-count",
+        "intro": "Here you can see the number of edits you have made without uploading them.",
+        "position": "right"
+      },
+      {
+        "element": "last-step",
+        "intro": "Good job! You have successfully created a route with members.",
         "position": "right"
       }
     ]

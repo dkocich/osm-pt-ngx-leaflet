@@ -19,7 +19,7 @@
         <!--<a href="#" (click)="showHelpModal()">-->
           <!--<i class="fa fa-info" aria-hidden="true"></i>&nbsp;{{ 'Help' | translate }} </a>-->
       <!--</li>-->
-      <li>
+      <li *ngIf="isAuthenticated()">
         <a target="_blank" (click)="startTutorials()" rel="noopener">
           <i class="fa fa-book" aria-hidden="true"></i>&nbsp;{{ 'Tutorials' | translate}}</a>
       </li>

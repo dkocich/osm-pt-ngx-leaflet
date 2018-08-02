@@ -21,6 +21,7 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -52,6 +53,7 @@ export class AppComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
+    private authSrv: AuthService,
   ) {
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());
@@ -113,5 +115,9 @@ export class AppComponent implements OnInit {
   }
   public startTutorials(): void {
       this.appActions.actToggleTutorialMode(true);
+  }
+
+  public isAuthenticated(): void {
+    return this.authSrv.oauth.authenticated();
   }
 }

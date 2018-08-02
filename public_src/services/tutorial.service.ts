@@ -6,8 +6,6 @@ import { AppActions } from '../store/app/actions';
 
 import * as data from './tutorials.json';
 
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
-
 import { EditService } from './edit.service';
 import { StorageService } from './storage.service';
 import { MapService } from './map.service';
@@ -15,63 +13,72 @@ import * as L from 'leaflet';
 
 @Injectable()
 export class TutorialService {
-  public intro           = null;
-  public steps           = null;
-  // public currentTutorial = null;
-  // public currentStep     = 0;
-  public tempEditSteps   = 0;
+  public intro = null;
+  public steps = null;
+  public tempEditSteps = 0;
+  public expertMode    = null;
+
   constructor(public appActions: AppActions,
               public editSrv: EditService,
               public storageSrv: StorageService,
               public mapSrv: MapService,
               private ngRedux: NgRedux<IAppState>,
-
   ) {
     this.storageSrv.tutorialStepCompleted.subscribe((action) => {
-      console.log('GOT');
       if (action) {
         this.handleStepCompletion(action);
       }
     });
     this.storageSrv.tempStepAdded.subscribe((added) => {
       if (added) {
-        this.tempEditSteps ++;
+        this.tempEditSteps++;
       } else {
-        this.tempEditSteps --;
+        this.tempEditSteps--;
       }
     });
   }
+
   public startTutorial(tutorialTitle: string, expertMode: string): void {
-    if (tutorialTitle === 'Add new route') {
+    if (tutorialTitle === 'Add new route' || tutorialTitle === 'Quick overview (expert)') {
       this.appActions.actSetAdvancedExpMode(true);
     }
-    this.tempEditSteps = 0 ;
-    // this.currentStep = this.editSrv.currentEditStep;
-    this.intro.setOptions({ keyboardNavigation: false, exitOnOverlayClick: false });
+    if (tutorialTitle === 'Quick overview (expert)') {
+      this.appActions.actToggleEditing();
+      this.intro.setOptions({ disableInteraction: true });
+    }
+    this.expertMode                 = expertMode;
+    this.tempEditSteps              = 0;
     this.storageSrv.currentTutorial = tutorialTitle;
-    this.steps = [];
+    this.steps                      = [];
     for (let step of data[expertMode][tutorialTitle]) {
       this.steps.push({
-        element: step.element,
-        intro: step.intro,
+        element : step.element,
+        intro   : step.intro,
         position: step.position,
       });
     }
     this.intro.setOptions({
-      steps: [this.steps[0]],
-      showButtons: false,
-      showBullets: false,
+      steps             : [this.steps[0]],
+      showButtons       : false,
+      showBullets       : false,
+      keyboardNavigation: false,
+      exitOnOverlayClick: false,
     });
     this.storageSrv.currentTutorialStep = 1;
     this.intro.start();
+    if (tutorialTitle === 'Quick overview (expert)') {
+      this.storageSrv.tutorialStepCompleted.emit('start');
+    }
+
   }
 
   private moveToNextStep(): void {
-    if (data['beginner'][this.storageSrv.currentTutorial][this.storageSrv.currentTutorialStep].element !== 'last-step') {
+
+    if (data[this.expertMode][this.storageSrv.currentTutorial][this.storageSrv.currentTutorialStep].element !== 'last-step') {
       const nextStep = this.storageSrv.currentTutorialStep + 1;
       this.intro.addStep(this.steps[this.storageSrv.currentTutorialStep]);
       setTimeout(() => {
-        if (document.querySelector(data['beginner'][this.storageSrv.currentTutorial][this.storageSrv.currentTutorialStep].element)) {
+        if (document.querySelector(data[this.expertMode][this.storageSrv.currentTutorial][this.storageSrv.currentTutorialStep].element)) {
           this.intro.goToStepNumber(nextStep).start();
           this.storageSrv.currentTutorialStep++;
         }
@@ -79,11 +86,11 @@ export class TutorialService {
     } else {
       this.intro.addStep(this.steps[this.storageSrv.currentTutorialStep]);
       const nextStep = this.storageSrv.currentTutorialStep + 1;
-      this.intro.setOptions({ showStepNumbers : false, keyboardNavigation: true });
+      this.intro.setOptions({ showStepNumbers: false, keyboardNavigation: true });
       this.intro.goToStepNumber(nextStep).start();
-      this.storageSrv.currentTutorialStep = 0 ;
+      this.storageSrv.currentTutorialStep = 0;
       this.appActions.actToggleTutorialMode(true);
-      for (let i = 0; i < this.tempEditSteps ; i++){
+      for (let i = 0; i < this.tempEditSteps; i++) {
         this.editSrv.currentTotalSteps.emit({
           current: this.editSrv.currentEditStep - 1, total: this.editSrv.totalEditSteps,
         });
@@ -91,9 +98,9 @@ export class TutorialService {
 
       }
       this.editSrv.currentTotalSteps.emit({
-        current: this.editSrv.currentEditStep , total: this.editSrv.totalEditSteps - this.tempEditSteps,
+        current: this.editSrv.currentEditStep, total: this.editSrv.totalEditSteps - this.tempEditSteps,
       });
-      this.storageSrv.edits.splice(this.storageSrv.edits.length - this.tempEditSteps , this.tempEditSteps);
+      this.storageSrv.edits.splice(this.storageSrv.edits.length - this.tempEditSteps, this.tempEditSteps);
       this.mapSrv.clearHighlight(this.mapSrv.map);
     }
 
@@ -110,7 +117,11 @@ export class TutorialService {
           this.moveToNextStep();
           break;
         case 'Quick overview (beginner)':
-          this.handleQuickOverviewCompletion(action);
+
+          this.handleQuickOverviewBeginnerCompletion(action);
+          break;
+        case 'Quick overview (expert)':
+          this.handleQuickOverviewExpertCompletion();
           break;
       }
     }
@@ -125,7 +136,6 @@ export class TutorialService {
             case 2 :
               this.mapSrv.map.setView(new L.LatLng(28.63299, 77.21937), 19);
               document.removeEventListener('keydown', fn);
-              console.log('REMOVED');
               this.moveToNextStep();
               break;
             case 4 :
@@ -145,11 +155,17 @@ export class TutorialService {
               break;
           }
           break;
+        case 'Quick overview (expert)':
+          if (this.storageSrv.currentTutorialStep === 11) {
+            document.removeEventListener('keydown', fn);
+          }
+          this.moveToNextStep();
+          break;
       }
     }
   }
 
-  private handleQuickOverviewCompletion(action: string): void {
+  private handleQuickOverviewBeginnerCompletion(action: string): void {
     let fn;
     switch (this.storageSrv.currentTutorialStep) {
       case 1 :
@@ -197,5 +213,13 @@ export class TutorialService {
       case 10:
         break;
     }
+  }
+
+  private handleQuickOverviewExpertCompletion(): void {
+    let fn;
+    document.addEventListener('keydown', fn = (e) => {
+
+      this.leftKeyClick(e, fn);
+    });
   }
 }

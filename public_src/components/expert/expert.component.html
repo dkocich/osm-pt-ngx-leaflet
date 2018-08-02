@@ -1,5 +1,5 @@
 <accordion>
-  <accordion-group #a1 [isOpen]="false">
+  <accordion-group  id ="relation-browser" #a1 [isOpen]="false">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp;{{ 'Relations' | translate }}
       <i class="pull-right float-xs-right fa"
@@ -31,7 +31,7 @@
     </div>
     <stop-browser></stop-browser>
   </accordion-group>
-  <accordion-group #a3 [isOpen]="false" *ngIf="editing$ | async">
+  <accordion-group #a3 id = "suggestion-browser" [isOpen]="false" *ngIf="editing$ | async">
     <div accordion-heading class="text-center text-uppercase">
       {{ 'Suggestions for quick edit' | translate }}
       <i class="pull-right float-xs-right fa " aria-hidden="true"

@@ -28,13 +28,14 @@ import { RouteMasterWizardComponent } from '../route-master-wizard/route-master-
 
 export class EditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editModal') public editModal: ModalDirective;
-  public totalEditSteps: number = 0;
-  public currentEditStep: number = 0;
+  public totalEditSteps: number        = 0;
+  public currentEditStep: number       = 0;
   public creatingElementOfType: string = '';
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
-                                 modalRefRouteWiz: BsModalRef;
-                                 modalRefRouteMasterWiz: BsModalRef;
+
+  modalRefRouteWiz: BsModalRef;
+  modalRefRouteMasterWiz: BsModalRef;
 
   constructor(
     public appActions: AppActions,

@@ -6,20 +6,22 @@
   <i class="fa fa-pencil" aria-hidden="true"></i>
 
 </button>
-<button id="edits-backward-btn" class="btn btn-default on-map" container="body"
-        *ngIf="editing$ | async"
-        tooltip="{{ 'Step back' | translate }}"
-        [disabled]="isInactive('backward')"
-        (click)="stepBackward()">
-  <i class="fa fa-undo" aria-hidden="true"></i>
-</button>
-<button id="edits-forward-btn" class="btn btn-default on-map" container="body"
-        *ngIf="editing$ | async"
-        tooltip="{{ 'Step forward' | translate }}Step forward"
-        [disabled]="isInactive('forward')"
-        (click)="stepForward()">
-  <i class="fa fa-repeat" aria-hidden="true"></i>
-</button>
+<div id="undo-redo-btns">
+  <button id="edits-backward-btn" class="btn btn-default on-map undo-redo-btns" container="body"
+          *ngIf="editing$ | async"
+          tooltip="{{ 'Step back' | translate }}"
+          [disabled]="isInactive('backward')"
+          (click)="stepBackward()">
+    <i class="fa fa-undo" aria-hidden="true"></i>
+  </button>
+  <button id="edits-forward-btn" class="btn btn-default on-map undo-redo-btns" container="body"
+          *ngIf="editing$ | async"
+          tooltip="{{ 'Step forward' | translate }}Step forward"
+          [disabled]="isInactive('forward')"
+          (click)="stepForward()">
+    <i class="fa fa-repeat" aria-hidden="true"></i>
+  </button>
+</div>
 <div *ngIf="editing$ | async" id="edits-count" class="label label-info on-map">
   <h6>{{currentEditStep }}/{{totalEditSteps }}</h6>
 </div>
