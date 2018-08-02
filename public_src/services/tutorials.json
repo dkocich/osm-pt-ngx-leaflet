@@ -8,7 +8,7 @@
       },
       {
         "element": "#platform-btn",
-        "intro": "Good Job! Now you can start editing. To add a new platform first click here on the platform button",
+        "intro": "<strong>Good Job!</strong> Now you can start editing. To add a new platform first click here on the platform button",
         "position": "right"
       },
       {
@@ -34,28 +34,79 @@
       },
       {
         "element": "#route-browser",
-        "intro": "Click on the browser to open it",
+        "intro": "Click on the browser heading to open it.",
         "position": "right"
       },
       {
         "element": "#create-route-btn",
-        "intro": "Click on the create route button",
+        "intro": "Click on the create route button.",
         "position": "right"
       },
       {
         "element": "#toggle-members-edit-btn",
-        "intro": "Click on the toggle edit button button",
+        "intro": "Click here to start adding/removing members of the route.",
         "position": "right"
       },
       {
         "element": "#map",
-        "intro": "Click on any marker to add it to the new route",
+        "intro": "Click on any marker on the map to add it to the new route.",
         "position": "right"
       },
       {
         "element": "last-step",
-        "intro": "Good job! you have successfully created a route",
+        "intro": "Good job! You have successfully created a route with members.",
         "position": "right"
+      }
+    ],
+    "Quick overview" : [
+      {
+        "element": "#map",
+        "intro": "Try moving around in the map and zooming to download some new map data.",
+        "position": "right"
+      },
+      {
+        "element": "#map",
+        "intro": "<strong>Good Job!</strong> Click <i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i>  keyboard key to move to the next step.",
+        "position": "right"
+      },
+      {
+        "element": "#map",
+        "intro": "We have moved the map to a new location. Click on any of the stop which you see in center of the central park to start exploring it.",
+        "position": "right"
+      },
+      {
+        "element": "#tag-browser",
+        "intro": "Here is the tag browser window. You can view all the tags of the selected stop/platform which you just selected here. Click <i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i>  keyboard key to move to the next step.",
+        "position": "right"
+      },
+      {
+        "element": "#route-browser",
+        "intro": "You can also view the parent routes of the selected stop/platform here. Try selecting a route from the given list.",
+        "position": "right"
+      },
+      {
+        "element": "#sidebar",
+        "intro": "Now you can see the information about of route you just selected.Click <i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i>  keyboard key to move to the next step.",
+        "position": "right"
+      },
+      {
+        "element": "#map",
+        "intro": "The route which you selected is also highlighted on the map. Click <i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i>  keyboard key to move to the next step.",
+        "position": "right"
+      },
+      {
+        "element": "#back-btn",
+        "intro": "Click this button to go back to viewing information regarding your selected stop.",
+        "position": "right"
+      },
+      {
+        "element": "#sidebar",
+        "intro": "This way you can toggle between viewing information regarding the stop/platform selected or one of it's parent route. Click <i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i>  keyboard key to move to the next step.",
+        "position": "right"
+      },
+      {
+        "element": "last-step",
+        "intro": "<strong>Good Job!</strong>The tutorial is now complet. Click escape key to exit."
       }
     ]
   }

@@ -128,6 +128,19 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
         false,
         false,
       );
+      if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+        let title = this.storageSrv.currentTutorial;
+        switch (title) {
+          case 'Quick overview':
+            if (this.storageSrv.currentTutorialStep === 5) {
+              this.storageSrv.tutorialStepCompleted.emit(true);
+              let fn;
+              document.addEventListener('keydown', fn = (e) => {
+                this.leftKeyClick(e, fn);
+              });
+            }
+        }
+      }
     }
     else {
       this.processSrv.exploreRelation(
@@ -232,6 +245,17 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   private exploreStop(): void {
     if (!this.advancedExpMode) {
       this.processSrv.exploreStop(this.storageSrv.currentElement, false, false, true);
+    }
+  }
+
+  private leftKeyClick(event: any, fn: any): void {
+    if (event.key === 'ArrowRight') {
+      if (this.storageSrv.currentTutorial === 'Quick overview'){
+        if (this.storageSrv.currentTutorialStep === 7) {
+          document.removeEventListener('keydown', fn);
+          }
+         this.storageSrv.tutorialStepCompleted.emit(true);
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-link" *ngIf="(beginnerView$ | async) === 'route'" (click)="back()">
+<button type="button" id="back-btn" class="btn btn-link" *ngIf="(beginnerView$ | async) === 'route'" (click)="back()">
   <i class="fa fa-caret-left  icon-2x" aria-hidden="true"> Back </i>
 </button>
 <accordion>
@@ -14,7 +14,7 @@
       [tagBrowserOptions]="(beginnerView$| async) === 'stop'? stopTagBrowserOptions : routeTagBrowserOptions">
     </tag-browser>
   </accordion-group>
-  <accordion-group #a2 id = "route-browser" [isOpen]="false" *ngIf="shouldView('route-browser')">
+  <accordion-group #a2 id = "route-browser" [isOpen]="true" *ngIf="shouldView('route-browser')">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-road" aria-hidden="true"></i>&nbsp;{{ 'Parent Routes' | translate }}
       <i class="pull-right float-xs-right fa"

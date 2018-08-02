@@ -207,12 +207,35 @@ export class OverpassService {
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
+          if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+            let title = this.storageSrv.currentTutorial;
+            switch (title) {
+              case 'Quick overview':
+                if (this.storageSrv.currentTutorialStep === 1) {
+                  this.storageSrv.tutorialStepCompleted.emit(true);
+                  let fn;
+                  document.addEventListener('keydown', fn = (e) => {
+                    this.leftKeyClick(e, fn);
+                  });
+                }
+            }
+          }
         },
         (err) => {
           this.warnSrv.showError();
           console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
         },
       );
+  }
+
+  private leftKeyClick(event: any, fn: any): void {
+    if (event.key === 'ArrowRight') {
+      if (this.storageSrv.currentTutorial === 'Quick overview' && this.storageSrv.currentTutorialStep === 2){
+        document.removeEventListener('keydown', fn);
+        this.mapSrv.map.setView(new L.LatLng(28.63299, 77.21937), 15);
+        this.storageSrv.tutorialStepCompleted.emit(true);
+      }
+    }
   }
 
   /**
@@ -804,9 +827,15 @@ export class OverpassService {
             this.storageSrv.listOfRelations.push(relation);
           }
         }
-        this.storageSrv.logStats();
       }
+      this.storageSrv.logStats();
       this.storageSrv.elementsDownloaded.add(stopId);
+      if (!(this.ngRedux.getState()['app']['advancedExpMode'])) {
+        let element = this.storageSrv.elementsMap.get(stopId);
+        this.storageSrv.selectedStopBeginnerMode = element;
+        this.processSrv.filterRelationsByStop(element);
+        this.appActions.actSetBeginnerView('stop');
+      }
       this.getRouteMasters(10);
     }).catch((err) => {
       console.log('LOG (overpass s.) Could not fetch ids of relations for a stop with id :' + stopId);
@@ -838,6 +867,12 @@ export class OverpassService {
         this.storageSrv.logStats();
       }
       this.storageSrv.elementsDownloaded.add(platformId);
+      if (!(this.ngRedux.getState()['app']['advancedExpMode'])) {
+        let element = this.storageSrv.elementsMap.get(platformId);
+        this.storageSrv.selectedStopBeginnerMode = element;
+        this.processSrv.filterRelationsByStop(element);
+        this.appActions.actSetBeginnerView('stop');
+      }
       this.getRouteMasters(10);
     }).catch((err) => {
       console.log('LOG (overpass s.) Could not fetch ids of relations for a platform with id :' + platformId);

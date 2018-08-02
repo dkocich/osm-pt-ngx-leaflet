@@ -44,6 +44,7 @@ export class MapService {
     private httpClient: HttpClient,
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
+    // private tutorialSrv: TutorialService,
   ) {
     this.baseMaps = {
       Empty: L.tileLayer('', {
@@ -771,6 +772,26 @@ export class MapService {
   private handleMarkerClick(feature: any): void {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     this.markerClick.emit(featureId);
+    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+      let title = this.storageSrv.currentTutorial;
+      switch (title) {
+        case 'Quick overview':
+          if (this.storageSrv.currentTutorialStep === 3) {
+            this.storageSrv.tutorialStepCompleted.emit(true);
+            let fn;
+            document.addEventListener('keydown', fn = (e) => {
+              this.leftKeyClick(e, fn);
+            });
+          }
+      }
+    }
+  }
+  private leftKeyClick(event: any, fn: any): void {
+    if (event.key === 'ArrowRight') {
+      if (this.storageSrv.currentTutorial === 'Quick overview' && this.storageSrv.currentTutorialStep === 4)
+      document.removeEventListener('keydown', fn);
+      this.storageSrv.tutorialStepCompleted.emit(true);
+    }
   }
 
   /**

@@ -16,8 +16,8 @@ import { MapService } from './map.service';
 export class TutorialService {
   public intro           = null;
   public steps           = null;
-  public currentTutorial = null;
-  public currentStep     = 0;
+  // public currentTutorial = null;
+  // public currentStep     = 0;
   public tempEditSteps   = 0;
   constructor(public appActions: AppActions,
               public editSrv: EditService,
@@ -42,9 +42,9 @@ export class TutorialService {
       this.appActions.actSetAdvancedExpMode(true);
     }
     this.tempEditSteps = 0 ;
-    this.currentStep = this.editSrv.currentEditStep;
+    // this.currentStep = this.editSrv.currentEditStep;
     this.intro.setOptions({ keyboardNavigation: false, exitOnOverlayClick: false });
-    this.currentTutorial = tutorialTitle;
+    this.storageSrv.currentTutorial = tutorialTitle;
     this.steps = [];
     for (let step of data[expertMode][tutorialTitle]) {
       this.steps.push({
@@ -58,27 +58,26 @@ export class TutorialService {
       showButtons: false,
       showBullets: false,
     });
-    this.currentStep = 1;
+    this.storageSrv.currentTutorialStep = 1;
     this.intro.start();
   }
 
   private moveToNextStep(): void {
-
-    if (data['beginner'][this.currentTutorial][this.currentStep].element !== 'last-step') {
-      const nextStep = this.currentStep + 1;
-      this.intro.addStep(this.steps[this.currentStep]);
+    if (data['beginner'][this.storageSrv.currentTutorial][this.storageSrv.currentTutorialStep].element !== 'last-step') {
+      const nextStep = this.storageSrv.currentTutorialStep + 1;
+      this.intro.addStep(this.steps[this.storageSrv.currentTutorialStep]);
       setTimeout(() => {
-        if (document.querySelector(data['beginner'][this.currentTutorial][this.currentStep].element)) {
+        if (document.querySelector(data['beginner'][this.storageSrv.currentTutorial][this.storageSrv.currentTutorialStep].element)) {
           this.intro.goToStepNumber(nextStep).start();
-          this.currentStep++;
+          this.storageSrv.currentTutorialStep++;
         }
-      }, 1000);
+      }, 500);
     } else {
-      this.intro.addStep(this.steps[this.currentStep]);
-      const nextStep = this.currentStep + 1;
+      this.intro.addStep(this.steps[this.storageSrv.currentTutorialStep]);
+      const nextStep = this.storageSrv.currentTutorialStep + 1;
       this.intro.setOptions({ showStepNumbers : false, keyboardNavigation: true });
       this.intro.goToStepNumber(nextStep).start();
-      this.currentStep = 0 ;
+      this.storageSrv.currentTutorialStep = 0 ;
       this.appActions.actToggleTutorialMode(true);
       for (let i = 0; i < this.tempEditSteps ; i++){
         this.editSrv.currentTotalSteps.emit({
