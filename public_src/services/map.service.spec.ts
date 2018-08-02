@@ -1,20 +1,15 @@
+import { TestBed, inject } from '@angular/core/testing';
+
 import { MapService } from './map.service';
-import { ConfService } from './conf.service';
-import { HttpClient } from '@angular/common/http';
-import { StorageService } from './storage.service';
 
 describe('MapService', () => {
-  let service: MapService;
-  let confSrv: ConfService;
-  let httpClient: HttpClient;
-  let storageSrv: StorageService;
-
   beforeEach(() => {
-    service = new MapService(confSrv, httpClient, storageSrv);
+    TestBed.configureTestingModule({
+      providers: [MapService]
+    });
   });
 
-  it('works', () => {
-    expect(1).toEqual(2);
-  });
-
+  it('should be created', inject([MapService], (service: MapService) => {
+    expect(service).toBeTruthy();
+  }));
 });

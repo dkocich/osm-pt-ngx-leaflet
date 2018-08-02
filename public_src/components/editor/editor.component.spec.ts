@@ -69,10 +69,6 @@ describe('EditorComponent', () => {
     expect(comp.currentEditStep).toEqual(0);
   });
 
-  it('editing defaults to: false', () => {
-    expect(comp.editing).toEqual(false);
-  });
-
   describe('ngOnInit', () => {
     it('makes expected calls', () => {
       const editServiceStub: EditService = fixture.debugElement.injector.get(EditService);

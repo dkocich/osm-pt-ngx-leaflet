@@ -47,7 +47,7 @@ export class OverpassService {
     private routeWizardSrv: RouteWizardService,
     private routeMasterWizardSrv: RouteMasterWizardService,
   ) {
-    /**
+    /***
      * @param data - string containing ID of clicked marker
      */
     this.mapSrv.markerClick.subscribe((data) => {
