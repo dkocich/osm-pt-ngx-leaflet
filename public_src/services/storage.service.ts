@@ -43,6 +43,13 @@ export class StorageService {
   public editsChanged: EventEmitter<boolean> = new EventEmitter();
   public stats: EventEmitter<object> = new EventEmitter();
 
+  public tempStepAdded: EventEmitter<boolean>         = new EventEmitter();
+  public tutorialStepCompleted: EventEmitter<string> = new EventEmitter();
+  public currentTutorial                              = null;
+  public currentTutorialStep                          = 0;
+  // public checkComplete: EventEmitter<boolean> = new EventEmitter();
+
+
   public completelyDownloadedRoutesIDB    = new Set();
   public completelyDownloadedStopsIDB     = new Set();
   public completelyDownloadedPlatformsIDB = new Set();

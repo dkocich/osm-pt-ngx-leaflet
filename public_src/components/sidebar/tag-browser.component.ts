@@ -106,7 +106,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
           }
           this.currentElement.tags[
             event.target.value
-          ] = this.currentElement.tags[key];
+            ] = this.currentElement.tags[key];
           delete this.currentElement.tags[key];
           break;
         case 'value':
@@ -180,7 +180,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     } else {
       return alert(
         'Problem occurred - unknown problem in toggle ' +
-          JSON.stringify(this.currentElement),
+        JSON.stringify(this.currentElement),
       );
     }
   }
@@ -212,14 +212,18 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
-  /***
+  /**
    * Adds tag for beginnerMode
    * @param {string} key
+   * @param {string} value
    * @returns {void}
    */
-  private addChangeBeginnerMode(key: string): void {
+  private addChangeBeginnerMode(key: string, value: string): void {
     this.tagKey = key;
+    this.tagValue = value;
     this.createChange('add tag');
+    this.storageSrv.tutorialStepCompleted.emit('add tag');
+
   }
 
   ngOnDestroy(): void {

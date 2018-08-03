@@ -1,5 +1,5 @@
 <accordion>
-  <accordion-group #a1 [isOpen]="false">
+  <accordion-group  id ="relation-browser" #a1 [isOpen]="false">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp;{{ 'Relations' | translate }}
       <i class="pull-right float-xs-right fa"
@@ -7,7 +7,7 @@
     </div>
     <relation-browser></relation-browser>
   </accordion-group>
-  <accordion-group #a2 [isOpen]="false">
+  <accordion-group #a2 id ="tag-browser" [isOpen]="false">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-tags" aria-hidden="true"></i>&nbsp;{{ 'Tags' | translate }}
       <i class="pull-right float-xs-right fa"
@@ -15,7 +15,7 @@
     </div>
     <tag-browser [tagBrowserOptions]="tagBrowserOptions"></tag-browser>
   </accordion-group>
-  <accordion-group #a3 [isOpen]="false">
+  <accordion-group #a3 id ="route-browser" [(isOpen)]="isRouteBrowserOpen" (isOpenChange)="openBrowser('route-browser')">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-road" aria-hidden="true"></i>&nbsp;{{ 'Routes' | translate }}
       <i class="pull-right float-xs-right fa"
@@ -23,7 +23,7 @@
     </div>
     <route-browser [routeBrowserOptions]='routeBrowserOptions'></route-browser>
   </accordion-group>
-  <accordion-group #a4 [isOpen]="false">
+  <accordion-group #a4 id ="stop-browser" [isOpen]="false">
     <div accordion-heading class="text-center text-uppercase">
       <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;{{ 'Stops/platforms' | translate }}
       <i class="pull-right float-xs-right fa"
@@ -31,7 +31,7 @@
     </div>
     <stop-browser></stop-browser>
   </accordion-group>
-  <accordion-group #a3 [isOpen]="false" *ngIf="editing$ | async">
+  <accordion-group #a3 id = "suggestion-browser" [isOpen]="false" *ngIf="editing$ | async">
     <div accordion-heading class="text-center text-uppercase">
       {{ 'Suggestions for quick edit' | translate }}
       <i class="pull-right float-xs-right fa " aria-hidden="true"

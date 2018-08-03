@@ -28,11 +28,12 @@ import { RouteMasterWizardComponent } from '../route-master-wizard/route-master-
 
 export class EditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editModal') public editModal: ModalDirective;
-  public totalEditSteps: number = 0;
-  public currentEditStep: number = 0;
+  public totalEditSteps: number        = 0;
+  public currentEditStep: number       = 0;
   public creatingElementOfType: string = '';
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+
   modalRefRouteWiz: BsModalRef;
   modalRefRouteMasterWiz: BsModalRef;
 
@@ -58,6 +59,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
       if (this.ngRedux.getState()['app']['editing'] && this.creatingElementOfType !== '') {
         this.editSrv.createElement(this.creatingElementOfType, event);
         this.creatingElementOfType = '';
+        this.storageSrv.tutorialStepCompleted.emit('click on map');
       }
     });
   }
@@ -131,6 +133,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
    */
   private createElement(type: string): void {
     this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
+    this.storageSrv.tutorialStepCompleted.emit('click platform button');
+
   }
 
   /**
@@ -169,6 +173,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
         this.mapSrv.disableMouseEvent('platform-btn');
       }, 250);
     }
+    this.storageSrv.tutorialStepCompleted.emit('toggle edit mode');
   }
 
   public routeCreationWizard(): void {

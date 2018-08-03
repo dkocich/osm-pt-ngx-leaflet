@@ -207,6 +207,7 @@ export class OverpassService {
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
+          this.storageSrv.tutorialStepCompleted.emit('new continuous overpass data');
         },
         (err) => {
           this.warnSrv.showError();
@@ -804,9 +805,15 @@ export class OverpassService {
             this.storageSrv.listOfRelations.push(relation);
           }
         }
-        this.storageSrv.logStats();
       }
+      this.storageSrv.logStats();
       this.storageSrv.elementsDownloaded.add(stopId);
+      if (!(this.ngRedux.getState()['app']['advancedExpMode'])) {
+        let element = this.storageSrv.elementsMap.get(stopId);
+        this.storageSrv.selectedStopBeginnerMode = element;
+        this.processSrv.filterRelationsByStop(element);
+        this.appActions.actSetBeginnerView('stop');
+      }
       this.getRouteMasters(10);
     }).catch((err) => {
       console.log('LOG (overpass s.) Could not fetch ids of relations for a stop with id :' + stopId);
@@ -838,6 +845,12 @@ export class OverpassService {
         this.storageSrv.logStats();
       }
       this.storageSrv.elementsDownloaded.add(platformId);
+      if (!(this.ngRedux.getState()['app']['advancedExpMode'])) {
+        let element = this.storageSrv.elementsMap.get(platformId);
+        this.storageSrv.selectedStopBeginnerMode = element;
+        this.processSrv.filterRelationsByStop(element);
+        this.appActions.actSetBeginnerView('stop');
+      }
       this.getRouteMasters(10);
     }).catch((err) => {
       console.log('LOG (overpass s.) Could not fetch ids of relations for a platform with id :' + platformId);
@@ -955,7 +968,7 @@ export class OverpassService {
               } else {
                 this.routeWizardSrv.routesReceived.emit(null);
               }
-          }
+            }
           }
 
           if (wizardMode === 'route master wizard') {

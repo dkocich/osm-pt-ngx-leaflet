@@ -17,4 +17,5 @@ export interface IAppState {
   beginnerView: string;
   switchMode: boolean;
   wizardMode: string | null | 'router wizard' | 'router master wizard';
+  tutorialMode: boolean;
 }

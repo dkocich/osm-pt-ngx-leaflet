@@ -92,6 +92,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     } else {
       this.mapSrv.clearCircleHighlight();
     }
+    this.storageSrv.tutorialStepCompleted.emit('click change members');
   }
 
   private hasMaster(relId: number): boolean {
@@ -120,11 +121,12 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
       this.processSrv.refreshTagView(rel);
       this.appActions.actSetBeginnerView('route');
       this.processSrv.exploreRelation(
-      this.storageSrv.elementsMap.get(rel.id),
+        this.storageSrv.elementsMap.get(rel.id),
         true,
         false,
         false,
       );
+      this.storageSrv.tutorialStepCompleted.emit('click route from list');
     }
     else {
       this.processSrv.exploreRelation(
@@ -166,6 +168,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
 
   private createRoute(): void {
     this.editSrv.createRoute();
+    this.storageSrv.tutorialStepCompleted.emit('click create route button');
   }
 
   private elementShouldBeEditable(): boolean {
@@ -230,6 +233,6 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-  this.advancedExpModeSubscription.unsubscribe();
+    this.advancedExpModeSubscription.unsubscribe();
   }
 }

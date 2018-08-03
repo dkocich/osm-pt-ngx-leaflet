@@ -11,13 +11,13 @@
       </button>
     </span>
     <span *ngIf="editing$ | async">
-      <button *ngIf="routeBrowserOptions.createRoute" type="button" class="btn btn-default" container="body"
+      <button id ="create-route-btn" *ngIf="routeBrowserOptions.createRoute" type="button" class="btn btn-default" container="body"
               tooltip="{{ 'Create a new empty route relation' | translate }}"
               (click)="createRoute()">
         <i class="fa fa-road" aria-hidden="true"></i>
         &nbsp;{{ 'Create a route' | translate }}
       </button>
-      <button  *ngIf="routeBrowserOptions.membersEditing" type="button" class="btn btn-default" container="body"
+      <button  id = "toggle-members-edit-btn" *ngIf="routeBrowserOptions.membersEditing" type="button" class="btn btn-default" container="body"
               tooltip="{{ 'Toggle members editing for a route in a map' | translate }}"
               [class.btn-primary]="membersEditing" [disabled]="!elementShouldBeEditable()"
               (click)="toggleMembersEdit()"

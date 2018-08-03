@@ -63,6 +63,7 @@ import { StorageService } from './services/storage.service';
 import { WarnService } from './services/warn.service';
 import { RouteWizardService } from './services/route-wizard.service';
 import { RouteMasterWizardService } from './services/route-master-wizard.service';
+import { TutorialService } from './services/tutorial.service';
 
 import { KeysPipe } from './pipes/keys.pipe';
 
@@ -74,6 +75,7 @@ import { RootEpics } from './store/epics';
 import { RavenErrorHandler } from './raven-error-handler';
 
 import { Utils } from './core/utils.class';
+import {TutorialsComponent} from './components/tutorials/tutorials.component';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
@@ -109,6 +111,7 @@ const conditional_providers = [
     RouteWizardComponent,
     ValidationBrowserComponent,
     RouteMasterWizardComponent,
+    TutorialsComponent,
 
     KeysPipe,
   ],
@@ -161,6 +164,7 @@ const conditional_providers = [
     WarnService,
     RouteWizardService,
     RouteMasterWizardService,
+    TutorialService,
 
     KeysPipe,
 

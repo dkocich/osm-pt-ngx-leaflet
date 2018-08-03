@@ -7,6 +7,9 @@ import { StorageService } from '../../services/storage.service';
 
 import { ModalDirective } from 'ngx-bootstrap';
 
+import { select } from '@angular-redux/store';
+import {Observable} from 'rxjs/Observable';
+
 @Component({
   providers: [],
   selector: 'transporter',
@@ -20,6 +23,8 @@ import { ModalDirective } from 'ngx-bootstrap';
 export class TransporterComponent implements OnInit {
   @ViewChild('downloadModal') public downloadModal: ModalDirective;
   @ViewChild('uploadModal') public uploadModal: ModalDirective;
+  @select(['app', 'tutorialMode']) public readonly tutorialMode$: Observable<string>;
+
   public favoriteQueries = [
     {
       id: 1,

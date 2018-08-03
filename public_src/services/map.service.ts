@@ -10,6 +10,10 @@ import 'leaflet-textpath';
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
 
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from '../store/model';
+import {TutorialService} from './tutorial.service';
+
 @Injectable()
 export class MapService {
   public map: L.Map;
@@ -40,6 +44,8 @@ export class MapService {
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
+    // private tutorialSrv: TutorialService,
   ) {
     this.baseMaps = {
       Empty: L.tileLayer('', {
@@ -67,7 +73,7 @@ export class MapService {
       ),
       Esri: L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-          'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+        'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
         {
           attribution: `Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap,
             iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan,
@@ -78,7 +84,7 @@ export class MapService {
       ),
       Esri_imagery: L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-          'World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        'World_Imagery/MapServer/tile/{z}/{y}/{x}',
         {
           attribution: `Tiles &copy; Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye,
             Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community `,
@@ -88,7 +94,7 @@ export class MapService {
       ),
       HERE_satelliteDay: L.tileLayer(
         'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/' +
-          'satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
+        'satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
         {
           attribution:
             'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
@@ -107,7 +113,7 @@ export class MapService {
       ),
       HERE_hybridDay: L.tileLayer(
         'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/' +
-          'hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
+        'hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
         {
           attribution:
             'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
@@ -126,7 +132,7 @@ export class MapService {
       ),
       MapBox_imagery: L.tileLayer(
         'https://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=' +
-          ConfService.mapboxToken,
+        ConfService.mapboxToken,
         {
           attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank'
             rel='noopener'>&copy;&nbsp;Mapbox</a>,&nbsp;<a href='https://www.openstreetmap.org/about/'
@@ -139,7 +145,7 @@ export class MapService {
       ),
       MapBox_streets: L.tileLayer(
         'https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=' +
-          ConfService.mapboxToken,
+        ConfService.mapboxToken,
         {
           attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank'
             rel='noopener'>&copy;&nbsp;Mapbox</a>,&nbsp;<a href='https://www.openstreetmap.org/about/'
@@ -231,7 +237,6 @@ export class MapService {
    * @param map
    */
   public renderTransformedGeojsonData(transformedGeojson: any, map: L.Map): void {
-    console.log('transformed geojson', transformedGeojson);
     this.ptLayer = L.geoJSON(transformedGeojson, {
       filter: (feature) => {
         // filter away already rendered elements
@@ -372,8 +377,8 @@ export class MapService {
       this.highlight = undefined;
     }
     if (this.highlightFill !== undefined) {
-     map.removeLayer(this.highlightFill);
-     this.highlightFill = undefined;
+      map.removeLayer(this.highlightFill);
+      this.highlightFill = undefined;
     }
     if (this.highlightStroke !== undefined) {
       map.removeLayer(this.highlightStroke);
@@ -615,16 +620,16 @@ export class MapService {
       case 'Stops':
         latlngTo = this.findCoordinates(
           this.storageSrv.stopsForRoute[
-            this.storageSrv.stopsForRoute.length - 1
-          ],
+          this.storageSrv.stopsForRoute.length - 1
+            ],
           this.storageSrv.elementsMap,
         );
         return latlngTo;
       case 'Platforms':
         latlngTo = this.findCoordinates(
           this.storageSrv.platformsForRoute[
-            this.storageSrv.platformsForRoute.length - 1
-          ],
+          this.storageSrv.platformsForRoute.length - 1
+            ],
           this.storageSrv.elementsMap,
         );
         return latlngTo;
@@ -768,6 +773,7 @@ export class MapService {
   private handleMarkerClick(feature: any): void {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     this.markerClick.emit(featureId);
+    this.storageSrv.tutorialStepCompleted.emit('click map marker');
   }
 
   /**
@@ -778,6 +784,8 @@ export class MapService {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     const marker: object = feature.target; // FIXME DELETE?
     this.markerMembershipToggleClick.emit({ featureId });
+    let rel = this.storageSrv.elementsMap.get(this.storageSrv.currentElement.id);
+    this.storageSrv.tutorialStepCompleted.emit('click change route members');
   }
 
   /***
@@ -832,11 +840,6 @@ export class MapService {
     if (this.popUpLayerGroup) {
       this.popUpLayerGroup.remove();
     }
-    this.map.eachLayer((layer) => {
-      if (layer['_latlng']  && layer['feature']) {
-        this.enableDrag(layer['feature'], layer);
-      }
-    });
   }
 
   /***

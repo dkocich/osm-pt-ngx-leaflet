@@ -553,6 +553,13 @@ export class ErrorHighlightService {
     this.appActions.actToggleSwitchMode(false);
     this.processSrv.refreshSidebarView('cancel selection');
     this.mapSrv.removePopUps();
+    if (this.currentMode) {
+      this.mapSrv.map.eachLayer((layer) => {
+        if (layer['_latlng']  && layer['feature']) {
+          this.mapSrv.enableDrag(layer['feature'], layer);
+        }
+      });
+    }
     this.storageSrv.currentElement = null;
     this.storageSrv.currentElementsChange.emit(
       JSON.parse(JSON.stringify(null)),
@@ -667,6 +674,11 @@ export class ErrorHighlightService {
   public addSinglePopUp(errorObj: INameErrorObject | IRefErrorObject | IWayErrorObject | IPTvErrorObject): void {
     let stop = errorObj['stop'];
     this.mapSrv.removePopUps();
+    this.mapSrv.map.eachLayer((layer) => {
+      if (layer['_latlng']  && layer['feature']) {
+        this.mapSrv.enableDrag(layer['feature'], layer);
+      }
+    });
     let latlng = { lat: stop.lat, lng: stop.lon };
     let popupContent = ErrorHighlightService.makePopUpContent(errorObj.corrected);
     let popup =     L.popup({
