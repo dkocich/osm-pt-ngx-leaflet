@@ -74,6 +74,18 @@
           </ng-container>
         </li>
 
+        <li class="list-group-item clearfix" *ngIf="view('pt-pair-errors-menu-item')">
+          <ng-container *ngIf="ptPairErrorsObj.length !==0">
+            {{ptPairErrorsObj.length}} {{'stop-platform pair errors' | translate }}
+            <button class="btn btn-default pull-right" (click)="startPTPairCorrection()">{{'Start Correction' | translate
+              }}
+            </button>
+          </ng-container>
+          <ng-container *ngIf="ptPairErrorsObj.length ===0">
+            {{ 'No pt pair suggestions available' | translate }}
+          </ng-container>
+        </li>
+
       </ul>
 
     </ng-container>
@@ -147,6 +159,19 @@
         </ng-container>
       </ul>
 
+    </ng-container>
+
+    <ng-container *ngIf="view('pt-pair-error-list')">
+      <ul class="list-group scrollable-panel">
+        <ng-container *ngFor="let ptPairError of ptPairErrorsObj; let i = index">
+          <li (click)="jumpPTPairCorrection(i)" id='{{ ptPairError.stop.id }}-pt-pair-error-list-id' class="list-group-item"
+              [style.background-color]="i===0 ? 'lightblue':'white'">
+            {{i +1}}. Platform
+            <i *ngIf="ptPairError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="ptPairError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
+          </li>
+        </ng-container>
+      </ul>
     </ng-container>
 
   </ng-container>

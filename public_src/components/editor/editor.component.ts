@@ -131,7 +131,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
    * Provides access to editing service function.
    * @param type
    */
-  private createElement(type: string): void {
+  public createElement(type: string): void {
     this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
     this.storageSrv.tutorialStepCompleted.emit('click platform button');
 
@@ -159,7 +159,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   /**
    * Activates editing mode (locally/globally).
    */
-  private toggleEditMode(): void {
+  public toggleEditMode(): void {
     this.appActions.actToggleEditing();
     let editing = this.ngRedux.getState()['app']['editing'];
     this.editSrv.editingMode.emit(editing);

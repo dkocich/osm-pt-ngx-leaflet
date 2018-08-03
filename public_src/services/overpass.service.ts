@@ -138,9 +138,11 @@ export class OverpassService {
 
           let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
           if (errorCorrectionMode) {
+            console.log('RAN');
             if (errorCorrectionMode.refSuggestions === null && errorCorrectionMode.waySuggestions === null) {
               this.errorHighlightSrv.countNameErrors();
               this.errorHighlightSrv.countPTvErrors();
+              this.errorHighlightSrv.countPTPairErrors();
               this.appActions.actSetErrorCorrectionMode({
                 nameSuggestions: {
                   found          : true,
@@ -152,12 +154,17 @@ export class OverpassService {
                   found          : true,
                   startCorrection: false,
                 },
+                ptPairSuggestions: {
+                  found          : true,
+                  startCorrection: false,
+                },
               });
             } else {
               if (this.errorHighlightSrv.isMobileDevice()) {
                 this.errorHighlightSrv.countNameErrors();
                 this.errorHighlightSrv.countRefErrors();
                 this.errorHighlightSrv.countPTvErrors();
+                this.errorHighlightSrv.countPTPairErrors();
                 this.appActions.actSetErrorCorrectionMode({
                   nameSuggestions: {
                     found          : true,
@@ -172,6 +179,10 @@ export class OverpassService {
                     found          : true,
                     startCorrection: false,
                   },
+                  ptPairSuggestions: {
+                    found          : true,
+                    startCorrection: false,
+                  },
                 });
               } else {
                 let toDownload = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
@@ -180,6 +191,7 @@ export class OverpassService {
                   this.errorHighlightSrv.countRefErrors();
                   this.errorHighlightSrv.countWayErrors();
                   this.errorHighlightSrv.countPTvErrors();
+                  this.errorHighlightSrv.countPTPairErrors();
                   this.appActions.actSetErrorCorrectionMode({
                     nameSuggestions: {
                       found          : true,
@@ -194,6 +206,10 @@ export class OverpassService {
                       startCorrection: false,
                     },
                     PTvSuggestions : {
+                      found          : true,
+                      startCorrection: false,
+                    },
+                    ptPairSuggestions: {
                       found          : true,
                       startCorrection: false,
                     },
@@ -909,11 +925,16 @@ export class OverpassService {
               found          : true,
               startCorrection: false,
             },
+            ptPairSuggestions: {
+              found          : true,
+              startCorrection: false,
+            },
           });
           this.errorHighlightSrv.countNameErrors();
           this.errorHighlightSrv.countRefErrors();
           this.errorHighlightSrv.countWayErrors();
           this.errorHighlightSrv.countPTvErrors();
+          this.errorHighlightSrv.countPTPairErrors();
         },
         (err) => {
           this.warnSrv.showError();

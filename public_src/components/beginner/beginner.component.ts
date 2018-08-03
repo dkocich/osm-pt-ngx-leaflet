@@ -46,13 +46,17 @@ export class BeginnerComponent {
   };
 
   public suggestionsBrowserOptions: ISuggestionsBrowserOptions = {
-    nameSuggestions: {
+    nameSuggestions  : {
       found          : false,
       startCorrection: false,
     },
-    refSuggestions : null,
-    waySuggestions : null,
-    PTvSuggestions : {
+    refSuggestions   : null,
+    waySuggestions   : null,
+    PTvSuggestions   : {
+      found          : false,
+      startCorrection: false,
+    },
+    ptPairSuggestions: {
       found          : false,
       startCorrection: false,
     },
@@ -92,7 +96,6 @@ export class BeginnerComponent {
     this.processSrv.exploreStop(this.storageSrv.currentElement, false, true, true);
     this.storageSrv.tutorialStepCompleted.emit('click back button');
   }
-
 
   /**
    * Determines whether given component should be viewed
