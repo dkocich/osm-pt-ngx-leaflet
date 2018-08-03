@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 
 import * as L from 'leaflet';
 import * as MobileDetect from 'mobile-detect';
@@ -6,7 +6,6 @@ import * as MobileDetect from 'mobile-detect';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
-import { EditService } from './edit.service';
 
 import { AppActions } from '../store/app/actions';
 import { IAppState } from '../store/model';
@@ -35,6 +34,8 @@ export class ErrorHighlightService {
 
   public errorCorrectionMode: ISuggestionsBrowserOptions;
   public errorCorrectionModeSubscription;
+
+  private circleHighlight: L.Circle = null;
   constructor(
     private modalService: BsModalService,
     private ngRedux: NgRedux<IAppState>,
@@ -42,7 +43,6 @@ export class ErrorHighlightService {
     public appActions: AppActions,
     public mapSrv: MapService,
     public storageSrv: StorageService,
-    private editSrv: EditService,
   ) {
 
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
@@ -446,7 +446,7 @@ export class ErrorHighlightService {
         .style.backgroundColor = 'white';
       document.getElementById(errorsObj[this.currentIndex]['stop'].id.toString() + appendStringID)
         .style.backgroundColor = 'lightblue';
-     if (typeOfErrorObject !== 'pt-pair') {
+      if (typeOfErrorObject !== 'pt-pair') {
        this.addSinglePopUp(errorsObj[this.currentIndex]);
        this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
      } else {
@@ -618,6 +618,7 @@ export class ErrorHighlightService {
       this.appActions.actToggleSwitchMode(false);
       this.processSrv.refreshSidebarView('cancel selection');
       this.mapSrv.removePopUps();
+      this.mapSrv.map.removeLayer(this.circleHighlight);
       if (this.currentMode) {
         this.mapSrv.map.eachLayer((layer) => {
           if (layer['_latlng'] && layer['feature']) {
@@ -936,16 +937,7 @@ export class ErrorHighlightService {
   }
 
   public startPTPairCorrection(ptPairErrorObj: IPTPairErrorObject): any {
-    let circle;
-    if (ptPairErrorObj.corrected === 'false') {
-      circle = new L.Circle([ptPairErrorObj.stop.lat, ptPairErrorObj.stop.lon], {
-        radius: 100,
-        color: '#9838ff',
-        opacity: 0.75,
-      }).addTo(this.mapSrv.map);
-    }
-    let circleBounds = circle.getBounds();
-    let stopId = ptPairErrorObj.stop.id;
+    let stopId    = ptPairErrorObj.stop.id;
     let stopLayer = null;
     this.mapSrv.map.eachLayer((layer) => {
       if (layer['feature'] && layer['_latlng']) {
@@ -955,17 +947,37 @@ export class ErrorHighlightService {
         }
       }
     });
-    stopLayer.bindPopup('Add a platform near me', { closeOnClick: false, closeButton : false }).openPopup();
-    this.mapSrv.map.on('click', (event) => {
-      if (ptPairErrorObj.corrected === 'false' && this.errorCorrectionMode.ptPairSuggestions &&
-        this.errorCorrectionMode.ptPairSuggestions.startCorrection) {
-        if (circleBounds.contains(event['latlng']) && ptPairErrorObj.corrected === 'false') {
-          this.openModalWithComponentForPTPair(ptPairErrorObj, event, circle);
-        } else {
-          alert('not within bounds');
+    if (this.circleHighlight) {
+      this.mapSrv.map.removeLayer(this.circleHighlight);
+    }
+
+    if (ptPairErrorObj.corrected === 'false') {
+      console.log('RAN');
+      this.circleHighlight = new L.Circle([ptPairErrorObj.stop.lat, ptPairErrorObj.stop.lon], {
+        radius : 100,
+        color  : '#9838ff',
+        opacity: 0.75,
+      }).addTo(this.mapSrv.map);
+
+      console.log('this is layer', stopLayer);
+      stopLayer.bindPopup('Add a platform near me', { closeOnClick: false, closeButton: false }).openPopup();
+      this.mapSrv.map.on('click', (event) => {
+        if (ptPairErrorObj.corrected === 'false' && this.errorCorrectionMode.ptPairSuggestions &&
+          this.errorCorrectionMode.ptPairSuggestions.startCorrection) {
+          let circleBounds = this.circleHighlight.getBounds();
+          if (circleBounds.contains(event['latlng']) && ptPairErrorObj.corrected === 'false') {
+            this.openModalWithComponentForPTPair(ptPairErrorObj, event, this.circleHighlight);
+          } else {
+            let response = confirm('The location you selected is too far away from the stop. Do you still want to continue?');
+            if (response) {
+              this.openModalWithComponentForPTPair(ptPairErrorObj, event, this.circleHighlight);
+            }
+          }
         }
-      }
-    });
+      });
+    } else {
+      stopLayer.bindPopup('Already added', { closeOnClick: false, closeButton: false }).openPopup();
+    }
   }
 
   public openModalWithComponentForPTPair(errorObject: IPTPairErrorObject, event: any, circleLayer: any): void {
@@ -1016,11 +1028,9 @@ export class ErrorHighlightService {
           let errorObj: IPTPairErrorObject = { stop, corrected: 'false' };
           this.ptPairErrorsObj.push(errorObj);
         }
-
       }
     });
     this.storageSrv.ptPairErrorsObject = this.ptPairErrorsObj;
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'pt-pair' });
-
   }
 }

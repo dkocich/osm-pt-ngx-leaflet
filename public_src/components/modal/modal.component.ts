@@ -45,7 +45,6 @@ export class ModalComponent {
   public missingRefRels: any[];
   public nearbyRels: any[];
 
-  public newPlatformLatLng = L.LatLng;
   public platformTags = PtTags.expectedKeys;
   public addedPlatformTagsValues = [];
   public newAddedTagsForPlatform = new Map();
@@ -523,7 +522,6 @@ export class ModalComponent {
       }
     });
     stopLayer.closePopup();
-    // this.mapSrv.map.off();
     this.circleLayer.removeFrom(this.mapSrv.map);
     this.ptPairErrorObject.corrected                                           = 'true';
     this.storageSrv.ptPairErrorsObject[this.storageSrv.currentIndex].corrected = 'true';

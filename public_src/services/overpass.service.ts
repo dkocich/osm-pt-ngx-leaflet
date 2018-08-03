@@ -138,7 +138,6 @@ export class OverpassService {
 
           let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
           if (errorCorrectionMode) {
-            console.log('RAN');
             if (errorCorrectionMode.refSuggestions === null && errorCorrectionMode.waySuggestions === null) {
               this.errorHighlightSrv.countNameErrors();
               this.errorHighlightSrv.countPTvErrors();

@@ -159,7 +159,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   /**
    * Activates editing mode (locally/globally).
    */
-  public toggleEditMode(): void {
+  private toggleEditMode(): void {
     this.appActions.actToggleEditing();
     let editing = this.ngRedux.getState()['app']['editing'];
     this.editSrv.editingMode.emit(editing);

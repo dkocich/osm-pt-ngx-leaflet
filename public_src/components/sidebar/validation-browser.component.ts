@@ -16,7 +16,6 @@ import { ConfService } from '../../services/conf.service';
 import { IPtStop } from '../../core/ptStop.interface';
 import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
 import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject, IPTPairErrorObject } from '../../core/errorObject.interface';
-
 import { PtTags } from '../../core/ptTags.class';
 
 @Component({
@@ -38,7 +37,6 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
   @Input() suggestionsBrowserOptions: ISuggestionsBrowserOptions;
   public errorCorrectionModeSubscription;
   public errorCorrectionMode: ISuggestionsBrowserOptions;
-  public platformTags = PtTags.expectedKeys;
 
   constructor(
     private errorHighlightSrv: ErrorHighlightService,
