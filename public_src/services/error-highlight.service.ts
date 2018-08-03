@@ -36,6 +36,8 @@ export class ErrorHighlightService {
   public errorCorrectionModeSubscription;
 
   private circleHighlight: L.Circle = null;
+  private clickEventFunction = null;
+
   constructor(
     private modalService: BsModalService,
     private ngRedux: NgRedux<IAppState>,
@@ -788,7 +790,7 @@ export class ErrorHighlightService {
     return inBounds;
   }
 
-  /***
+  /**
    * Jumps to error
    * @param {number} index
    * @returns {void}
@@ -850,19 +852,6 @@ export class ErrorHighlightService {
         .style.backgroundColor = 'lightblue';
     }
 
-    if (errorCorrectionMode.waySuggestions && errorCorrectionMode.waySuggestions.startCorrection) {
-      document.getElementById(this.ptPairErrorsObj[this.currentIndex].stop.id.toString() + '-pt-pair-error-list-id')
-        .style.backgroundColor = 'white';
-      this.currentIndex = index;
-      this.storageSrv.currentIndex = index;
-      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'pt-pair' });
-      this.addSinglePopUp(this.ptPairErrorsObj[this.currentIndex]);
-      let stop = this.ptPairErrorsObj[this.currentIndex].stop;
-      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
-      document.getElementById(this.ptPairErrorsObj[this.currentIndex]
-        .stop.id.toString() + '-pt-pair-error-list-id')
-        .style.backgroundColor = 'lightblue';
-    }
   }
 
   /***
@@ -937,6 +926,7 @@ export class ErrorHighlightService {
   }
 
   public startPTPairCorrection(ptPairErrorObj: IPTPairErrorObject): any {
+    this.mapSrv.map.off('click', this.clickEventFunction);
     let stopId    = ptPairErrorObj.stop.id;
     let stopLayer = null;
     this.mapSrv.map.eachLayer((layer) => {
@@ -959,24 +949,25 @@ export class ErrorHighlightService {
         opacity: 0.75,
       }).addTo(this.mapSrv.map);
 
-      console.log('this is layer', stopLayer);
       stopLayer.bindPopup('Add a platform near me', { closeOnClick: false, closeButton: false }).openPopup();
-      this.mapSrv.map.on('click', (event) => {
-        if (ptPairErrorObj.corrected === 'false' && this.errorCorrectionMode.ptPairSuggestions &&
-          this.errorCorrectionMode.ptPairSuggestions.startCorrection) {
-          let circleBounds = this.circleHighlight.getBounds();
-          if (circleBounds.contains(event['latlng']) && ptPairErrorObj.corrected === 'false') {
-            this.openModalWithComponentForPTPair(ptPairErrorObj, event, this.circleHighlight);
-          } else {
-            let response = confirm('The location you selected is too far away from the stop. Do you still want to continue?');
-            if (response) {
-              this.openModalWithComponentForPTPair(ptPairErrorObj, event, this.circleHighlight);
-            }
-          }
-        }
-      });
+      this.mapSrv.map.on('click', (event) => this.clickEventFunction = this.onClickMapPTPairCorrection(event));
     } else {
       stopLayer.bindPopup('Already added', { closeOnClick: false, closeButton: false }).openPopup();
+    }
+  }
+
+  private onClickMapPTPairCorrection(event: any): void {
+    if (this.ptPairErrorsObj[this.currentIndex].corrected === 'false' && this.errorCorrectionMode.ptPairSuggestions &&
+      this.errorCorrectionMode.ptPairSuggestions.startCorrection) {
+      let circleBounds = this.circleHighlight.getBounds();
+      if (circleBounds.contains(event['latlng']) && this.ptPairErrorsObj[this.currentIndex].corrected === 'false') {
+        this.openModalWithComponentForPTPair(this.ptPairErrorsObj[this.currentIndex], event, this.circleHighlight);
+      } else {
+        let response = confirm('The location you selected is too far away from the stop. Do you still want to continue?');
+        if (response) {
+          this.openModalWithComponentForPTPair(this.ptPairErrorsObj[this.currentIndex], event, this.circleHighlight);
+        }
+      }
     }
   }
 
