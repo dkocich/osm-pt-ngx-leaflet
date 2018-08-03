@@ -118,5 +118,6 @@
     "xmlbuilder": "10.0.0",
     "zone.js": "0.8.26"
   },
-  "snyk": true
+  "snyk": true,
+  "devDependencies": {}
 }

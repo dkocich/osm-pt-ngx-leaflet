@@ -1,6 +1,7 @@
 import { KeysPipe } from './keys.pipe';
-
 describe('KeysPipe', () => {
+  'use strict';
+
   let pipe: KeysPipe;
 
   beforeEach(() => {
