@@ -5,7 +5,7 @@
       <ng-container
         *ngIf="view('find-errors-option')">
         <p> {{'Zoom into the area where you want to run the validation.' | translate}}</p>
-        <button class="btn btn-default" (click)="startValidation()"> {{'Find Errors' | translate }}</button>
+        <button class="btn btn-default" (click)="startValidation()"> {{'Find Suggestions' | translate }}</button>
       </ng-container>
 
       <ng-container *ngIf="(switchMode$ | async)">
@@ -164,7 +164,7 @@
     <ng-container *ngIf="view('pt-pair-error-list')">
       <ul class="list-group scrollable-panel">
         <ng-container *ngFor="let ptPairError of ptPairErrorsObj; let i = index">
-          <li (click)="jumpPTPairCorrection(i)" id='{{ ptPairError.stop.id }}-pt-pair-error-list-id' class="list-group-item"
+          <li (click)="jumpToLocation(i)" id='{{ ptPairError.stop.id }}-pt-pair-error-list-id' class="list-group-item"
               [style.background-color]="i===0 ? 'lightblue':'white'">
             {{i +1}}. Platform
             <i *ngIf="ptPairError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>

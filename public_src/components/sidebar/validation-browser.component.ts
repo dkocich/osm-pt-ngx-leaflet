@@ -298,9 +298,4 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
       return 'stop';
     }
   }
-
-  public jumpPTPairCorrection(index: any): any {
-    this.errorHighlightSrv.startPTPairCorrection(this.ptPairErrorsObj[index]);
-  }
-
 }

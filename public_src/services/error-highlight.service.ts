@@ -20,6 +20,7 @@ import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject, IP
 import { ISuggestionsBrowserOptions } from '../core/editingOptions.interface';
 import { IPtStop } from '../core/ptStop.interface';
 
+
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
@@ -632,6 +633,7 @@ export class ErrorHighlightService {
       this.storageSrv.currentElementsChange.emit(
         JSON.parse(JSON.stringify(null)),
       );
+      document.getElementById('map').classList.remove('platform-cursor');
     }
   }
 
@@ -852,6 +854,20 @@ export class ErrorHighlightService {
         .style.backgroundColor = 'lightblue';
     }
 
+    if (errorCorrectionMode.ptPairSuggestions && errorCorrectionMode.ptPairSuggestions.startCorrection) {
+      document.getElementById(this.ptPairErrorsObj[this.currentIndex].stop.id.toString() + '-pt-pair-error-list-id')
+        .style.backgroundColor = 'white';
+      this.currentIndex = index;
+      this.storageSrv.currentIndex = index;
+      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'pt-pair' });
+      this.startPTPairCorrection(this.ptPairErrorsObj[this.currentIndex]);
+      let stop = this.ptPairErrorsObj[this.currentIndex].stop;
+      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 17);
+      document.getElementById(this.ptPairErrorsObj[this.currentIndex]
+        .stop.id.toString() + '-pt-pair-error-list-id')
+        .style.backgroundColor = 'lightblue';
+    }
+
   }
 
   /***
@@ -947,9 +963,12 @@ export class ErrorHighlightService {
         radius : 100,
         color  : '#9838ff',
         opacity: 0.75,
+        className: 'platform-cursor',
+        interactive: false,
       }).addTo(this.mapSrv.map);
-
+      document.getElementById('map').classList.add('platform-cursor');
       stopLayer.bindPopup('Add a platform near me', { closeOnClick: false, closeButton: false }).openPopup();
+      console.log('adding listener');
       this.mapSrv.map.on('click', (event) => this.clickEventFunction = this.onClickMapPTPairCorrection(event));
     } else {
       stopLayer.bindPopup('Already added', { closeOnClick: false, closeButton: false }).openPopup();
