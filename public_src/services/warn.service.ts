@@ -12,7 +12,7 @@ export class WarnService {
     private toastrSrv: ToastrService,
     private translateSrv: TranslateService,
   ) {
-    /***
+    /**
      * Listens to language change event and translates error and success messages
      */
     this.translateSrv.onLangChange.subscribe((event: TranslationChangeEvent) => {

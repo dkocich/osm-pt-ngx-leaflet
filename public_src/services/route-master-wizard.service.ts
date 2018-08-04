@@ -48,7 +48,7 @@ export class RouteMasterWizardService {
     });
   }
 
-  /***
+  /**
    * Fired when modal has rendered
    * @returns {void}
    */
@@ -58,7 +58,7 @@ export class RouteMasterWizardService {
     }
   }
 
-  /***
+  /**
    * Renders data on modal map which was already present on the main map
    * @returns {void}
    */
@@ -73,7 +73,7 @@ export class RouteMasterWizardService {
     this.renderTransformedGeojsonDataRMWizard(transformed, this.map);
   }
 
-  /***
+  /**
    *Used when modal is closed,
    *  all data downloaded for modal map is processed for main application
    * @returns {void}
@@ -224,7 +224,7 @@ export class RouteMasterWizardService {
     console.log('LOG (route master wizard s.) Route masters map for suggestions RM\'s', this.newRMsMap);
   }
 
-  /***
+  /**
    * Highlight selected member route of currently selected route master on map
    * @param routeID
    * @returns {void}

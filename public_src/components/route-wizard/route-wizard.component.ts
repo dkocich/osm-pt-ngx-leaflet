@@ -126,7 +126,7 @@ export class RouteWizardComponent {
       });
   }
 
-  /***
+  /**
    * Finds suggestions in current bounds
    * @returns {void}
    */
@@ -138,7 +138,7 @@ export class RouteWizardComponent {
     }
   }
 
-  /***
+  /**
    * Uses selected suggested ref
    * @param {string} ref
    * @returns {void}
@@ -180,7 +180,7 @@ export class RouteWizardComponent {
     this.routeWizardSrv.highlightMembers(this.addedNewRouteMembers);
   }
 
-  /***
+  /**
    * Changes selected tab
    * @param {number} step
    */
@@ -192,7 +192,7 @@ export class RouteWizardComponent {
     }
   }
 
-  /***
+  /**
    * Handles marker click
    * @param {number} featureId
    */
@@ -203,7 +203,7 @@ export class RouteWizardComponent {
     }
   }
 
-  /***
+  /**
    * Adds new member to route
    * @param newMember
    */
@@ -211,7 +211,7 @@ export class RouteWizardComponent {
     this.addedNewRouteMembers = this.routeWizardSrv.addNewMemberToRoute(newMember, this.addedNewRouteMembers);
   }
 
-  /***
+  /**
    * Removes member from route
    * @param {string} toRemoveMemberID
    */
@@ -219,7 +219,7 @@ export class RouteWizardComponent {
     this.addedNewRouteMembers = this.routeWizardSrv.removeMember(toRemoveMemberID, this.addedNewRouteMembers);
   }
 
-  /***
+  /**
    * View suggested route on map
    * @param ref
    * @returns {void}
@@ -229,7 +229,7 @@ export class RouteWizardComponent {
   this.routeWizardSrv.viewSuggestedRoute(ref, { canStopsConnect : this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
   }
 
-  /***
+  /**
    * Changes route highlight on map on reordering members from list
    */
   public reorderMembers(): void {
@@ -237,7 +237,7 @@ export class RouteWizardComponent {
     this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers, false);
   }
 
-  /***
+  /**
    * Saves step 3 of adding members
    * @returns {void}
    */
@@ -245,7 +245,7 @@ export class RouteWizardComponent {
    this.selectTab(4);
   }
 
-  /***
+  /**
    * Handles when tags for route are updated
    * @param {string} action
    * @param key
@@ -260,7 +260,7 @@ export class RouteWizardComponent {
     }
   }
 
-  /***
+  /**
    * Saves final step
    * @returns {void}
    */
@@ -275,7 +275,7 @@ export class RouteWizardComponent {
     this.appActions.actSetWizardMode(null);
   }
 
-  /***
+  /**
    * Jumps to step when tab directly clicked
    * @param {string} step
    * @returns {void}
@@ -300,7 +300,7 @@ export class RouteWizardComponent {
     }
   }
 
-  /****
+  /**
    * Changes connectivity of route on map
    * @param {string} type
    * @returns {void}

@@ -51,7 +51,7 @@ export class OverpassService {
      * @param data - string containing ID of clicked marker
      */
     this.mapSrv.markerClick.subscribe((data) => {
-      // let goodConnectionMode = ngRedux.getState()['app']['goodConnectMode'];
+      let goodConnectionMode = ngRedux.getState()['app']['goodConnectMode'];
       const featureId = Number(data);
 
       if (this.storageSrv.elementsMap.has(featureId)) {
@@ -83,28 +83,32 @@ export class OverpassService {
         }
       }
 
-      // if (!goodConnectionMode) {
-      //   for (let i = 0; i < 5; i++) {
-      //     let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
-      //     if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
-      //       !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
-      //       // gets the data from overpass query and adds to IDB
-      //       console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in slow connection mode');
-      //       this.getNodeDataOverpass(randomKey, false);
-      //     }
-      //   }
-      // }
-      // else {
-      //   for (let i = 0; i < 25; i++) {
-      //     let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
-      //     if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
-      //       !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
-      //       // gets the data from overpass query and adds to IDB
-      //       console.log('LOG (overpass s.) Downloading ' + randomKey + ' in background in fast connection mode');
-      //       this.getNodeDataOverpass(randomKey, false);
-      //     }
-      //   }
-      // }
+      if (!goodConnectionMode) {
+        let toDownload = [];
+        for (let i = 0; toDownload.length <= 5; i++) {
+          let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
+          if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
+            !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
+            // gets the data from overpass query and adds to IDB
+            toDownload.push(randomKey);
+          }
+        }
+        console.log('LOG (overpass s.) Downloading ' + toDownload + ' in background in slow connection mode');
+        this.downloadMultipleNodeData(toDownload);
+      }
+      else {
+        let toDownload = [];
+        for (let i = 0; toDownload.length <= 25; i++) {
+          let randomKey = this.getRandomKey(this.storageSrv.elementsMap);
+          if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
+            !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
+            // gets the data from overpass query and adds to IDB
+            toDownload.push(randomKey);
+          }
+        }
+        console.log('LOG (overpass s.) Downloading ' + toDownload + ' in background in slow connection mode');
+        this.downloadMultipleNodeData(toDownload);
+      }
     });
 
     /**
@@ -859,12 +863,12 @@ export class OverpassService {
     });
   }
 
-  /***
+  /**
    * Downloads multiple node data for error highlight
    * @param toDownload
-   * @returns {any}
+   * @returns {void}
    */
-  private downloadMultipleNodeData(toDownload: any): any {
+  private downloadMultipleNodeData(toDownload: any): void {
     let requestBody = `
       [out:json][timeout:25];
       (
@@ -892,6 +896,12 @@ export class OverpassService {
               this.storageSrv.elementsMap.set(element.id, element);
             }
           }
+          this.dbSrv.addMultipleResponseToIDB(res, toDownload).catch((err) => {
+            console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
+              ' in adding related metadata to IDB for route with ids : ' , toDownload);
+            console.error(err);
+            throw new Error(JSON.stringify(err));
+          });
           this.appActions.actSetErrorCorrectionMode({
             nameSuggestions: {
               found          : true,
@@ -921,7 +931,7 @@ export class OverpassService {
         });
   }
 
-  /***
+  /**
    * Continuous query for auto route wizard
    * @param {boolean} find: boolean
    */
@@ -1020,7 +1030,7 @@ export class OverpassService {
       );
   }
 
-  /***
+  /**
    * Multiple node data download for route wizard
    * @param idsArr
    * @returns {void}
@@ -1043,7 +1053,12 @@ export class OverpassService {
           if (!res) {
             return alert('No response from API. Try to select element again please.');
           }
-
+          this.dbSrv.addMultipleResponseToIDB(res, idsArr).catch((err) => {
+            console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
+              ' in adding related metadata to IDB for route with ids : ' , idsArr);
+            console.error(err);
+            throw new Error(JSON.stringify(err));
+          });
           let wizardMode = this.ngRedux.getState()['app']['wizardMode'];
           if (wizardMode === 'route wizard') {
             for (let id of idsArr) {

@@ -57,7 +57,7 @@ export class ErrorHighlightService {
     });
   }
 
-  /***
+  /**
    * Turns off marker click and starts switch location mode on
    * @param {string} errorName
    * @returns {void}
@@ -100,7 +100,7 @@ export class ErrorHighlightService {
     }
   }
 
-  /***
+  /**
    * Generates the popup content
    * @returns {object}
    */
@@ -124,7 +124,7 @@ export class ErrorHighlightService {
     return popupContent;
   }
 
-  /***
+  /**
    * Handles click events for popup
    * @param popUp
    * @param errorObj
@@ -173,7 +173,7 @@ export class ErrorHighlightService {
     });
   }
 
-  /***
+  /**
    * Opens up modal
    * @returns {void}
    */
@@ -193,7 +193,7 @@ export class ErrorHighlightService {
     this.modalRef = this.modalService.show(ModalComponent, { initialState });
   }
 
-  /***
+  /**
    * Opens up modal for ref
    * @returns {void}
    */
@@ -268,7 +268,7 @@ export class ErrorHighlightService {
     }
 
   }
-  /***
+  /**
    * Counts and forms name error objects
    */
   public countNameErrors(): void {
@@ -289,7 +289,7 @@ export class ErrorHighlightService {
 
   }
 
-  /***
+  /**
    * Counts and forms ref error objects
    */
   public countRefErrors(): void {
@@ -328,7 +328,7 @@ export class ErrorHighlightService {
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing refs' });
   }
 
-  /***
+  /**
    * Counts way errors
    * @returns {void}
    */
@@ -375,7 +375,7 @@ export class ErrorHighlightService {
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'PTv correction' });
   }
 
-  /***
+  /**
    * Checks whether on Mobile/Desktop
    * @returns {boolean}
    */
@@ -384,7 +384,7 @@ export class ErrorHighlightService {
     return !!md.mobile();
   }
 
-  /***
+  /**
    * Moves to next location
    * @returns {any}
    */
@@ -441,7 +441,7 @@ export class ErrorHighlightService {
     }
   }
 
-  /***
+  /**
    * Moves to previous location
    * @returns {void}
    */
@@ -499,7 +499,7 @@ export class ErrorHighlightService {
     }
   }
 
-  /***
+  /**
    * Quits specific correction mode
    */
   public quit(): void {
@@ -566,7 +566,7 @@ export class ErrorHighlightService {
     );
   }
 
-  /***
+  /**
    * returns names of nearby nodes
    * @param latlngm
    * @returns {any[]}
@@ -586,7 +586,7 @@ export class ErrorHighlightService {
     return inRangeNameArray;
   }
 
-  /***
+  /**
    * Nearby route suggestions
    * @param latlngm
    * @param missingRefRels
@@ -631,7 +631,7 @@ export class ErrorHighlightService {
     return nearbyRels;
   }
 
-  /***
+  /**
    * Returns most occurred name (top 5 most used names)
    * @param {any[]} array
    * @returns {any}
@@ -666,7 +666,7 @@ export class ErrorHighlightService {
     return sorted;
   }
 
-  /***
+  /**
    * Adds popup
    * @param errorObj
    * @returns {void}
@@ -695,7 +695,7 @@ export class ErrorHighlightService {
     this.mapSrv.popUpLayerGroup.addLayer(popup);
   }
 
-  /***
+  /**
    * Returns all stops in current map bounds and which are not downloaded
    * @returns {any[]}
    */
@@ -721,7 +721,7 @@ export class ErrorHighlightService {
     return inBounds;
   }
 
-  /***
+  /**
    * Jumps to error
    * @param {number} index
    * @returns {void}
@@ -784,7 +784,7 @@ export class ErrorHighlightService {
     }
   }
 
-  /***
+  /**
    * Returns all stops in current map bounds and which are not downloaded
    * @returns {any[]}
    */
@@ -794,7 +794,8 @@ export class ErrorHighlightService {
       if (element.type === 'node' &&
         (element.tags.bus === 'yes' || element.tags.public_transport) &&
         this.mapSrv.map.getBounds().contains(element) &&
-        !this.storageSrv.elementsDownloaded.has(element.id)) {
+        !this.storageSrv.elementsDownloaded.has(element.id) &&
+        element.tags.public_transport !== 'stop_area') {
         inBounds.push(element.id);
 
       }
@@ -802,7 +803,7 @@ export class ErrorHighlightService {
     return inBounds;
   }
 
-  /***
+  /**
    * Gets all parent relations for id
    * @param id
    * @returns {any}
@@ -822,7 +823,7 @@ export class ErrorHighlightService {
     return parentRels;
   }
 
-  /***
+  /**
    * Splits route_ref tag into individual refs
    * @param {string} routeRefTag
    * @returns {string[]}
@@ -831,7 +832,7 @@ export class ErrorHighlightService {
     return routeRefTag.split(';');
   }
 
-  /***
+  /**
    * Compares refs of parent relations with added refs of node
    * @param parentRels
    * @param addedRefs
