@@ -394,11 +394,12 @@ export class DbService {
             });
             for (let member of element.members) {
               if (IDs.includes(member.ref)) {
+                let parents = [];
                 if (!parentRoutes.has(member.ref)) {
-                  let parents = [element.id];
+                  parents.push(element.id);
                   parentRoutes.set(member.ref , parents);
                 } else {
-                  let parents = parentRoutes.get(member.ref);
+                  parents = parentRoutes.get(member.ref);
                   parents.push(element.id);
                 }
               }

@@ -47,9 +47,7 @@ export class SettingsComponent {
     this.processSrv.refreshSidebarView('cancel selection');
     this.mapSrv.removePopUps();
     this.storageSrv.currentElement = null;
-    this.storageSrv.currentElementsChange.emit(
-      JSON.parse(JSON.stringify(null)),
-    );
+    this.storageSrv.currentElementsChange.emit(null);
     this.appActions.actSetErrorCorrectionMode(null);
     this.appActions.actSetAdvancedExpMode(advancedExpMode);
     localStorage.setItem('advancedMode', JSON.stringify(advancedExpMode));
