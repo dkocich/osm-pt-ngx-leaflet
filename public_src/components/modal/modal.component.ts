@@ -166,9 +166,9 @@ export class ModalComponent {
 
   /***
    * Re-renders platform as stop
-   * @returns {any}
+   * @returns {void}
    */
-  private rerenderPlatformAsStop(): any {
+  private rerenderPlatformAsStop(): void {
     this.mapSrv.map.removeLayer(this.getLayerFromMap(this.wayErrorObject.stop.id));
     this.storageSrv.elementsRendered.delete('node/' + this.wayErrorObject.stop.id);
     let obj: any = {};
@@ -474,11 +474,11 @@ export class ModalComponent {
     return matchedLayer;
   }
 
-  public addTagToPlatform(key: any, value: any): any {
+  public addTagToPlatform(key: string, value: string): void {
     this.newAddedTagsForPlatform.set(key, value);
   }
 
-  public savePTPairError(): any {
+  public savePTPairError(): void {
     let tags = {};
     this.newAddedTagsForPlatform.forEach((tagValue, tagKey) => {
       tags['tagKey'] = tagValue;
