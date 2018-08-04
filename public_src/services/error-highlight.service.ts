@@ -1,4 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import * as L from 'leaflet';
 import * as MobileDetect from 'mobile-detect';
@@ -19,7 +19,6 @@ import { ModalComponent } from '../components/modal/modal.component';
 import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject, IPTPairErrorObject } from '../core/errorObject.interface';
 import { ISuggestionsBrowserOptions } from '../core/editingOptions.interface';
 import { IPtStop } from '../core/ptStop.interface';
-
 
 @Injectable()
 export class ErrorHighlightService {
@@ -941,7 +940,7 @@ export class ErrorHighlightService {
     return missingRefs;
   }
 
-  public startPTPairCorrection(ptPairErrorObj: IPTPairErrorObject): any {
+  public startPTPairCorrection(ptPairErrorObj: IPTPairErrorObject): void {
     this.mapSrv.map.off('click', this.clickEventFunction);
     let stopId    = ptPairErrorObj.stop.id;
     let stopLayer = null;
@@ -958,7 +957,6 @@ export class ErrorHighlightService {
     }
 
     if (ptPairErrorObj.corrected === 'false') {
-      console.log('RAN');
       this.circleHighlight = new L.Circle([ptPairErrorObj.stop.lat, ptPairErrorObj.stop.lon], {
         radius : 100,
         color  : '#9838ff',
@@ -968,14 +966,13 @@ export class ErrorHighlightService {
       }).addTo(this.mapSrv.map);
       document.getElementById('map').classList.add('platform-cursor');
       stopLayer.bindPopup('Add a platform near me', { closeOnClick: false, closeButton: false }).openPopup();
-      console.log('adding listener');
       this.mapSrv.map.on('click', (event) => this.clickEventFunction = this.onClickMapPTPairCorrection(event));
     } else {
       stopLayer.bindPopup('Already added', { closeOnClick: false, closeButton: false }).openPopup();
     }
   }
 
-  private onClickMapPTPairCorrection(event: any): void {
+  private onClickMapPTPairCorrection(event: L.LeafletEvent): void {
     if (this.ptPairErrorsObj[this.currentIndex].corrected === 'false' && this.errorCorrectionMode.ptPairSuggestions &&
       this.errorCorrectionMode.ptPairSuggestions.startCorrection) {
       let circleBounds = this.circleHighlight.getBounds();
@@ -990,7 +987,7 @@ export class ErrorHighlightService {
     }
   }
 
-  public openModalWithComponentForPTPair(errorObject: IPTPairErrorObject, event: any, circleLayer: any): void {
+  public openModalWithComponentForPTPair(errorObject: IPTPairErrorObject, event: L.LeafletEvent, circleLayer: L.Layer): void {
     if (errorObject.corrected === 'false') {
       let initialState;
       initialState = {
