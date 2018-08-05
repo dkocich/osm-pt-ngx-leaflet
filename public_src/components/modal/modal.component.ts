@@ -61,7 +61,7 @@ export class ModalComponent {
   ) {
   }
 
-  /***
+  /**
    * Executed on click of save button for adding new name tag
    * @param {string} name
    * @returns {void}
@@ -164,7 +164,7 @@ export class ModalComponent {
     this.bsModalRef.hide();
   }
 
-  /***
+  /**
    * Re-renders platform as stop
    * @returns {void}
    */
@@ -179,7 +179,7 @@ export class ModalComponent {
     this.mapSrv.renderTransformedGeojsonData(transformed, this.mapSrv.map);
   }
 
-  /***
+  /**
    * Closes the currently opened modal
    * @returns {void}
    */
@@ -187,7 +187,7 @@ export class ModalComponent {
     this.bsModalRef.hide();
   }
 
-  /***
+  /**
    * Handles adding missing name
    * @param {string} name
    */
@@ -281,7 +281,7 @@ export class ModalComponent {
     }
   }
 
-  /***
+  /**
    * Remove the added ref value (added from suggestions (nearby) by user)
    * @param toRemoveRel
    */
@@ -306,7 +306,7 @@ export class ModalComponent {
     }
   }
 
-  /***
+  /**
    * Remove the added ref value (newly added by user)
    * @param ref
    */
@@ -317,7 +317,7 @@ export class ModalComponent {
     }
   }
 
-  /***
+  /**
    * Adds new ref value
    * @param ref
    */
@@ -330,7 +330,7 @@ export class ModalComponent {
     this.newlyAddedValue.first.nativeElement.value = '';
   }
 
-  /***
+  /**
    *  Handles adding missing refs
    * @param {string} ref
    */
@@ -352,7 +352,7 @@ export class ModalComponent {
     }
   }
 
-  /***
+  /**
    * adds given node as child member of routes
    * @param addedFromNearbySuggestionsRefs
    * @returns {void}
@@ -425,7 +425,7 @@ export class ModalComponent {
     popupArr[0].setContent(popupContent);
   }
 
-  /***
+  /**
    * Determines if new refs were added
    * @returns {boolean}
    */
@@ -435,7 +435,7 @@ export class ModalComponent {
       this.addedFromNearbySuggestionsRefs.length !== 0;
   }
 
-  /***
+  /**
    * Returns tool tip text
    * @param {string} name
    * @returns {string}
@@ -457,7 +457,7 @@ export class ModalComponent {
     }
   }
 
-  /***
+  /**
    * Get layer from map from given stop ID
    * @param {number} stopID
    * @returns {any}

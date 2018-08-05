@@ -788,7 +788,7 @@ export class MapService {
     this.storageSrv.tutorialStepCompleted.emit('click change route members');
   }
 
-  /***
+  /**
    * Colors popup according to event
    * @param e
    * @returns {void}
@@ -807,7 +807,7 @@ export class MapService {
     }
   }
 
-  /***
+  /**
    * Colors popup according to the given popup name
    * @param {string} colorName
    * @param element
@@ -818,7 +818,7 @@ export class MapService {
     element.lastElementChild.lastElementChild.style.backgroundColor = colorName;
   }
 
-  /***
+  /**
    * Fetches popup element from currently added popups on map
    * @param popUpId
    * @returns {HTMLElement}
@@ -831,7 +831,7 @@ export class MapService {
     }
   }
 
-  /***
+  /**
    * Removes the complete popup layer and enables marker click again
    * @returns {void}
    */
@@ -842,7 +842,7 @@ export class MapService {
     }
   }
 
-  /***
+  /**
    * Adds mouseover and mouseout listeners from popup
    * @param popUpElement
    * @returns {void}
@@ -852,7 +852,7 @@ export class MapService {
     L.DomEvent.addListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
 
-  /***
+  /**
    * Removes mouseover and mouseout listeners from popup
    * @param popUpElement
    * @returns {void}
@@ -906,7 +906,7 @@ export class MapService {
     });
   }
 
-  /***
+  /**
    * Returns all stops/platforms on the given map
    * @param {Map} map
    * @param elementsMap

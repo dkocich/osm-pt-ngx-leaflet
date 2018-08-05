@@ -70,7 +70,7 @@ export class DbService {
     });
   }
 
-  /***
+  /**
    * Fetches IDs of routes for which route masters were fetched from Overpass and added to IDB
    * @returns {any}
    */
@@ -89,7 +89,7 @@ export class DbService {
     });
   }
 
-  /***
+  /**
    * Fetches routes for which the given stop is a member from IDB
    * @param {number} stopId
    * @returns {any}
@@ -114,7 +114,7 @@ export class DbService {
     });
   }
 
-  /***
+  /**
    * Fetches routes for which the given platform is a member from IDB
    * @param {number} platformId
    * @returns {any}
@@ -140,7 +140,7 @@ export class DbService {
     });
   }
 
-  /***
+  /**
    * Markes Routes for which parent masters have been fetched from overpass and added to IDB
    * @param {number[]} routeIds
    * @returns {any}
@@ -338,7 +338,182 @@ export class DbService {
     });
   }
 
-  /***
+  /**
+   * Adds multiple node download overpass API's response to IDB
+   * @param response
+   * @param {any[]} IDs
+   * @returns {any}
+   */
+  public addMultipleResponseToIDB(response: any, IDs: any[]): any {
+    let parentRoutes         = new Map();
+    let routes               = [];
+    let platforms            = [];
+    let stops                = [];
+    let routeMasters         = [];
+    let ways                 = [];
+    let platformsMetaData    = [];
+    let stopsMetaData        = [];
+    let routesMetaData       = [];
+    let routeMastersMetaData = [];
+    let waysMetaData         = [];
+
+    for (let element of response.elements) {
+      switch (element.type) {
+        case 'node':
+          if (element.tags.public_transport === 'platform') {
+            platforms.push(element);
+            platformsMetaData.push({
+              id: element.id,
+              timestamp: Math.floor(Date.now() / 1000),
+              type: 'platform',
+              parentRoutes: [],
+              isCompletelyDownloaded: 0,
+            });
+          }
+          if (element.tags.public_transport === 'stop_position') {
+            stops.push(element);
+            stopsMetaData.push({
+              id: element.id,
+              timestamp: Math.floor(Date.now() / 1000),
+              type: 'stop_position',
+              parentRoutes: [],
+              isCompletelyDownloaded: 0,
+            });
+          }
+          break;
+        case 'relation':
+          if (element.tags.type === 'route') {
+            routes.push(element);
+            routesMetaData.push({
+              id: element.id,
+              timestamp: Math.floor(Date.now() / 1000),
+              type: 'route',
+              memberStops: [],
+              memberPlatforms: [],
+              isCompletelyDownloaded: 0,
+            });
+            for (let member of element.members) {
+              if (IDs.includes(member.ref)) {
+                let parents = [];
+                if (!parentRoutes.has(member.ref)) {
+                  parents.push(element.id);
+                  parentRoutes.set(member.ref , parents);
+                } else {
+                  parents = parentRoutes.get(member.ref);
+                  parents.push(element.id);
+                }
+              }
+            }
+          }
+          if (element.tags.type === 'route_master') {
+            routeMasters.push(element);
+            routeMastersMetaData.push({
+              id: element.id,
+              timestamp: Math.floor(Date.now() / 1000),
+              type: 'route_master',
+              isCompletelyDownloaded: 0,
+            });
+          }
+          break;
+        case 'way':
+          ways.push(element);
+          waysMetaData.push({
+            id: element.id,
+            timestamp: Math.floor(Date.now() / 1000),
+            type: 'way',
+            isCompletelyDownloaded: 0,
+          });
+          break;
+      }
+    }
+    return this.db.transaction('rw', [this.db.PtRoutes, this.db.PtStops,
+      this.db.PtPlatforms, this.db.OSMWays, this.db.PtRouteMasters, this.db.MetaData], () => {
+      if (platforms.length !== 0) {
+        this.db.PtPlatforms.bulkPut(platforms).then(() => {
+          console.log('LOG (db s.) Added platforms : [ ' + platforms.map((platform) => {
+            return platform.id;
+          }).join(',') + ' ] to IDB for Overpass API \'s response');
+        }).catch((err) => {
+          console.log('LOG (db s.) Error in adding platforms to IDB, all previous ' +
+            'operations for this particular transaction (not metadata) will be rolled back');
+          console.error(err);
+          throw new Error(JSON.stringify(err));
+        });
+
+      }
+      if (stops.length !== 0) {
+        this.db.PtStops.bulkPut(stops).then(() => {
+          console.log('LOG (db s.) Added stops : [ ' + stops.map((stop) => {
+            return stop.id;
+          }).join(',') + ' ] to IDB for Overpass API \'s response');
+        }).catch((err) => {
+          console.log('LOG (db s.) Error in adding stops to IDB, all previous ' +
+            'operations for this particular transaction (not metadata) will be rolled back');
+          console.error(err);
+          throw new Error(JSON.stringify(err));
+        });
+      }
+      if (ways.length !== 0) {
+        this.db.OSMWays.bulkPut(ways).then(() => {
+          console.log('LOG (db s.) Added ways : [ ' + ways.map((way) => {
+            return way.id;
+          }).join(',') + ' ] to IDB for Overpass API \'s response');
+        }).catch((err) => {
+          console.log('LOG (db s.) Error in adding ways to IDB, all previous ' +
+            ' operations for this particular transaction (not metadata) will be rolled back');
+          console.error(err);
+          throw new Error(JSON.stringify(err));
+        });
+      }
+      if (routeMasters.length !== 0) {
+        this.db.PtRouteMasters.bulkPut(routeMasters).then(() => {
+          console.log('LOG (db s.) Added route masters : [ ' + routeMasters.map((routeMaster) => {
+            return routeMaster.id;
+          }).join(',') + ' ] to IDB for Overpass API response');
+        }).catch((err) => {
+          console.log('LOG (db s.) Error in adding route masters to IDB, all previous ' +
+            ' operations for this particular transaction (not metadata) will be rolled back');
+          console.error(err);
+          throw new Error(JSON.stringify(err));
+        });
+      }
+      if (routes.length !== 0) {
+        this.db.PtRoutes.bulkPut(routes).then(() => {
+          console.log('LOG (db s.) Added routes : [ ' + routes.map((route) => {
+            return route.id;
+          }).join(',') + ' ] to IDB for Overpass API \'s response');
+        }).catch((err) => {
+          console.log('LOG (db s.) Error in adding routes to IDB, all previous ' +
+            ' operations for this particular transaction (not metadata) will be rolled back');
+          console.error(err);
+          throw new Error(JSON.stringify(err));
+        });
+      }
+
+    }).then(() => {
+      console.log('LOG (db s.) Successfully added Overpass API \'s response for :' , IDs);
+      return this.addMetaDataForMultipleResponse(stopsMetaData, platformsMetaData, routesMetaData,
+        routeMastersMetaData, waysMetaData, IDs, parentRoutes).then(() => {
+          console.log('LOG (db s.) Successfully added metadata Overpass API \'s response for ' , IDs);
+      }).catch((err) => {
+        console.log('LOG (db s.) Error in adding metadata, all previous metadata addition for' +
+          ' this transaction will be rolled back for Overpass API \'s response for ids: ' + IDs + ' to IDB');
+        for (let id of IDs) {
+          if (this.storageSrv.completelyDownloadedStopsIDB.has(id)) {
+            this.storageSrv.completelyDownloadedStopsIDB.delete(id);
+          } else if (this.storageSrv.completelyDownloadedRoutesIDB.has(id)) {
+            this.storageSrv.completelyDownloadedRoutesIDB.delete(id);
+          } else if (this.storageSrv.completelyDownloadedPlatformsIDB.has(id)) {
+            this.storageSrv.completelyDownloadedPlatformsIDB.delete(id);
+          }
+        }
+        console.error(err);
+        throw new Error(JSON.stringify(err));
+      });
+    });
+
+  }
+  /**
    * Fetches stops/platform members for a given route from IDB
    * @param {number} relId
    * @returns {any}
@@ -378,7 +553,7 @@ export class DbService {
     });
   }
 
-  /***
+  /**
    * Gets all parent route_masters for given routeIDs
    * @param {number[]} routeIds
    * @returns {any}
@@ -401,7 +576,7 @@ export class DbService {
     });
   }
 
-  /***
+  /**
    * Deletes old data from IDB (everything except areas grid)
    * @returns {any}
    */
@@ -478,7 +653,7 @@ export class DbService {
     });
   }
 
-  /***
+  /**
    * Adds metadata to IDB
    * @param {number[]} routeIds
    * @param {number} id
@@ -532,6 +707,62 @@ export class DbService {
       if (type === 'route_master') {
         for (let route of routesMetaData) {
           route.isQueriedForMasters = 1;
+        }
+      }
+      return this.db.MetaData.bulkPut(platformsMetaData.concat(stopsMetaData, waysMetaData, routeMastersMetaData, routesMetaData,
+        platformsMetaData));
+    });
+  }
+
+  /**
+   * Adds metadata to IDB for multiple node response
+   * @param stopsMetaData
+   * @param platformsMetaData
+   * @param routesMetaData
+   * @param routeMastersMetaData
+   * @param waysMetaData
+   * @param {any[]} IDs
+   * @param {Map<string, string[]>} parentRoutes
+   * @returns {any}
+   */
+  private addMetaDataForMultipleResponse(
+    stopsMetaData: any,
+    platformsMetaData: any,
+    routesMetaData: any,
+    routeMastersMetaData: any,
+    waysMetaData: any,
+    IDs: any[],
+    parentRoutes: Map<string, string[]>,
+  ): any {
+
+    return this.db.transaction('rw', [this.db.PtRoutes, this.db.PtStops,
+      this.db.PtPlatforms, this.db.OSMWays, this.db.PtRouteMasters, this.db.MetaData], () => {
+
+      for (let stop of stopsMetaData) {
+        if (IDs.includes(stop.id)) {
+          this.storageSrv.completelyDownloadedStopsIDB.add(stop.id);
+          stop.isCompletelyDownloaded = 1;
+          if (parentRoutes.get(stop.id)) {
+            stop.parentRoutes = parentRoutes.get(stop.id);
+          }
+          break;
+        }
+      }
+      for (let platform of platformsMetaData) {
+        if (IDs.includes(platform.id)) {
+          this.storageSrv.completelyDownloadedPlatformsIDB.add(platform.id);
+          platform.isCompletelyDownloaded = 1;
+          if (parentRoutes.get(platform.id)) {
+            platform.parentRoutes = parentRoutes.get(platform.id);
+          }
+          break;
+        }
+      }
+      for (let route of routesMetaData) {
+        if (IDs.includes(route.id)) {
+          this.storageSrv.completelyDownloadedRoutesIDB.add(route.id);
+          route.isCompletelyDownloaded = 1;
+          break;
         }
       }
       return this.db.MetaData.bulkPut(platformsMetaData.concat(stopsMetaData, waysMetaData, routeMastersMetaData, routesMetaData,
