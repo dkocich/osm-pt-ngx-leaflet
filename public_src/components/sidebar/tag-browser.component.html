@@ -1,5 +1,5 @@
 <div class="panel-group">
-  <div class="panel panel-heading panel-default">
+  <div class="panel panel-heading panel-default" *ngIf="!currentElement || (currentElement && editing$ | async)">
     <h4 class="text-center text-danger" *ngIf="!currentElement">{{ 'Please select a feature to browse tags.' | translate }}</h4>
     <div *ngIf="currentElement" class="medium">
       <div class="text-center" *ngIf="(editing$ | async) && (currentElement.tags.type === 'route_master' ||

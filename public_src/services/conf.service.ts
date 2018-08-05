@@ -4,7 +4,7 @@ const p = require('../../package.json');
 
 @Injectable()
 export class ConfService {
-  public static readonly overpassUrl              = 'https://overpass-api.de/api/interpreter';
+  public static readonly overpassUrl              = 'http://overpass-api.de/api/interpreter';
   public static readonly baseOsmUrl               = 'https://www.openstreetmap.org';
   public static readonly apiUrl                   = 'https://api.openstreetmap.org/api/0.6';
   public static readonly apiConsumerSecret        = 'vFXps19FPNhWzzGmWbrhNpMv3RYiI1RFL4oK8NPz';
