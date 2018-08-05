@@ -46,13 +46,17 @@ export class BeginnerComponent {
   };
 
   public suggestionsBrowserOptions: ISuggestionsBrowserOptions = {
-    nameSuggestions: {
+    nameSuggestions  : {
       found          : false,
       startCorrection: false,
     },
-    refSuggestions : null,
-    waySuggestions : null,
-    PTvSuggestions : {
+    refSuggestions   : null,
+    waySuggestions   : null,
+    PTvSuggestions   : {
+      found          : false,
+      startCorrection: false,
+    },
+    ptPairSuggestions: {
       found          : false,
       startCorrection: false,
     },

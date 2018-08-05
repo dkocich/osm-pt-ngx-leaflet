@@ -131,7 +131,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
    * Provides access to editing service function.
    * @param type
    */
-  private createElement(type: string): void {
+  public createElement(type: string): void {
     this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
     this.storageSrv.tutorialStepCompleted.emit('click platform button');
 

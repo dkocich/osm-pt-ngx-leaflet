@@ -572,7 +572,7 @@ export class EditService {
    * Binds events to created markers.
    * @param marker
    */
-  private createNewMarkerEvents(marker: any): void {
+  public createNewMarkerEvents(marker: any): void {
     marker.on('dragend', (event) => {
       this.repositionElement(marker, event);
     });
@@ -589,7 +589,7 @@ export class EditService {
    * @param {number} newId
    * @returns {any}
    */
-  private initializeNewMarker(
+  public initializeNewMarker(
     creatingElementOfType: string,
     event: any,
     newId: number,

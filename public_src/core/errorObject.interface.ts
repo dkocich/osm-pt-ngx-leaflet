@@ -22,3 +22,8 @@ export interface IPTvErrorObject {
   stop: IPtStop;
   corrected: string;
 }
+
+export interface IPTPairErrorObject {
+  stop: IPtStop;
+  corrected: string;
+}

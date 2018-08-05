@@ -16,19 +16,27 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 
 import { ModalComponent } from '../components/modal/modal.component';
 
-import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject } from '../core/errorObject.interface';
+import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject, IPTPairErrorObject } from '../core/errorObject.interface';
 import { ISuggestionsBrowserOptions } from '../core/editingOptions.interface';
+import { IPtStop } from '../core/ptStop.interface';
 
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
-  public nameErrorsObj: INameErrorObject[] = [];
-  public refErrorsObj: IRefErrorObject[]   = [];
-  public wayErrorsObj: IWayErrorObject[]   = [];
-  public PTvErrorsObj: IPTvErrorObject[]   = [];
+  public nameErrorsObj: INameErrorObject[]     = [];
+  public refErrorsObj: IRefErrorObject[]       = [];
+  public wayErrorsObj: IWayErrorObject[]       = [];
+  public PTvErrorsObj: IPTvErrorObject[]       = [];
+  public ptPairErrorsObj: IPTPairErrorObject[] = [];
 
   public currentIndex = 0;
-  public currentMode: 'missing name tags' | 'missing refs' | 'way as parent' | 'PTv correction';
+  public currentMode: 'missing name tags' | 'pt-pair' | 'missing refs' | 'way as parent' | 'PTv correction';
+
+  public errorCorrectionMode: ISuggestionsBrowserOptions;
+  public errorCorrectionModeSubscription;
+
+  private circleHighlight: L.Circle = null;
+  private clickEventFunction = null;
 
   constructor(
     private modalService: BsModalService,
@@ -54,7 +62,12 @@ export class ErrorHighlightService {
       if (typeOfErrorObject === 'PTv correction') {
         this.PTvErrorsObj = this.storageSrv.PTvErrorsObj;
       }
+      if (typeOfErrorObject === 'pt-pair') {
+        this.ptPairErrorsObj = this.storageSrv.ptPairErrorsObject;
+      }
     });
+    this.errorCorrectionModeSubscription = ngRedux.select<ISuggestionsBrowserOptions>(['app', 'errorCorrectionMode'])
+      .subscribe((data) => this.errorCorrectionMode = data);
   }
 
   /***
@@ -62,7 +75,7 @@ export class ErrorHighlightService {
    * @param {string} errorName
    * @returns {void}
    */
-  public startCorrection(errorName: 'missing name tags' | 'missing refs' | 'way as parent' | 'PTv correction'): void {
+  public startCorrection(errorName: 'missing name tags' | 'missing refs' | 'way as parent' | 'PTv correction' | 'pt-pair'): void {
     this.storageSrv.currentIndex = 0;
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: errorName });
     this.currentMode = errorName;
@@ -98,11 +111,18 @@ export class ErrorHighlightService {
       stop = this.PTvErrorsObj[0]['stop'];
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
     }
+
+    if (this.currentMode === 'pt-pair') {
+      this.startPTPairCorrection(this.ptPairErrorsObj[0]);
+      stop = this.ptPairErrorsObj[0]['stop'];
+      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 17);
+    }
   }
 
-  /***
+  /**
    * Generates the popup content
-   * @returns {object}
+   * @param {string} isCorrected
+   * @returns {HTMLElement}
    */
   private static makePopUpContent(isCorrected: string): HTMLElement {
     let popupContent       = L.DomUtil.create('div', 'content');
@@ -413,31 +433,46 @@ export class ErrorHighlightService {
         typeOfErrorObject = this.currentMode;
         appendStringID    = '-PTv-error-list-id';
         break;
+      case 'pt-pair':
+        errorsObj         = this.ptPairErrorsObj;
+        typeOfErrorObject = 'pt-pair';
+        appendStringID    = '-pt-pair-error-list-id';
+        break;
     }
     if (this.currentIndex === (errorsObj.length - 1)) {
       this.currentIndex            = 0;
       this.storageSrv.currentIndex = 0;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
-      this.addSinglePopUp(errorsObj[this.currentIndex]);
       let stop = errorsObj[this.currentIndex].stop;
-      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
       document.getElementById(errorsObj[errorsObj.length - 1].stop.id.toString() + appendStringID)
         .style.backgroundColor = 'white';
       document.getElementById(errorsObj[this.currentIndex]['stop'].id.toString() + appendStringID)
         .style.backgroundColor = 'lightblue';
-
+      if (typeOfErrorObject !== 'pt-pair') {
+       this.addSinglePopUp(errorsObj[this.currentIndex]);
+       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+     } else {
+       this.startPTPairCorrection(errorsObj[this.currentIndex]);
+       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 17);
+     }
     } else {
       this.currentIndex++;
       this.storageSrv.currentIndex++;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
-      this.addSinglePopUp(errorsObj[this.currentIndex]);
       let stop = errorsObj[this.currentIndex].stop;
-      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
 
       document.getElementById(errorsObj[this.currentIndex - 1].stop.id.toString() + appendStringID)
         .style.backgroundColor = 'white';
       document.getElementById(errorsObj[this.currentIndex].stop.id.toString() + appendStringID)
         .style.backgroundColor = 'lightblue';
+
+      if (typeOfErrorObject !== 'pt-pair') {
+        this.addSinglePopUp(errorsObj[this.currentIndex]);
+        this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+      } else {
+        this.startPTPairCorrection(errorsObj[this.currentIndex]);
+        this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 17);
+      }
     }
   }
 
@@ -471,31 +506,47 @@ export class ErrorHighlightService {
         typeOfErrorObject = this.currentMode;
         appendStringID    = '-PTv-error-list-id';
         break;
+      case 'pt-pair':
+        errorsObj         = this.ptPairErrorsObj;
+        typeOfErrorObject = 'pt-pair';
+        appendStringID    = '-pt-pair-error-list-id';
+        break;
     }
 
     if (this.currentIndex === 0) {
       this.currentIndex            = errorsObj.length - 1;
       this.storageSrv.currentIndex = errorsObj.length - 1;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
-      this.addSinglePopUp(errorsObj[this.currentIndex]);
       let stop = errorsObj[this.currentIndex].stop;
-      this.mapSrv.map.panTo({ lat: stop.lat, lng: stop.lon });
       document.getElementById(errorsObj[0].stop.id.toString() + appendStringID)
         .style.backgroundColor = 'white';
       document.getElementById(errorsObj[errorsObj.length - 1].stop.id.toString() + appendStringID)
         .style.backgroundColor = 'lightblue';
+
+      if (typeOfErrorObject !== 'pt-pair') {
+        this.addSinglePopUp(errorsObj[this.currentIndex]);
+        this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+      } else {
+        this.startPTPairCorrection(errorsObj[this.currentIndex]);
+        this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 17);
+      }
     } else {
       this.currentIndex--;
       this.storageSrv.currentIndex--;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
-      this.addSinglePopUp(errorsObj[this.currentIndex]);
       let stop = errorsObj[this.currentIndex].stop;
-      this.mapSrv.map.panTo({ lat: stop.lat, lng: stop.lon });
       document.getElementById(errorsObj[this.currentIndex + 1].stop.id.toString() + appendStringID)
         .style.backgroundColor = 'white';
       document.getElementById(errorsObj[this.currentIndex].stop.id.toString() + appendStringID)
         .style.backgroundColor = 'lightblue';
 
+      if (typeOfErrorObject !== 'pt-pair') {
+        this.addSinglePopUp(errorsObj[this.currentIndex]);
+        this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
+      } else {
+        this.startPTPairCorrection(errorsObj[this.currentIndex]);
+        this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 17);
+      }
     }
   }
 
@@ -507,32 +558,35 @@ export class ErrorHighlightService {
     if (errorCorrectionMode) {
       if (errorCorrectionMode.refSuggestions && errorCorrectionMode.refSuggestions.startCorrection) {
         this.appActions.actSetErrorCorrectionMode({
-          nameSuggestions: errorCorrectionMode.nameSuggestions,
-          refSuggestions : {
+          nameSuggestions  : errorCorrectionMode.nameSuggestions,
+          refSuggestions   : {
             found          : true,
             startCorrection: false,
           },
-          waySuggestions: errorCorrectionMode.waySuggestions,
-          PTvSuggestions: errorCorrectionMode.PTvSuggestions,
+          waySuggestions   : errorCorrectionMode.waySuggestions,
+          PTvSuggestions   : errorCorrectionMode.PTvSuggestions,
+          ptPairSuggestions: errorCorrectionMode.ptPairSuggestions,
         });
       }
       if (errorCorrectionMode.nameSuggestions.startCorrection) {
         this.appActions.actSetErrorCorrectionMode({
-          nameSuggestions: {
+          nameSuggestions  : {
             found          : true,
             startCorrection: false,
           },
-          refSuggestions : errorCorrectionMode.refSuggestions,
-          waySuggestions : errorCorrectionMode.waySuggestions,
-          PTvSuggestions : errorCorrectionMode.PTvSuggestions,
+          refSuggestions   : errorCorrectionMode.refSuggestions,
+          waySuggestions   : errorCorrectionMode.waySuggestions,
+          PTvSuggestions   : errorCorrectionMode.PTvSuggestions,
+          ptPairSuggestions: errorCorrectionMode.ptPairSuggestions,
         });
       }
       if (errorCorrectionMode.waySuggestions && errorCorrectionMode.waySuggestions.startCorrection) {
         this.appActions.actSetErrorCorrectionMode({
-          nameSuggestions: errorCorrectionMode.nameSuggestions,
-          refSuggestions : errorCorrectionMode.refSuggestions,
-          PTvSuggestions : errorCorrectionMode.PTvSuggestions,
-          waySuggestions : {
+          nameSuggestions  : errorCorrectionMode.nameSuggestions,
+          refSuggestions   : errorCorrectionMode.refSuggestions,
+          PTvSuggestions   : errorCorrectionMode.PTvSuggestions,
+          ptPairSuggestions: errorCorrectionMode.ptPairSuggestions,
+          waySuggestions   : {
             found          : true,
             startCorrection: false,
           },
@@ -540,30 +594,46 @@ export class ErrorHighlightService {
       }
       if (errorCorrectionMode.PTvSuggestions && errorCorrectionMode.PTvSuggestions.startCorrection) {
         this.appActions.actSetErrorCorrectionMode({
-          nameSuggestions: errorCorrectionMode.nameSuggestions,
-          refSuggestions : errorCorrectionMode.refSuggestions,
-          waySuggestions : errorCorrectionMode.waySuggestions,
-          PTvSuggestions : {
+          nameSuggestions  : errorCorrectionMode.nameSuggestions,
+          refSuggestions   : errorCorrectionMode.refSuggestions,
+          waySuggestions   : errorCorrectionMode.waySuggestions,
+          ptPairSuggestions: errorCorrectionMode.ptPairSuggestions,
+          PTvSuggestions   : {
             found          : true,
             startCorrection: false,
           },
         });
       }
+      if (errorCorrectionMode.ptPairSuggestions && errorCorrectionMode.ptPairSuggestions.startCorrection) {
+        this.appActions.actSetErrorCorrectionMode({
+          nameSuggestions  : errorCorrectionMode.nameSuggestions,
+          refSuggestions   : errorCorrectionMode.refSuggestions,
+          waySuggestions   : errorCorrectionMode.waySuggestions,
+          PTvSuggestions   : errorCorrectionMode.PTvSuggestions,
+          ptPairSuggestions: {
+            found          : true,
+            startCorrection: false,
+          },
+        });
+      }
+
+      this.appActions.actToggleSwitchMode(false);
+      this.processSrv.refreshSidebarView('cancel selection');
+      this.mapSrv.removePopUps();
+      this.mapSrv.map.removeLayer(this.circleHighlight);
+      if (this.currentMode) {
+        this.mapSrv.map.eachLayer((layer) => {
+          if (layer['_latlng'] && layer['feature']) {
+            this.mapSrv.enableDrag(layer['feature'], layer);
+          }
+        });
+      }
+      this.storageSrv.currentElement = null;
+      this.storageSrv.currentElementsChange.emit(
+        JSON.parse(JSON.stringify(null)),
+      );
+      document.getElementById('map').classList.remove('platform-cursor');
     }
-    this.appActions.actToggleSwitchMode(false);
-    this.processSrv.refreshSidebarView('cancel selection');
-    this.mapSrv.removePopUps();
-    if (this.currentMode) {
-      this.mapSrv.map.eachLayer((layer) => {
-        if (layer['_latlng']  && layer['feature']) {
-          this.mapSrv.enableDrag(layer['feature'], layer);
-        }
-      });
-    }
-    this.storageSrv.currentElement = null;
-    this.storageSrv.currentElementsChange.emit(
-      JSON.parse(JSON.stringify(null)),
-    );
   }
 
   /***
@@ -721,7 +791,7 @@ export class ErrorHighlightService {
     return inBounds;
   }
 
-  /***
+  /**
    * Jumps to error
    * @param {number} index
    * @returns {void}
@@ -782,6 +852,21 @@ export class ErrorHighlightService {
         .stop.id.toString() + '-PTv-error-list-id')
         .style.backgroundColor = 'lightblue';
     }
+
+    if (errorCorrectionMode.ptPairSuggestions && errorCorrectionMode.ptPairSuggestions.startCorrection) {
+      document.getElementById(this.ptPairErrorsObj[this.currentIndex].stop.id.toString() + '-pt-pair-error-list-id')
+        .style.backgroundColor = 'white';
+      this.currentIndex = index;
+      this.storageSrv.currentIndex = index;
+      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'pt-pair' });
+      this.startPTPairCorrection(this.ptPairErrorsObj[this.currentIndex]);
+      let stop = this.ptPairErrorsObj[this.currentIndex].stop;
+      this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 17);
+      document.getElementById(this.ptPairErrorsObj[this.currentIndex]
+        .stop.id.toString() + '-pt-pair-error-list-id')
+        .style.backgroundColor = 'lightblue';
+    }
+
   }
 
   /***
@@ -853,5 +938,106 @@ export class ErrorHighlightService {
     }
 
     return missingRefs;
+  }
+
+  public startPTPairCorrection(ptPairErrorObj: IPTPairErrorObject): void {
+    this.mapSrv.map.off('click', this.clickEventFunction);
+    let stopId    = ptPairErrorObj.stop.id;
+    let stopLayer = null;
+    this.mapSrv.map.eachLayer((layer) => {
+      if (layer['feature'] && layer['_latlng']) {
+        let featureID = this.mapSrv.getFeatureIdFromMarker(layer['feature']);
+        if (featureID === stopId) {
+          stopLayer = layer;
+        }
+      }
+    });
+    if (this.circleHighlight) {
+      this.mapSrv.map.removeLayer(this.circleHighlight);
+    }
+
+    if (ptPairErrorObj.corrected === 'false') {
+      this.circleHighlight = new L.Circle([ptPairErrorObj.stop.lat, ptPairErrorObj.stop.lon], {
+        radius : 100,
+        color  : '#9838ff',
+        opacity: 0.75,
+        className: 'platform-cursor',
+        interactive: false,
+      }).addTo(this.mapSrv.map);
+      document.getElementById('map').classList.add('platform-cursor');
+      stopLayer.bindPopup('Add a platform near me', { closeOnClick: false, closeButton: false }).openPopup();
+      this.mapSrv.map.on('click', (event) => this.clickEventFunction = this.onClickMapPTPairCorrection(event));
+    } else {
+      stopLayer.bindPopup('Already added', { closeOnClick: false, closeButton: false }).openPopup();
+    }
+  }
+
+  private onClickMapPTPairCorrection(event: L.LeafletEvent): void {
+    if (this.ptPairErrorsObj[this.currentIndex].corrected === 'false' && this.errorCorrectionMode.ptPairSuggestions &&
+      this.errorCorrectionMode.ptPairSuggestions.startCorrection) {
+      let circleBounds = this.circleHighlight.getBounds();
+      if (circleBounds.contains(event['latlng']) && this.ptPairErrorsObj[this.currentIndex].corrected === 'false') {
+        this.openModalWithComponentForPTPair(this.ptPairErrorsObj[this.currentIndex], event, this.circleHighlight);
+      } else {
+        let response = confirm('The location you selected is too far away from the stop. Do you still want to continue?');
+        if (response) {
+          this.openModalWithComponentForPTPair(this.ptPairErrorsObj[this.currentIndex], event, this.circleHighlight);
+        }
+      }
+    }
+  }
+
+  public openModalWithComponentForPTPair(errorObject: IPTPairErrorObject, event: L.LeafletEvent, circleLayer: L.Layer): void {
+    if (errorObject.corrected === 'false') {
+      let initialState;
+      initialState = {
+        error      : 'pt-pair',
+        ptPairErrorObject : errorObject,
+        newPlatformEvent: event,
+        circleLayer,
+      };
+      this.modalRef = this.modalService.show(ModalComponent, { initialState });
+    }
+  }
+
+  public checkDistance(stop: IPtStop, platform: IPtStop): boolean {
+    let stopLayer = null;
+    let platformLayer = null;
+    this.mapSrv.map.eachLayer((layer) => {
+      if (layer['feature'] && layer['_latlng']) {
+        let featureID = this.mapSrv.getFeatureIdFromMarker(layer['feature']);
+        if (featureID === stop.id) {
+          stopLayer = layer;
+        }
+        if (featureID === platform.id) {
+          platformLayer = layer;
+        }
+      }
+    });
+    return (stopLayer.getLatLng().distanceTo(platformLayer.getLatLng()) < 100);
+  }
+  public countPTPairErrors(): void {
+    this.storageSrv.currentIndex       = 0;
+    this.ptPairErrorsObj               = [];
+    this.storageSrv.ptPairErrorsObject = [];
+    this.storageSrv.elementsMap.forEach((stop) => {
+      if (stop.type === 'node' && (stop.tags.public_transport &&
+        stop.tags.public_transport === 'stop_position' || (stop.tags.highway && stop.tags.highway === 'bus_stop')) &&
+        this.mapSrv.map.getBounds().contains(stop)) {
+        let flag = false;
+        this.storageSrv.elementsMap.forEach((platform) => {
+          if (platform.type === 'node' && (platform.tags.public_transport === 'platform') &&
+            (this.checkDistance(stop, platform))) {
+            flag = true;
+          }
+        });
+        if (!flag) {
+          let errorObj: IPTPairErrorObject = { stop, corrected: 'false' };
+          this.ptPairErrorsObj.push(errorObj);
+        }
+      }
+    });
+    this.storageSrv.ptPairErrorsObject = this.ptPairErrorsObj;
+    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'pt-pair' });
   }
 }

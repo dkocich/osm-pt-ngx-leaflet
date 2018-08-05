@@ -40,19 +40,23 @@ export class ExpertComponent {
   };
 
   public suggestionsBrowserOptions: ISuggestionsBrowserOptions = {
-    nameSuggestions: {
+    nameSuggestions  : {
       found          : false,
       startCorrection: false,
     },
-    refSuggestions : {
+    refSuggestions   : {
       found          : false,
       startCorrection: false,
     },
-    waySuggestions : {
+    waySuggestions   : {
       found          : false,
       startCorrection: false,
     },
-    PTvSuggestions : {
+    PTvSuggestions   : {
+      found          : false,
+      startCorrection: false,
+    },
+    ptPairSuggestions: {
       found          : false,
       startCorrection: false,
     },

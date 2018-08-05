@@ -188,3 +188,63 @@
     </p>
   </div>
 </ng-container>
+
+<ng-container *ngIf="error === 'pt-pair'">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{'Enter name' | translate }}</h4>
+  </div>
+  <div class="modal-body text-center">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <p class="text-success"> Add tags for the new platform. </p>
+      </div>
+      <div class="panel-body">
+        <div class="content panel panel-body panel-default scrollable-panel">
+          <table
+            class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
+            <tbody>
+            <td>
+              <input type="text" value="public_transport" data-type="key" [readonly]="true">
+            </td>
+            <td>
+              <input type="text" value="platform" data-type="value" [readonly]="true">
+            </td>
+            <tr *ngFor="let tag of platformTags; let i = index">
+              <ng-container *ngIf="!(tag === 'public_transport')">
+                <td>
+                  <input type="text" value="{{tag}}" data-type="key" [readonly]="true">
+                </td>
+                <td>
+                  <input type="text"  data-type="value" [(ngModel)]="addedPlatformTagsValues[i]">
+                </td>
+              </ng-container>
+            </tr>
+            <tr>
+              <td>
+                <input #k class="form-control" type="text" minlength="1"
+                       placeholder="{{ 'Add new tag' | translate }}" [ngModel]="tagKey">
+              </td>
+              <td>
+                <input #v class="form-control" type="text" minlength="1"
+                       placeholder="{{ 'Add new value' | translate }}">
+              </td>
+              <td>
+                <button class="btn btn-sm btn-primary fa fa-plus" aria-hidden="true" container="body"
+                        tooltip="{{ 'Create a new tag' | translate }}"
+                        (click)="addTagToPlatform( k.value, v.value)">
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <p>
+      <button type="button" class="btn btn-default" (click)="close()">{{'Cancel' | translate }}</button>
+      <button type="button" class="btn btn-primary" (click)="savePTPairError()">{{'Yes' | translate}}</button>
+    </p>
+  </div>
+</ng-container>
