@@ -25,6 +25,7 @@ import {
   SortableModule,
   TabsModule,
 } from 'ngx-bootstrap';
+import { HotkeyModule } from 'angular2-hotkeys';
 
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2Piwik } from 'angulartics2/piwik';
@@ -147,6 +148,7 @@ const conditional_providers = [
     SortableModule.forRoot(),
     TabsModule.forRoot(),
     ReactiveFormsModule,
+    HotkeyModule.forRoot(),
   ],
   providers: [
     ...conditional_providers,

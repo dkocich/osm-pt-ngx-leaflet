@@ -15,6 +15,7 @@ import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 
 import * as L from 'leaflet';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 @Component({
   providers: [],
@@ -49,6 +50,7 @@ export class ToolbarComponent implements OnInit {
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
     public storageSrv: StorageService,
+    private hotkeysService: HotkeysService,
   ) {
     this.downloading = true;
     this.filtering = this.confSrv.cfgFilterLines;
@@ -87,6 +89,11 @@ export class ToolbarComponent implements OnInit {
         this.enableInfoRouteLabels = false;
       }
     });
+    this.hotkeysService.add([
+      new Hotkey('d', (): boolean => {
+        this.toggleDownloading();
+        return false;
+      }, undefined, 'Toggle downloading data')]);
   }
 
   ngOnInit(): void {

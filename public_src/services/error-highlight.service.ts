@@ -620,7 +620,9 @@ export class ErrorHighlightService {
       this.appActions.actToggleSwitchMode(false);
       this.processSrv.refreshSidebarView('cancel selection');
       this.mapSrv.removePopUps();
-      this.mapSrv.map.removeLayer(this.circleHighlight);
+      if(this.circleHighlight){
+        this.mapSrv.map.removeLayer(this.circleHighlight);
+      }
       if (this.currentMode) {
         this.mapSrv.map.eachLayer((layer) => {
           if (layer['_latlng'] && layer['feature']) {

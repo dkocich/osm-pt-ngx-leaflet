@@ -6,6 +6,7 @@ import { MapService } from '../../services/map.service';
 import { StorageService } from '../../services/storage.service';
 
 import { BsModalRef, BsModalService, ModalDirective } from 'ngx-bootstrap';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
@@ -45,8 +46,44 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
     private modalService: BsModalService,
+    private hotkeysService: HotkeysService,
   ) {
-    //
+    this.hotkeysService.add([new Hotkey('shift+e', (): boolean => {
+      if (this.isAuthenticated()) {
+        this.toggleEditMode();
+      }
+      return false;
+    }, undefined, 'Toggle edit mode'), new Hotkey('1', (): boolean => {
+      if (this.ngRedux.getState()['app']['editing']) {
+        this.createElement('platform');
+      }
+      return false;
+    }, undefined, 'Create new platform'),
+      new Hotkey('ctrl+r', (): boolean => {
+        if (this.ngRedux.getState()['app']['editing'] && this.ngRedux.getState()['app']['advancedExpMode']) {
+          this.routeCreationWizard();
+        }
+        return false;
+      }, undefined, 'Open route creation wizard'),
+      new Hotkey('ctrl+m', (): boolean => {
+        if (this.ngRedux.getState()['app']['editing'] && this.ngRedux.getState()['app']['advancedExpMode']) {
+
+          this.routeMasterCreationWizard();
+        }
+        return false;
+      }, undefined, 'Open route master creation wizard'),
+      new Hotkey('left', (): boolean => {
+        if (this.ngRedux.getState()['app']['editing']) {
+          this.stepBackward();
+        }
+        return false;
+      }, undefined, 'Undo edit'),
+      new Hotkey('right', (): boolean => {
+        if (this.ngRedux.getState()['app']['editing']) {
+          this.stepForward();
+        }
+        return false;
+      }, undefined, 'Redo edit')]);
   }
 
   public ngOnInit(): void {
@@ -134,7 +171,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
   public createElement(type: string): void {
     this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
     this.storageSrv.tutorialStepCompleted.emit('click platform button');
-
   }
 
   /**
@@ -177,11 +213,13 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   public routeCreationWizard(): void {
+    console.log('route creation wizard');
     this.modalRefRouteWiz = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
     this.appActions.actSetWizardMode('route wizard');
   }
 
   public routeMasterCreationWizard(): void {
+    console.log('route  master creation wizard');
     this.modalRefRouteMasterWiz = this.modalService.show(RouteMasterWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
     this.appActions.actSetWizardMode('route master wizard');
   }

@@ -6,6 +6,7 @@ import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
 
 import { BsModalService } from 'ngx-bootstrap';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 import { ErrorHighlightService } from '../../services/error-highlight.service';
 import { MapService } from '../../services/map.service';
@@ -16,7 +17,6 @@ import { ConfService } from '../../services/conf.service';
 import { IPtStop } from '../../core/ptStop.interface';
 import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
 import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject, IPTPairErrorObject } from '../../core/errorObject.interface';
-import { PtTags } from '../../core/ptTags.class';
 
 @Component({
   selector: 'validation-browser',
@@ -46,6 +46,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     public appActions: AppActions,
     public storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
+    private hotkeysService: HotkeysService,
   ) {
 
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
@@ -76,6 +77,37 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
         this.errorCorrectionMode = data;
       });
 
+    this.hotkeysService.add([
+      new Hotkey('alt+1', (): boolean => {
+        this.quit();
+        this.startNameCorrection();
+        return false;
+      }, undefined, 'Start missing name correction'),
+      new Hotkey('alt+2', (): boolean => {
+        this.quit();
+        this.startRefCorrection();
+        return false;
+      }, undefined, 'Start references correction'),
+      new Hotkey('alt+3', (): boolean => {
+        this.quit();
+        this.startWayCorrection();
+        return false;
+      }, undefined, 'Start way as parent correction'),
+      new Hotkey('alt+4', (): boolean => {
+        this.quit();
+        this.startPTvCorrection();
+        return false;
+      }, undefined, 'Start PTv2 correction'),
+      new Hotkey('alt+5', (): boolean => {
+        this.quit();
+        this.startPTPairCorrection();
+        return false;
+      }, undefined, 'Find suggestions'),
+      new Hotkey('f', (): boolean => {
+      this.quit();
+      this.startValidation();
+      return false;
+    }, undefined, 'Start missing name correction')]);
   }
   public ngOnInit(): void {
     this.appActions.actSetErrorCorrectionMode(this.suggestionsBrowserOptions);
