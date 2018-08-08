@@ -620,7 +620,7 @@ export class ErrorHighlightService {
       this.appActions.actToggleSwitchMode(false);
       this.processSrv.refreshSidebarView('cancel selection');
       this.mapSrv.removePopUps();
-      if(this.circleHighlight){
+      if (this.circleHighlight) {
         this.mapSrv.map.removeLayer(this.circleHighlight);
       }
       if (this.currentMode) {

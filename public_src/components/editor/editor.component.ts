@@ -213,13 +213,11 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   public routeCreationWizard(): void {
-    console.log('route creation wizard');
     this.modalRefRouteWiz = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
     this.appActions.actSetWizardMode('route wizard');
   }
 
   public routeMasterCreationWizard(): void {
-    console.log('route  master creation wizard');
     this.modalRefRouteMasterWiz = this.modalService.show(RouteMasterWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
     this.appActions.actSetWizardMode('route master wizard');
   }
