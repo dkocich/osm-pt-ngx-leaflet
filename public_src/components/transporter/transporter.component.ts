@@ -7,6 +7,12 @@ import { StorageService } from '../../services/storage.service';
 
 import { ModalDirective } from 'ngx-bootstrap';
 
+import { select } from '@angular-redux/store';
+
+import { Observable } from 'rxjs';
+
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+
 @Component({
   providers: [],
   selector: 'transporter',
@@ -20,6 +26,8 @@ import { ModalDirective } from 'ngx-bootstrap';
 export class TransporterComponent implements OnInit {
   @ViewChild('downloadModal') public downloadModal: ModalDirective;
   @ViewChild('uploadModal') public uploadModal: ModalDirective;
+  @select(['app', 'tutorialMode']) public readonly tutorialMode$: Observable<string>;
+
   public favoriteQueries = [
     {
       id: 1,
@@ -60,8 +68,13 @@ export class TransporterComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private storageSrv: StorageService,
+    private hotkeysService: HotkeysService,
   ) {
-    //
+    this.hotkeysService.add([
+      new Hotkey('s', (): boolean => {
+        this.uploadData();
+        return false;
+      }, undefined, 'Upload data to OSM')]);
   }
 
   public ngOnInit(): void {

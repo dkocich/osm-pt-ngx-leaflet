@@ -41,14 +41,7 @@ Contact me on Slack [osm-pt.slack.com](https://join.slack.com/t/osm-pt/shared_in
 
 ## Acknowledgment
 
-This project was made possible by Google/OSM during the [GSOC 2017](https://summerofcode.withgoogle.com/) for [OpenStreetMap](https://www.openstreetmap.org/) organization.
- Big Thanks to the project's mentors - [Zverik](https://github.com/zverik) ([OSM](https://wiki.openstreetmap.org/wiki/User:Zverik)) and [Polyglot](https://github.com/PolyglotOpenstreetmap) ([OSM](https://wiki.openstreetmap.org/wiki/User:Polyglot))
- who were very helpful during the development.
+The development was supported by Google during the [Google Summer of Code 2017 and 2018](https://summerofcode.withgoogle.com/) for [OpenStreetMap](https://www.openstreetmap.org/) organization. Please visit [wiki-Acknowledgment](https://github.com/dkocich/osm-pt-ngx-leaflet/wiki/Acknowledgment) for details.
 
-Thanks to [haolingyu](https://github.com/haoliangyu) for his work on [Ngx-leaflet-starter](https://github.com/haoliangyu/ngx-leaflet-starter)
- and [Ngx-MapboxGL-starter](https://github.com/haoliangyu/ngx-mapboxgl-starter) example demos.
-
-## Support on Beerpay
-
-To support the project development please visit Beerpay
-[![Beerpay](https://beerpay.io/dkocich/osm-pt-ngx-leaflet/badge.svg?style=beer-square)](https://beerpay.io/dkocich/osm-pt-ngx-leaflet)  [![Beerpay](https://beerpay.io/dkocich/osm-pt-ngx-leaflet/make-wish.svg?style=flat-square)](https://beerpay.io/dkocich/osm-pt-ngx-leaflet?focus=wish)
+## Support
+Please visit [wiki-Support](https://github.com/dkocich/osm-pt-ngx-leaflet/wiki/Support) for details.

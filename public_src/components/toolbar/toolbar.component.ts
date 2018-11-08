@@ -14,6 +14,9 @@ import { IOsmElement } from '../../core/osmElement.interface';
 import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
 
+import * as L from 'leaflet';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+
 @Component({
   providers: [],
   selector: 'toolbar',
@@ -33,6 +36,12 @@ export class ToolbarComponent implements OnInit {
 
   public currentElement: IOsmElement;
   public stats = { s: 0, r: 0, a: 0, m: 0 };
+  public routeLabelShown = false;
+  public enableInfoRouteLabels = false;
+
+  public singleRelID = null;
+  public multipleRelsHighlightsAndIDs: Map<number, L.Polyline> = null;
+
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
 
   constructor(
@@ -40,7 +49,8 @@ export class ToolbarComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
-    private storageSrv: StorageService,
+    public storageSrv: StorageService,
+    private hotkeysService: HotkeysService,
   ) {
     this.downloading = true;
     this.filtering = this.confSrv.cfgFilterLines;
@@ -60,6 +70,30 @@ export class ToolbarComponent implements OnInit {
     this.mapSrv.highlightTypeEmitter.subscribe((data) => {
       this.htRadioModel = data.highlightType;
     });
+    this.mapSrv.enableInfoRouteLabelsOption.subscribe((data: {type: string, id: number, highlightFill: L.Polyline}) => {
+        if (data && data.type === 'single') {
+          this.singleRelID = data.id;
+          this.enableInfoRouteLabels = true;
+        }
+        if (data && data.type === 'multiple') {
+          if (!this.multipleRelsHighlightsAndIDs) {
+            this.multipleRelsHighlightsAndIDs = new Map();
+          }
+          this.multipleRelsHighlightsAndIDs.set(data.id, data.highlightFill);
+          this.enableInfoRouteLabels = true;
+        }
+        if (!data) {
+        this.singleRelID = null;
+        this.multipleRelsHighlightsAndIDs = null;
+        this.routeLabelShown = false;
+        this.enableInfoRouteLabels = false;
+      }
+    });
+    this.hotkeysService.add([
+      new Hotkey('d', (): boolean => {
+        this.toggleDownloading();
+        return false;
+      }, undefined, 'Toggle downloading data')]);
   }
 
   ngOnInit(): void {
@@ -83,7 +117,7 @@ export class ToolbarComponent implements OnInit {
     this.downloading = !this.downloading;
     if (this.downloading) {
       this.mapSrv.map.on('zoomend moveend', () => {
-        this.overpassSrv.initDownloader();
+        this.overpassSrv.initDownloader(this.mapSrv.map);
       });
     } else if (!this.downloading) {
       this.mapSrv.map.off('zoomend moveend');
@@ -136,7 +170,8 @@ export class ToolbarComponent implements OnInit {
   }
 
   private clearHighlight(): void {
-    return this.mapSrv.clearHighlight();
+    this.enableInfoRouteLabels = false;
+    return this.mapSrv.clearHighlight(this.mapSrv.map);
   }
 
   private getLoadAndZoomUrl(): void {
@@ -165,5 +200,31 @@ export class ToolbarComponent implements OnInit {
 
   private isDisabled(): boolean {
     return this.currentElement.id < 0;
+  }
+
+  /**
+   * Handles toggling of route info labels
+   */
+  public toggleRouteInfoLabels(): void {
+   if (!this.routeLabelShown) {
+     if (this.storageSrv.currentElement.type === 'node') {
+       this.mapSrv.showMultipleRouteInfoLabels(this.multipleRelsHighlightsAndIDs);
+     } else if (this.storageSrv.currentElement.type === 'relation') {
+       this.mapSrv.showRouteInfoLabels(this.singleRelID);
+     }
+     this.routeLabelShown = true;
+   }  else {
+     this.mapSrv.clearSingleRouteInfoLabels();
+     this.mapSrv.clearMultipleRouteInfoLabels();
+     this.routeLabelShown = false;
+   }
+  }
+
+  public hasRef(): boolean {
+    return this.storageSrv.currentElement.tags.ref !== undefined;
+  }
+
+  public clear(): void {
+    this.mapSrv.clearMultipleRouteInfoLabels();
   }
 }

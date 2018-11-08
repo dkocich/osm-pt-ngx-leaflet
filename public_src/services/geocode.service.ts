@@ -61,7 +61,6 @@ export class GeocodeService {
           this.httpClient.get<IResponseFreeGeoIp>(`${ConfService.geocodingApiUrl}${resp1.ip}${ConfService.geocodingApiKey}`)
             .subscribe(
               (resp2: IResponseFreeGeoIp) => {
-                debugger;
                 const location = new Location();
                 location.address =
                   `${resp2.city}, ${resp2.region_code} ${resp2.zip_code}, ${resp2.country_code}`;

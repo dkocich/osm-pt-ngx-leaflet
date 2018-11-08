@@ -1,14 +1,21 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 
 import { AuthService } from '../../services/auth.service';
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
 import { StorageService } from '../../services/storage.service';
 
-import { ModalDirective } from 'ngx-bootstrap';
-import { select } from '@angular-redux/store';
+import { BsModalRef, BsModalService, ModalDirective } from 'ngx-bootstrap';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+
+import { NgRedux, select } from '@angular-redux/store';
 import { Observable } from 'rxjs';
+
 import { AppActions } from '../../store/app/actions';
+import { IAppState } from '../../store/model';
+
+import { RouteWizardComponent } from '../route-wizard/route-wizard.component';
+import { RouteMasterWizardComponent } from '../route-master-wizard/route-master-wizard.component';
 
 @Component({
   providers: [],
@@ -18,16 +25,18 @@ import { AppActions } from '../../store/app/actions';
     '../../styles/main.less',
   ],
   templateUrl: './editor.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class EditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editModal') public editModal: ModalDirective;
-  public totalEditSteps: number = 0;
-  public currentEditStep: number = 0;
-  public editing: boolean = false;
+  public totalEditSteps: number        = 0;
+  public currentEditStep: number       = 0;
   public creatingElementOfType: string = '';
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+
+  modalRefRouteWiz: BsModalRef;
+  modalRefRouteMasterWiz: BsModalRef;
 
   constructor(
     public appActions: AppActions,
@@ -35,8 +44,46 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private editSrv: EditService,
     private mapSrv: MapService,
     private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
+    private modalService: BsModalService,
+    private hotkeysService: HotkeysService,
   ) {
-    //
+    this.hotkeysService.add([new Hotkey('shift+e', (): boolean => {
+      if (this.isAuthenticated()) {
+        this.toggleEditMode();
+      }
+      return false;
+    }, undefined, 'Toggle edit mode'), new Hotkey('1', (): boolean => {
+      if (this.ngRedux.getState()['app']['editing']) {
+        this.createElement('platform');
+      }
+      return false;
+    }, undefined, 'Create new platform'),
+      new Hotkey('ctrl+r', (): boolean => {
+        if (this.ngRedux.getState()['app']['editing'] && this.ngRedux.getState()['app']['advancedExpMode']) {
+          this.routeCreationWizard();
+        }
+        return false;
+      }, undefined, 'Open route creation wizard'),
+      new Hotkey('ctrl+m', (): boolean => {
+        if (this.ngRedux.getState()['app']['editing'] && this.ngRedux.getState()['app']['advancedExpMode']) {
+
+          this.routeMasterCreationWizard();
+        }
+        return false;
+      }, undefined, 'Open route master creation wizard'),
+      new Hotkey('left', (): boolean => {
+        if (this.ngRedux.getState()['app']['editing']) {
+          this.stepBackward();
+        }
+        return false;
+      }, undefined, 'Undo edit'),
+      new Hotkey('right', (): boolean => {
+        if (this.ngRedux.getState()['app']['editing']) {
+          this.stepForward();
+        }
+        return false;
+      }, undefined, 'Redo edit')]);
   }
 
   public ngOnInit(): void {
@@ -46,9 +93,10 @@ export class EditorComponent implements OnInit, AfterViewInit {
       this.totalEditSteps = data.total;
     });
     this.mapSrv.map.on('click', (event: MouseEvent) => {
-      if (this.editing && this.creatingElementOfType !== '') {
+      if (this.ngRedux.getState()['app']['editing'] && this.creatingElementOfType !== '') {
         this.editSrv.createElement(this.creatingElementOfType, event);
         this.creatingElementOfType = '';
+        this.storageSrv.tutorialStepCompleted.emit('click on map');
       }
     });
   }
@@ -120,8 +168,9 @@ export class EditorComponent implements OnInit, AfterViewInit {
    * Provides access to editing service function.
    * @param type
    */
-  private createElement(type: string): void {
+  public createElement(type: string): void {
     this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
+    this.storageSrv.tutorialStepCompleted.emit('click platform button');
   }
 
   /**
@@ -147,10 +196,11 @@ export class EditorComponent implements OnInit, AfterViewInit {
    * Activates editing mode (locally/globally).
    */
   private toggleEditMode(): void {
-    this.editing = !this.editing;
-    this.editSrv.editingMode.emit(this.editing);
-    this.mapSrv.editingMode = this.editing;
-    if (this.editing) {
+    this.appActions.actToggleEditing();
+    let editing = this.ngRedux.getState()['app']['editing'];
+    this.editSrv.editingMode.emit(editing);
+    this.mapSrv.editingMode = editing;
+    if (editing) {
       setTimeout(() => {
         this.mapSrv.disableMouseEvent('edits-backward-btn');
         this.mapSrv.disableMouseEvent('edits-forward-btn');
@@ -159,5 +209,16 @@ export class EditorComponent implements OnInit, AfterViewInit {
         this.mapSrv.disableMouseEvent('platform-btn');
       }, 250);
     }
+    this.storageSrv.tutorialStepCompleted.emit('toggle edit mode');
+  }
+
+  public routeCreationWizard(): void {
+    this.modalRefRouteWiz = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+    this.appActions.actSetWizardMode('route wizard');
+  }
+
+  public routeMasterCreationWizard(): void {
+    this.modalRefRouteMasterWiz = this.modalService.show(RouteMasterWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+    this.appActions.actSetWizardMode('route master wizard');
   }
 }

@@ -7,8 +7,13 @@ import { ModalDirective } from 'ngx-bootstrap';
 
 import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
 import { IOsmElement } from '../../core/osmElement.interface';
+
 import { Observable } from 'rxjs';
-import { select } from '@angular-redux/store';
+
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from '../../store/model';
+
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 @Component({
   providers: [],
@@ -29,8 +34,16 @@ export class RelationBrowserComponent implements OnInit {
     private editSrv: EditService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
+    private hotkeysService: HotkeysService,
+    private ngRedux: NgRedux<IAppState>,
   ) {
-    //
+    this.hotkeysService.add(new Hotkey('3', (): boolean => {
+      if (this.ngRedux.getState()['app']['editing'] && this.ngRedux.getState()['app']['advancedExpMode']) {
+
+        this.createMaster();
+      }
+      return false;
+    }, undefined, 'Create a new route master'));
   }
 
   public ngOnInit(): void {

@@ -21,6 +21,7 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -40,6 +41,7 @@ export class AppComponent implements OnInit {
 
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  @select(['app', 'tutorialMode']) public readonly tutorialMode$: Observable<boolean>;
   private startEventProcessing = new Subject<L.LeafletEvent>();
 
   constructor(
@@ -51,6 +53,7 @@ export class AppComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
+    private authSrv: AuthService,
   ) {
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());
@@ -90,7 +93,7 @@ export class AppComponent implements OnInit {
       .distinctUntilChanged()
       .subscribe((event: L.LeafletEvent) => {
         this.processSrv.addPositionToUrlHash();
-        this.overpassSrv.initDownloader();
+        this.overpassSrv.initDownloader(this.mapSrv.map);
         this.processSrv.filterDataInBounds();
       });
 
@@ -109,5 +112,12 @@ export class AppComponent implements OnInit {
 
   private showHelpModal(): void {
     this.helpModal.show();
+  }
+  public startTutorials(): void {
+      this.appActions.actToggleTutorialMode(true);
+  }
+
+  public isAuthenticated(): void {
+    return this.authSrv.oauth.authenticated();
   }
 }

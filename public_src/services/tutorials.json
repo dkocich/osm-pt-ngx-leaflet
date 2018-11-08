@@ -1,0 +1,172 @@
+{
+  "beginner": {
+    "Add new platform": [
+      {
+        "element": "#toggle-edit",
+        "intro": "Click here on the edit button to start editing",
+        "position": "right"
+      },
+      {
+        "element": "#platform-btn",
+        "intro": "<strong>Good Job!</strong> Now you can start editing. To add a new platform first click here on the platform button.",
+        "position": "right"
+      },
+      {
+        "element": "#map",
+        "intro": "Now click anywhere on the map to specify the location for the new platform.",
+        "position": "right"
+      },
+      {
+        "element": "#tag-browser",
+        "intro": "Now add the name or reference for the platform you just added.",
+        "position": "right"
+      },
+      {
+        "element": "last-step",
+        "intro": "Good job, you have successfully added a platform. Click the escape key to exit."
+      }
+    ],
+    "Quick overview (beginner)" : [
+      {
+        "element": "#map",
+        "intro": "Try moving around in the map and zooming to download some new map data.",
+        "position": "right"
+      },
+      {
+        "element": "#map",
+        "intro": "<strong>Good Job!</strong> Click <i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i>  keyboard key to move to the next step.",
+        "position": "right"
+      },
+      {
+        "element": "#map",
+        "intro": "We have moved the map to a new location.<strong> Wait till the data is rendered and click on any of the stop which you see in center of the central park to start exploring it.</strong>",
+        "position": "right"
+      },
+      {
+        "element": "#tag-browser",
+        "intro": "Here is the tag browser window. You can view all the tags of the selected stop/platform which you just selected here. Click <i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i>  keyboard key to move to the next step.",
+        "position": "right"
+      },
+      {
+        "element": "#route-browser",
+        "intro": "You can also view the parent routes of the selected stop/platform here. Try selecting a route from the given list.",
+        "position": "right"
+      },
+      {
+        "element": "#sidebar",
+        "intro": "Now you can see the information about of route you just selected.Click <i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i>  keyboard key to move to the next step.",
+        "position": "right"
+      },
+      {
+        "element": "#map",
+        "intro": "The route which you selected is also highlighted on the map. Click <i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i>  keyboard key to move to the next step.",
+        "position": "right"
+      },
+      {
+        "element": "#back-btn",
+        "intro": "Click this button to go back to viewing information regarding your selected stop.",
+        "position": "right"
+      },
+      {
+        "element": "#sidebar",
+        "intro": "This way you can toggle between viewing information regarding the stop/platform selected or one of it's parent route. Click <i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i>  keyboard key to move to the next step.",
+        "position": "right"
+      },
+      {
+        "element": "last-step",
+        "intro": "<strong>Good Job!</strong>The tutorial is now complete. Click escape key to exit."
+      }
+    ]
+  },
+  "expert": {
+    "Add new route": [
+      {
+        "element": "#toggle-edit",
+        "intro": "Click on the edit button to start editing.",
+        "position": "right"
+      },
+      {
+        "element": "#route-browser",
+        "intro": "This the window where you can view all thr routes which are downloaded and have atleast one memeber in the current map bounds. <strong> Click on the panel heading to open it. </strong>",
+        "position": "right"
+      },
+      {
+        "element": "#create-route-btn",
+        "intro": "Now to start creating a route, click on the create route button.",
+        "position": "right"
+      },
+      {
+        "element": "#toggle-members-edit-btn",
+        "intro": "You have now successfully created a route but there are no members added to your route!<strong> Click here to start adding/removing members of the route.</strong>",
+        "position": "right"
+      },
+      {
+        "element": "#map",
+        "intro": "Click on any marker on the map to add it to the new route.",
+        "position": "right"
+      },
+      {
+        "element": "last-step",
+        "intro": "Good job! You have successfully created a route with members.",
+        "position": "right"
+      }
+    ],
+    "Quick overview (expert)": [
+      {
+        "element": "#toggle-edit",
+        "intro": "<strong>Edit Button :</strong> Enables editing",
+        "position": "right"
+      },
+      {
+        "element": "#tag-browser",
+        "intro": "<strong> Tag Browser :</strong> Used for displaying/editing tags of the selected element.",
+        "position": "right"
+      },
+      {
+        "element": "#route-browser",
+        "intro": "<strong> Route Browser :</strong> Contains the list of routes (can be parent routes of a specific element or all the routes in the current map bounds) You can also create a new route, change it's members and download route masters from here.",
+        "position": "right"
+      },
+      {
+        "element": "#relation-browser",
+        "intro": "<strong> Relation Browser :</strong> Displays all route masters. You can also create a new route master from here.",
+        "position": "right"
+      },
+      {
+        "element": "#stop-browser",
+        "intro": "<strong> Stop Browser :</strong> Depending on the selection, this window displays a list of all the stops in the current map bounds or for a specific route.",
+        "position": "right"
+      },
+      {
+        "element": "#suggestion-browser",
+        "intro": "<strong> Suggestions Browser :</strong> Use this browser to highlight the map using certain rules such as missing name tags. You this when you want to make some quick edits.",
+        "position": "right"
+      },
+      {
+        "element": "#platform-btn",
+        "intro": "<strong> Add platform button :</strong> Use this to start adding new platforms to the map.",
+        "position": "right"
+      },
+      {
+        "element": "#wizard-btn",
+        "intro": "<strong> Wizards :</strong> Route Creation Wizard and Route Master Creation Wizard are available under this option.",
+        "position": "right"
+      },
+      {
+        "element": "#undo-redo-btns",
+        "intro": "Use these to undo/redo your edits.",
+        "position": "right"
+      },
+      {
+        "element": "#edits-count",
+        "intro": "Here you can see the number of edits you have made without uploading them.",
+        "position": "right"
+      },
+      {
+        "element": "last-step",
+        "intro": "Good job! You have successfully created a route with members.",
+        "position": "right"
+      }
+    ]
+  }
+}

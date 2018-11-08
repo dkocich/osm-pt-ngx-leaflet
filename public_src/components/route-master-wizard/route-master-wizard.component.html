@@ -1,0 +1,138 @@
+<div id="container">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{'Route Master Creation Wizard' | translate }}</h4>
+    <i class="pull-right fa fa-times" aria-hidden="true" (click)="modalRefRouteMasterWiz.hide()"></i>
+  </div>
+  <div class="modal-body text-center ">
+    <div class="row full-height">
+      <div class="col-md-5 full-height">
+        <div id="master-route-wizard-modal-map">
+        </div>
+      </div>
+      <div class="col-md-7 full-height">
+        <div class="panel panel-default full-height right-panel">
+          <div class="panel-body">
+            <div>
+              <tabset [justified]="true" type="pills" #stepTabs>
+                <tab heading="Step 1">
+                  <p class="text-success step-text">{{'Zoom into the required area on the map and find suggested route masters' | translate}}</p>
+                  <button class="btn btn-default" type="submit" (click)="findSuggestions()">{{'Find suggestions' | translate }}
+                  </button>
+                </tab>
+                <tab heading="Step 2">
+                  <accordion [closeOthers]="true">
+                    <accordion-group #a *ngFor="let ref of getKeys()">
+                      <div accordion-heading class="clearfix">
+                        Ref:&nbsp;{{ref}}
+                        <i class="pull-right float-xs-right fa"
+                           [ngClass]="{'fa-chevron-down': a?.isOpen, 'fa-chevron-right': !a?.isOpen}"></i>
+                      </div>
+                      <ul class="suggested-rm-list">
+                        <li class="list-group-item clearfix" *ngFor="let route of getValue(ref)"
+                            [ngStyle]="{'background-color' : getListItemColor(route.percentCoverage) }"
+                            (click)="viewRoute(route.id,route.percentCoverage, ref)">
+                          <span> {{'Name'| translate }}:&nbsp;{{getWholeRoute(route.id).tags.name}}</span>
+                        </li>
+                      </ul>
+                      <button class="btn btn-default pull-right" type="submit"
+                              (click)="useRouteMaster(ref) ">{{'Use Route Master' | translate }}
+                      </button>
+                    </accordion-group>
+                  </accordion>
+                </tab>
+
+                <tab heading="Step 3">
+                  <div class="panel panel-default full-height right-panel">
+                    <div class="panel-heading">
+                      <p class="text-success">{{'Remove routes if necessary.' | translate }}</p>
+                    </div>
+                    <div class="panel-body ">
+                      <div class="scrollable-panel" *ngIf="usedRM.length !== 0">
+                        <bs-sortable
+                          [(ngModel)]="usedRM"
+                          itemClass="sortable-item"
+                          itemActiveClass="sortable-item-active"
+                          placeholderItem="Drag here"
+                          placeholderClass="sortable-item"
+                          wrapperClass="sortable-wrapper"
+                          [itemTemplate]="itemTemplate">
+                        </bs-sortable>
+                      </div>
+                    </div>
+                    <div class="panel-footer clearfix">
+                      <button class="btn btn-default pull-right" (click)="saveStep3()">{{'Done' | translate}}</button>
+                    </div>
+                  </div>
+                </tab>
+
+                <tab heading="Step 4">
+
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <p class="text-success">{{'Add tags for the new route master.' | translate}}</p>
+                    </div>
+                    <div class="panel-body">
+                      <div class="content panel panel-body panel-default ">
+                        <table
+                          class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
+                          <tbody>
+                          <tr *ngFor="let tag of RMTags | keys; ">
+
+                            <td>
+                              <input type="text" value="{{tag.key}}" data-type="key" [readonly]="true">
+                            </td>
+                            <td>
+                              <input type="text" value="{{tag.value}}" data-type="value"
+                                     (blur)="createChangeTag('change tag', tag.key, $event)">
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-danger fa fa-minus"
+                                      aria-hidden="true" container="body"
+                                      tooltip="{{ 'Remove tag' | translate }}"
+                                      (click)="createChangeTag('remove tag', tag.key)">
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input #k class="form-control" type="text" minlength="1"
+                                     placeholder="{{ 'Add new tag' | translate }}" [ngModel]="tagKey">
+                            </td>
+                            <td>
+                              <input #v class="form-control" type="text" minlength="1"
+                                     placeholder="{{ 'Add new value' | translate }}">
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-primary fa fa-plus" aria-hidden="true" container="body"
+                                      tooltip="{{ 'Create a new tag' | translate }}"
+                                      (click)="createChangeTag('add tag', k.value, v.value)">
+                              </button>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="panel-footer clearfix">
+                      <button class="btn btn-default pull-right" (click)="saveStep4()">{{'Save Route Master' | translate }}r</button>
+                    </div>
+                  </div>
+                </tab>
+              </tabset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<ng-template #itemTemplate let-item="item" let-index="index">
+  <li class="list-group-item"> {{index + 1}}.&nbsp;{{'Name' | translate}}:&nbsp;{{getWholeRoute(item.value.id).tags.name}}&nbsp;id:&nbsp;{{item.value.id}}
+    <i class="fa fa-times pull-right" aria-hidden="true" (click)="removeRoute(item.value.id)"></i>
+    <i class="fa fa-search pull-right" aria-hidden="true"
+       (click)="viewRoute(item.value.id,item.value.percentCoverage, getWholeRoute(item.value.id).tags.ref)"></i>
+  </li>
+
+</ng-template>

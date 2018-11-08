@@ -5,9 +5,14 @@ import { ConfService } from './conf.service';
 import { StorageService } from './storage.service';
 
 import * as L from 'leaflet';
+import 'leaflet-textpath';
 
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
+
+import { NgRedux } from '@angular-redux/store';
+import { IAppState } from '../store/model';
+import {TutorialService} from './tutorial.service';
 
 @Injectable()
 export class MapService {
@@ -26,19 +31,21 @@ export class MapService {
   public markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
   public membersHighlightLayer: any = undefined;
   private ptLayer: any;
-  private highlightFill: any = undefined;
+  public highlightFill: any = undefined;
   private highlight: any = undefined;
   private markerFrom: any = undefined;
   private markerTo: any = undefined;
   public popUpArr = [];
   public popUpLayerGroup: L.LayerGroup;
   public currentPopUpFeatureId: number;
-  public errorLocations: L.LatLngExpression [] = [];
-
+  public enableInfoRouteLabelsOption: EventEmitter<any> = new EventEmitter();
+  // public autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
   constructor(
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>,
+    // private tutorialSrv: TutorialService,
   ) {
     this.baseMaps = {
       Empty: L.tileLayer('', {
@@ -66,7 +73,7 @@ export class MapService {
       ),
       Esri: L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-          'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+        'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
         {
           attribution: `Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap,
             iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan,
@@ -77,7 +84,7 @@ export class MapService {
       ),
       Esri_imagery: L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-          'World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        'World_Imagery/MapServer/tile/{z}/{y}/{x}',
         {
           attribution: `Tiles &copy; Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye,
             Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community `,
@@ -87,7 +94,7 @@ export class MapService {
       ),
       HERE_satelliteDay: L.tileLayer(
         'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/' +
-          'satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
+        'satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
         {
           attribution:
             'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
@@ -106,7 +113,7 @@ export class MapService {
       ),
       HERE_hybridDay: L.tileLayer(
         'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/' +
-          'hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
+        'hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
         {
           attribution:
             'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
@@ -125,7 +132,7 @@ export class MapService {
       ),
       MapBox_imagery: L.tileLayer(
         'https://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=' +
-          ConfService.mapboxToken,
+        ConfService.mapboxToken,
         {
           attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank'
             rel='noopener'>&copy;&nbsp;Mapbox</a>,&nbsp;<a href='https://www.openstreetmap.org/about/'
@@ -138,7 +145,7 @@ export class MapService {
       ),
       MapBox_streets: L.tileLayer(
         'https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=' +
-          ConfService.mapboxToken,
+        ConfService.mapboxToken,
         {
           attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank'
             rel='noopener'>&copy;&nbsp;Mapbox</a>,&nbsp;<a href='https://www.openstreetmap.org/about/'
@@ -227,8 +234,9 @@ export class MapService {
   /**
    * Renders GeoJson data on the map.
    * @param transformedGeojson
+   * @param map
    */
-  public renderTransformedGeojsonData(transformedGeojson: any): void {
+  public renderTransformedGeojsonData(transformedGeojson: any, map: L.Map): void {
     this.ptLayer = L.geoJSON(transformedGeojson, {
       filter: (feature) => {
         // filter away already rendered elements
@@ -256,7 +264,8 @@ export class MapService {
       },
     });
     console.log('LOG (map s.) Adding PTlayer to map again', this.ptLayer);
-    this.ptLayer.addTo(this.map);
+
+    this.ptLayer.addTo(map);
   }
 
   /**
@@ -354,36 +363,38 @@ export class MapService {
   /**
    * Clears active map highlight (stop markers, route lines).
    */
-  public clearHighlight(): void {
+  public clearHighlight(map: L.Map): void {
     if (this.markerFrom !== undefined) {
-      this.map.removeLayer(this.markerFrom);
+      map.removeLayer(this.markerFrom);
       this.markerFrom = undefined;
     }
     if (this.markerTo !== undefined) {
-      this.map.removeLayer(this.markerTo);
+      map.removeLayer(this.markerTo);
       this.markerTo = undefined;
     }
     if (this.highlight !== undefined) {
-      this.map.removeLayer(this.highlight);
+      map.removeLayer(this.highlight);
       this.highlight = undefined;
     }
     if (this.highlightFill !== undefined) {
-      this.map.removeLayer(this.highlightFill);
+      map.removeLayer(this.highlightFill);
       this.highlightFill = undefined;
     }
     if (this.highlightStroke !== undefined) {
-      this.map.removeLayer(this.highlightStroke);
+      map.removeLayer(this.highlightStroke);
       this.highlightStroke = undefined;
     }
+    this.enableInfoRouteLabelsOption.emit(null);
   }
 
   /**
    * Returns coordinates for a stop specified by ID.
    * @param refId
+   * @param map
    * @returns {{lat: number, lng: number}}
    */
-  public findCoordinates(refId: number): L.LatLngExpression {
-    const element = this.storageSrv.elementsMap.get(refId);
+  public findCoordinates(refId: number, map: any): L.LatLngExpression {
+    const element = map.get(refId);
     if (!element) {
       console.log('Warning - elem. not found ', refId, JSON.stringify(element));
     } else {
@@ -439,7 +450,7 @@ export class MapService {
         ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
         this.storageSrv.stopsForRoute.push(member.ref);
-        const latlng: L.LatLngExpression = this.findCoordinates(member.ref);
+        const latlng: L.LatLngExpression = this.findCoordinates(member.ref, this.storageSrv.elementsMap);
         if (latlng) {
           latlngs.push(latlng);
         }
@@ -453,8 +464,9 @@ export class MapService {
       this.highlightFill = L.polyline(latlngs, Utils.HIGHLIGHT_FILL).bindTooltip(
         rel.tags.name,
       );
+      this.enableInfoRouteLabelsOption.emit({ type: 'multiple', id: rel.id, highlightFill: this.highlightFill });
       if (this.highlight) {
-        this.highlight.addLayer(L.layerGroup([this.highlightFill]));
+        this.highlight.addLayer(this.highlightFill);
       } else {
         this.highlight = L.layerGroup([this.highlightFill]);
       }
@@ -482,28 +494,41 @@ export class MapService {
   /**
    * Builds and creates relation highlight.
    * @param rel
+   * @param map
+   * @param elementsMap
    * @returns {boolean}
    */
-  public showRoute(rel: any): boolean {
+  public showRoute(rel: any, map: L.Map, elementsMap: any): boolean {
     for (const member of rel.members) {
       if (
         member.type === 'node' &&
         ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
-        this.storageSrv.stopsForRoute.push(member.ref);
+
+        if (member.ref) {
+          this.storageSrv.stopsForRoute.push(member.ref);
+        }
+        if (member.id) {
+          this.storageSrv.stopsForRoute.push(member.id);
+        }
       } else if (
         member.type === 'node' &&
         ['platform', 'platform_entry_only', 'platform_exit_only']
           .indexOf(member.role) > -1
       ) {
-        this.storageSrv.platformsForRoute.push(member.ref);
+        if (member.ref) {
+          this.storageSrv.platformsForRoute.push(member.ref);
+        }
+        if (member.id) {
+          this.storageSrv.platformsForRoute.push(member.id);
+        }
+
       } else if (member.type === 'way') {
         this.storageSrv.waysForRoute.push(member.ref);
       } else if (member.type === 'relation') {
         this.storageSrv.relationsForRoute.push(member.ref);
       }
     }
-
     // setup highlight type
     if (
       this.storageSrv.stopsForRoute.length === 0 &&
@@ -522,10 +547,9 @@ export class MapService {
         memberRefs = this.storageSrv.platformsForRoute;
         break;
     }
-
     const latlngs = Array();
     for (const ref of memberRefs) {
-      const latlng: L.LatLngExpression = this.findCoordinates(ref);
+      const latlng: L.LatLngExpression = this.findCoordinates(ref, elementsMap);
       if (latlng) {
         latlngs.push(latlng);
       }
@@ -546,7 +570,8 @@ export class MapService {
       this.highlight = L.layerGroup([
         this.highlightStroke,
         this.highlightFill,
-      ]).addTo(this.map);
+      ]).addTo(map);
+      this.enableInfoRouteLabelsOption.emit({ type: 'single', id: rel.id, highlightFill: this.highlightFill });
       return true;
     } else {
       if (rel.members.length <= 1) {
@@ -578,11 +603,12 @@ export class MapService {
     let latlngFrom;
     switch (this.highlightType) {
       case 'Stops':
-        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0]); // get first and last ID reference
+        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0], this.storageSrv.elementsMap); // get first and last ID reference
         return latlngFrom;
       case 'Platforms':
         latlngFrom = this.findCoordinates(
           this.storageSrv.platformsForRoute[0],
+          this.storageSrv.elementsMap,
         ); // get first and last ID reference
         return latlngFrom;
     }
@@ -594,15 +620,17 @@ export class MapService {
       case 'Stops':
         latlngTo = this.findCoordinates(
           this.storageSrv.stopsForRoute[
-            this.storageSrv.stopsForRoute.length - 1
-          ],
+          this.storageSrv.stopsForRoute.length - 1
+            ],
+          this.storageSrv.elementsMap,
         );
         return latlngTo;
       case 'Platforms':
         latlngTo = this.findCoordinates(
           this.storageSrv.platformsForRoute[
-            this.storageSrv.platformsForRoute.length - 1
-          ],
+          this.storageSrv.platformsForRoute.length - 1
+            ],
+          this.storageSrv.elementsMap,
         );
         return latlngTo;
     }
@@ -638,7 +666,7 @@ export class MapService {
       },
     );
     if (this.highlight) {
-      this.highlight.addLayer(L.layerGroup([this.markerFrom, this.markerTo]));
+      this.highlight.addLayer(this.markerFrom, this.markerTo);
     } else {
       this.highlight = L.layerGroup([this.markerFrom, this.markerTo]);
     }
@@ -650,7 +678,7 @@ export class MapService {
    * @param latlng
    * @returns {any}
    */
-  private stylePoint(feature: any, latlng: any): any {
+  public stylePoint(feature: any, latlng: any): any {
     let iconUrl = 'assets/marker-icon.png';
     let shadowUrl = '';
     const fp = feature.properties;
@@ -732,7 +760,7 @@ export class MapService {
    * @param feature
    * @returns {number}
    */
-  private getFeatureIdFromMarker(feature: any): number {
+  public getFeatureIdFromMarker(feature: any): number {
     const featureTypeId = feature.id.split('/');
     const featureType = featureTypeId[0];
     return Number(featureTypeId[1]); // featureId
@@ -745,6 +773,7 @@ export class MapService {
   private handleMarkerClick(feature: any): void {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     this.markerClick.emit(featureId);
+    this.storageSrv.tutorialStepCompleted.emit('click map marker');
   }
 
   /**
@@ -755,9 +784,11 @@ export class MapService {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     const marker: object = feature.target; // FIXME DELETE?
     this.markerMembershipToggleClick.emit({ featureId });
+    let rel = this.storageSrv.elementsMap.get(this.storageSrv.currentElement.id);
+    this.storageSrv.tutorialStepCompleted.emit('click change route members');
   }
 
-  /***
+  /**
    * Colors popup according to event
    * @param e
    * @returns {void}
@@ -776,7 +807,7 @@ export class MapService {
     }
   }
 
-  /***
+  /**
    * Colors popup according to the given popup name
    * @param {string} colorName
    * @param element
@@ -787,7 +818,7 @@ export class MapService {
     element.lastElementChild.lastElementChild.style.backgroundColor = colorName;
   }
 
-  /***
+  /**
    * Fetches popup element from currently added popups on map
    * @param popUpId
    * @returns {HTMLElement}
@@ -800,7 +831,7 @@ export class MapService {
     }
   }
 
-  /***
+  /**
    * Removes the complete popup layer and enables marker click again
    * @returns {void}
    */
@@ -809,14 +840,9 @@ export class MapService {
     if (this.popUpLayerGroup) {
       this.popUpLayerGroup.remove();
     }
-    this.map.eachLayer((layer) => {
-      if (layer['_latlng']  && layer['feature']) {
-        this.enableDrag(layer['feature'], layer);
-      }
-    });
   }
 
-  /***
+  /**
    * Adds mouseover and mouseout listeners from popup
    * @param popUpElement
    * @returns {void}
@@ -826,7 +852,7 @@ export class MapService {
     L.DomEvent.addListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
 
-  /***
+  /**
    * Removes mouseover and mouseout listeners from popup
    * @param popUpElement
    * @returns {void}
@@ -836,4 +862,65 @@ export class MapService {
     L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
 
+  /**
+   * Displays route info labels for the case of single route highlight
+   * @param {number} relID
+   */
+  public showRouteInfoLabels(relID: number): void {
+    let rel = this.storageSrv.elementsMap.get(relID);
+    if (rel.tags.ref) {
+      let textString = '     ' + rel.tags.ref + '     ';
+      this.highlightFill.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
+    }
+  }
+
+  /**
+   * Handles displaying route info labels for the case of multiple route highlight
+   * @param {Map<number, Polyline>} relHighlightsAndIDs
+   */
+  public showMultipleRouteInfoLabels(relHighlightsAndIDs: Map<number, L.Polyline>): void {
+    relHighlightsAndIDs.forEach((highlight, id) => {
+      let rel        = this.storageSrv.elementsMap.get(id);
+      let textString = '     ' + rel.tags.ref + '     ';
+      let layer: any =  highlight;
+      layer.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
+    });
+  }
+
+  /**
+   * Clears the info label for single route highlight case
+   */
+  public clearSingleRouteInfoLabels(): void {
+    this.highlightFill.setText(null);
+  }
+
+  /**
+   * Clears the info labels for the case of multiple route highlights
+   */
+  public clearMultipleRouteInfoLabels(): void {
+    this.highlight.eachLayer((layer: L.Layer) => {
+      if (layer instanceof L.Polyline) {
+        let layerA: any = layer;
+        layerA.setText(null);
+      }
+    });
+  }
+
+  /**
+   * Returns all stops/platforms on the given map
+   * @param {Map} map
+   * @param elementsMap
+   * @returns {any[]}
+   */
+  public findStopsInBounds(map: L.Map, elementsMap: any): any[] {
+    let stopsInBounds = [];
+    elementsMap.forEach((stop) => {
+      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+        if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
+          stopsInBounds.push(stop.id);
+        }
+      }
+    });
+    return stopsInBounds;
+  }
 }

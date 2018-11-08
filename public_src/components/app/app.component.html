@@ -19,6 +19,10 @@
         <!--<a href="#" (click)="showHelpModal()">-->
           <!--<i class="fa fa-info" aria-hidden="true"></i>&nbsp;{{ 'Help' | translate }} </a>-->
       <!--</li>-->
+      <li *ngIf="isAuthenticated()">
+        <a target="_blank" (click)="startTutorials()" rel="noopener">
+          <i class="fa fa-book" aria-hidden="true"></i>&nbsp;{{ 'Tutorials' | translate}}</a>
+      </li>
       <li>
         <a href="https://github.com/dkocich/osm-pt-ngx-leaflet" target="_blank" rel="noopener">
           <i class="fa fa-github" aria-hidden="true"></i>&nbsp;{{ 'About' | translate}}</a>
@@ -30,20 +34,25 @@
     </ul>
   </div>
 </nav>
-
+<div id="map-c" >
 <div id="map">
   <navigator></navigator>
   <toolbar></toolbar>
 </div>
-
+</div>
 <div id="sidebar">
-  <div *ngIf="!(advancedExpMode$ | async)">
+  <div *ngIf="!(advancedExpMode$ | async) && !((tutorialMode$ | async))">
     <beginner></beginner>
   </div>
-  <div *ngIf="(advancedExpMode$ | async)">
+  <div *ngIf="(advancedExpMode$ | async) && !((tutorialMode$ | async))">
     <expert></expert>
   </div>
+  <div *ngIf="(tutorialMode$ | async)">
+  <tutorials></tutorials>
+  </div>
 </div>
+
+<hotkeys-cheatsheet></hotkeys-cheatsheet>
 
 <div class="modal fade" bsModal #helpModal="bs-modal" [config]="{backdrop: 'static'}"
      tabindex="-1" role="dialog" aria-labelledby="myHelpModalLabel" aria-hidden="true">

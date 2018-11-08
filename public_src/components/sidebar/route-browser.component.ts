@@ -15,6 +15,8 @@ import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
 
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+
 @Component({
   providers: [],
   selector: 'route-browser',
@@ -48,9 +50,21 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
     private appActions: AppActions,
+    private hotkeysService: HotkeysService,
   ) {
     this.advancedExpModeSubscription = ngRedux.select<boolean>(['app', 'advancedExpMode'])
       .subscribe((data) => this.advancedExpMode = data);
+    this.hotkeysService.add([new Hotkey('2', (event: KeyboardEvent): boolean => {
+      if (this.ngRedux.getState()['app']['editing'] && this.ngRedux.getState()['app']['advancedExpMode']) {
+        this.createRoute();
+      }
+      return false;
+    }, undefined, 'Create a new route'), new Hotkey('shift+2', (event: KeyboardEvent): boolean => {
+      if (this.ngRedux.getState()['app']['editing'] && this.ngRedux.getState()['app']['advancedExpMode']) {
+        this.toggleMembersEdit();
+      }
+      return false;
+    }, undefined, 'Toggle editing members of the selected route')]);
   }
 
   public ngOnInit(): void {
@@ -92,6 +106,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     } else {
       this.mapSrv.clearCircleHighlight();
     }
+    this.storageSrv.tutorialStepCompleted.emit('click change members');
   }
 
   private hasMaster(relId: number): boolean {
@@ -120,11 +135,12 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
       this.processSrv.refreshTagView(rel);
       this.appActions.actSetBeginnerView('route');
       this.processSrv.exploreRelation(
-      this.storageSrv.elementsMap.get(rel.id),
+        this.storageSrv.elementsMap.get(rel.id),
         true,
         false,
         false,
       );
+      this.storageSrv.tutorialStepCompleted.emit('click route from list');
     }
     else {
       this.processSrv.exploreRelation(
@@ -166,6 +182,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
 
   private createRoute(): void {
     this.editSrv.createRoute();
+    this.storageSrv.tutorialStepCompleted.emit('click create route button');
   }
 
   private elementShouldBeEditable(): boolean {
@@ -230,6 +247,6 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-  this.advancedExpModeSubscription.unsubscribe();
+    this.advancedExpModeSubscription.unsubscribe();
   }
 }

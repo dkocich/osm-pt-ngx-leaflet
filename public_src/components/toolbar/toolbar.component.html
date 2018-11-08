@@ -16,6 +16,12 @@
 
 <transporter></transporter>
 
+
+<button class="btn btn-primary on-map route-labels-btn" *ngIf="enableInfoRouteLabels" [disabled]="storageSrv.currentElement && storageSrv.currentElement.type === 'relation' && !hasRef()"
+        (click)="toggleRouteInfoLabels()">
+  <i class="fa fa-info-circle" aria-hidden="true"></i>
+</button>
+
 <div id="radio-highlight" *ngIf="highlightIsActive() && isRelation()">
   <div class="btn-group">
     <label class="btn btn-primary" container="body" btnRadio="Stops"

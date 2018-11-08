@@ -58,7 +58,7 @@ export class ProcessService {
        */
       (data) => {
         const featureId = Number(data);
-        const element = this.getElementById(featureId);
+        const element = this.getElementById(featureId, this.storageSrv.elementsMap);
         if (!element) {
           alert(
             'Problem occurred - clicked element was not found?! Select different element please.',
@@ -79,10 +79,11 @@ export class ProcessService {
   /**
    * Returns element with specific ID directly from mapped object.
    * @param featureId
+   * @param map
    */
-  public getElementById(featureId: number): any {
-    if (this.storageSrv.elementsMap.has(featureId)) {
-      return this.storageSrv.elementsMap.get(featureId);
+  public getElementById(featureId: number, map: any): any {
+    if (map.has(featureId)) {
+      return map.get(featureId);
     }
   }
 
@@ -130,7 +131,8 @@ export class ProcessService {
     this.storageSrv.localJsonStorage.set(responseId, response);
     this.storageSrv.localGeojsonStorage.set(responseId, transformedGeojson);
     this.createLists(responseId);
-    this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
+    console.log('response', response);
+    this.mapSrv.renderTransformedGeojsonData(transformedGeojson, this.mapSrv.map);
   }
 
   /**
@@ -254,7 +256,7 @@ export class ProcessService {
         if (member['type'] !== 'node') {
           continue;
         }
-        const ref: IPtStop = this.getElementById(member.ref);
+        const ref: IPtStop = this.getElementById(member.ref, this.storageSrv.elementsMap);
         coords.push([ref.lat, ref.lon]);
       }
       const polyline = L.polyline(coords);
@@ -315,7 +317,7 @@ export class ProcessService {
     this.storageSrv.listOfVariants.length = 0;
     if (rel.tags.type === 'route_master') {
       for (const member of rel.members) {
-        const routeVariant = this.getElementById(member.ref);
+        const routeVariant = this.getElementById(member.ref, this.storageSrv.elementsMap);
         this.storageSrv.listOfVariants.push(routeVariant);
       }
     }
@@ -380,7 +382,8 @@ export class ProcessService {
       console.log('LOG (processing s.) (Route in JS) or (no missing elements &' +
         ' old) or (new & has some members)' + rel.id);
       console.log('condition is valid', rel.id, rel['members'].length);
-      this.downloadedMissingMembers(rel, true, zoomToElement);
+      console.log('rel available : highlight type', this.mapSrv.highlightType);
+      this.downloadedMissingMembers(rel, zoomToElement, true);
       this.refreshTagView(rel);
       this.storageSrv.elementsDownloaded.add(rel.id);
     } else if (rel.id < 0) {
@@ -420,10 +423,10 @@ export class ProcessService {
     refreshTagView: boolean,
   ): void {
     if (this.mapSrv.highlightIsActive()) {
-      this.mapSrv.clearHighlight();
+      this.mapSrv.clearHighlight(this.mapSrv.map);
     }
     this.storageSrv.clearRouteData();
-    if (this.mapSrv.showRoute(rel)) {
+    if (this.mapSrv.showRoute(rel, this.mapSrv.map, this.storageSrv.elementsMap)) {
       this.mapSrv.drawTooltipFromTo(rel);
       this.filterStopsByRelation(rel);
       if (zoomToElement) {
@@ -467,7 +470,7 @@ export class ProcessService {
     }
     // explore first variant and focus tag/rel. browsers on selected master rel.
     this.exploreRelation(
-      this.getElementById(rel.members[0].ref),
+      this.getElementById(rel.members[0].ref, this.storageSrv.elementsMap),
       false,
       false,
       false,
@@ -491,7 +494,7 @@ export class ProcessService {
     zoomTo: boolean,
   ): void {
     if (this.mapSrv.highlightIsActive()) {
-      this.mapSrv.clearHighlight();
+      this.mapSrv.clearHighlight(this.mapSrv.map);
     }
     this.mapSrv.showStop(stop);
     if (filterRelations) {
@@ -537,7 +540,7 @@ export class ProcessService {
     this.storageSrv.listOfStopsForRoute.length = 0;
     rel.members.forEach((mem) => {
       if (this.storageSrv.elementsMap.has(mem.ref) && mem.type === 'node') {
-        const stop = this.getElementById(mem.ref);
+        const stop = this.getElementById(mem.ref, this.storageSrv.elementsMap);
         const stopWithMemberAttr = Object.assign(
           JSON.parse(JSON.stringify(mem)),
           JSON.parse(JSON.stringify(stop)),
@@ -569,7 +572,7 @@ export class ProcessService {
       const coords = [];
       for (const member of element['members']) {
         if (member.type === 'node') {
-          const elem = this.getElementById(member.ref);
+          const elem = this.getElementById(member.ref, this.storageSrv.elementsMap);
           if (elem['lat'] && elem['lon']) {
             coords.push([elem['lat'], elem['lon']]);
           }
@@ -581,13 +584,16 @@ export class ProcessService {
       }
       if (coords.length < 2) {
         // do not zoom to point
-        return alert(
-          'Problem occurred - not enough coordinates to fit into their boundaries.',
-        );
+        // commenting out the following alert the alert as when undoing the 'add members in a route' edit,
+        // the route will have a single member or no members, so we should not give this alert when that happens
+        // return alert(
+        //   'Problem occurred - not enough coordinates to fit into their boundaries.',
+        // );
+      } else {
+        const polyLine = L.polyline(coords); // zoom to coords of a relation
+        this.mapSrv.map.fitBounds(polyLine.getBounds());
+        console.log('LOG (processing s.) FitBounds to relation geometry');
       }
-      const polyLine = L.polyline(coords); // zoom to coords of a relation
-      this.mapSrv.map.fitBounds(polyLine.getBounds());
-      console.log('LOG (processing s.) FitBounds to relation geometry');
     }
   }
 
@@ -614,7 +620,7 @@ export class ProcessService {
 
   public cancelSelection(): void {
     this.refreshTagView(undefined);
-    this.mapSrv.clearHighlight();
+    this.mapSrv.clearHighlight(this.mapSrv.map);
   }
 
   public haveSameIds(relId: number, currElementId?: number): boolean {
@@ -633,7 +639,7 @@ export class ProcessService {
       this.processNodeResponse(res);
       const transformedGeojson = this.mapSrv.osmtogeojson(res);
       this.storageSrv.localGeojsonStorage = transformedGeojson;
-      this.mapSrv.renderTransformedGeojsonData(transformedGeojson);
+      this.mapSrv.renderTransformedGeojsonData(transformedGeojson, this.mapSrv.map);
       this.storageSrv.elementsDownloaded.add(rel.id);
       this.downloadedMissingMembers(rel, true, true);
     }).catch((err) => {

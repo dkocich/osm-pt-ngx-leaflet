@@ -1,40 +1,178 @@
 <div class="panel-group">
   <div class="panel panel-heading panel-default">
-    <ng-container *ngIf="!(errorCorrectionMode$ | async) ||(errorCorrectionMode$ | async) === 'menu' ">
-      <p> {{'Zoom into the area where you want to run the validation.' | translate}}</p>
-      <button class="btn btn-default" (click)="startValidation()"> {{'Find Errors' | translate }}</button>
-    </ng-container>
-    <ng-container *ngIf="(switchMode$ | async)">
-      <button class="btn btn-default" type="submit" id='prevLoc' (click)="previousLocation()"><i
-        class="fa fa-arrow-left" aria-hidden="true"></i></button>
-      <button class="btn btn-default" type="submit" id='nextLoc' (click)="nextLocation()"><i class="fa fa-arrow-right"
-                                                                                             aria-hidden="true"></i>
-      </button>
-      <button class="btn btn-default pull-right" type="submit" id='quit' (click)="quit()">{{'Quit' | translate }}
-      </button>
+    <ng-container *ngIf="(errorCorrectionMode$ | async) as errorCorrectMode">
+
+      <ng-container
+        *ngIf="view('find-errors-option')">
+        <p> {{'Zoom into the area where you want to run the validation.' | translate}}</p>
+        <button class="btn btn-default" (click)="startValidation()"> {{'Find Suggestions' | translate }}</button>
+      </ng-container>
+
+      <ng-container *ngIf="(switchMode$ | async)">
+        <button class="btn btn-default" type="submit" id='prevLoc' (click)="previousLocation()"><i
+          class="fa fa-arrow-left" aria-hidden="true"></i></button>
+        <button class="btn btn-default" type="submit" id='nextLoc' (click)="nextLocation()"><i class="fa fa-arrow-right"
+                                                                                               aria-hidden="true"></i>
+        </button>
+        <button class="btn btn-default pull-right" type="submit" id='quit' (click)="quit()">{{'Quit' | translate }}
+        </button>
+      </ng-container>
+
     </ng-container>
   </div>
+  <ng-container>
 
-  <div class="content panel panel-body panel-default scrollable-panel"
-       *ngIf="(errorCorrectionMode$ | async) === 'menu' || (errorCorrectionMode$ | async) === 'missing name tag'">
-    <ng-container *ngIf="(errorCorrectionMode$ | async) === 'menu'">
+    <ng-container *ngIf="view('menu')">
+
       <ul class="list-group">
-        <li class="list-group-item" *ngIf="nameErrorsO"> {{nameErrorsO.length}} {{'missing name tags' | translate }}
-          <button (click)="startNameCorrection()">{{'Start Correction' | translate }}</button>
+
+        <li class="list-group-item clearfix" *ngIf="view('name-errors-menu-item')">
+          <ng-container *ngIf="nameErrorsObj.length !==0">
+            {{nameErrorsObj.length}} {{'name tag errors' | translate }}
+            <button class="btn btn-default pull-right" (click)="startNameCorrection()">
+              {{'Start Correction' | translate}}
+            </button>
+          </ng-container>
+          <ng-container *ngIf="nameErrorsObj.length ===0">
+            {{ 'No missing name suggestions available' | translate}}
+          </ng-container>
         </li>
+
+        <li class="list-group-item clearfix" *ngIf="view('ref-errors-menu-item')">
+          <ng-container *ngIf="refErrorsObj.length !==0">
+            {{refErrorsObj.length}} {{'route references tag errors' | translate }}
+            <button class="btn btn-default pull-right" (click)="startRefCorrection()">
+              {{'Start Correction' | translate}}
+            </button>
+          </ng-container>
+          <ng-container *ngIf="refErrorsObj.length ===0">
+            {{ 'No missing ref suggestions available' | translate }}
+          </ng-container>
+        </li>
+
+        <li class="list-group-item clearfix" *ngIf="view('way-errors-menu-item')">
+          <ng-container *ngIf="wayErrorsObj.length !==0">
+            {{wayErrorsObj.length}} {{'parent way errors' | translate }}
+            <button class="btn btn-default pull-right" (click)="startWayCorrection()">{{'Start Correction' | translate
+              }}
+            </button>
+          </ng-container>
+          <ng-container *ngIf="wayErrorsObj.length ===0">
+            {{ 'No parent way suggestions available' | translate }}
+          </ng-container>
+        </li>
+
+        <li class="list-group-item clearfix" *ngIf="view('PTv-errors-menu-item')">
+          <ng-container *ngIf="PTvErrorsObj.length !==0">
+            {{PTvErrorsObj.length}} {{'PTv2 errors' | translate }}
+            <button class="btn btn-default pull-right" (click)="startPTvCorrection()">{{'Start Correction' | translate
+              }}
+            </button>
+          </ng-container>
+          <ng-container *ngIf="PTvErrorsObj.length ===0">
+            {{ 'No PTv2 suggestions available' | translate }}
+          </ng-container>
+        </li>
+
+        <li class="list-group-item clearfix" *ngIf="view('pt-pair-errors-menu-item')">
+          <ng-container *ngIf="ptPairErrorsObj.length !==0">
+            {{ptPairErrorsObj.length}} {{'stop-platform pair errors' | translate }}
+            <button class="btn btn-default pull-right" (click)="startPTPairCorrection()">{{'Start Correction' | translate
+              }}
+            </button>
+          </ng-container>
+          <ng-container *ngIf="ptPairErrorsObj.length ===0">
+            {{ 'No pt pair suggestions available' | translate }}
+          </ng-container>
+        </li>
+
       </ul>
+
     </ng-container>
-    <ng-container *ngIf="(errorCorrectionMode$ | async) === 'missing name tag'">
-      <ul class="list-group">
-        <ng-container *ngFor="let error of nameErrorsO; let i = index">
-          <li (click)="jumpToLocation(i)" id='{{ error.stop.id }}' class="list-group-item"
+
+    <ng-container *ngIf="view('name-error-list')">
+      <ul class="list-group scrollable-panel">
+        <ng-container *ngFor="let nameError of nameErrorsObj; let i = index">
+          <li (click)="jumpToLocation(i)" id='{{ nameError.stop.id }}-name-error-list-id' class="list-group-item"
               [style.background-color]="i===0 ? 'lightblue':'white'">
-            Location {{i + 1}} ({{error['stop'].lat}}, {{error['stop'].lon}})
-            <i *ngIf="error['stop'].isCorrected" class="fa fa-check pull-right" aria-hidden="true"></i>
-            <i *ngIf="!error['stop'].isCorrected" class="fa fa-times pull-right" aria-hidden="true"></i>
+            {{i +1}}. {{getNodeType(nameError.stop)}}
+            <i *ngIf="nameError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="nameError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
           </li>
         </ng-container>
       </ul>
     </ng-container>
-  </div>
+
+    <ng-container *ngIf="view('ref-error-list')">
+
+      <ul class="list-group scrollable-panel">
+        <ng-container *ngFor="let refError of refErrorsObj; let i = index">
+          <li (click)="jumpToLocation(i)" id='{{ refError.stop.id }}-ref-error-list-id' class="list-group-item"
+              [style.background-color]="i===0 ? 'lightblue':'white'">
+            {{i +1}}. {{getNodeType(refError.stop)}}
+            <ng-container *ngIf="refError.missingConnectedRefs !== null">
+              [ {{refError.totalConnectedRefs - refError.missingConnectedRefs}} / {{refError.totalConnectedRefs}} {{
+              'refs added' | translate }} ]
+            </ng-container>
+            <ng-container *ngIf="!refError.missingConnectedRefs && !refError.totalConnectedRefs ">
+              {{'Missing route_ref Tag' | translate }}
+            </ng-container>
+            <i *ngIf="refError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="refError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
+            <i *ngIf="refError.corrected === 'partial'" class="fa fa-question pull-right" aria-hidden="true"></i>
+          </li>
+        </ng-container>
+      </ul>
+    </ng-container>
+
+    <ng-container *ngIf="view('way-error-list')">
+
+      <ul class="list-group scrollable-panel">
+        <ng-container *ngFor="let wayError of wayErrorsObj; let i = index">
+          <li (click)="jumpToLocation(i)" id='{{ wayError.stop.id }}-way-error-list-id' class="list-group-item"
+              [style.background-color]="i===0 ? 'lightblue':'white'">
+            {{i +1}}. Platform
+            <ng-container *ngIf="wayError.wayIDs.length > 1">
+              [ Connected to {{wayError.wayIDs.length}} ways ]
+            </ng-container>
+            <ng-container *ngIf="wayError.wayIDs.length === 1">
+              [ Connected to {{wayError.wayIDs.length}} way ]
+            </ng-container>
+            <i *ngIf="wayError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="wayError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
+          </li>
+        </ng-container>
+      </ul>
+
+    </ng-container>
+
+    <ng-container *ngIf="view('PTv-error-list')">
+
+      <ul class="list-group scrollable-panel">
+        <ng-container *ngFor="let PTvError of PTvErrorsObj; let i = index">
+          <li (click)="jumpToLocation(i)" id='{{ PTvError.stop.id }}-PTv-error-list-id' class="list-group-item"
+              [style.background-color]="i===0 ? 'lightblue':'white'">
+            {{i +1}}. Platform
+            <i *ngIf="PTvError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="PTvError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
+          </li>
+        </ng-container>
+      </ul>
+
+    </ng-container>
+
+    <ng-container *ngIf="view('pt-pair-error-list')">
+      <ul class="list-group scrollable-panel">
+        <ng-container *ngFor="let ptPairError of ptPairErrorsObj; let i = index">
+          <li (click)="jumpToLocation(i)" id='{{ ptPairError.stop.id }}-pt-pair-error-list-id' class="list-group-item"
+              [style.background-color]="i===0 ? 'lightblue':'white'">
+            {{i +1}}. Platform
+            <i *ngIf="ptPairError.corrected === 'true'" class="fa fa-check pull-right" aria-hidden="true"></i>
+            <i *ngIf="ptPairError.corrected === 'false'" class="fa fa-times pull-right" aria-hidden="true"></i>
+          </li>
+        </ng-container>
+      </ul>
+    </ng-container>
+
+  </ng-container>
 </div>
