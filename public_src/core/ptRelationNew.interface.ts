@@ -1,11 +1,12 @@
 import { IOsmElement } from './osmElement.interface';
 import { IPtMember } from './ptMember';
+import { EnumWheelchair, TStrPtv2, TStrRelation, TStrRoute } from './other';
 
 export interface IPtRelationNew extends IOsmElement {
-  type: 'relation';
+  type: TStrRelation;
   members: IPtMember[];
   tags: {
-    type: 'route',
+    type: TStrRoute,
     route: string,
     ref: string,
     network: string,
@@ -13,8 +14,8 @@ export interface IPtRelationNew extends IOsmElement {
     name: string,
     from: string,
     to: string,
-    wheelchair: 'yes' | 'no' | 'limited' | 'designated' | '',
+    wheelchair: EnumWheelchair,
     colour: string,
-    'public_transport:version': '2',
+    'public_transport:version': TStrPtv2,
   };
 }

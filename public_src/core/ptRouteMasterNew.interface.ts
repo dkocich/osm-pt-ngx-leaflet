@@ -1,17 +1,18 @@
 import { IOsmElement } from './osmElement.interface';
 import { IPtMember } from './ptMember';
+import { EnumRouteMaster, EnumWheelchair, TStrRelation, TStrRouteMaster } from './other';
 
 export interface IPtRouteMasterNew extends IOsmElement {
-  type: 'relation';
+  type: TStrRelation;
   members: IPtMember[];
   tags: {
-    type?: 'route_master',
-    route_master?: 'train' | 'subway' | 'monorail' | 'tram' | 'bus' | 'trolleybus' | 'aerialway' | 'ferry' | '',
+    type?: TStrRouteMaster,
+    route_master?: EnumRouteMaster,
     ref?: string,
     network?: string,
     operator?: string,
     name?: string,
-    wheelchair?: 'yes' | 'no' | 'limited' | 'designated' | '',
+    wheelchair?: EnumWheelchair,
     colour?: string,
     'public_transport:version'?: '2',
   };

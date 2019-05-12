@@ -1,3 +1,5 @@
+import { expectedKeys, expectedValues } from './other';
+
 export interface IPtTags {
   aerialway?: string;
   ascent?: string;
@@ -38,7 +40,7 @@ export interface IPtTags {
 }
 
 export class PtTags {
-  public static readonly expectedKeys = [
+  public static readonly expectedKeys: expectedKeys[] = [
     'ascent',
     'bench',
     'building',
@@ -69,7 +71,8 @@ export class PtTags {
     'uic_name',
     'uic_ref',
   ];
-  public static readonly expectedValues = [
+
+  public static readonly expectedValues: expectedValues[] = [
     'aerialway',
     'backward',
     'bus',
