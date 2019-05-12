@@ -1,4 +1,4 @@
 export interface ILatLng {
-  latitude:  number;
+  latitude: number;
   longitude: number;
 }

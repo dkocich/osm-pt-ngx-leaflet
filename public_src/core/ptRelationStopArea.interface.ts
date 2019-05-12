@@ -4,7 +4,7 @@
  * "type": "public_transport"
  */
 export interface IPtRelationStopArea {
-  name?:            string     ;
+  name?: string;
   public_transport: 'stop_area';
-  type?:            string     ;
+  type?: string;
 }

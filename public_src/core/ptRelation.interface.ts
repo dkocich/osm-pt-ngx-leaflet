@@ -41,7 +41,7 @@ import { IPtTags } from './ptTags.class';
  *  }
  */
 export interface IPtRelation extends IOsmElement {
-  type:   'relation'  ;
+  type: 'relation';
   members: IPtMember[];
-  tags:    IPtTags    ;
+  tags: IPtTags;
 }
