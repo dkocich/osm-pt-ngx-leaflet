@@ -12,7 +12,7 @@ import { Utils } from '../core/utils.class';
 
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
-import {TutorialService} from './tutorial.service';
+import { TutorialService } from './tutorial.service';
 
 @Injectable()
 export class MapService {

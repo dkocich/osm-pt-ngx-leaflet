@@ -97,7 +97,6 @@ export class BeginnerComponent {
     this.storageSrv.tutorialStepCompleted.emit('click back button');
   }
 
-
   /**
    * Determines whether given component should be viewed
    * @param {string} windowName

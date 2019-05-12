@@ -76,7 +76,7 @@ import { RootEpics } from './store/epics';
 import { RavenErrorHandler } from './raven-error-handler';
 
 import { Utils } from './core/utils.class';
-import {TutorialsComponent} from './components/tutorials/tutorials.component';
+import { TutorialsComponent } from './components/tutorials/tutorials.component';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);

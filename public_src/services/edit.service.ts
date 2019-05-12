@@ -636,7 +636,7 @@ export class EditService {
    */
   public step(direction: string): void {
     // TODO
-    console.log('current edir step',this.currentEditStep);
+    console.log('current edir step', this.currentEditStep);
     if (direction === 'forward') {
       const edit = this.storageSrv.edits[this.currentEditStep - 1];
       console.log('LOG (editing s.) Moving forward in history');

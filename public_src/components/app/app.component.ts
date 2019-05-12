@@ -113,8 +113,9 @@ export class AppComponent implements OnInit {
   private showHelpModal(): void {
     this.helpModal.show();
   }
+
   public startTutorials(): void {
-      this.appActions.actToggleTutorialMode(true);
+    this.appActions.actToggleTutorialMode(true);
   }
 
   public isAuthenticated(): void {

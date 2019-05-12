@@ -5,7 +5,7 @@ import { TutorialService } from './tutorial.service';
 describe('TutorialService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [TutorialService]
+      providers: [TutorialService],
     });
   });
 
