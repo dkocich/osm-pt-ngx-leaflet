@@ -108,7 +108,7 @@
     "reflect-metadata": "0.1.12",
     "rxjs": "6.2.0",
     "rxjs-compat": "6.2.0",
-    "snyk": "^1.88.0",
+    "snyk": "^1.234.0",
     "stylelint": "10.0.1",
     "stylelint-config-standard": "18.3.0",
     "ts-node": "6.1.0",
