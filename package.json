@@ -70,7 +70,7 @@
     "@types/xmlbuilder": "0.0.32",
     "angular2-hotkeys": "^2.1.2",
     "angulartics2": "6.1.0",
-    "bootstrap": "3.3.7",
+    "bootstrap": "3.4.1",
     "codelyzer": "4.3.0",
     "core-js": "2.5.7",
     "cypress": "3.0.2",
