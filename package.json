@@ -68,7 +68,7 @@
     "@types/leaflet": "1.2.7",
     "@types/node": "10.3.2",
     "@types/xmlbuilder": "0.0.32",
-    "angular2-hotkeys": "^2.1.2",
+    "angular2-hotkeys": "^2.1.5",
     "angulartics2": "6.1.0",
     "bootstrap": "3.4.1",
     "codelyzer": "4.3.0",
