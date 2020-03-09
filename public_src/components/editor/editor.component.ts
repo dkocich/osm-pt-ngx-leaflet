@@ -92,6 +92,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
       this.currentEditStep = data.current;
       this.totalEditSteps = data.total;
     });
+    // @ts-ignore
     this.mapSrv.map.on('click', (event: MouseEvent) => {
       if (this.ngRedux.getState()['app']['editing'] && this.creatingElementOfType !== '') {
         this.editSrv.createElement(this.creatingElementOfType, event);

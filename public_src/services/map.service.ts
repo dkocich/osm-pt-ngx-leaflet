@@ -13,11 +13,22 @@ import { Utils } from '../core/utils.class';
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
 import { TutorialService } from './tutorial.service';
+import {TileLayer, TileLayerOptions} from 'leaflet';
+
+interface MyTileLayer extends TileLayer {
+  app_code: string,
+  app_id: string,
+  mapID: string,
+}
+
+interface IBaseMaps {
+  [key: string ]: MyTileLayer
+}
 
 @Injectable()
 export class MapService {
   public map: L.Map;
-  public baseMaps: any;
+  public baseMaps: IBaseMaps;
   public osmtogeojson: any = require('osmtogeojson');
   public bounds;
   public highlightStroke: any = undefined;
@@ -47,6 +58,7 @@ export class MapService {
     private ngRedux: NgRedux<IAppState>,
     // private tutorialSrv: TutorialService,
   ) {
+    // @ts-ignore
     this.baseMaps = {
       Empty: L.tileLayer('', {
         attribution: '',
@@ -99,6 +111,7 @@ export class MapService {
           attribution:
             'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
           subdomains: '1234',
+          // @ts-ignore
           mapID: 'newest',
           app_id: ConfService.hereAppId,
           app_code: ConfService.hereAppCode,
@@ -118,12 +131,13 @@ export class MapService {
           attribution:
             'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
           subdomains: '1234',
-          mapID: 'newest',
-          app_id: ConfService.hereAppId,
-          app_code: ConfService.hereAppCode,
-          base: 'aerial',
+          // mapID: 'newest',
+          // app_id: ConfService.hereAppId,
+          // app_code: ConfService.hereAppCode,
+          // base: 'aerial',
           maxNativeZoom: 19,
           maxZoom: 20,
+          // @ts-ignore
           type: 'maptile',
           language: 'eng',
           format: 'png8',

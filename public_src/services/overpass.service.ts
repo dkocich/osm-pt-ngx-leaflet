@@ -617,6 +617,7 @@ export class OverpassService {
     console.log('LOG (overpass s.) Changed documents: ', changedElements);
 
     const xml = create('osmChange', {
+      // @ts-ignore
       '@version': '0.6',
       '@generator': ConfService.appName,
     });
