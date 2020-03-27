@@ -1,35 +1,23 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./public/out-tsc",
-    "target": "ES5",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
-    "emitDecoratorMetadata": true,
+    "declaration": false,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "removeComments": false,
-    "noImplicitAny": false,
-    "skipLibCheck": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
     "lib": [
-      "es2015",
-      "es2017",
+      "es2018",
       "dom"
-    ],
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "types": [
-      "node",
-      "jasmine",
-      "leaflet",
-      "webpack-env"
     ]
   },
-  "compileOnSave": false,
-  "exclude": [
-    "node_modules"
-  ],
-  "awesomeTypeScriptLoaderOptions": {
-    "useWebpackText": true
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
   }
 }
