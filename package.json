@@ -2,8 +2,8 @@
   "name": "osm-pt-ngx-leaflet",
   "version": "0.0.1",
   "engines": {
-    "node": "10.4.0",
-    "npm": "6.1.0"
+    "node": "12.16.1",
+    "npm": "6.14.2"
   },
   "description": "An OpenStreetMap public transport editor built with Leaflet and Angular.",
   "repository": {
@@ -23,22 +23,24 @@
   },
   "scripts": {
     "cypress-open": "node_modules/.bin/cypress open",
+    "build": "ng build",
     "cypress-run": "node_modules/.bin/cypress run --record --key 5bed002a-82c7-44a6-9e99-8fee9727f7d2",
-    "lint": "tslint -c tslint.json src/**/*.ts src/components/**/*.ts src/*.ts",
-    "postinstall": "npm run ngbuild",
-    "prepare": "npm run snyk-protect",
-    "prepublishOnly": "snyk protect",
-    "snyk-protect": "snyk protect",
-    "stylelint": "stylelint **/*.css **/*.less",
-    "test": "snyk test && NODE_ENV=development karma start",
+    "e2e": "ng e2e",
+    "lint": "ng lint",
+    "lint:all": "tslint -c tslint.json src/**/*.ts src/components/**/*.ts src/*.ts",
     "ng": "ng",
-    "ngstart": "ng serve",
-    "ngstart-hmr": "ng serve --configuration hmr --hmr --aot=true",
-    "ngstart-aot": "ng serve --aot=true",
     "ngbuild": "ng build --progress --verbose --aot=true --build-optimizer",
-    "ngtest": "ng test",
+    "nge2e": "ng e2e",
     "nglint": "ng lint",
-    "nge2e": "ng e2e"
+    "ngstart": "ng serve",
+    "ngstart-aot": "ng serve --aot=true",
+    "ngstart-hmr": "ng serve --configuration hmr --hmr --aot=true",
+    "ngtest": "ng test",
+    "snyk-protect": "snyk protect",
+    "start": "ng serve",
+    "stylelint": "stylelint **/*.css **/*.less",
+    "test": "ng test",
+    "test:all": "snyk test && NODE_ENV=development karma start"
   },
   "homepage": "https://github.com/dkocich/osm-pt-ngx-leaflet#readme",
   "dependencies": {
@@ -86,7 +88,6 @@
     "bootstrap": "3.4.1",
     "codelyzer": "4.3.0",
     "core-js": "2.5.7",
-    "cypress": "3.0.2",
     "dexie": "2.0.4",
     "eslint": "5.16.0",
     "eslint-plugin-cypress": "2.2.1",
@@ -130,6 +131,9 @@
     "typescript": "2.7.2",
     "xmlbuilder": "10.0.0",
     "zone.js": "0.8.26"
+  },
+  "optionalDependencies": {
+    "cypress": "4.2.0"
   },
   "snyk": true
 }

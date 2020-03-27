@@ -35,3 +35,5 @@ public/**/*
 
 # Cypress tests
 cypress/videos
+
+.now
