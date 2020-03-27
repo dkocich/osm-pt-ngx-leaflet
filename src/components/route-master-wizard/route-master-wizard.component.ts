@@ -1,3 +1,5 @@
+
+import {distinctUntilChanged, debounceTime} from 'rxjs/operators';
 import { Component, Input, ViewChild } from '@angular/core';
 
 import * as L from 'leaflet';
@@ -96,9 +98,10 @@ export class RouteMasterWizardComponent {
     this.routeMasterWizardSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
       this.startEventProcessing.next(event);
     });
-    this.startEventProcessing
-      .debounceTime(500)
-      .distinctUntilChanged()
+    this.startEventProcessing.pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+      )
       .subscribe(() => {
         this.overpassSrv.initDownloaderForModalMapRMW(this.routeMasterWizardSrv.map);
       });

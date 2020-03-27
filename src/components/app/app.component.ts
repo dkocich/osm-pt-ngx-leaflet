@@ -7,7 +7,7 @@ import * as L from 'leaflet';
 import { Spinkit } from 'ng-http-loader';
 
 import { Observable } from 'rxjs';
-import { Subject } from 'rxjs/Rx';
+import { Subject } from 'rxjs';
 
 import { DbService } from '../../services/db.service';
 import { EditService } from '../../services/edit.service';
@@ -22,6 +22,7 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
 import { AuthService } from '../../services/auth.service';
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
@@ -88,9 +89,10 @@ export class AppComponent implements OnInit {
     this.mapSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
       this.startEventProcessing.next(event);
     });
-    this.startEventProcessing
-      .debounceTime(500)
-      .distinctUntilChanged()
+    this.startEventProcessing.pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
       .subscribe((event: L.LeafletEvent) => {
         this.processSrv.addPositionToUrlHash();
         this.overpassSrv.initDownloader(this.mapSrv.map);
