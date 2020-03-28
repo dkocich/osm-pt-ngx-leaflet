@@ -22,7 +22,7 @@ interface MyTileLayer extends TileLayer {
 }
 
 interface IBaseMaps {
-  [key: string ]: MyTileLayer
+  [key: string ]: TileLayer
 }
 
 @Injectable()

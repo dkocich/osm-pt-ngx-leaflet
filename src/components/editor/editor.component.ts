@@ -111,7 +111,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     console.log('LOG (editor) Current edits are: ', this.storageSrv.edits);
   }
 
-  public isAuthenticated(): void {
+  public isAuthenticated(): boolean {
     return this.authSrv.oauth.authenticated();
   }
 
