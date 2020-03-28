@@ -30,7 +30,6 @@ public/**/*
 .tscache
 
 # editors settings
-.vscode
 .idea
 
 # Cypress tests

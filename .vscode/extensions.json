@@ -1,0 +1,27 @@
+{
+  "recommendations": [
+    "Angular.ng-template",
+    "doggy8088.angular-extension-pack",
+    "loiane.angular-extension-pack",
+    "NG-42.ng-fortytwo-vscode-extension",
+    "AngularDoc.angulardoc-vscode",
+    "alexiv.vscode-angular2-files",
+    "cyrilletuzi.angular-schematics",
+    "1tontech.angular-material",
+    "danwahlin.angular2-snippets",
+    "herrherrmann.angular-bootstrap",
+    "infinity1207.angular2-switcher",
+    "johnpapa.angular-essentials",
+    "johnpapa.Angular2",
+    "MarinhoBrandao.Angular2Tests",
+    "Mikael.Angular-BeastCode",
+    "nrwl.angular-console",
+    "UVBrain.Angular2",
+    "ms-vscode.typescript-javascript-grammar",
+    "ms-vscode.vscode-typescript-tslint-plugin",
+    "rbbit.typescript-hero",
+    "msjsdiag.debugger-for-chrome",
+    "CoenraadS.bracket-pair-colorizer-2",
+    "lmcarreiro.vscode-smart-column-indenter"
+  ]
+}
