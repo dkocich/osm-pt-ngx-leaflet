@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Map } from 'leaflet';
-
 import { GeocodeService } from '../../services/geocode.service';
 import { MapService } from '../../services/map.service';
 

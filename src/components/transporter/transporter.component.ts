@@ -1,16 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-
 import { AuthService } from '../../services/auth.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { StorageService } from '../../services/storage.service';
-
 import { ModalDirective } from 'ngx-bootstrap';
-
 import { select } from '@angular-redux/store';
-
 import { Observable } from 'rxjs';
-
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 @Component({

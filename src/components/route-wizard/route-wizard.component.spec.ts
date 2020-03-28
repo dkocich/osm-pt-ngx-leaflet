@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RouteWizardComponent } from './route-wizard.component';
 
 describe('RouteModalComponent', () => {

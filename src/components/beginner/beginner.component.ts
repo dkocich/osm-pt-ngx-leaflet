@@ -1,17 +1,12 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-
 import { PtTags } from '../../core/ptTags.class';
 import { IRouteBrowserOptions, ISuggestionsBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interface';
-
 import { Observable } from 'rxjs';
-
 import { NgRedux, select } from '@angular-redux/store';
 import { AppActions } from '../../store/app/actions';
-
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 import { TutorialService } from '../../services/tutorial.service';
-
 import { IAppState } from '../../store/model';
 
 @Component({

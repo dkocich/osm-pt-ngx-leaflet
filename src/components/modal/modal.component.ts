@@ -1,14 +1,10 @@
 import { Component, ViewChildren } from '@angular/core';
-
 import { BsModalRef } from 'ngx-bootstrap';
-
 import { EditService } from '../../services/edit.service';
 import { StorageService } from '../../services/storage.service';
 import { MapService } from '../../services/map.service';
 import { WarnService } from '../../services/warn.service';
-
 import * as L from 'leaflet';
-
 import { IPtRelation } from '../../core/ptRelation.interface';
 import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject, IPTPairErrorObject } from '../../core/errorObject.interface';
 import { PtTags } from '../../core/ptTags.class';

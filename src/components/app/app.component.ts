@@ -1,24 +1,18 @@
 import { Component, isDevMode, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
-
 import * as L from 'leaflet';
-
 import { Spinkit } from 'ng-http-loader';
-
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
-
 import { DbService } from '../../services/db.service';
 import { EditService } from '../../services/edit.service';
 import { GeocodeService } from '../../services/geocode.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
-
 import { AuthComponent } from '../auth/auth.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
-
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
 import { AuthService } from '../../services/auth.service';

@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
-
 import { IRouteBrowserOptions, ISuggestionsBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interface';
-
 import { Observable } from 'rxjs';
-
 import { NgRedux, select } from '@angular-redux/store';
 import { IAppState } from '../../store/model';
-
 import { TutorialService } from '../../services/tutorial.service';
 import { StorageService } from '../../services/storage.service';
 

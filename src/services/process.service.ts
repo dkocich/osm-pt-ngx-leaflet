@@ -1,18 +1,14 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { Subject } from 'rxjs';
-
 import * as L from 'leaflet';
-
 import { MapService } from './map.service';
 import { StorageService } from './storage.service';
 import { DbService } from './db.service';
-
 import { IOsmElement } from '../core/osmElement.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtStop } from '../core/ptStop.interface';
 import { IOverpassResponse } from '../core/overpassResponse.interface';
-
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
 

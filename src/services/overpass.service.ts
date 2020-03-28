@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { AuthService } from './auth.service';
 import { ConfService } from './conf.service';
 import { DbService } from './db.service';
@@ -9,21 +8,16 @@ import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 import { RouteWizardService } from './route-wizard.service';
-
 import { WarnService } from './warn.service';
-
 import { create } from 'xmlbuilder';
 import * as L from 'leaflet';
-
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { IAreaRef } from '../core/areaRef.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { Utils } from '../core/utils.class';
-
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
-
 import { RouteMasterWizardService } from './route-master-wizard.service';
 
 @Injectable()

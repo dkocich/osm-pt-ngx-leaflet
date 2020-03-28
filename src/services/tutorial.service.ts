@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
-
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
-
 import * as data from './tutorials.json';
-
 import { EditService } from './edit.service';
 import { StorageService } from './storage.service';
 import { MapService } from './map.service';

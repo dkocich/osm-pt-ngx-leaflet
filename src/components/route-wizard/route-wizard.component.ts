@@ -1,7 +1,6 @@
 
 import {distinctUntilChanged, debounceTime} from 'rxjs/operators';
 import { Component, Input, ViewChild } from '@angular/core';
-
 import { StorageService } from '../../services/storage.service';
 import { MapService } from '../../services/map.service';
 import { WarnService } from '../../services/warn.service';
@@ -10,10 +9,8 @@ import { RouteWizardService } from '../../services/route-wizard.service';
 import { ProcessService } from '../../services/process.service';
 import { EditService } from '../../services/edit.service';
 import { ConfService } from '../../services/conf.service';
-
 import * as L from 'leaflet';
 import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
-
 import { Subject } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
 

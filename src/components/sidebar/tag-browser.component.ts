@@ -7,15 +7,11 @@ import {
   OnInit,
 } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-
 import { Observable } from 'rxjs';
-
 import { EditService } from '../../services/edit.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-
 import { IOsmElement } from '../../core/osmElement.interface';
-
 import { PtTags } from '../../core/ptTags.class';
 import { ITagBrowserOptions } from '../../core/editingOptions.interface';
 import { IAppState } from '../../store/model';

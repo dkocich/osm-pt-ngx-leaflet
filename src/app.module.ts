@@ -3,7 +3,6 @@ import 'leaflet.vectorgrid';
 import 'reflect-metadata';
 import 'zone.js/dist/zone';
 import 'zone.js/dist/long-stack-trace-zone';
-
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
@@ -26,12 +25,10 @@ import {
   TabsModule,
 } from 'ngx-bootstrap';
 import { HotkeyModule } from 'angular2-hotkeys';
-
 import { Angulartics2Module } from 'angulartics2';
 import { Angulartics2Piwik } from 'angulartics2/piwik';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { ToastrModule } from 'ngx-toastr';
-
 import { AppComponent } from './components/app/app.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { BeginnerComponent } from './components/beginner/beginner.component';
@@ -50,7 +47,6 @@ import { TransporterComponent } from './components/transporter/transporter.compo
 import { ValidationBrowserComponent } from './components/sidebar/validation-browser.component';
 import { RouteWizardComponent } from './components/route-wizard/route-wizard.component';
 import { RouteMasterWizardComponent } from './components/route-master-wizard/route-master-wizard.component';
-
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
 import { DbService } from './services/db.service';
@@ -65,16 +61,11 @@ import { WarnService } from './services/warn.service';
 import { RouteWizardService } from './services/route-wizard.service';
 import { RouteMasterWizardService } from './services/route-master-wizard.service';
 import { TutorialService } from './services/tutorial.service';
-
 import { KeysPipe } from './pipes/keys.pipe';
-
 import { StoreModule } from './store/module';
-
 import { AppActions } from './store/app/actions';
 import { RootEpics } from './store/epics';
-
 import { RavenErrorHandler } from './raven-error-handler';
-
 import { Utils } from './core/utils.class';
 import { TutorialsComponent } from './components/tutorials/tutorials.component';
 

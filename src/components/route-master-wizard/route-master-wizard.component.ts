@@ -1,12 +1,9 @@
 
 import {distinctUntilChanged, debounceTime} from 'rxjs/operators';
 import { Component, Input, ViewChild } from '@angular/core';
-
 import * as L from 'leaflet';
 import { Subject } from 'rxjs';
-
 import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
-
 import { EditService } from '../../services/edit.service';
 import { ProcessService } from '../../services/process.service';
 import { OverpassService } from '../../services/overpass.service';
@@ -15,9 +12,7 @@ import { StorageService } from '../../services/storage.service';
 import { RouteMasterWizardService } from '../../services/route-master-wizard.service';
 import { MapService } from '../../services/map.service';
 import { ConfService } from '../../services/conf.service';
-
 import { AppActions } from '../../store/app/actions';
-
 import { IOsmElement } from '../../core/osmElement.interface';
 
 @Component({

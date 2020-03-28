@@ -1,20 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-
 import { Observable } from 'rxjs';
-
 import { IRouteBrowserOptions } from '../../core/editingOptions.interface';
-
 import { NgRedux, select } from '@angular-redux/store';
-
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
-
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 @Component({

@@ -1,15 +1,11 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { ConfService } from './conf.service';
 import { StorageService } from './storage.service';
-
 import * as L from 'leaflet';
 import 'leaflet-textpath';
-
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
-
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
 import { TutorialService } from './tutorial.service';

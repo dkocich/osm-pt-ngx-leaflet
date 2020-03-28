@@ -1,15 +1,11 @@
 import { EventEmitter, Injectable } from '@angular/core';
-
 import * as L from 'leaflet';
-
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
-
 import { IPtStop } from '../core/ptStop.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtRelationNew } from '../core/ptRelationNew.interface';
-
 import { NgRedux } from '@angular-redux/store';
 import { IAppState } from '../store/model';
 

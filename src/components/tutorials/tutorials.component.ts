@@ -3,10 +3,8 @@ import * as data from '../../services/tutorials.json';
 import { Observable } from 'rxjs';
 import { NgRedux, select } from '@angular-redux/store';
 import * as introJs from 'intro.js';
-
 import { IAppState } from '../../store/model';
 import { AppActions } from '../../store/app/actions';
-
 import { TutorialService } from '../../services/tutorial.service';
 
 @Component({

@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 import { DragulaService } from 'ng2-dragula';
-
 import { IPtRelation } from '../../core/ptRelation.interface';
 import { IPtStop } from '../../core/ptStop.interface';
-
 import { Observable } from 'rxjs';
 import { select } from '@angular-redux/store';
 
