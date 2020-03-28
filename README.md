@@ -42,12 +42,9 @@ This project requires [npm](https://npmpkg.com/) to run locally and it is built 
 2. Run `npm start` to enable local development server.
 3. Open the browser at `http://localhost:4200/` to see the application.
 
-## Dev environment
-Project is tested and developed with node v10.2.1+, npm v6.1.0+, npm v1.7.0+.
-
 ## Communication
 
-Contact me via OSM messages [here](https://www.openstreetmap.org/user/dkocich).    
+Contact me via OSM messages [here](https://www.openstreetmap.org/user/dkocich).
 
 ## Acknowledgment
 
