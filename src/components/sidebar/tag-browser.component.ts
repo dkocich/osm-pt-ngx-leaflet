@@ -84,7 +84,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     );
   }
 
-  private createChange(type: string, key?: string, event?: any): void {
+  createChange(type: string, key?: string, event?: any): void {
     let change: object;
 
     if (type === 'change tag') {
@@ -162,11 +162,11 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     this.cd.markForCheck();
   }
 
-  private updateKey(value: string): void {
+  updateKey(value: string): void {
     this.tagKey = value;
   }
 
-  private toggleType(key: string): void {
+  toggleType(key: string): void {
     let change;
     if (Object.keys(this.currentElement.tags).indexOf(key) === -1) {
       this.currentElement.tags[key] = 'yes';
@@ -185,19 +185,19 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateValue(value: string): void {
+  updateValue(value: string): void {
     this.tagValue = value;
   }
 
-  private isUnchanged(): boolean {
+  isUnchanged(): boolean {
     return !this.tagKey || !this.tagValue;
   }
 
-  private keyChange($event: any): void {
+  keyChange($event: any): void {
     console.log('LOG (tag-browser)', $event);
   }
 
-  private valueChange($event: any): void {
+  valueChange($event: any): void {
     console.log('LOG (tag-browser)', $event);
   }
 
@@ -218,7 +218,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
    * @param {string} value
    * @returns {void}
    */
-  private addChangeBeginnerMode(key: string, value: string): void {
+  addChangeBeginnerMode(key: string, value: string): void {
     this.tagKey = key;
     this.tagValue = value;
     this.createChange('add tag');

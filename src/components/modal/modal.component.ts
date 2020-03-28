@@ -23,6 +23,7 @@ import { IPtStop } from '../../core/ptStop.interface';
 })
 
 export class ModalComponent {
+  public tagKey;
   public suggestedNames: string[];
   public error: string;
 
@@ -248,7 +249,7 @@ export class ModalComponent {
    * @param rel
    * @returns {any}
    */
-  private addNearbySuggestedRefValue(rel: any): void {
+  addNearbySuggestedRefValue(rel: any): void {
     this.addedFromNearbySuggestionsRefs.push(rel);
     this.nearbyRels.forEach((item, ind) => {
       if (item.id === rel.id) {
@@ -261,7 +262,7 @@ export class ModalComponent {
    * Remove the added ref value (added from suggestions (missing) by user)
    * @param toRemoveRel
    */
-  private removeMissingSuggestedRefValue(toRemoveRel: any): void {
+  removeMissingSuggestedRefValue(toRemoveRel: any): void {
     let index ;
     for (let rel of  this.addedMissingSuggestionsRefs) {
       if (rel.id === toRemoveRel.id) {
@@ -285,7 +286,7 @@ export class ModalComponent {
    * Remove the added ref value (added from suggestions (nearby) by user)
    * @param toRemoveRel
    */
-  private removeNearbySuggestedRefValue(toRemoveRel: any): void {
+  removeNearbySuggestedRefValue(toRemoveRel: any): void {
 
     let index ;
     for (let rel of  this.addedFromNearbySuggestionsRefs) {
@@ -310,7 +311,7 @@ export class ModalComponent {
    * Remove the added ref value (newly added by user)
    * @param ref
    */
-  private removeNewRefValue(ref: any): void {
+  removeNewRefValue(ref: any): void {
     let index = this.newAddedRefs.indexOf(ref);
     if (index > -1) {
       this.newAddedRefs.splice(index, 1);
@@ -321,7 +322,7 @@ export class ModalComponent {
    * Adds new ref value
    * @param ref
    */
-  private addNewRefValue(ref: string): void {
+  addNewRefValue(ref: string): void {
     if (ref !== '') {
       this.newAddedRefs.push(ref);
     } else {

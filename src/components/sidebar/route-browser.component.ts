@@ -93,7 +93,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     });
   }
 
-  private toggleMembersEdit(): void {
+  toggleMembersEdit(): void {
     this.membersEditing = !this.membersEditing;
     this.mapSrv.membersEditing = this.membersEditing;
     if (this.membersEditing) {
@@ -109,19 +109,19 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     this.storageSrv.tutorialStepCompleted.emit('click change members');
   }
 
-  private hasMaster(relId: number): boolean {
+  hasMaster(relId: number): boolean {
     return this.storageSrv.idsHaveMaster.has(relId);
   }
 
-  private isDownloaded(relId: number): boolean {
+  isDownloaded(relId: number): boolean {
     return this.storageSrv.elementsDownloaded.has(relId);
   }
 
-  private masterWasChecked(relId: number): boolean {
+  masterWasChecked(relId: number): boolean {
     return this.storageSrv.queriedMasters.has(relId);
   }
 
-  private cancelFilter(): void {
+  cancelFilter(): void {
     this.processSrv.activateFilteredRouteView(false);
   }
 
@@ -130,7 +130,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
    * @param $event
    * @param rel
    */
-  private exploreRelation($event: any, rel: any): void {
+  exploreRelation($event: any, rel: any): void {
     if (!this.advancedExpMode) {
       this.processSrv.refreshTagView(rel);
       this.appActions.actSetBeginnerView('route');
@@ -157,7 +157,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
    * @param $event
    * @param rel
    */
-  private exploreAvailableRelation($event: any, rel: any): void {
+  exploreAvailableRelation($event: any, rel: any): void {
     if (this.storageSrv.elementsDownloaded.has(rel.id) && this.advancedExpMode) {
       this.processSrv.exploreRelation(
         this.storageSrv.elementsMap.get(rel.id),
@@ -168,24 +168,24 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
-  private exploreMaster($event: any, rel: any): void {
+  exploreMaster($event: any, rel: any): void {
     this.processSrv.exploreMaster(
       this.storageSrv.elementsMap.get(rel.id),
     );
   }
 
-  private downloadMaster(): void {
+  downloadMaster(): void {
     this.isRequesting = true;
     console.log('LOG (route-browser) Manually downloading masters');
     this.overpassSrv.getRouteMasters(1);
   }
 
-  private createRoute(): void {
+  createRoute(): void {
     this.editSrv.createRoute();
     this.storageSrv.tutorialStepCompleted.emit('click create route button');
   }
 
-  private elementShouldBeEditable(): boolean {
+  elementShouldBeEditable(): boolean {
     if (this.currentElement) {
       return (
         this.currentElement.type === 'relation' &&
@@ -196,11 +196,11 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
-  private isSelected(relId: number): boolean {
+  isSelected(relId: number): boolean {
     return this.processSrv.haveSameIds(relId, this.currentElement.id);
   }
 
-  private visibleInMap(relId: any): string {
+  visibleInMap(relId: any): string {
     const rel = this.storageSrv.elementsMap.get(relId);
     let nodesCounter = 0;
     for (const member of rel.members) {
@@ -232,7 +232,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
    * @param item
    * @returns {number}
    */
-  private trackByFn(index: number, item: any): number {
+  trackByFn(index: number, item: any): number {
     return item.id;
   }
 

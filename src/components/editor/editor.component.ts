@@ -145,7 +145,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   /**
    * Provides access to editing service function.
    */
-  private stepBackward(): void {
+  stepBackward(): void {
     this.currentEditStep--;
     this.editSrv.currentTotalSteps.emit({
       current: this.currentEditStep, total: this.totalEditSteps,
@@ -156,7 +156,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   /**
    * Provides access to editing service function.
    */
-  private stepForward(): void {
+  stepForward(): void {
     this.currentEditStep++;
     console.log('LOG (editor)', this.currentEditStep, this.totalEditSteps);
     this.editSrv.currentTotalSteps.emit({
@@ -179,7 +179,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
    * @param type - "forward" or "backward" button
    * @returns {boolean} - when true then button is disabled
    */
-  private isInactive(type: string): boolean {
+  isInactive(type: string): boolean {
     this.mapSrv.disableMouseEvent('edits-backward-btn');
     this.mapSrv.disableMouseEvent('edits-forward-btn');
     // console.log("LOG (editor)", this.totalEditSteps, this.currentEditStep);
@@ -196,7 +196,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   /**
    * Activates editing mode (locally/globally).
    */
-  private toggleEditMode(): void {
+  toggleEditMode(): void {
     this.appActions.actToggleEditing();
     let editing = this.ngRedux.getState()['app']['editing'];
     this.editSrv.editingMode.emit(editing);

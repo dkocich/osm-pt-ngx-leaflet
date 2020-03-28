@@ -322,7 +322,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getNodeType(stop: IPtStop): string {
+  getNodeType(stop: IPtStop): string {
     if (stop.tags.public_transport === 'platform') {
       return 'platform';
     }

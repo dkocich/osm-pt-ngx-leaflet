@@ -25,7 +25,7 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
   templateUrl: './relation-browser.component.html',
 })
 export class RelationBrowserComponent implements OnInit {
-  private currentElement: IOsmElement | IPtRouteMasterNew;
+  currentElement: IOsmElement | IPtRouteMasterNew;
   public listOfVariants = this.storageSrv.listOfVariants;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
   public listOfMasters = this.storageSrv.listOfMasters;
@@ -86,11 +86,11 @@ export class RelationBrowserComponent implements OnInit {
     this.masterModal.hide();
   }
 
-  private isDownloaded(relId: number): boolean {
+  isDownloaded(relId: number): boolean {
     return this.storageSrv.elementsDownloaded.has(relId) || relId < 0; // show created
   }
 
-  private exploreRelation($event: any, relId: number): void {
+  exploreRelation($event: any, relId: number): void {
     this.processSrv.exploreRelation(
       this.storageSrv.elementsMap.get(relId),
       true,
@@ -99,14 +99,14 @@ export class RelationBrowserComponent implements OnInit {
     );
   }
 
-  private hasMaster(): boolean {
+  hasMaster(): boolean {
     if (this.currentElement) {
       return this.storageSrv.idsHaveMaster.has(this.currentElement.id); // create only one route_master for each element
     }
     return false; // turned on to create route_masters without members
   }
 
-  private createMaster(): void {
+  createMaster(): void {
     // FIXME - allow to create route_master of route_masters later
     if (
       this.currentElement &&
@@ -117,7 +117,7 @@ export class RelationBrowserComponent implements OnInit {
       this.editSrv.createMaster();
     }
   }
-  private changeRouteMasterMembers(routeMasterId: number): void {
+  changeRouteMasterMembers(routeMasterId: number): void {
     this.editSrv.changeRouteMasterMembers(
       this.currentElement.id,
       routeMasterId,
@@ -131,7 +131,7 @@ export class RelationBrowserComponent implements OnInit {
     // this.mapSrv.disableMouseEvent("modalDownload");
   }
 
-  private isAlreadyAdded(relId: number): boolean {
+  isAlreadyAdded(relId: number): boolean {
     if (!this.currentElement) {
       return;
     }
@@ -142,7 +142,7 @@ export class RelationBrowserComponent implements OnInit {
     return found.length > 0;
   }
 
-  private isSelected(relId: number): boolean {
+  isSelected(relId: number): boolean {
     return this.processSrv.haveSameIds(relId, this.currentElement.id);
   }
 }

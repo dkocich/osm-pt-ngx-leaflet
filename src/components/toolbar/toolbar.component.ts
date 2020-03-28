@@ -136,7 +136,7 @@ export class ToolbarComponent implements OnInit {
     this.filtering = !this.filtering;
   }
 
-  private changeHighlight(): void {
+  changeHighlight(): void {
     if (
       this.highlightIsActive() &&
       this.htRadioModel !== this.mapSrv.highlightType
@@ -155,26 +155,26 @@ export class ToolbarComponent implements OnInit {
    *
    * @param selection
    */
-  private showInfo(selection: object): void {
+  showInfo(selection: object): void {
     alert(JSON.stringify(selection, null, '\t'));
   }
 
-  private cancelSelection(): void {
+  cancelSelection(): void {
     delete this.currentElement;
     this.currentElement = undefined;
     this.processSrv.cancelSelection();
   }
 
-  private zoomTo(selection: IOsmElement): void {
+  zoomTo(selection: IOsmElement): void {
     this.processSrv.zoomToElement(selection);
   }
 
-  private clearHighlight(): void {
+  clearHighlight(): void {
     this.enableInfoRouteLabels = false;
     return this.mapSrv.clearHighlight(this.mapSrv.map);
   }
 
-  private getLoadAndZoomUrl(): void {
+  getLoadAndZoomUrl(): void {
     const josmHref =
       'http://127.0.0.1:8111/load_and_zoom?' +
       'left=' + this.mapSrv.map.getBounds().getWest() +
@@ -185,7 +185,7 @@ export class ToolbarComponent implements OnInit {
     window.open(josmHref, '_blank');
   }
 
-  private openInIdEditor(selection: object): void {
+  openInIdEditor(selection: object): void {
     let zoomlevel = this.mapSrv.map.getZoom();
     if (zoomlevel <= 12) {
       zoomlevel = 13;
@@ -198,7 +198,7 @@ export class ToolbarComponent implements OnInit {
     window.open(idHref);
   }
 
-  private isDisabled(): boolean {
+  isDisabled(): boolean {
     return this.currentElement.id < 0;
   }
 

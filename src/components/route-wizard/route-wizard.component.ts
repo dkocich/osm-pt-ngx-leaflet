@@ -227,7 +227,7 @@ export class RouteWizardComponent {
    * @param ref
    * @returns {void}
    */
-  private viewSuggestedRoute(ref: string): void {
+  viewSuggestedRoute(ref: string): void {
   this.currentlyViewedRef = ref;
   this.routeWizardSrv.viewSuggestedRoute(ref, { canStopsConnect : this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
   }

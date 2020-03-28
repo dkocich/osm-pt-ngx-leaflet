@@ -110,7 +110,7 @@ export class TransporterComponent implements OnInit {
     this.uploadModal.hide();
   }
 
-  public isAuthenticated(): void {
+  public isAuthenticated(): boolean {
     return this.authSrv.oauth.authenticated();
   }
 
@@ -141,7 +141,7 @@ export class TransporterComponent implements OnInit {
     return true;
   }
 
-  private setQuery(event: any): void {
+  setQuery(event: any): void {
     this.queryShort = event.target.textContent;
     const filtered = this.favoriteQueries.filter((iter) => {
       return iter.short === event.target.textContent;

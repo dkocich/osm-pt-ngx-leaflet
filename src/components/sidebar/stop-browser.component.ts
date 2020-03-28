@@ -70,11 +70,11 @@ export class StopBrowserComponent implements OnInit {
     }
   }
 
-  private isDownloaded(nodeId: number): boolean {
+  isDownloaded(nodeId: number): boolean {
     return this.storageSrv.elementsDownloaded.has(nodeId);
   }
 
-  private reorderMembers(rel: IPtRelation): void {
+  reorderMembers(rel: IPtRelation): void {
     this.editSrv.reorderMembers(rel);
   }
 
@@ -99,15 +99,15 @@ export class StopBrowserComponent implements OnInit {
     this.createChange();
   }
 
-  private cancelFilter(): void {
+  cancelFilter(): void {
     this.processSrv.activateFilteredStopView(false);
   }
 
-  private exploreStop($event: any, stop: IPtStop): void {
+  exploreStop($event: any, stop: IPtStop): void {
     this.processSrv.exploreStop(stop, true, true, true);
   }
 
-  private isSelected(relId: number): boolean {
+  isSelected(relId: number): boolean {
     return this.processSrv.haveSameIds(relId, this.currentElement.id);
   }
 
@@ -118,7 +118,7 @@ export class StopBrowserComponent implements OnInit {
    * @param item
    * @returns {number}
    */
-  private trackByFn(index: number, item: any): number {
+  trackByFn(index: number, item: any): number {
     return item.id;
   }
 }

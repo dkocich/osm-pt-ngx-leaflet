@@ -14,8 +14,8 @@ import { StorageService } from '../../services/storage.service';
   templateUrl: './auth.component.html',
 })
 export class AuthComponent {
-  private displayName: string;
-  private imgHref: string;
+  displayName: string;
+  imgHref: string;
 
   constructor(
     private authSrv: AuthService,
@@ -25,7 +25,7 @@ export class AuthComponent {
     this.imgHref = this.storageSrv.getImgHref();
   }
 
-  public isAuthenticated = (): void => {
+  public isAuthenticated = (): boolean => {
     return this.authSrv.oauth.authenticated();
   }
 
@@ -33,7 +33,7 @@ export class AuthComponent {
     return this.storageSrv.getDisplayName();
   }
 
-  private authenticate = (): void => {
+  authenticate = (): void => {
     this.authSrv.oauth.authenticate(this.gotAuthenticatedCallback);
   }
 
@@ -44,7 +44,7 @@ export class AuthComponent {
     this.showDetails();
   }
 
-  private logout = (): void => {
+  logout = (): void => {
     this.authSrv.oauth.logout();
     document.getElementById('display_name').innerHTML = '';
     this.storageSrv.clearLocalStorage();

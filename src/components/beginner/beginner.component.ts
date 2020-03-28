@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 
 import { PtTags } from '../../core/ptTags.class';
 import { IRouteBrowserOptions, ISuggestionsBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interface';
@@ -24,6 +24,8 @@ import { IAppState } from '../../store/model';
   templateUrl: './beginner.component.html',
 })
 export class BeginnerComponent {
+  @ViewChild('accordion1') a1: ElementRef
+
   @select(['app', 'beginnerView']) public readonly beginnerView$: Observable<string>;
   @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<ISuggestionsBrowserOptions>;
   @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
