@@ -27,6 +27,8 @@
     "cypress-run": "node_modules/.bin/cypress run --record --key 5bed002a-82c7-44a6-9e99-8fee9727f7d2",
     "e2e": "ng e2e",
     "lint": "ng lint",
+    "lint:navigableInWebstorm": "ng lint --format=stylish",
+    "lint:fix": "ng lint --fix=true",
     "lint:all": "tslint -c tslint.json src/**/*.ts src/components/**/*.ts src/*.ts",
     "ng": "ng",
     "ngbuild": "ng build --progress --verbose --aot=true --build-optimizer",
