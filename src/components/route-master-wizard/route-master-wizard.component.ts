@@ -1,19 +1,18 @@
-
-import {distinctUntilChanged, debounceTime} from 'rxjs/operators';
 import { Component, Input, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
-import { Subject } from 'rxjs';
 import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
-import { EditService } from '../../services/edit.service';
-import { ProcessService } from '../../services/process.service';
-import { OverpassService } from '../../services/overpass.service';
-import { WarnService } from '../../services/warn.service';
-import { StorageService } from '../../services/storage.service';
-import { RouteMasterWizardService } from '../../services/route-master-wizard.service';
-import { MapService } from '../../services/map.service';
-import { ConfService } from '../../services/conf.service';
-import { AppActions } from '../../store/app/actions';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { IOsmElement } from '../../core/osmElement.interface';
+import { ConfService } from '../../services/conf.service';
+import { EditService } from '../../services/edit.service';
+import { MapService } from '../../services/map.service';
+import { OverpassService } from '../../services/overpass.service';
+import { ProcessService } from '../../services/process.service';
+import { RouteMasterWizardService } from '../../services/route-master-wizard.service';
+import { StorageService } from '../../services/storage.service';
+import { WarnService } from '../../services/warn.service';
+import { AppActions } from '../../store/app/actions';
 
 @Component({
   selector: 'route-master-wizard',

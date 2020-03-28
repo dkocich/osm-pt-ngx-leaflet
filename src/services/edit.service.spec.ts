@@ -1,7 +1,7 @@
 import { EditService } from './edit.service';
 import { MapService } from './map.service';
-import { StorageService } from './storage.service';
 import { ProcessService } from './process.service';
+import { StorageService } from './storage.service';
 
 describe('EditService', () => {
   let service: EditService;

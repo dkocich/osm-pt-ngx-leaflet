@@ -1,5 +1,5 @@
-import * as L from 'leaflet';
 import { HttpHeaders } from '@angular/common/http';
+import * as L from 'leaflet';
 
 export class Utils {
   constructor() {

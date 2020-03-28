@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import * as data from '../../services/tutorials.json';
-import { Observable } from 'rxjs';
 import { NgRedux, select } from '@angular-redux/store';
+import { Component, OnInit } from '@angular/core';
 import * as introJs from 'intro.js';
-import { IAppState } from '../../store/model';
-import { AppActions } from '../../store/app/actions';
+import { Observable } from 'rxjs';
 import { TutorialService } from '../../services/tutorial.service';
+import * as data from '../../services/tutorials.json';
+import { AppActions } from '../../store/app/actions';
+import { IAppState } from '../../store/model';
 
 @Component({
   providers: [],

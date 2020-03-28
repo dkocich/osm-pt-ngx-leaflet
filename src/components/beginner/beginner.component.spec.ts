@@ -1,11 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { AppActions } from '../../store/app/actions';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PtTags } from '../../core/ptTags.class';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
+import { AppActions } from '../../store/app/actions';
 import { BeginnerComponent } from './beginner.component';
-import { PtTags } from '../../core/ptTags.class';
 
 describe('BeginnerComponent', () => {
   let comp: BeginnerComponent;

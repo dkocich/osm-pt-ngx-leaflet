@@ -1,24 +1,24 @@
-import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import * as L from 'leaflet';
+import { create } from 'xmlbuilder';
+import { IAreaRef } from '../core/areaRef.interface';
+import { IOverpassResponse } from '../core/overpassResponse.interface';
+import { IPtRelation } from '../core/ptRelation.interface';
+import { Utils } from '../core/utils.class';
+import { AppActions } from '../store/app/actions';
+import { IAppState } from '../store/model';
 import { AuthService } from './auth.service';
 import { ConfService } from './conf.service';
 import { DbService } from './db.service';
 import { ErrorHighlightService } from './error-highlight.service';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
-import { StorageService } from './storage.service';
-import { RouteWizardService } from './route-wizard.service';
-import { WarnService } from './warn.service';
-import { create } from 'xmlbuilder';
-import * as L from 'leaflet';
-import { IOverpassResponse } from '../core/overpassResponse.interface';
-import { IAreaRef } from '../core/areaRef.interface';
-import { IPtRelation } from '../core/ptRelation.interface';
-import { Utils } from '../core/utils.class';
-import { NgRedux } from '@angular-redux/store';
-import { IAppState } from '../store/model';
-import { AppActions } from '../store/app/actions';
 import { RouteMasterWizardService } from './route-master-wizard.service';
+import { RouteWizardService } from './route-wizard.service';
+import { StorageService } from './storage.service';
+import { WarnService } from './warn.service';
 
 @Injectable()
 export class OverpassService {

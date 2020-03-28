@@ -1,17 +1,18 @@
-import 'leaflet';
-import 'leaflet.vectorgrid';
-import 'reflect-metadata';
-import 'zone.js/dist/zone';
-import 'zone.js/dist/long-stack-trace-zone';
 import { APP_BASE_HREF } from '@angular/common';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { RouterModule, Routes } from '@angular/router';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HotkeyModule } from 'angular2-hotkeys';
+import { Angulartics2Module } from 'angulartics2';
+import { Angulartics2Piwik } from 'angulartics2/piwik';
+import 'leaflet';
+import 'leaflet.vectorgrid';
+import { NgHttpLoaderModule } from 'ng-http-loader';
 import { DragulaModule } from 'ng2-dragula';
 import {
   AccordionModule,
@@ -19,16 +20,15 @@ import {
   ButtonsModule,
   CarouselModule,
   ModalModule,
-  TooltipModule,
-  TypeaheadModule,
   SortableModule,
   TabsModule,
+  TooltipModule,
+  TypeaheadModule,
 } from 'ngx-bootstrap';
-import { HotkeyModule } from 'angular2-hotkeys';
-import { Angulartics2Module } from 'angulartics2';
-import { Angulartics2Piwik } from 'angulartics2/piwik';
-import { NgHttpLoaderModule } from 'ng-http-loader';
 import { ToastrModule } from 'ngx-toastr';
+import 'reflect-metadata';
+import 'zone.js/dist/long-stack-trace-zone';
+import 'zone.js/dist/zone';
 import { AppComponent } from './components/app/app.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { BeginnerComponent } from './components/beginner/beginner.component';
@@ -37,16 +37,20 @@ import { ExpertComponent } from './components/expert/expert.component';
 import { LangComponent } from './components/lang/lang.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { NavigatorComponent } from './components/navigator/navigator.component';
+import { RouteMasterWizardComponent } from './components/route-master-wizard/route-master-wizard.component';
+import { RouteWizardComponent } from './components/route-wizard/route-wizard.component';
+import { SettingsComponent } from './components/settings/settings.component';
 import { RelationBrowserComponent } from './components/sidebar/relation-browser.component';
 import { RouteBrowserComponent } from './components/sidebar/route-browser.component';
-import { SettingsComponent } from './components/settings/settings.component';
 import { StopBrowserComponent } from './components/sidebar/stop-browser.component';
 import { TagBrowserComponent } from './components/sidebar/tag-browser.component';
+import { ValidationBrowserComponent } from './components/sidebar/validation-browser.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TransporterComponent } from './components/transporter/transporter.component';
-import { ValidationBrowserComponent } from './components/sidebar/validation-browser.component';
-import { RouteWizardComponent } from './components/route-wizard/route-wizard.component';
-import { RouteMasterWizardComponent } from './components/route-master-wizard/route-master-wizard.component';
+import { TutorialsComponent } from './components/tutorials/tutorials.component';
+import { Utils } from './core/utils.class';
+import { KeysPipe } from './pipes/keys.pipe';
+import { RavenErrorHandler } from './raven-error-handler';
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
 import { DbService } from './services/db.service';
@@ -56,18 +60,14 @@ import { GeocodeService } from './services/geocode.service';
 import { MapService } from './services/map.service';
 import { OverpassService } from './services/overpass.service';
 import { ProcessService } from './services/process.service';
-import { StorageService } from './services/storage.service';
-import { WarnService } from './services/warn.service';
-import { RouteWizardService } from './services/route-wizard.service';
 import { RouteMasterWizardService } from './services/route-master-wizard.service';
+import { RouteWizardService } from './services/route-wizard.service';
+import { StorageService } from './services/storage.service';
 import { TutorialService } from './services/tutorial.service';
-import { KeysPipe } from './pipes/keys.pipe';
-import { StoreModule } from './store/module';
+import { WarnService } from './services/warn.service';
 import { AppActions } from './store/app/actions';
 import { RootEpics } from './store/epics';
-import { RavenErrorHandler } from './raven-error-handler';
-import { Utils } from './core/utils.class';
-import { TutorialsComponent } from './components/tutorials/tutorials.component';
+import { StoreModule } from './store/module';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);

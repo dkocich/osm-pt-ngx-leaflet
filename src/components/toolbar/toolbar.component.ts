@@ -1,16 +1,16 @@
+import { select } from '@angular-redux/store';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { EditorComponent } from '../editor/editor.component';
-import { TransporterComponent } from '../transporter/transporter.component';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import * as L from 'leaflet';
+import { Observable } from 'rxjs';
+import { IOsmElement } from '../../core/osmElement.interface';
 import { ConfService } from '../../services/conf.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-import { IOsmElement } from '../../core/osmElement.interface';
-import { select } from '@angular-redux/store';
-import { Observable } from 'rxjs';
-import * as L from 'leaflet';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { EditorComponent } from '../editor/editor.component';
+import { TransporterComponent } from '../transporter/transporter.component';
 
 @Component({
   providers: [],

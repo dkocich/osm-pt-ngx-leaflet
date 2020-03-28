@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
 import { NgRedux, select } from '@angular-redux/store';
-import { AppActions } from '../../store/app/actions';
-import { IAppState } from '../../store/model';
+import { Component } from '@angular/core';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { Observable } from 'rxjs';
 import { ErrorHighlightService } from '../../services/error-highlight.service';
+import { MapService } from '../../services/map.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-import { MapService } from '../../services/map.service';
 import { TutorialService } from '../../services/tutorial.service';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { AppActions } from '../../store/app/actions';
+import { IAppState } from '../../store/model';
 
 @Component({
   selector: 'settings',

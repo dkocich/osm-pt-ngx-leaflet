@@ -1,14 +1,15 @@
 import { Component, ViewChildren } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap';
-import { EditService } from '../../services/edit.service';
-import { StorageService } from '../../services/storage.service';
-import { MapService } from '../../services/map.service';
-import { WarnService } from '../../services/warn.service';
 import * as L from 'leaflet';
+import { BsModalRef } from 'ngx-bootstrap';
+import { INameErrorObject, IPTPairErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject } from '../../core/errorObject.interface';
 import { IPtRelation } from '../../core/ptRelation.interface';
-import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject, IPTPairErrorObject } from '../../core/errorObject.interface';
-import { PtTags } from '../../core/ptTags.class';
 import { IPtStop } from '../../core/ptStop.interface';
+import { PtTags } from '../../core/ptTags.class';
+import { EditService } from '../../services/edit.service';
+import { MapService } from '../../services/map.service';
+import { StorageService } from '../../services/storage.service';
+import { WarnService } from '../../services/warn.service';
+
 @Component({
   selector: 'modal-content',
   styleUrls: [

@@ -1,7 +1,7 @@
 import { IOsmElement } from './osmElement.interface';
+import { TStrRelation } from './other';
 import { IPtMember } from './ptMember';
 import { IPtTags } from './ptTags.class';
-import { TStrRelation } from './other';
 
 /**
  *  {

@@ -1,10 +1,10 @@
+import { ChangeDetectorRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
+import { PtTags } from '../../core/ptTags.class';
 import { EditService } from '../../services/edit.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 import { TagBrowserComponent } from './tag-browser.component';
-import { PtTags } from '../../core/ptTags.class';
 
 describe('TagBrowserComponent', () => {
   let comp: TagBrowserComponent;

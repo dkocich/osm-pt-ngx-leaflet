@@ -1,10 +1,10 @@
-import { ErrorHighlightService } from './error-highlight.service';
-import { BsModalService } from 'ngx-bootstrap';
 import { NgRedux } from '@angular-redux/store';
-import { IAppState } from '../store/model';
-import { ProcessService } from './process.service';
+import { BsModalService } from 'ngx-bootstrap';
 import { AppActions } from '../store/app/actions';
+import { IAppState } from '../store/model';
+import { ErrorHighlightService } from './error-highlight.service';
 import { MapService } from './map.service';
+import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 
 describe('ErrorHighlightService', () => {

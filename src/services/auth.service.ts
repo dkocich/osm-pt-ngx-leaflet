@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ConfService } from './conf.service';
 import { IOSMAuthOptions } from '../core/osmAuthOptions.interface';
+import { ConfService } from './conf.service';
 
 @Injectable()
 export class AuthService {

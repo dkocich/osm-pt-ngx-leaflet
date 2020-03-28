@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BsModalRef } from 'ngx-bootstrap';
 import { EditService } from '../../services/edit.service';
-import { StorageService } from '../../services/storage.service';
 import { MapService } from '../../services/map.service';
+import { StorageService } from '../../services/storage.service';
 import { WarnService } from '../../services/warn.service';
 import { ModalComponent } from './modal.component';
 

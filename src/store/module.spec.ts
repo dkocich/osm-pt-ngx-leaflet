@@ -1,8 +1,8 @@
-import { NgRedux, DevToolsExtension } from '@angular-redux/store';
-import { NgReduxTestingModule, MockNgRedux } from '@angular-redux/store/testing';
-import { TestBed, async, getTestBed } from '@angular/core/testing';
-import { StoreModule } from './module';
+import { DevToolsExtension, NgRedux } from '@angular-redux/store';
+import { MockNgRedux, NgReduxTestingModule } from '@angular-redux/store/testing';
+import { async, getTestBed, TestBed } from '@angular/core/testing';
 import { RootEpics } from './epics';
+import { StoreModule } from './module';
 
 describe('Store Module', () => {
   let mockNgRedux: NgRedux<any>;

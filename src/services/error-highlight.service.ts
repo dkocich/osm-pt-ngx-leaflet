@@ -1,17 +1,17 @@
+import { NgRedux } from '@angular-redux/store';
 import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import * as MobileDetect from 'mobile-detect';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { ModalComponent } from '../components/modal/modal.component';
+import { ISuggestionsBrowserOptions } from '../core/editingOptions.interface';
+import { INameErrorObject, IPTPairErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject } from '../core/errorObject.interface';
+import { IPtStop } from '../core/ptStop.interface';
+import { AppActions } from '../store/app/actions';
+import { IAppState } from '../store/model';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
-import { AppActions } from '../store/app/actions';
-import { IAppState } from '../store/model';
-import { NgRedux } from '@angular-redux/store';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
-import { ModalComponent } from '../components/modal/modal.component';
-import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject, IPTPairErrorObject } from '../core/errorObject.interface';
-import { ISuggestionsBrowserOptions } from '../core/editingOptions.interface';
-import { IPtStop } from '../core/ptStop.interface';
 
 @Injectable()
 export class ErrorHighlightService {

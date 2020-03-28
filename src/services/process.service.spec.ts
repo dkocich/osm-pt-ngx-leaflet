@@ -1,8 +1,8 @@
-import { ProcessService } from './process.service';
 import { NgRedux } from '@angular-redux/store';
-import { IAppState } from '../store/model';
 import { AppActions } from '../store/app/actions';
+import { IAppState } from '../store/model';
 import { MapService } from './map.service';
+import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 
 describe('ProcessService', () => {

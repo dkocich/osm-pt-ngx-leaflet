@@ -1,16 +1,16 @@
+import { NgRedux, select } from '@angular-redux/store';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { BsModalRef, BsModalService, ModalDirective } from 'ngx-bootstrap';
+import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
 import { StorageService } from '../../services/storage.service';
-import { BsModalRef, BsModalService, ModalDirective } from 'ngx-bootstrap';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
-import { NgRedux, select } from '@angular-redux/store';
-import { Observable } from 'rxjs';
 import { AppActions } from '../../store/app/actions';
 import { IAppState } from '../../store/model';
-import { RouteWizardComponent } from '../route-wizard/route-wizard.component';
 import { RouteMasterWizardComponent } from '../route-master-wizard/route-master-wizard.component';
+import { RouteWizardComponent } from '../route-wizard/route-wizard.component';
 
 @Component({
   providers: [],

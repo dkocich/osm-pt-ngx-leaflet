@@ -1,6 +1,6 @@
-import { MapService } from './map.service';
-import { ConfService } from './conf.service';
 import { HttpClient } from '@angular/common/http';
+import { ConfService } from './conf.service';
+import { MapService } from './map.service';
 import { StorageService } from './storage.service';
 
 describe('MapService', () => {

@@ -1,9 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { MapService } from './map.service';
-import { StorageService } from './storage.service';
-import { ProcessService } from './process.service';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import * as L from 'leaflet';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { MapService } from './map.service';
+import { ProcessService } from './process.service';
+import { StorageService } from './storage.service';
 
 @Injectable()
 export class RouteWizardService {

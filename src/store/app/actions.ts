@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
+import { Injectable } from '@angular/core';
 import { Action } from 'redux';
-import { IAppState } from '../model';
 import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
+import { IAppState } from '../model';
 
 @Injectable()
 export class AppActions {

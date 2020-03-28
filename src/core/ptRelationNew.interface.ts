@@ -1,6 +1,6 @@
 import { IOsmElement } from './osmElement.interface';
-import { IPtMember } from './ptMember';
 import { EnumWheelchair, TStrPtv2, TStrRelation, TStrRoute } from './other';
+import { IPtMember } from './ptMember';
 
 export interface IPtRelationNew extends IOsmElement {
   type: TStrRelation;

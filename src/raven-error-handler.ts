@@ -1,6 +1,5 @@
-
-import * as Raven from 'raven-js';
 import { ErrorHandler } from '@angular/core';
+import * as Raven from 'raven-js';
 import { Utils } from './core/utils.class';
 
 if (Utils.isProductionDeployment()) {

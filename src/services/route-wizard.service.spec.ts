@@ -1,8 +1,8 @@
+import { BsModalService } from 'ngx-bootstrap';
+import { MapService } from './map.service';
+import { ProcessService } from './process.service';
 import { RouteWizardService } from './route-wizard.service';
 import { StorageService } from './storage.service';
-import { MapService } from './map.service';
-import { BsModalService } from 'ngx-bootstrap';
-import { ProcessService } from './process.service';
 
 describe('RouteWizardService', () => {
   let service: RouteWizardService;

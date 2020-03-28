@@ -1,18 +1,18 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable } from 'rxjs';
-import { IAppState } from '../../store/model';
-import { AppActions } from '../../store/app/actions';
-import { BsModalService } from 'ngx-bootstrap';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import { BsModalService } from 'ngx-bootstrap';
+import { Observable } from 'rxjs';
+import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
+import { INameErrorObject, IPTPairErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject } from '../../core/errorObject.interface';
+import { IPtStop } from '../../core/ptStop.interface';
+import { ConfService } from '../../services/conf.service';
 import { ErrorHighlightService } from '../../services/error-highlight.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { StorageService } from '../../services/storage.service';
-import { ConfService } from '../../services/conf.service';
-import { IPtStop } from '../../core/ptStop.interface';
-import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
-import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject, IPTPairErrorObject } from '../../core/errorObject.interface';
+import { AppActions } from '../../store/app/actions';
+import { IAppState } from '../../store/model';
 
 @Component({
   selector: 'validation-browser',

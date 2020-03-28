@@ -1,12 +1,12 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { MapService } from './map.service';
-import { StorageService } from './storage.service';
-import { BsModalService } from 'ngx-bootstrap';
-import { ProcessService } from './process.service';
+import {EventEmitter, Injectable} from '@angular/core';
+import {BsModalService} from 'ngx-bootstrap';
+import {MapService} from './map.service';
+import {StorageService} from './storage.service';
+import {ProcessService} from './process.service';
 import * as L from 'leaflet';
-import { IPtRelation } from '../core/ptRelation.interface';
-import { IOverpassResponse } from '../core/overpassResponse.interface';
-import { IOsmElement } from '../core/osmElement.interface';
+import {IPtRelation} from '../core/ptRelation.interface';
+import {IOverpassResponse} from '../core/overpassResponse.interface';
+import {IOsmElement} from '../core/osmElement.interface';
 
 @Injectable()
 export class RouteMasterWizardService {

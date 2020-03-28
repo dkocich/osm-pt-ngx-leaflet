@@ -1,6 +1,6 @@
-import { Db } from '../database/dexiedb';
-import { StorageService } from './storage.service';
-import { Injectable } from '@angular/core';
+import {Db} from '../database/dexiedb';
+import {StorageService} from './storage.service';
+import {Injectable} from '@angular/core';
 
 @Injectable()
 export class DbService {

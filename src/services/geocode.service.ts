@@ -1,14 +1,10 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
-import {
-  IResponseFreeGeoIp,
-  IResponseGeocodeGMaps,
-  IResponseIp,
-} from '../core/responses.interface';
 import { Location } from '../core/location.class';
-import { MapService } from './map.service';
+import { IResponseFreeGeoIp, IResponseGeocodeGMaps, IResponseIp, } from '../core/responses.interface';
 import { ConfService } from './conf.service';
+import { MapService } from './map.service';
 
 @Injectable()
 export class GeocodeService {

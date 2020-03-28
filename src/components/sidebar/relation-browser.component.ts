@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProcessService } from '../../services/process.service';
-import { StorageService } from '../../services/storage.service';
-import { EditService } from '../../services/edit.service';
-import { ModalDirective } from 'ngx-bootstrap';
-import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
-import { IOsmElement } from '../../core/osmElement.interface';
-import { Observable } from 'rxjs';
-import { NgRedux, select } from '@angular-redux/store';
-import { IAppState } from '../../store/model';
-import { Hotkey, HotkeysService } from 'angular2-hotkeys';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ProcessService} from '../../services/process.service';
+import {StorageService} from '../../services/storage.service';
+import {EditService} from '../../services/edit.service';
+import {ModalDirective} from 'ngx-bootstrap';
+import {IPtRouteMasterNew} from '../../core/ptRouteMasterNew.interface';
+import {IOsmElement} from '../../core/osmElement.interface';
+import {Observable} from 'rxjs';
+import {NgRedux, select} from '@angular-redux/store';
+import {IAppState} from '../../store/model';
+import {Hotkey, HotkeysService} from 'angular2-hotkeys';
 
 @Component({
   providers: [],

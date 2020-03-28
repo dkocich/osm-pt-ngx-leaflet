@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { EditService } from '../../services/edit.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-import { EditService } from '../../services/edit.service';
 import { RelationBrowserComponent } from './relation-browser.component';
 
 describe('RelationBrowserComponent', () => {

@@ -1,5 +1,5 @@
-import { GeocodeService } from './geocode.service';
 import { HttpClient } from '@angular/common/http';
+import { GeocodeService } from './geocode.service';
 import { MapService } from './map.service';
 
 describe('GeocodeService', () => {

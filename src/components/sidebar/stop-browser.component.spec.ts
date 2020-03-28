@@ -1,10 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DragulaService } from 'ng2-dragula';
 import { EditService } from '../../services/edit.service';
 import { MapService } from '../../services/map.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-import { DragulaService } from 'ng2-dragula';
 import { StopBrowserComponent } from './stop-browser.component';
 
 describe('StopBrowserComponent', () => {

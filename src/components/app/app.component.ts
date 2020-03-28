@@ -1,22 +1,21 @@
-import { Component, isDevMode, OnInit, ViewChild } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
+import { Component, isDevMode, OnInit, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { Spinkit } from 'ng-http-loader';
-import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
+import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { AuthService } from '../../services/auth.service';
 import { DbService } from '../../services/db.service';
 import { EditService } from '../../services/edit.service';
 import { GeocodeService } from '../../services/geocode.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
+import { AppActions } from '../../store/app/actions';
+import { IAppState } from '../../store/model';
 import { AuthComponent } from '../auth/auth.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
-import { IAppState } from '../../store/model';
-import { AppActions } from '../../store/app/actions';
-import { AuthService } from '../../services/auth.service';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],

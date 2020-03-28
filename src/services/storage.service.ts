@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { IPtStop } from '../core/ptStop.interface';
-import { IOsmElement } from '../core/osmElement.interface';
 import { INameErrorObject, IPTPairErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject } from '../core/errorObject.interface';
+import { IOsmElement } from '../core/osmElement.interface';
+import { IPtStop } from '../core/ptStop.interface';
 
 @Injectable()
 export class StorageService {

@@ -1,10 +1,10 @@
-import { OverpassService } from './overpass.service';
-import { AuthService } from './auth.service';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from './auth.service';
 import { DbService } from './db.service';
+import { MapService } from './map.service';
+import { OverpassService } from './overpass.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
-import { MapService } from './map.service';
 import { WarnService } from './warn.service';
 
 describe('OverpassService', () => {

@@ -1,9 +1,10 @@
 import Dexie from 'dexie';
-import { IPtWay } from '../core/ptWay.interface';
-import { IPtStop } from '../core/ptStop.interface';
+import { IMetadata } from '../core/metadata.interface';
 import { IPtRelationNew } from '../core/ptRelationNew.interface';
 import { IPtRouteMasterNew } from '../core/ptRouteMasterNew.interface';
-import { IMetadata } from '../core/metadata.interface';
+import { IPtStop } from '../core/ptStop.interface';
+import { IPtWay } from '../core/ptWay.interface';
+
 export class Db extends Dexie {
   AreasGrid:      Dexie.Table<string,             number>;
   PtStops:        Dexie.Table<IPtStop,            number>;

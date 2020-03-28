@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { IRouteBrowserOptions, ISuggestionsBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interface';
-import { Observable } from 'rxjs';
 import { NgRedux, select } from '@angular-redux/store';
-import { IAppState } from '../../store/model';
-import { TutorialService } from '../../services/tutorial.service';
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { IRouteBrowserOptions, ISuggestionsBrowserOptions, ITagBrowserOptions } from '../../core/editingOptions.interface';
 import { StorageService } from '../../services/storage.service';
+import { TutorialService } from '../../services/tutorial.service';
+import { IAppState } from '../../store/model';
 
 @Component({
   providers  : [],
