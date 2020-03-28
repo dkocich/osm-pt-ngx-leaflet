@@ -22,6 +22,9 @@
     "rbbit.typescript-hero",
     "msjsdiag.debugger-for-chrome",
     "CoenraadS.bracket-pair-colorizer-2",
-    "lmcarreiro.vscode-smart-column-indenter"
+    "lmcarreiro.vscode-smart-column-indenter",
+    "eamodio.gitlens",
+    "donjayamanne.githistory",
+    "mhutchie.git-graph"
   ]
 }
