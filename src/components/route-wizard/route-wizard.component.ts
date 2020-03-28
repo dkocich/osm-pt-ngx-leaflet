@@ -28,20 +28,20 @@ import { AppActions } from '../../store/app/actions';
 
 export class RouteWizardComponent {
 
-  public map: L.Map;
-  public newRoutesRefs              = [];
-  public osmtogeojson: any          = require('osmtogeojson');
+  map: L.Map;
+  newRoutesRefs              = [];
+  osmtogeojson: any          = require('osmtogeojson');
   private startEventProcessing      = new Subject<L.LeafletEvent>();
-  public newRoute: any              = {};
-  public newRouteMembersSuggestions = [];
-  public addedNewRouteMembers       = [];
+  newRoute: any              = {};
+  newRouteMembersSuggestions = [];
+  addedNewRouteMembers       = [];
 
-  @Input() public tagKey: string   = '';
-  @Input() public tagValue: string = '';
+  @Input() tagKey: string   = '';
+  @Input() tagValue: string = '';
 
-  public canStopsConnect     = false;
-  public canPlatformsConnect = false;
-  public currentlyViewedRef  = null;
+  canStopsConnect     = false;
+  canPlatformsConnect = false;
+  currentlyViewedRef  = null;
 
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
 
@@ -52,7 +52,7 @@ export class RouteWizardComponent {
               private routeWizardSrv: RouteWizardService,
               private processSrv: ProcessService,
               private editSrv: EditService,
-              public modalRefRouteWiz: BsModalRef,
+              public  modalRefRouteWiz: BsModalRef,
               public appActions: AppActions,
 
   ) {
@@ -91,7 +91,7 @@ export class RouteWizardComponent {
     });
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.selectTab(1);
     this.routeWizardSrv.elementsRenderedModalMap = new Set();
     this.map                                 = L.map('auto-route-modal-map', {
@@ -133,7 +133,7 @@ export class RouteWizardComponent {
    * Finds suggestions in current bounds
    * @returns {void}
    */
-  public findMissingRoutes(): void {
+  findMissingRoutes(): void {
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForRouteWizard) {
       this.overpassSrv.requestNewOverpassDataForWizard(true);
     } else {
@@ -146,7 +146,7 @@ export class RouteWizardComponent {
    * @param {string} ref
    * @returns {void}
    */
-  public useRef(ref: string): void {
+  useRef(ref: string): void {
     this.mapSrv.clearHighlight(this.routeWizardSrv.map);
     this.routeWizardSrv.clearMembersHighlight();
     const newId                     = this.editSrv.findNewId();
@@ -218,7 +218,7 @@ export class RouteWizardComponent {
    * Removes member from route
    * @param {string} toRemoveMemberID
    */
-  public removeMember(toRemoveMemberID: string): void {
+  removeMember(toRemoveMemberID: string): void {
     this.addedNewRouteMembers = this.routeWizardSrv.removeMember(toRemoveMemberID, this.addedNewRouteMembers);
   }
 
@@ -235,7 +235,7 @@ export class RouteWizardComponent {
   /**
    * Changes route highlight on map on reordering members from list
    */
-  public reorderMembers(): void {
+  reorderMembers(): void {
     this.mapSrv.clearHighlight(this.routeWizardSrv.map);
     this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers, false);
   }
@@ -244,7 +244,7 @@ export class RouteWizardComponent {
    * Saves step 3 of adding members
    * @returns {void}
    */
-  public saveStep3(): void {
+  saveStep3(): void {
    this.selectTab(4);
   }
 
@@ -255,7 +255,7 @@ export class RouteWizardComponent {
    * @param event
    * @returns {void}
    */
-  public createChangeTag(action: string, key: any, event: any): void {
+  createChangeTag(action: string, key: any, event: any): void {
     this.newRoute = RouteWizardService.modifiesTags(action, key, event, this.newRoute);
     if (action === 'add tag') {
       this.tagKey             = '';
@@ -267,7 +267,7 @@ export class RouteWizardComponent {
    * Saves final step
    * @returns {void}
    */
-  public saveStep4(): void {
+  saveStep4(): void {
     RouteWizardService.assignRolesToMembers(this.addedNewRouteMembers);
     this.newRoute.members = RouteWizardService.formRelMembers(this.addedNewRouteMembers);
     this.newRoute.tags    = RouteWizardService.filterEmptyTags(this.newRoute);
@@ -283,7 +283,7 @@ export class RouteWizardComponent {
    * @param {string} step
    * @returns {void}
    */
-  public jumpToStep(step: string): void {
+  jumpToStep(step: string): void {
     switch (step) {
       case '1':
         this.routeWizardSrv.clearMembersHighlight();
@@ -308,7 +308,7 @@ export class RouteWizardComponent {
    * @param {string} type
    * @returns {void}
    */
-  public showConnectivity(type: string): void {
+  showConnectivity(type: string): void {
     this.routeWizardSrv.showConnectivity(type, {
       canStopsConnect    : this.canStopsConnect,
       canPlatformsConnect: this.canPlatformsConnect,
@@ -320,7 +320,7 @@ export class RouteWizardComponent {
    * @param {string} ref
    * @returns {string}
    */
-  public getTextColorForSuggestedRoutes(ref: string): string {
+  getTextColorForSuggestedRoutes(ref: string): string {
     let color = '';
     this.routeWizardSrv.routesMap.forEach((members, suggestedRef) => {
       if (suggestedRef === ref) {

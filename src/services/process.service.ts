@@ -23,11 +23,11 @@ export class ProcessService {
   private showStopsForRouteSource = new Subject<boolean>();
   private refreshSidebarViewsSource = new Subject<string>();
   // Observable boolean streams
-  public showRelationsForStop$ = this.showRelationsForStopSource.asObservable();
-  public showStopsForRoute$ = this.showStopsForRouteSource.asObservable();
-  public refreshSidebarViews$ = this.refreshSidebarViewsSource.asObservable();
-  public membersToDownload: EventEmitter<object> = new EventEmitter();
-  public refreshMasters: EventEmitter<object> = new EventEmitter();
+  showRelationsForStop$ = this.showRelationsForStopSource.asObservable();
+  showStopsForRoute$ = this.showStopsForRouteSource.asObservable();
+  refreshSidebarViews$ = this.refreshSidebarViewsSource.asObservable();
+  membersToDownload: EventEmitter<object> = new EventEmitter();
+  refreshMasters: EventEmitter<object> = new EventEmitter();
 
   constructor(
     private ngRedux: NgRedux<IAppState>,
@@ -81,7 +81,7 @@ export class ProcessService {
    * @param featureId
    * @param map
    */
-  public getElementById(featureId: number, map: any): any {
+  getElementById(featureId: number, map: any): any {
     if (map.has(featureId)) {
       return map.get(featureId);
     }
@@ -90,7 +90,7 @@ export class ProcessService {
   /**
    * Filters data in the sidebar depending on current view's bounding box.
    */
-  public filterDataInBounds(): void {
+  filterDataInBounds(): void {
     if (
       !this.storageSrv.localJsonStorage ||
       this.storageSrv.listOfStops.length > 1000
@@ -125,7 +125,7 @@ export class ProcessService {
    *
    * @param response
    */
-  public processResponse(response: IOverpassResponse): void {
+  processResponse(response: IOverpassResponse): void {
     const responseId = this.getResponseId();
     const transformedGeojson = this.mapSrv.osmtogeojson(response);
     this.storageSrv.localJsonStorage.set(responseId, response);
@@ -139,7 +139,7 @@ export class ProcessService {
    *
    * @param response
    */
-  public processNodeResponse(response: any): void {
+  processNodeResponse(response: any): void {
     for (const element of response.elements) {
       if (!this.storageSrv.elementsMap.has(element.id)) {
         this.storageSrv.elementsMap.set(element.id, element);
@@ -171,7 +171,7 @@ export class ProcessService {
   /**
    * Adds hash to URL hostname similarly like it is used on OSM (/#map=19/49.83933/18.29230)
    */
-  public addPositionToUrlHash(): void {
+  addPositionToUrlHash(): void {
     const center = this.mapSrv.map.getCenter();
     window.location.hash = `map=${this.mapSrv.map.getZoom()}/${center.lat.toFixed(
       5,
@@ -182,7 +182,7 @@ export class ProcessService {
    *
    * @param response
    */
-  public processMastersResponse(response: object): void {
+  processMastersResponse(response: object): void {
     response['elements'].forEach((element) => {
       if (!this.storageSrv.elementsMap.has(element.id)) {
         console.log('LOG (processing s.) New element added:', element);
@@ -215,7 +215,7 @@ export class ProcessService {
    * Creates initial list of stops/relations.
    * @param id
    */
-  public createLists(id: number): void {
+  createLists(id: number): void {
     const response = this.storageSrv.localJsonStorage.get(id);
     response.elements.forEach((element) => {
       if (!this.storageSrv.elementsMap.has(element.id)) {
@@ -248,7 +248,7 @@ export class ProcessService {
   /**
    * Highlights downloaded stop areas by rectangles.
    */
-  public drawStopAreas(): void {
+  drawStopAreas(): void {
     const boundaries = [];
     for (const area of this.storageSrv.listOfAreas) {
       const coords = [];
@@ -274,7 +274,7 @@ export class ProcessService {
    *
    * @param data
    */
-  public activateFilteredRouteView(data: boolean): void {
+  activateFilteredRouteView(data: boolean): void {
     this.showRelationsForStopSource.next(data);
   }
 
@@ -282,7 +282,7 @@ export class ProcessService {
    *
    * @param data
    */
-  public activateFilteredStopView(data: boolean): void {
+  activateFilteredStopView(data: boolean): void {
     this.showStopsForRouteSource.next(data);
   }
 
@@ -290,7 +290,7 @@ export class ProcessService {
    *
    * @param data
    */
-  public refreshSidebarView(data: string): void {
+  refreshSidebarView(data: string): void {
     this.refreshSidebarViewsSource.next(data);
   }
 
@@ -298,7 +298,7 @@ export class ProcessService {
    *
    * @param element
    */
-  public refreshTagView(element: any): void {
+  refreshTagView(element: any): void {
     if (element) {
       this.storageSrv.currentElementsChange.emit(
         JSON.parse(JSON.stringify(element)),
@@ -313,7 +313,7 @@ export class ProcessService {
    * Re-initiates a list of route's variants and refreshes relation browser window.
    * @param rel
    */
-  public refreshRelationView(rel: IPtRelation): void {
+  refreshRelationView(rel: IPtRelation): void {
     this.storageSrv.listOfVariants.length = 0;
     if (rel.tags.type === 'route_master') {
       for (const member of rel.members) {
@@ -331,7 +331,7 @@ export class ProcessService {
    * @param refreshMasterView?
    * @param zoomToElement?
    */
-  public exploreRelation(
+  exploreRelation(
     rel: any,
     refreshTagView?: boolean,
     refreshMasterView?: boolean,
@@ -417,7 +417,7 @@ export class ProcessService {
    * @param zoomToElement
    * @param refreshTagView
    */
-  public downloadedMissingMembers(
+  downloadedMissingMembers(
     rel: any,
     zoomToElement: boolean,
     refreshTagView: boolean,
@@ -448,7 +448,7 @@ export class ProcessService {
    *
    * @param rel
    */
-  public exploreMaster(rel: any): void {
+  exploreMaster(rel: any): void {
     if (rel.members.length === 0) {
       return alert(
         'Problem occurred - this relation doesn\'t contain any route variants.',
@@ -487,7 +487,7 @@ export class ProcessService {
    * @param {boolean} refreshTags
    * @param {boolean} zoomTo
    */
-  public exploreStop(
+  exploreStop(
     stop: any,
     filterRelations: boolean,
     refreshTags: boolean,
@@ -514,7 +514,7 @@ export class ProcessService {
    * Filters relations (routes) for given stop.
    * @param stop
    */
-  public filterRelationsByStop(stop: IPtStop): object[] {
+  filterRelationsByStop(stop: IPtStop): object[] {
     this.storageSrv.listOfRelationsForStop = [];
 
     for (const relation of this.storageSrv.listOfRelations) {
@@ -533,7 +533,7 @@ export class ProcessService {
    * Filters stops for given relation (route).
    * @param rel
    */
-  public filterStopsByRelation(rel: IPtRelation): void {
+  filterStopsByRelation(rel: IPtRelation): void {
     if (rel === undefined) {
       return alert('Problem occurred - relation is undefined.');
     }
@@ -558,7 +558,7 @@ export class ProcessService {
    * Zooms to the input element (point position or relation geometry).
    * @param element
    */
-  public zoomToElement(element: IOsmElement): void {
+  zoomToElement(element: IOsmElement): void {
     if (element.type === 'node') {
       if (!element['lat'] || !element['lon']) {
         return alert(
@@ -601,7 +601,7 @@ export class ProcessService {
    * Validates URL hash content (lat, lng, zoom)
    * @returns {boolean}
    */
-  public hashIsValidPosition(): boolean {
+  hashIsValidPosition(): boolean {
     const h = window.location.hash
       .slice(5)
       .split('/')
@@ -618,12 +618,12 @@ export class ProcessService {
     );
   }
 
-  public cancelSelection(): void {
+  cancelSelection(): void {
     this.refreshTagView(undefined);
     this.mapSrv.clearHighlight(this.mapSrv.map);
   }
 
-  public haveSameIds(relId: number, currElementId?: number): boolean {
+  haveSameIds(relId: number, currElementId?: number): boolean {
     if (currElementId) {
       return currElementId === relId;
     } else {
@@ -631,10 +631,10 @@ export class ProcessService {
     }
   }
 
-  public numIsBetween(num: number, min: number, max: number): boolean {
+  numIsBetween(num: number, min: number, max: number): boolean {
     return min < num && num < max;
   }
-  public getRelationDataIDB(rel: any): any {
+  getRelationDataIDB(rel: any): any {
     this.dbSrv.getMembersForRoute(rel.id).then((res) => {
       this.processNodeResponse(res);
       const transformedGeojson = this.mapSrv.osmtogeojson(res);

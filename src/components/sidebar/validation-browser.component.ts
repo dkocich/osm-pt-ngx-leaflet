@@ -24,19 +24,19 @@ import { INameErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject, IP
   styleUrls: ['./validation-browser.component.less'],
 })
 export class ValidationBrowserComponent implements OnInit, OnDestroy {
-  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<object>;
-  @select(['app', 'switchMode']) public readonly switchMode$: Observable<boolean>;
+  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
+  @select(['app', 'errorCorrectionMode']) readonly errorCorrectionMode$: Observable<object>;
+  @select(['app', 'switchMode']) readonly switchMode$: Observable<boolean>;
 
-  public refErrorsObj: IRefErrorObject[];
-  public nameErrorsObj: INameErrorObject[];
-  public wayErrorsObj: IWayErrorObject[];
-  public PTvErrorsObj: IPTvErrorObject[];
-  public ptPairErrorsObj: IPTPairErrorObject[];
+  refErrorsObj: IRefErrorObject[];
+  nameErrorsObj: INameErrorObject[];
+  wayErrorsObj: IWayErrorObject[];
+  PTvErrorsObj: IPTvErrorObject[];
+  ptPairErrorsObj: IPTPairErrorObject[];
 
   @Input() suggestionsBrowserOptions: ISuggestionsBrowserOptions;
-  public errorCorrectionModeSubscription;
-  public errorCorrectionMode: ISuggestionsBrowserOptions;
+  errorCorrectionModeSubscription;
+  errorCorrectionMode: ISuggestionsBrowserOptions;
 
   constructor(
     private errorHighlightSrv: ErrorHighlightService,
@@ -109,11 +109,11 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
       return false;
     }, undefined, 'Start missing name correction')]);
   }
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.appActions.actSetErrorCorrectionMode(this.suggestionsBrowserOptions);
   }
 
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.errorCorrectionModeSubscription.unsubscribe();
   }
 
@@ -121,7 +121,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
    * Counts and list all errors
    * @returns {void}
    */
-  public startValidation(): void {
+  startValidation(): void {
     this.nameErrorsObj   = [];
     this.refErrorsObj    = [];
     this.wayErrorsObj    = [];
@@ -138,7 +138,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
    * Starts name correction mode
    * @returns {void}
    */
-  public startNameCorrection(): void {
+  startNameCorrection(): void {
     if (this.errorCorrectionMode.nameSuggestions) {
       this.appActions.actSetErrorCorrectionMode(
         {
@@ -155,7 +155,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     this.errorHighlightSrv.startCorrection('missing name tags');
   }
 
-  public startWayCorrection(): void {
+  startWayCorrection(): void {
     if (this.errorCorrectionMode.waySuggestions) {
       this.appActions.actSetErrorCorrectionMode(
         {
@@ -176,7 +176,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
    * Starts ref correction
    * @returns {void}
    */
-  public startRefCorrection(): void {
+  startRefCorrection(): void {
     if (this.errorCorrectionMode.refSuggestions) {
       this.appActions.actSetErrorCorrectionMode(
         {
@@ -197,7 +197,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
    * Starts PTv correction
    * @returns {void}
    */
-  public startPTvCorrection(): void {
+  startPTvCorrection(): void {
     if (this.errorCorrectionMode.PTvSuggestions) {
       this.appActions.actSetErrorCorrectionMode(
         {
@@ -214,7 +214,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     this.errorHighlightSrv.startCorrection('PTv correction');
   }
 
-  public startPTPairCorrection(): void {
+  startPTPairCorrection(): void {
     if (this.errorCorrectionMode.ptPairSuggestions) {
       this.appActions.actSetErrorCorrectionMode(
         {
@@ -234,21 +234,21 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
   /**
    * Moves to the next location
    */
-  public nextLocation(): void {
+  nextLocation(): void {
     this.errorHighlightSrv.nextLocation();
   }
 
   /**
    * Moves to the previous location
    */
-  public previousLocation(): void {
+  previousLocation(): void {
     this.errorHighlightSrv.previousLocation();
   }
 
   /**
    * Quits mode
    */
-  public quit(): void {
+  quit(): void {
     this.errorHighlightSrv.quit();
   }
 
@@ -256,7 +256,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
    * Jumps to different location
    * @param {number} index
    */
-  public jumpToLocation(index: number): void {
+  jumpToLocation(index: number): void {
     this.errorHighlightSrv.jumpToLocation(index);
   }
 
@@ -265,7 +265,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
    * @param {string} name
    * @returns {boolean}
    */
-  public view(name: string): boolean {
+  view(name: string): boolean {
     switch (name) {
       case 'name-errors-menu-item':
         return this.errorCorrectionMode &&

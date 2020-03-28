@@ -13,23 +13,23 @@ import { IOsmElement } from '../core/osmElement.interface';
 
 @Injectable()
 export class RouteMasterWizardService {
-  public map;
-  public routes = [];
-  public ptLayerModal;
-  public osmtogeojson: any = require('osmtogeojson');
-  public modalMapElementsMap = new Map();
+  map;
+  routes = [];
+  ptLayerModal;
+  osmtogeojson: any = require('osmtogeojson');
+  modalMapElementsMap = new Map();
 
-  public newRoutesMapReceived: EventEmitter<Map<string, Array<{ id: number, percentCoverage: number }>>> = new EventEmitter();
+  newRoutesMapReceived: EventEmitter<Map<string, Array<{ id: number, percentCoverage: number }>>> = new EventEmitter();
 
-  public savedMultipleNodeDataResponses = [];
-  public savedContinuousQueryResponses = [];
-  public savedMasterQueryResponses = [];
+  savedMultipleNodeDataResponses = [];
+  savedContinuousQueryResponses = [];
+  savedMasterQueryResponses = [];
 
-  public elementsRenderedModalMap = new Set();
-  public nodesFullyDownloaded = new Set();
+  elementsRenderedModalMap = new Set();
+  nodesFullyDownloaded = new Set();
 
-  public relsMap = new Map();
-  public newRMsMap: Map<string, Array<{ id: number, percentCoverage: number }>> = new Map();
+  relsMap = new Map();
+  newRMsMap: Map<string, Array<{ id: number, percentCoverage: number }>> = new Map();
 
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,
@@ -52,7 +52,7 @@ export class RouteMasterWizardService {
    * Fired when modal has rendered
    * @returns {void}
    */
-  public onShownModal(): void {
+  onShownModal(): void {
     if (this.map) {
       this.map.invalidateSize();
     }
@@ -62,7 +62,7 @@ export class RouteMasterWizardService {
    * Renders data on modal map which was already present on the main map
    * @returns {void}
    */
-  public renderAlreadyDownloadedData(): void {
+  renderAlreadyDownloadedData(): void {
     const obj: { elements: IOsmElement[] } = { elements: null };
     const elements: IOsmElement[] = [];
     this.storageSrv.elementsMap.forEach((element) => {
@@ -78,7 +78,7 @@ export class RouteMasterWizardService {
    *  all data downloaded for modal map is processed for main application
    * @returns {void}
    */
-  public processAllDownloadedOnMainMap(): void {
+  processAllDownloadedOnMainMap(): void {
     for (let res of this.savedContinuousQueryResponses) {
       this.processSrv.processResponse(res);
     }
@@ -95,7 +95,7 @@ export class RouteMasterWizardService {
    * @param transformedGeoJSON
    * @param {Map} map
    */
-  public renderTransformedGeojsonDataRMWizard(transformedGeoJSON: any, map: L.Map): void {
+  renderTransformedGeojsonDataRMWizard(transformedGeoJSON: any, map: L.Map): void {
     this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
       filter: (feature) => {
         return (!this.elementsRenderedModalMap.has(feature.id) &&
@@ -113,7 +113,7 @@ export class RouteMasterWizardService {
     this.ptLayerModal.addTo(map);
   }
 
-  public findToBeComparedRels(response: IOverpassResponse): Map<number, number> {
+  findToBeComparedRels(response: IOverpassResponse): Map<number, number> {
     let newDownloadedRoutes = [];
     let oldDownloadedRoutes = [];
     if (response) {
@@ -161,7 +161,7 @@ export class RouteMasterWizardService {
     return relsMap;
   }
 
-  public checkMembersInBounds(relation: IOsmElement): boolean {
+  checkMembersInBounds(relation: IOsmElement): boolean {
     let flag = false;
     relation['members'].forEach((member) => {
       if (this.modalMapElementsMap.has(member.ref) && this.modalMapElementsMap.get(member.ref).type === 'node') {
@@ -175,7 +175,7 @@ export class RouteMasterWizardService {
     return flag;
   }
 
-  public findMissingRouteMasters(res: IOverpassResponse): void {
+  findMissingRouteMasters(res: IOverpassResponse): void {
     this.newRMsMap = new Map();
     let RMRefs: string[] = [];
 
@@ -229,7 +229,7 @@ export class RouteMasterWizardService {
    * @param routeID
    * @returns {void}
    */
-  public viewRoute(routeID: number): void {
+  viewRoute(routeID: number): void {
     let route = this.modalMapElementsMap.get(routeID);
     this.mapSrv.clearHighlight(this.map);
     this.storageSrv.stopsForRoute = [];

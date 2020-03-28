@@ -6,62 +6,62 @@ import { INameErrorObject, IPTPairErrorObject, IPTvErrorObject, IRefErrorObject,
 
 @Injectable()
 export class StorageService {
-  public elementsDownloaded  = new Set();
-  public queriedMasters      = new Set();
-  public elementsRendered    = new Set();
-  public elementsMap         = new Map();
-  public markersMap          = new Map();
-  public elementsToHighlight = new Set();
+  elementsDownloaded  = new Set();
+  queriedMasters      = new Set();
+  elementsRendered    = new Set();
+  elementsMap         = new Map();
+  markersMap          = new Map();
+  elementsToHighlight = new Set();
 
-  public localJsonStorage: any     = new Map();
-  public localGeojsonStorage: any  = new Map();
-  public listOfStops: IPtStop[]    = [];
-  public listOfRelations: object[] = [];
-  public listOfAreas: object[]     = [];
-  public listOfMasters: object[]   = [];
-  public listOfVariants: object[]  = [];
+  localJsonStorage: any     = new Map();
+  localGeojsonStorage: any  = new Map();
+  listOfStops: IPtStop[]    = [];
+  listOfRelations: object[] = [];
+  listOfAreas: object[]     = [];
+  listOfMasters: object[]   = [];
+  listOfVariants: object[]  = [];
 
   // filtering of sidebar
-  public listOfStopsForRoute: IPtStop[]   = [];
-  public listOfRelationsForStop: object[] = [];
+  listOfStopsForRoute: IPtStop[]   = [];
+  listOfRelationsForStop: object[] = [];
 
-  public stopsForRoute: number[]     = [];
-  public platformsForRoute: number[] = [];
-  public waysForRoute: number[]      = [];
-  public relationsForRoute: number[] = [];
+  stopsForRoute: number[]     = [];
+  platformsForRoute: number[] = [];
+  waysForRoute: number[]      = [];
+  relationsForRoute: number[] = [];
 
-  public idsHaveMaster = new Set();
+  idsHaveMaster = new Set();
 
-  public currentElement: IOsmElement | undefined;
-  public currentElementsChange = new EventEmitter();
-  public selectedStopBeginnerMode: IOsmElement | undefined;
+  currentElement: IOsmElement | undefined;
+  currentElementsChange = new EventEmitter();
+  selectedStopBeginnerMode: IOsmElement | undefined;
 
-  public displayName: string = '';
-  public imgHref: string     = '';
+  displayName: string = '';
+  imgHref: string     = '';
 
-  public edits: object[]                     = [];
-  public editsChanged: EventEmitter<boolean> = new EventEmitter();
-  public stats: EventEmitter<object>         = new EventEmitter();
+  edits: object[]                     = [];
+  editsChanged: EventEmitter<boolean> = new EventEmitter();
+  stats: EventEmitter<object>         = new EventEmitter();
 
-  public tempStepAdded: EventEmitter<boolean>        = new EventEmitter();
-  public tutorialStepCompleted: EventEmitter<string> = new EventEmitter();
-  public currentTutorial                             = null;
-  public currentTutorialStep                         = 0;
-  // public checkComplete: EventEmitter<boolean> = new EventEmitter();
+  tempStepAdded: EventEmitter<boolean>        = new EventEmitter();
+  tutorialStepCompleted: EventEmitter<string> = new EventEmitter();
+  currentTutorial                             = null;
+  currentTutorialStep                         = 0;
+  // checkComplete: EventEmitter<boolean> = new EventEmitter();
 
-  public completelyDownloadedRoutesIDB    = new Set();
-  public completelyDownloadedStopsIDB     = new Set();
-  public completelyDownloadedPlatformsIDB = new Set();
-  public queriedRoutesForMastersIDB       = new Set();
+  completelyDownloadedRoutesIDB    = new Set();
+  completelyDownloadedStopsIDB     = new Set();
+  completelyDownloadedPlatformsIDB = new Set();
+  queriedRoutesForMastersIDB       = new Set();
 
-  public nameErrorsObj: INameErrorObject[]        = [];
-  public refErrorsObj: IRefErrorObject[]          = [];
-  public wayErrorsObj: IWayErrorObject[]          = [];
-  public PTvErrorsObj: IPTvErrorObject[]          = [];
-  public ptPairErrorsObject: IPTPairErrorObject[] = [];
+  nameErrorsObj: INameErrorObject[]        = [];
+  refErrorsObj: IRefErrorObject[]          = [];
+  wayErrorsObj: IWayErrorObject[]          = [];
+  PTvErrorsObj: IPTvErrorObject[]          = [];
+  ptPairErrorsObject: IPTPairErrorObject[] = [];
 
-  public currentIndex                              = 0;
-  public refreshErrorObjects: EventEmitter<object> = new EventEmitter();
+  currentIndex                              = 0;
+  refreshErrorObjects: EventEmitter<object> = new EventEmitter();
 
   constructor() {
     this.currentElementsChange.subscribe((data) => {
@@ -72,7 +72,7 @@ export class StorageService {
   /**
    * Logs basic data statistics.
    */
-  public logStats(): void {
+  logStats(): void {
     console.log(
       'LOG (storage)',
       'Total # of nodes: ',
@@ -101,7 +101,7 @@ export class StorageService {
     this.stats.emit(stats);
   }
 
-  public clearRouteData(): void {
+  clearRouteData(): void {
     this.stopsForRoute = [];
     this.platformsForRoute = [];
     this.waysForRoute = [];
@@ -112,7 +112,7 @@ export class StorageService {
    * Sets user details after login.
    * @param userDetails
    */
-  public setUserData(userDetails: any): void {
+  setUserData(userDetails: any): void {
     console.log(userDetails);
     this.displayName = userDetails.displayName;
     this.imgHref = userDetails.img_href;
@@ -127,7 +127,7 @@ export class StorageService {
   /**
    * Synchronizes localStorage edits content with current memory object array.
    */
-  public syncEdits(): void {
+  syncEdits(): void {
     localStorage.setItem('edits', JSON.stringify(this.edits));
     this.editsChanged.emit(true);
   }
@@ -137,7 +137,7 @@ export class StorageService {
    * @param key
    * @param value
    */
-  public setSessionStorageItem(key: string, value: any): void {
+  setSessionStorageItem(key: string, value: any): void {
     sessionStorage.setItem(key, JSON.stringify(value));
   }
 
@@ -146,7 +146,7 @@ export class StorageService {
    * @param key
    * @returns {any}
    */
-  public getSessionStorageItem(key: string): any {
+  getSessionStorageItem(key: string): any {
     return JSON.parse(sessionStorage.getItem(key));
   }
 
@@ -155,7 +155,7 @@ export class StorageService {
    * @param key
    * @param value
    */
-  public pushToSessionStorageItem(key: string, value: object): void {
+  pushToSessionStorageItem(key: string, value: object): void {
     const previousValue: any = sessionStorage.getItem(key);
     sessionStorage.setItem(key, JSON.stringify(previousValue + value));
   }
@@ -165,7 +165,7 @@ export class StorageService {
    * @param key
    * @param value
    */
-  public setLocalStorageItem(key: string, value: any): void {
+  setLocalStorageItem(key: string, value: any): void {
     sessionStorage.setItem(key, JSON.stringify(value));
   }
 
@@ -174,7 +174,7 @@ export class StorageService {
    * @param key
    * @returns {any}
    */
-  public getLocalStorageItem(key: string): any {
+  getLocalStorageItem(key: string): any {
     return JSON.parse(localStorage.getItem(key));
   }
 
@@ -183,7 +183,7 @@ export class StorageService {
    * @param key
    * @param value
    */
-  public pushToLocalStorageItem(key: string, value: object): void {
+  pushToLocalStorageItem(key: string, value: object): void {
     const previousValue: string = localStorage.getItem(key);
     if (!previousValue) {
       localStorage.setItem(key, JSON.stringify(value));
@@ -197,14 +197,14 @@ export class StorageService {
   /**
    * Clears LocalStorage completely.
    */
-  public clearLocalStorage(): void {
+  clearLocalStorage(): void {
     localStorage.clear();
   }
 
   /**
    * Clears SessionStorage completely.
    */
-  public clearSessionStorage(): void {
+  clearSessionStorage(): void {
     sessionStorage.clear();
   }
 
@@ -212,7 +212,7 @@ export class StorageService {
    * Retrieves name of currently logged user.
    * @returns {string|string|null}
    */
-  public getDisplayName(): string {
+  getDisplayName(): string {
     return localStorage.getItem('display_name');
   }
 
@@ -220,7 +220,7 @@ export class StorageService {
    * Retrieves imgHref of currently logged user.
    * @returns {string}
    */
-  public getImgHref(): string {
+  getImgHref(): string {
     return localStorage.getItem('img_href');
   }
 
@@ -229,7 +229,7 @@ export class StorageService {
   //  * @param key
   //  * @param value
   //  */
-  // public overwriteLastLocalStorageEdit(key: string, value: object): void {
+  // overwriteLastLocalStorageEdit(key: string, value: object): void {
   //     let edits: any = JSON.parse(localStorage.getItem(key));
   //     edits[edits.length - 1] = value;
   //     localStorage.setItem(key, JSON.stringify(edits));

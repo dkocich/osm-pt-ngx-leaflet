@@ -23,14 +23,14 @@ export class AppActions {
   static readonly TOGGLE_TUTORIAL_MODE = 'TOGGLE_TUTORIAL_MODE';
 
   // basic sync action
-  public actToggleEditing = (): Action => {
+  actToggleEditing = (): Action => {
     return this.ngRedux.dispatch({
       type: AppActions.TOGGLE_EDITING,
     });
   }
 
   // basic sync action
-  public actSelectElement = (args): Action => {
+  actSelectElement = (args): Action => {
     const { element } = args;
     return this.ngRedux.dispatch({
       type: AppActions.SELECT_ELEMENT,
@@ -39,32 +39,32 @@ export class AppActions {
   }
 
   // basic sync action
-  public actSetAdvancedExpMode = (payload: boolean): Action => {
+  actSetAdvancedExpMode = (payload: boolean): Action => {
     return this.ngRedux.dispatch({ type: AppActions.SET_ADVANCED_EXP_MODE, payload });
   }
 
   // basic sync action
-  public actSetGoodConnectMode = (payload: boolean): Action => {
+  actSetGoodConnectMode = (payload: boolean): Action => {
     return this.ngRedux.dispatch({ type: AppActions.SET_GOOD_CONNECT_MODE, payload });
   }
 
-  public actSetErrorCorrectionMode = (payload: ISuggestionsBrowserOptions): Action => {
+  actSetErrorCorrectionMode = (payload: ISuggestionsBrowserOptions): Action => {
     return this.ngRedux.dispatch({ type: AppActions.SET_ERROR_CORRECTION_MODE, payload });
   }
 
-  public actSetBeginnerView = (payload: string): Action => {
+  actSetBeginnerView = (payload: string): Action => {
     return this.ngRedux.dispatch({ type: AppActions.SET_BEGINNER_VIEW, payload });
   }
 
-  public actToggleSwitchMode = (payload: boolean): Action => {
+  actToggleSwitchMode = (payload: boolean): Action => {
     return this.ngRedux.dispatch({ type: AppActions.TOGGLE_SWITCH_MODE, payload });
   }
 
-  public actSetWizardMode = (payload: string): Action => {
+  actSetWizardMode = (payload: string): Action => {
     return this.ngRedux.dispatch({ type: AppActions.SET_WIZARD_MODE, payload });
   }
 
-  public actToggleTutorialMode = (payload: boolean): Action => {
+  actToggleTutorialMode = (payload: boolean): Action => {
     return this.ngRedux.dispatch({ type: AppActions.TOGGLE_TUTORIAL_MODE, payload });
   }
 }

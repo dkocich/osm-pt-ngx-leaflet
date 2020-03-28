@@ -31,15 +31,15 @@ import { IAppState } from '../../store/model';
   templateUrl: './tag-browser.component.html',
 })
 export class TagBrowserComponent implements OnInit, OnDestroy {
-  @Input() public tagKey: string = '';
-  @Input() public tagValue: string = '';
-  public currentElement: IOsmElement =  this.storageSrv.currentElement;
-  public expectedKeys = PtTags.expectedKeys;
-  public expectedValues = PtTags.expectedValues;
-  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  @Input() tagKey: string = '';
+  @Input() tagValue: string = '';
+  currentElement: IOsmElement =  this.storageSrv.currentElement;
+  expectedKeys = PtTags.expectedKeys;
+  expectedValues = PtTags.expectedValues;
+  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
+  @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
   @Input() tagBrowserOptions: ITagBrowserOptions;
-  public unfilledKeys = [];
+  unfilledKeys = [];
   private advancedExpModeSubscription: any;
   private advancedExpMode: boolean;
 
@@ -54,7 +54,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
       .subscribe((data) => this.advancedExpMode = data);
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
       if (data === 'tag') {
         console.log(

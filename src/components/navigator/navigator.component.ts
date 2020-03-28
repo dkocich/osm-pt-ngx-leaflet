@@ -15,7 +15,7 @@ import { MapService } from '../../services/map.service';
   templateUrl: './navigator.component.html',
 })
 export class NavigatorComponent implements OnInit {
-  public address: string;
+  address: string;
 
   private map: Map;
 
@@ -26,13 +26,13 @@ export class NavigatorComponent implements OnInit {
     this.address = '';
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.mapSrv.disableMouseEvent('goto');
     this.mapSrv.disableMouseEvent('place-input');
     this.map = this.mapSrv.map;
   }
 
-  public goto(): any {
+  goto(): any {
     if (!this.address) {
       return;
     }

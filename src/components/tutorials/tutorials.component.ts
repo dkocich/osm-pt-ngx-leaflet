@@ -20,20 +20,20 @@ import { TutorialService } from '../../services/tutorial.service';
   templateUrl: './tutorials.component.html',
 })
 export class TutorialsComponent implements OnInit {
-  public tutorialsData = null;
-  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  tutorialsData = null;
+  @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
   constructor(private ngRedux: NgRedux<IAppState>,
               private tutorialSrv: TutorialService,
               public appActions: AppActions,
   ) {
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.tutorialSrv.intro = introJs();
     this.tutorialsData = data;
   }
 
-  public startTutorial(tutorialTitle: string, expertMode: string): void {
+  startTutorial(tutorialTitle: string, expertMode: string): void {
     this.appActions.actToggleTutorialMode(false);
     this.appActions.actSetAdvancedExpMode(false);
     if (this.ngRedux.getState()['app']['editing']) {
@@ -42,7 +42,7 @@ export class TutorialsComponent implements OnInit {
     this.tutorialSrv.startTutorial(tutorialTitle, expertMode);
   }
 
-  public quitTutorialMode(): void {
+  quitTutorialMode(): void {
     this.appActions.actToggleTutorialMode(null);
   }
 }

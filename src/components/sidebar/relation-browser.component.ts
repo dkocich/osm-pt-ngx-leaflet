@@ -26,9 +26,9 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 })
 export class RelationBrowserComponent implements OnInit {
   currentElement: IOsmElement | IPtRouteMasterNew;
-  public listOfVariants = this.storageSrv.listOfVariants;
-  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-  public listOfMasters = this.storageSrv.listOfMasters;
+  listOfVariants = this.storageSrv.listOfVariants;
+  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
+  listOfMasters = this.storageSrv.listOfMasters;
 
   constructor(
     private editSrv: EditService,
@@ -46,7 +46,7 @@ export class RelationBrowserComponent implements OnInit {
     }, undefined, 'Create a new route master'));
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
       if (data === 'tag') {
         console.log('LOG (relation-browser) Current selected element changed - ', data);
@@ -78,11 +78,11 @@ export class RelationBrowserComponent implements OnInit {
    * @param item
    * @returns {number}
    */
-  public trackByFn(index: number, item: any): number {
+  trackByFn(index: number, item: any): number {
     return item.id;
   }
 
-  public hideMasterModal(): void {
+  hideMasterModal(): void {
     this.masterModal.hide();
   }
 
@@ -124,9 +124,9 @@ export class RelationBrowserComponent implements OnInit {
     );
   }
 
-  @ViewChild('masterModal') public masterModal: ModalDirective;
+  @ViewChild('masterModal') masterModal: ModalDirective;
 
-  public showMasterModal(): void {
+  showMasterModal(): void {
     this.masterModal.show();
     // this.mapSrv.disableMouseEvent("modalDownload");
   }

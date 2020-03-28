@@ -25,7 +25,7 @@ export class AuthComponent {
     this.imgHref = this.storageSrv.getImgHref();
   }
 
-  public isAuthenticated = (): boolean => {
+  isAuthenticated = (): boolean => {
     return this.authSrv.oauth.authenticated();
   }
 

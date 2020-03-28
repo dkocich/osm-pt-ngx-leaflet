@@ -11,7 +11,7 @@ export class AuthService {
     singlepage: false,
     url: ConfService.baseOsmUrl,
   };
-  public oauth: any = this.osmAuth(this.osmAuthOptions);
+  oauth: any = this.osmAuth(this.osmAuthOptions);
   constructor() {
     //
   }

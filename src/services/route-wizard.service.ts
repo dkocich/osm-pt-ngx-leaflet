@@ -10,26 +10,26 @@ import * as L from 'leaflet';
 
 @Injectable()
 export class RouteWizardService {
-  public map;
-  public routes = [];
-  public ptLayerModal;
-  public osmtogeojson: any = require('osmtogeojson');
-  public modalMapElementsMap = new Map();
+  map;
+  routes = [];
+  ptLayerModal;
+  osmtogeojson: any = require('osmtogeojson');
+  modalMapElementsMap = new Map();
 
-  public autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
-  public routesReceived: EventEmitter<any> =  new EventEmitter();
-  public refreshAvailableConnectivity: EventEmitter<any> =  new EventEmitter();
+  autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
+  routesReceived: EventEmitter<any> =  new EventEmitter();
+  refreshAvailableConnectivity: EventEmitter<any> =  new EventEmitter();
 
-  public savedMultipleNodeDataResponses = [];
-  public savedContinuousQueryResponses = [];
+  savedMultipleNodeDataResponses = [];
+  savedContinuousQueryResponses = [];
 
-  public elementsRenderedModalMap = new Set();
-  public nodesFullyDownloaded = new Set();
+  elementsRenderedModalMap = new Set();
+  nodesFullyDownloaded = new Set();
 
-  public routesMap: Map<string, any[]> = new Map();
-  public membersHighlightLayerGroup    = L.layerGroup();
+  routesMap: Map<string, any[]> = new Map();
+  membersHighlightLayerGroup    = L.layerGroup();
 
-  public modalRefRouteWiz: BsModalRef;
+  modalRefRouteWiz: BsModalRef;
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,
               private modalService: BsModalService,
@@ -54,7 +54,7 @@ export class RouteWizardService {
    * Fired when modal has rendered
    * @returns {void}
    */
-  public onShownModal(): void {
+  onShownModal(): void {
     if (this.map) {
       this.map.invalidateSize();
     }
@@ -64,7 +64,7 @@ export class RouteWizardService {
    * Renders data on modal map which was already present on the main map
    * @returns {void}
    */
-  public renderAlreadyDownloadedData(): void {
+  renderAlreadyDownloadedData(): void {
     let obj: any = {};
     let elements = [];
     this.storageSrv.elementsMap.forEach((element) => {
@@ -80,7 +80,7 @@ export class RouteWizardService {
    * all data downloaded for modal map is processed for main application
    * @returns {void}
    */
-  public processAllDownloadedOnMainMap(): void {
+  processAllDownloadedOnMainMap(): void {
     for (let res of this.savedContinuousQueryResponses) {
       this.processSrv.processResponse(res);
     }
@@ -94,7 +94,7 @@ export class RouteWizardService {
    * @param transformedGeoJSON
    * @param {Map} map
    */
-  public renderTransformedGeojsonDataForRouteWizard(transformedGeoJSON: any, map: L.Map): void {
+  renderTransformedGeojsonDataForRouteWizard(transformedGeoJSON: any, map: L.Map): void {
     this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
       filter: (feature) => {
         if (!this.elementsRenderedModalMap.has(feature.id) &&
@@ -124,7 +124,7 @@ export class RouteWizardService {
    * @param layer
    * @returns {void}
    */
-  public enableClickForRouteWizardMap(feature: any, layer: any): void {
+  enableClickForRouteWizardMap(feature: any, layer: any): void {
     layer.on('click', () => {
       this.handleRouteWizardMarkerClick(feature);
     });
@@ -145,7 +145,7 @@ export class RouteWizardService {
    * @param stopsInBoundsIDs
    * @returns {any[]}
    */
-  public getRouteRefsFromNodes(stopsInBoundsIDs: any): any[] {
+  getRouteRefsFromNodes(stopsInBoundsIDs: any): any[] {
     let withRouteRefTag = [];
     let ref_map;
     let refValues       = [];
@@ -169,7 +169,7 @@ export class RouteWizardService {
    * @param downloadedResponse
    * @returns {void}
    */
-  public findMissingRoutes(downloadedResponse: any): void {
+  findMissingRoutes(downloadedResponse: any): void {
     let stopsInBounds       = this.mapSrv.findStopsInBounds(this.map, this.modalMapElementsMap);
     let nodeRefs            = this.getRouteRefsFromNodes(stopsInBounds);
     let refsOfRoutes: any[] = [];
@@ -286,7 +286,7 @@ export class RouteWizardService {
    * @param {any[]} stops
    * @returns {any}
    */
-  public static getIndividualRouteRefs(stops: any[]): any {
+  static getIndividualRouteRefs(stops: any[]): any {
     let refs = [];
     for (let stop of stops) {
       refs.push(stop.tags.route_ref);
@@ -312,7 +312,7 @@ export class RouteWizardService {
    * @param members
    * @param adjustZoom
    */
-  public highlightRoute(members: any, adjustZoom: boolean): void {
+  highlightRoute(members: any, adjustZoom: boolean): void {
     this.mapSrv.clearHighlight(this.map);
     let routeMembers = members;
     RouteWizardService.assignRolesToMembers(routeMembers);
@@ -333,7 +333,7 @@ export class RouteWizardService {
    * @param members
    * @returns {any}
    */
-  public static assignRolesToMembers(members: any): any {
+  static assignRolesToMembers(members: any): any {
     let probableRole: string = '';
     for (let member of members) {
       switch (member.tags.public_transport) {
@@ -369,7 +369,7 @@ export class RouteWizardService {
    * @param members
    * @returns {any}
    */
-  public static checkMemberCount(members: any): any {
+  static checkMemberCount(members: any): any {
     return members.length !== 1;
   }
 
@@ -377,7 +377,7 @@ export class RouteWizardService {
    * Handles highlighting of first route on starting of Step
    * @param connectObj
    */
-  public highlightFirstRoute(connectObj: any): void {
+  highlightFirstRoute(connectObj: any): void {
     let members  = this.routesMap.get(this.routesMap.keys().next().value);
     let countObj = RouteWizardService.countNodeType(members);
     this.useAndSetAvailableConnectivity(countObj);
@@ -389,7 +389,7 @@ export class RouteWizardService {
    * @param members
    * @returns {any}
    */
-  public static countNodeType(members: any): any {
+  static countNodeType(members: any): any {
     let stopsCount     = 0;
     let platformsCount = 0;
     for (let member of members) {
@@ -409,7 +409,7 @@ export class RouteWizardService {
    * @param countObj
    * @returns {any}
    */
-  public useAndSetAvailableConnectivity(countObj: any): any {
+  useAndSetAvailableConnectivity(countObj: any): any {
     let connectObj = this.resetAvailableConnectivity(countObj);
     if (connectObj.canStopsConnect) {
       this.setHighlightType('Stops', connectObj);
@@ -439,7 +439,7 @@ export class RouteWizardService {
    * @param route
    * @returns {any}
    */
-  public static filterEmptyTags(route: any): any {
+  static filterEmptyTags(route: any): any {
     let tags = route.tags;
     for (let property in tags) {
       if (tags.hasOwnProperty(property)) {
@@ -456,7 +456,7 @@ export class RouteWizardService {
    * @param {any[]} members
    * @returns {void}
    */
-  public highlightMembers(members: any[]): void {
+  highlightMembers(members: any[]): void {
     for (let member of members) {
       const latlng = { lat: member.lat, lng: member.lon };
       let circle   = L.circleMarker(latlng, {
@@ -473,7 +473,7 @@ export class RouteWizardService {
    * Clears member's highlight
    * @returns {any}
    */
-  public clearMembersHighlight(): void {
+  clearMembersHighlight(): void {
     this.membersHighlightLayerGroup.clearLayers();
   }
 
@@ -482,7 +482,7 @@ export class RouteWizardService {
    * @param toAddNodes
    * @returns {any}
    */
-  public static formRelMembers(toAddNodes: any): any {
+  static formRelMembers(toAddNodes: any): any {
     let relMembers = [];
     for (let node of toAddNodes) {
       relMembers.push({
@@ -502,7 +502,7 @@ export class RouteWizardService {
    * @param newRoute
    * @returns {any}
    */
-  public static modifiesTags(action: string, key: any, event: any, newRoute: any): any {
+  static modifiesTags(action: string, key: any, event: any, newRoute: any): any {
     switch (action) {
       case 'change tag':
         newRoute.tags[key] = event.target.value;
@@ -540,7 +540,7 @@ export class RouteWizardService {
    * Filters routes with one member
    * @param routesMap
    */
-  public filterRoutesMap(routesMap: any): void {
+  filterRoutesMap(routesMap: any): void {
     routesMap.forEach((value, key) => {
       if (RouteWizardService.checkMemberCount(value)) {
         this.routesMap.set(key, value);
@@ -554,7 +554,7 @@ export class RouteWizardService {
    * @param connectObj
    * @returns {void}
    */
-  public viewSuggestedRoute(ref: any, connectObj: any): void {
+  viewSuggestedRoute(ref: any, connectObj: any): void {
     let members = this.routesMap.get(ref);
     let countObj = RouteWizardService.countNodeType(members);
     this.useAndSetAvailableConnectivity(countObj);
@@ -567,7 +567,7 @@ export class RouteWizardService {
    * @param addedNewRouteMembers
    * @returns {any}
    */
-  public removeMember(toRemoveMemberID: string, addedNewRouteMembers: any): any {
+  removeMember(toRemoveMemberID: string, addedNewRouteMembers: any): any {
     let members = [];
     let index;
     for (let member of addedNewRouteMembers) {
@@ -596,7 +596,7 @@ export class RouteWizardService {
    * @param addedNewRouteMembers
    * @returns {any}
    */
-  public addNewMemberToRoute(newMember: any, addedNewRouteMembers: any): any {
+  addNewMemberToRoute(newMember: any, addedNewRouteMembers: any): any {
     let members = [];
     members.push(newMember);
     addedNewRouteMembers = addedNewRouteMembers.concat(members);
@@ -616,7 +616,7 @@ export class RouteWizardService {
    * @param connectivityObj
    * @returns {boolean}
    */
-  public setHighlightType(type: string, connectivityObj: any): boolean {
+  setHighlightType(type: string, connectivityObj: any): boolean {
     switch (type) {
       case 'Stops':
         if (connectivityObj.canStopsConnect) {
@@ -642,7 +642,7 @@ export class RouteWizardService {
    * @param addedNewRouteMembers
    * @returns {void}
    */
-  public showConnectivity(type: string, connectivityObj: any, addedNewRouteMembers: any): void {
+  showConnectivity(type: string, connectivityObj: any, addedNewRouteMembers: any): void {
     this.mapSrv.clearHighlight(this.map);
     let countObj = RouteWizardService.countNodeType(addedNewRouteMembers);
     this.resetAvailableConnectivity(countObj);
@@ -655,7 +655,7 @@ export class RouteWizardService {
    * Fetches ref of relations already downloaded
    * @returns {any}
    */
-  public getFromAlreadyDownloadedRoutes(): any {
+  getFromAlreadyDownloadedRoutes(): any {
     let refsOfRoutes = [];
     this.modalMapElementsMap.forEach((element) => {
       if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {

@@ -27,19 +27,19 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
   templateUrl: './route-browser.component.html',
 })
 export class RouteBrowserComponent implements OnInit, OnDestroy {
-  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
 
-  public currentElement;
-  public listOfMasters: object[] = this.storageSrv.listOfMasters;
-  public listOfRelations: object[] = this.storageSrv.listOfRelations;
-  public listOfRelationsForStop: object[] = this.storageSrv.listOfRelationsForStop;
+  currentElement;
+  listOfMasters: object[] = this.storageSrv.listOfMasters;
+  listOfRelations: object[] = this.storageSrv.listOfRelations;
+  listOfRelationsForStop: object[] = this.storageSrv.listOfRelationsForStop;
 
-  public isRequesting: boolean;
-  public filteredView: boolean;
+  isRequesting: boolean;
+  filteredView: boolean;
   private idsHaveMaster = new Set();
-  public membersEditing: boolean = false;
+  membersEditing: boolean = false;
   @Input() routeBrowserOptions: IRouteBrowserOptions;
-  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
   private advancedExpModeSubscription: any;
   private advancedExpMode: boolean;
   constructor(
@@ -67,7 +67,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     }, undefined, 'Toggle editing members of the selected route')]);
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     if (!this.routeBrowserOptions.toggleFilteredView) {
       this.filteredView = true;
     }

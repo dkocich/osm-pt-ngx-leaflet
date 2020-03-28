@@ -22,11 +22,11 @@ import { select } from '@angular-redux/store';
   templateUrl: './stop-browser.component.html',
 })
 export class StopBrowserComponent implements OnInit {
-  public listOfStopsForRoute: IPtStop[] = this.storageSrv.listOfStopsForRoute;
-  public currentElement: any;
-  public listOfStops: IPtStop[] = this.storageSrv.listOfStops;
-  public filteredView: boolean;
-  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  listOfStopsForRoute: IPtStop[] = this.storageSrv.listOfStopsForRoute;
+  currentElement: any;
+  listOfStops: IPtStop[] = this.storageSrv.listOfStops;
+  filteredView: boolean;
+  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
 
   constructor(
     private dragulaSrv: DragulaService,
@@ -40,7 +40,7 @@ export class StopBrowserComponent implements OnInit {
     });
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.processSrv.showStopsForRoute$.subscribe((data) => {
       this.filteredView = data;
     });
@@ -62,7 +62,7 @@ export class StopBrowserComponent implements OnInit {
     });
   }
 
-  public reorderingEnabled(): boolean {
+  reorderingEnabled(): boolean {
     if (this.currentElement) {
       return this.currentElement.type === 'relation' && this.filteredView;
     } else {

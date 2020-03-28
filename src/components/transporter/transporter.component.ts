@@ -24,11 +24,11 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
   templateUrl: './transporter.component.html',
 })
 export class TransporterComponent implements OnInit {
-  @ViewChild('downloadModal') public downloadModal: ModalDirective;
-  @ViewChild('uploadModal') public uploadModal: ModalDirective;
-  @select(['app', 'tutorialMode']) public readonly tutorialMode$: Observable<string>;
+  @ViewChild('downloadModal') downloadModal: ModalDirective;
+  @ViewChild('uploadModal') uploadModal: ModalDirective;
+  @select(['app', 'tutorialMode']) readonly tutorialMode$: Observable<string>;
 
-  public favoriteQueries = [
+  favoriteQueries = [
     {
       id: 1,
       raw: '%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3B%0A(%0A%20%20node%5B%22route%22%3D%22bus%22' +
@@ -56,13 +56,13 @@ export class TransporterComponent implements OnInit {
       short: 'public_transport=*',
     },
   ];
-  public queryShort = this.favoriteQueries[0].short;
-  public queryRaw = decodeURIComponent(this.favoriteQueries[0].raw);
-  public editsSummary;
+  queryShort = this.favoriteQueries[0].short;
+  queryRaw = decodeURIComponent(this.favoriteQueries[0].raw);
+  editsSummary;
 
-  public comment: string = '';
+  comment: string = '';
 
-  public source: string = '';
+  source: string = '';
   constructor(
     private authSrv: AuthService,
     private mapSrv: MapService,
@@ -77,7 +77,7 @@ export class TransporterComponent implements OnInit {
       }, undefined, 'Upload data to OSM')]);
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.mapSrv.disableMouseEvent('download-data');
     this.mapSrv.disableMouseEvent('upload-data');
     this.storageSrv.editsChanged.subscribe(
@@ -92,52 +92,52 @@ export class TransporterComponent implements OnInit {
     );
   }
 
-  public showDownloadModal(): void {
+  showDownloadModal(): void {
     this.downloadModal.show();
     this.mapSrv.disableMouseEvent('modalDownload');
   }
 
-  public hideDownloadModal(): void {
+  hideDownloadModal(): void {
     this.downloadModal.hide();
   }
 
-  public showUploadModal(): void {
+  showUploadModal(): void {
     this.uploadModal.show();
     this.mapSrv.disableMouseEvent('modalUpload');
   }
 
-  public hideUploadModal(): void {
+  hideUploadModal(): void {
     this.uploadModal.hide();
   }
 
-  public isAuthenticated(): boolean {
+  isAuthenticated(): boolean {
     return this.authSrv.oauth.authenticated();
   }
 
-  public hasEdits(): boolean {
+  hasEdits(): boolean {
     return this.storageSrv.edits.length > 0;
   }
 
-  public requestData(requestBody: string): void {
+  requestData(requestBody: string): void {
     this.overpassSrv.requestOverpassData(requestBody);
     this.hideDownloadModal();
   }
 
-  public verifyUpload(): void {
+  verifyUpload(): void {
     this.overpassSrv.uploadData(
       { source: 'test upload source', comment: 'test upload comment' },
       true,
     );
   }
 
-  public uploadData(): void {
+  uploadData(): void {
     this.overpassSrv.uploadData({
       comment: this.comment,
       source: this.source,
     });
   }
 
-  public downloading(): boolean {
+  downloading(): boolean {
     return true;
   }
 

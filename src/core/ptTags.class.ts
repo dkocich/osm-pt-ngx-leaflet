@@ -40,7 +40,7 @@ export interface IPtTags {
 }
 
 export class PtTags {
-  public static readonly expectedKeys: expectedKeys[] = [
+  static readonly expectedKeys: expectedKeys[] = [
     'ascent',
     'bench',
     'building',
@@ -72,7 +72,7 @@ export class PtTags {
     'uic_ref',
   ];
 
-  public static readonly expectedValues: expectedValues[] = [
+  static readonly expectedValues: expectedValues[] = [
     'aerialway',
     'backward',
     'bus',

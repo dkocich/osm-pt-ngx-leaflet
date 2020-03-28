@@ -33,16 +33,16 @@ import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
-  public spinkit = Spinkit;
-  public advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
+  spinkit = Spinkit;
+  advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
 
-  @ViewChild(ToolbarComponent) public toolbarComponent: ToolbarComponent;
-  @ViewChild(AuthComponent) public authComponent: AuthComponent;
-  @ViewChild('helpModal') public helpModal: ModalDirective;
+  @ViewChild(ToolbarComponent) toolbarComponent: ToolbarComponent;
+  @ViewChild(AuthComponent) authComponent: AuthComponent;
+  @ViewChild('helpModal') helpModal: ModalDirective;
 
-  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
-  @select(['app', 'tutorialMode']) public readonly tutorialMode$: Observable<boolean>;
+  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
+  @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
+  @select(['app', 'tutorialMode']) readonly tutorialMode$: Observable<boolean>;
   private startEventProcessing = new Subject<L.LeafletEvent>();
 
   constructor(
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public ngOnInit(): any {
+  ngOnInit(): any {
     this.dbSrv.deleteExpiredDataIDB();
     this.dbSrv.deleteExpiredPTDataIDB().then(() => {
       console.log('LOG (app component) Successfully checked and deleted old items from IDB');
@@ -108,7 +108,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public hideHelpModal(): void {
+  hideHelpModal(): void {
     this.helpModal.hide();
   }
 
@@ -116,11 +116,11 @@ export class AppComponent implements OnInit {
     this.helpModal.show();
   }
 
-  public startTutorials(): void {
+  startTutorials(): void {
     this.appActions.actToggleTutorialMode(true);
   }
 
-  public isAuthenticated(): void {
+  isAuthenticated(): void {
     return this.authSrv.oauth.authenticated();
   }
 }

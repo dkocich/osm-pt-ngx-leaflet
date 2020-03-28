@@ -26,28 +26,28 @@ import { IAppState } from '../../store/model';
 export class BeginnerComponent {
   @ViewChild('accordion1') a1: ElementRef
 
-  @select(['app', 'beginnerView']) public readonly beginnerView$: Observable<string>;
-  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<ISuggestionsBrowserOptions>;
-  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-  public expectedKeys                               = PtTags.expectedKeys;
-  public routeBrowserOptions: IRouteBrowserOptions  = {
+  @select(['app', 'beginnerView']) readonly beginnerView$: Observable<string>;
+  @select(['app', 'errorCorrectionMode']) readonly errorCorrectionMode$: Observable<ISuggestionsBrowserOptions>;
+  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
+  expectedKeys                               = PtTags.expectedKeys;
+  routeBrowserOptions: IRouteBrowserOptions  = {
     createRoute       : false,
     changeMembers     : false,
     membersEditing    : false,
     toggleFilteredView: false,
   };
-  public stopTagBrowserOptions: ITagBrowserOptions  = {
+  stopTagBrowserOptions: ITagBrowserOptions  = {
     limitedKeys     : true,
     allowedKeys     : this.expectedKeys.filter(this.filterStopKeysForBeginner),
     makeKeysReadOnly: true,
   };
-  public routeTagBrowserOptions: ITagBrowserOptions = {
+  routeTagBrowserOptions: ITagBrowserOptions = {
     limitedKeys     : true,
     allowedKeys     : this.expectedKeys.filter(this.filterRouteKeysForBeginner),
     makeKeysReadOnly: true,
   };
 
-  public suggestionsBrowserOptions: ISuggestionsBrowserOptions = {
+  suggestionsBrowserOptions: ISuggestionsBrowserOptions = {
     nameSuggestions  : {
       found          : false,
       startCorrection: false,
@@ -64,10 +64,12 @@ export class BeginnerComponent {
     },
   };
 
-  constructor(private appActions: AppActions,
-              private processSrv: ProcessService,
-              private storageSrv: StorageService,
-              private ngRedux: NgRedux<IAppState>) {
+  constructor(
+    private appActions: AppActions,
+    private processSrv: ProcessService,
+    private storageSrv: StorageService,
+    private ngRedux: NgRedux<IAppState>
+  ) {
   }
 
   /**
@@ -91,7 +93,7 @@ export class BeginnerComponent {
   /**
    * Refreshes view for back button functionality
    */
-  public back(): void {
+  back(): void {
     this.appActions.actSetBeginnerView('stop');
     this.storageSrv.currentElement = this.storageSrv.selectedStopBeginnerMode;
     this.processSrv.refreshSidebarView('tag');
@@ -104,7 +106,7 @@ export class BeginnerComponent {
    * @param {string} windowName
    * @returns {boolean}
    */
-  public shouldView(windowName: string): boolean {
+  shouldView(windowName: string): boolean {
 
     let beginnerView = this.ngRedux.getState()['app']['beginnerView'];
     let editing      = this.ngRedux.getState()['app']['editing'];

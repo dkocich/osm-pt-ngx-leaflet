@@ -23,17 +23,17 @@ import { IPtStop } from '../core/ptStop.interface';
 @Injectable()
 export class ErrorHighlightService {
   modalRef: BsModalRef;
-  public nameErrorsObj: INameErrorObject[]     = [];
-  public refErrorsObj: IRefErrorObject[]       = [];
-  public wayErrorsObj: IWayErrorObject[]       = [];
-  public PTvErrorsObj: IPTvErrorObject[]       = [];
-  public ptPairErrorsObj: IPTPairErrorObject[] = [];
+  nameErrorsObj: INameErrorObject[]     = [];
+  refErrorsObj: IRefErrorObject[]       = [];
+  wayErrorsObj: IWayErrorObject[]       = [];
+  PTvErrorsObj: IPTvErrorObject[]       = [];
+  ptPairErrorsObj: IPTPairErrorObject[] = [];
 
-  public currentIndex = 0;
-  public currentMode: 'missing name tags' | 'pt-pair' | 'missing refs' | 'way as parent' | 'PTv correction';
+  currentIndex = 0;
+  currentMode: 'missing name tags' | 'pt-pair' | 'missing refs' | 'way as parent' | 'PTv correction';
 
-  public errorCorrectionMode: ISuggestionsBrowserOptions;
-  public errorCorrectionModeSubscription;
+  errorCorrectionMode: ISuggestionsBrowserOptions;
+  errorCorrectionModeSubscription;
 
   private circleHighlight: L.Circle = null;
   private clickEventFunction = null;
@@ -75,7 +75,7 @@ export class ErrorHighlightService {
    * @param {string} errorName
    * @returns {void}
    */
-  public startCorrection(errorName: 'missing name tags' | 'missing refs' | 'way as parent' | 'PTv correction' | 'pt-pair'): void {
+  startCorrection(errorName: 'missing name tags' | 'missing refs' | 'way as parent' | 'PTv correction' | 'pt-pair'): void {
     this.storageSrv.currentIndex = 0;
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: errorName });
     this.currentMode = errorName;
@@ -197,7 +197,7 @@ export class ErrorHighlightService {
    * Opens up modal
    * @returns {void}
    */
-  public openModalWithComponentForName(errorObject: INameErrorObject): void {
+  openModalWithComponentForName(errorObject: INameErrorObject): void {
     const featureId = Number(errorObject.stop.id);
     const element   = this.processSrv.getElementById(featureId, this.storageSrv.elementsMap);
     const latlng = { lat: element.lat, lng: element.lon };
@@ -217,7 +217,7 @@ export class ErrorHighlightService {
    * Opens up modal for ref
    * @returns {void}
    */
-  public openModalWithComponentForRef(errorObject: IRefErrorObject): void {
+  openModalWithComponentForRef(errorObject: IRefErrorObject): void {
     const featureId = Number(errorObject.stop.id);
     const element   = this.processSrv.getElementById(featureId, this.storageSrv.elementsMap);
     const latlng = { lat: element.lat, lng: element.lon };
@@ -259,7 +259,7 @@ export class ErrorHighlightService {
    * Opens modal for way as parent error
    * @param {IWayErrorObject} errorObject
    */
-  public openModalWithComponentForWay(errorObject: IWayErrorObject): void {
+  openModalWithComponentForWay(errorObject: IWayErrorObject): void {
     if (errorObject.corrected === 'false') {
       let initialState;
       initialState = {
@@ -276,7 +276,7 @@ export class ErrorHighlightService {
    * Opens modal for PTv errors
    * @param {IWayErrorObject} errorObject
    */
-  public openModalWithComponentForPTv(errorObject: IWayErrorObject): void {
+  openModalWithComponentForPTv(errorObject: IWayErrorObject): void {
     if (errorObject.corrected === 'false') {
       let initialState;
       initialState = {
@@ -291,7 +291,7 @@ export class ErrorHighlightService {
   /**
    * Counts and forms name error objects
    */
-  public countNameErrors(): void {
+  countNameErrors(): void {
     this.storageSrv.currentIndex = 0;
     this.nameErrorsObj = [];
     this.storageSrv.nameErrorsObj = [];
@@ -312,7 +312,7 @@ export class ErrorHighlightService {
   /**
    * Counts and forms ref error objects
    */
-  public countRefErrors(): void {
+  countRefErrors(): void {
     this.storageSrv.currentIndex = 0;
     this.refErrorsObj = [];
     this.storageSrv.refErrorsObj = [];
@@ -352,7 +352,7 @@ export class ErrorHighlightService {
    * Counts way errors
    * @returns {void}
    */
-  public countWayErrors(): void {
+  countWayErrors(): void {
     this.storageSrv.currentIndex = 0;
     this.wayErrorsObj = [];
     this.storageSrv.wayErrorsObj = [];
@@ -378,7 +378,7 @@ export class ErrorHighlightService {
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'way as parent' });
   }
 
-  public countPTvErrors(): void {
+  countPTvErrors(): void {
     this.storageSrv.currentIndex = 0;
     this.PTvErrorsObj = [];
     this.storageSrv.PTvErrorsObj = [];
@@ -399,7 +399,7 @@ export class ErrorHighlightService {
    * Checks whether on Mobile/Desktop
    * @returns {boolean}
    */
-  public isMobileDevice(): boolean {
+  isMobileDevice(): boolean {
     let md = new MobileDetect(window.navigator.userAgent);
     return !!md.mobile();
   }
@@ -553,7 +553,7 @@ export class ErrorHighlightService {
   /**
    * Quits specific correction mode
    */
-  public quit(): void {
+  quit(): void {
     let errorCorrectionMode: ISuggestionsBrowserOptions = this.ngRedux.getState()['app']['errorCorrectionMode'];
     if (errorCorrectionMode) {
       if (errorCorrectionMode.refSuggestions && errorCorrectionMode.refSuggestions.startCorrection) {
@@ -643,7 +643,7 @@ export class ErrorHighlightService {
    * @param latlngm
    * @returns {any[]}
    */
-  public getNearbyNodeNames(latlngm: any): any[] {
+  getNearbyNodeNames(latlngm: any): any[] {
 
     let inRangeNameArray = [];
     this.mapSrv.map.eachLayer((layer) => {
@@ -664,7 +664,7 @@ export class ErrorHighlightService {
    * @param missingRefRels
    * @returns {any[]}
    */
-  public getNearbyRoutesSuggestions(latlngm: any, missingRefRels: any): any[] {
+  getNearbyRoutesSuggestions(latlngm: any, missingRefRels: any): any[] {
 
     let inRange = [];
     let nearbyRels = [];
@@ -708,7 +708,7 @@ export class ErrorHighlightService {
    * @param {any[]} array
    * @returns {any}
    */
-  public getMostUsedName(array: any[]): any {
+  getMostUsedName(array: any[]): any {
     if (array.length === 0) {
       return null;
     }
@@ -743,7 +743,7 @@ export class ErrorHighlightService {
    * @param errorObj
    * @returns {void}
    */
-  public addSinglePopUp(errorObj: INameErrorObject | IRefErrorObject | IWayErrorObject | IPTvErrorObject): void {
+  addSinglePopUp(errorObj: INameErrorObject | IRefErrorObject | IWayErrorObject | IPTvErrorObject): void {
     let stop = errorObj['stop'];
     this.mapSrv.removePopUps();
     this.mapSrv.map.eachLayer((layer) => {
@@ -771,7 +771,7 @@ export class ErrorHighlightService {
    * Returns all stops in current map bounds and which are not downloaded
    * @returns {any[]}
    */
-  public getAllStopsInCurrentBounds(): any[] {
+  getAllStopsInCurrentBounds(): any[] {
     let inBounds = [];
     let inBounds2 = [];
     this.storageSrv.elementsMap.forEach((element) => {
@@ -798,7 +798,7 @@ export class ErrorHighlightService {
    * @param {number} index
    * @returns {void}
    */
-  public jumpToLocation(index: number): void {
+  jumpToLocation(index: number): void {
     let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
     if (errorCorrectionMode.nameSuggestions.startCorrection) {
       document.getElementById(this.nameErrorsObj[this.currentIndex].stop.id.toString() + '-name-error-list-id')
@@ -875,7 +875,7 @@ export class ErrorHighlightService {
    * Returns all stops in current map bounds and which are not downloaded
    * @returns {any[]}
    */
-  public getNotDownloadedStopsInBounds(): any[] {
+  getNotDownloadedStopsInBounds(): any[] {
     let inBounds = [];
     this.storageSrv.elementsMap.forEach((element) => {
       if (element.type === 'node' &&
@@ -943,7 +943,7 @@ export class ErrorHighlightService {
     return missingRefs;
   }
 
-  public startPTPairCorrection(ptPairErrorObj: IPTPairErrorObject): void {
+  startPTPairCorrection(ptPairErrorObj: IPTPairErrorObject): void {
     this.mapSrv.map.off('click', this.clickEventFunction);
     let stopId    = ptPairErrorObj.stop.id;
     let stopLayer = null;
@@ -990,7 +990,7 @@ export class ErrorHighlightService {
     }
   }
 
-  public openModalWithComponentForPTPair(errorObject: IPTPairErrorObject, event: L.LeafletEvent, circleLayer: L.Layer): void {
+  openModalWithComponentForPTPair(errorObject: IPTPairErrorObject, event: L.LeafletEvent, circleLayer: L.Layer): void {
     if (errorObject.corrected === 'false') {
       let initialState;
       initialState = {
@@ -1003,7 +1003,7 @@ export class ErrorHighlightService {
     }
   }
 
-  public checkDistance(stop: IPtStop, platform: IPtStop): boolean {
+  checkDistance(stop: IPtStop, platform: IPtStop): boolean {
     let stopLayer = null;
     let platformLayer = null;
     this.mapSrv.map.eachLayer((layer) => {
@@ -1019,7 +1019,7 @@ export class ErrorHighlightService {
     });
     return (stopLayer.getLatLng().distanceTo(platformLayer.getLatLng()) < 100);
   }
-  public countPTPairErrors(): void {
+  countPTPairErrors(): void {
     this.storageSrv.currentIndex       = 0;
     this.ptPairErrorsObj               = [];
     this.storageSrv.ptPairErrorsObject = [];

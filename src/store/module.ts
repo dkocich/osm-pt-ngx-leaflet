@@ -27,7 +27,7 @@ import { RootEpics } from './epics';
 })
 export class StoreModule {
   constructor(
-    public store: NgRedux<IRootAppState>,
+    store: NgRedux<IRootAppState>,
     devTools: DevToolsExtension,
     ngReduxRouter: NgReduxRouter,
     rootEpics: RootEpics,

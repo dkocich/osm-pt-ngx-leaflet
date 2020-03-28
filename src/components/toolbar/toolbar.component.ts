@@ -27,22 +27,22 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
   templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent implements OnInit {
-  public downloading: boolean;
-  public htRadioModel: string;
+  downloading: boolean;
+  htRadioModel: string;
   @ViewChild(TransporterComponent)
-  public transporterComponent: TransporterComponent;
-  @ViewChild(EditorComponent) public editorComponent: EditorComponent;
-  public filtering: boolean;
+  transporterComponent: TransporterComponent;
+  @ViewChild(EditorComponent) editorComponent: EditorComponent;
+  filtering: boolean;
 
-  public currentElement: IOsmElement;
-  public stats = { s: 0, r: 0, a: 0, m: 0 };
-  public routeLabelShown = false;
-  public enableInfoRouteLabels = false;
+  currentElement: IOsmElement;
+  stats = { s: 0, r: 0, a: 0, m: 0 };
+  routeLabelShown = false;
+  enableInfoRouteLabels = false;
 
-  public singleRelID = null;
-  public multipleRelsHighlightsAndIDs: Map<number, L.Polyline> = null;
+  singleRelID = null;
+  multipleRelsHighlightsAndIDs: Map<number, L.Polyline> = null;
 
-  @select(['app', 'errorCorrectionMode']) public readonly errorCorrectionMode$: Observable<string>;
+  @select(['app', 'errorCorrectionMode']) readonly errorCorrectionMode$: Observable<string>;
 
   constructor(
     private confSrv: ConfService,
@@ -105,15 +105,15 @@ export class ToolbarComponent implements OnInit {
     this.mapSrv.disableMouseEvent('edits-count');
   }
 
-  public highlightIsActive(): boolean {
+  highlightIsActive(): boolean {
     return this.mapSrv.highlightIsActive();
   }
 
-  public isRelation(): boolean {
+  isRelation(): boolean {
     return this.currentElement && this.currentElement.type === 'relation';
   }
 
-  public toggleDownloading(): void {
+  toggleDownloading(): void {
     this.downloading = !this.downloading;
     if (this.downloading) {
       this.mapSrv.map.on('zoomend moveend', () => {
@@ -124,14 +124,14 @@ export class ToolbarComponent implements OnInit {
     }
   }
 
-  public showOptions(): void {
+  showOptions(): void {
     document.getElementById('toggle-filter').style.display = 'inline';
     setTimeout(() => {
       document.getElementById('toggle-filter').style.display = 'none';
     }, 5000);
   }
 
-  public toggleLinesFilter(): void {
+  toggleLinesFilter(): void {
     this.confSrv.cfgFilterLines = !this.confSrv.cfgFilterLines;
     this.filtering = !this.filtering;
   }
@@ -205,7 +205,7 @@ export class ToolbarComponent implements OnInit {
   /**
    * Handles toggling of route info labels
    */
-  public toggleRouteInfoLabels(): void {
+  toggleRouteInfoLabels(): void {
    if (!this.routeLabelShown) {
      if (this.storageSrv.currentElement.type === 'node') {
        this.mapSrv.showMultipleRouteInfoLabels(this.multipleRelsHighlightsAndIDs);
@@ -220,11 +220,11 @@ export class ToolbarComponent implements OnInit {
    }
   }
 
-  public hasRef(): boolean {
+  hasRef(): boolean {
     return this.storageSrv.currentElement.tags.ref !== undefined;
   }
 
-  public clear(): void {
+  clear(): void {
     this.mapSrv.clearMultipleRouteInfoLabels();
   }
 }

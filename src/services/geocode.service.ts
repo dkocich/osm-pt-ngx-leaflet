@@ -14,7 +14,7 @@ import { ConfService } from './conf.service';
 
 @Injectable()
 export class GeocodeService {
-  public httpClient: HttpClient;
+  httpClient: HttpClient;
 
   constructor(
     httpClient: HttpClient,
@@ -23,7 +23,7 @@ export class GeocodeService {
     this.httpClient = httpClient;
   }
 
-  public geocode(address: string): any {
+  geocode(address: string): any {
     return this.httpClient.get<IResponseGeocodeGMaps>(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}`)
       .subscribe(
@@ -54,7 +54,7 @@ export class GeocodeService {
       );
   }
 
-  public getCurrentLocation(): any {
+  getCurrentLocation(): any {
     return this.httpClient.get<IResponseIp>('https://ipv4.myexternalip.com/json')
       .subscribe(
         (resp1: IResponseIp) => {

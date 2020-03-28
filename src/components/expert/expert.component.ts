@@ -20,26 +20,26 @@ import { StorageService } from '../../services/storage.service';
   templateUrl: './expert.component.html',
 })
 export class ExpertComponent {
-  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
   constructor(private ngRedux: NgRedux<IAppState>,
               private tutorialSrv: TutorialService,
               private storageSrv: StorageService) {
 
   }
-  public isRouteBrowserOpen = false;
-  public routeBrowserOptions: IRouteBrowserOptions = {
+  isRouteBrowserOpen = false;
+  routeBrowserOptions: IRouteBrowserOptions = {
     changeMembers     : true,
     createRoute       : true,
     membersEditing    : true,
     toggleFilteredView: true,
   };
 
-  public tagBrowserOptions: ITagBrowserOptions = {
+  tagBrowserOptions: ITagBrowserOptions = {
     limitedKeys     : false,
     makeKeysReadOnly: false,
   };
 
-  public suggestionsBrowserOptions: ISuggestionsBrowserOptions = {
+  suggestionsBrowserOptions: ISuggestionsBrowserOptions = {
     nameSuggestions  : {
       found          : false,
       startCorrection: false,
@@ -62,7 +62,7 @@ export class ExpertComponent {
     },
   };
 
-  public openBrowser(name: string): void {
+  openBrowser(name: string): void {
     if (name === 'route-browser' && this.ngRedux.getState()['app']['tutorialMode'] === false && this.isRouteBrowserOpen) {
         this.storageSrv.tutorialStepCompleted.emit('open route browser expert');
     }

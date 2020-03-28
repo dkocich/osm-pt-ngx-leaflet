@@ -28,12 +28,12 @@ import { RouteMasterWizardComponent } from '../route-master-wizard/route-master-
 })
 
 export class EditorComponent implements OnInit, AfterViewInit {
-  @ViewChild('editModal') public editModal: ModalDirective;
-  public totalEditSteps: number        = 0;
-  public currentEditStep: number       = 0;
-  public creatingElementOfType: string = '';
-  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
-  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
+  @ViewChild('editModal') editModal: ModalDirective;
+  totalEditSteps: number        = 0;
+  currentEditStep: number       = 0;
+  creatingElementOfType: string = '';
+  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
+  @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
 
   modalRefRouteWiz: BsModalRef;
   modalRefRouteMasterWiz: BsModalRef;
@@ -86,7 +86,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
       }, undefined, 'Redo edit')]);
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.editSrv.currentTotalSteps.subscribe((data) => {
       // console.log("LOG (editor) subscribed to counter ", data);
       this.currentEditStep = data.current;
@@ -102,7 +102,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
     if (this.storageSrv.getLocalStorageItem('edits')) {
       this.editModal.show();
     } else {
@@ -111,14 +111,14 @@ export class EditorComponent implements OnInit, AfterViewInit {
     console.log('LOG (editor) Current edits are: ', this.storageSrv.edits);
   }
 
-  public isAuthenticated(): boolean {
+  isAuthenticated(): boolean {
     return this.authSrv.oauth.authenticated();
   }
 
   /**
    * Provides access to editing service function.
    */
-  public continueEditing(): void {
+  continueEditing(): void {
     this.storageSrv.edits = this.storageSrv.getLocalStorageItem('edits');
     this.editModal.hide();
     this.editSrv.continueEditing();
@@ -127,7 +127,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   /**
    * Deletes current edits create in the localStorage.
    */
-  public deleteEdits(): void {
+  deleteEdits(): void {
     localStorage.removeItem('edits');
     alert(this.storageSrv.edits);
     alert('LOG: LocalStorage changed to ' + localStorage.getItem('edits'));
@@ -169,7 +169,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
    * Provides access to editing service function.
    * @param type
    */
-  public createElement(type: string): void {
+  createElement(type: string): void {
     this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
     this.storageSrv.tutorialStepCompleted.emit('click platform button');
   }
@@ -213,12 +213,12 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.storageSrv.tutorialStepCompleted.emit('toggle edit mode');
   }
 
-  public routeCreationWizard(): void {
+  routeCreationWizard(): void {
     this.modalRefRouteWiz = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
     this.appActions.actSetWizardMode('route wizard');
   }
 
-  public routeMasterCreationWizard(): void {
+  routeMasterCreationWizard(): void {
     this.modalRefRouteMasterWiz = this.modalService.show(RouteMasterWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
     this.appActions.actSetWizardMode('route master wizard');
   }

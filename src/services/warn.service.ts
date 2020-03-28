@@ -22,15 +22,15 @@ export class WarnService {
     });
   }
 
-  public showError(): void {
+  showError(): void {
     this.toastrSrv.error(this.errorMessage);
   }
 
-  public showSuccess(): void {
+  showSuccess(): void {
     this.toastrSrv.success(this.successMessage);
   }
 
-  public showGenericSuccess(): void {
+  showGenericSuccess(): void {
     this.toastrSrv.success(this.genericSuccessMessage);
   }
 

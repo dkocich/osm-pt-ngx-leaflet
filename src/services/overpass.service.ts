@@ -28,10 +28,10 @@ import { RouteMasterWizardService } from './route-master-wizard.service';
 
 @Injectable()
 export class OverpassService {
-  public changeset;
+  changeset;
   private changeset_id: string;
   private areaReference: IAreaRef;
-  public osmtogeojson: any = require('osmtogeojson');
+  osmtogeojson: any = require('osmtogeojson');
 
   constructor(
     private authSrv: AuthService,
@@ -126,7 +126,7 @@ export class OverpassService {
   /**
    * Requests new batch of data from Overpass.
    */
-  public requestNewOverpassData(): void {
+  requestNewOverpassData(): void {
     const requestBody = this.replaceBboxString(Utils.CONTINUOUS_QUERY);
     this.httpClient
       .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
@@ -239,7 +239,7 @@ export class OverpassService {
    * Downloads route_master relations for currently added route relations.
    * @minNumOfRelations: number
    */
-  public getRouteMasters(minNumOfRelations?: number): void {
+  getRouteMasters(minNumOfRelations?: number): void {
     if (!minNumOfRelations) {
       minNumOfRelations = 10;
     }
@@ -324,7 +324,7 @@ export class OverpassService {
   /**
    * @param requestBody
    */
-  public requestOverpassData(requestBody: string): void {
+  requestOverpassData(requestBody: string): void {
     this.mapSrv.clearLayer();
     requestBody = this.replaceBboxString(requestBody);
     this.httpClient
@@ -339,26 +339,26 @@ export class OverpassService {
       );
   }
 
-  public uploadData(metadata: object, testUpload: boolean = false): void {
+  uploadData(metadata: object, testUpload: boolean = false): void {
     this.changeset = this.createChangeset(metadata);
     this.putChangeset(this.changeset, testUpload);
   }
 
-  public async initDownloader(map: L.Map): Promise<void> {
+  async initDownloader(map: L.Map): Promise<void> {
     this.setupAreaReference(map);
     if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
       this.requestNewOverpassData();
     }
   }
 
-  public async initDownloaderForModalMap(map: L.Map): Promise<void> {
+  async initDownloaderForModalMap(map: L.Map): Promise<void> {
     this.setupAreaReference(map);
     if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
       this.requestNewOverpassDataForWizard((false));
     }
   }
 
-  public async initDownloaderForModalMapRMW(map: L.Map): Promise<void> {
+  async initDownloaderForModalMapRMW(map: L.Map): Promise<void> {
     this.setupAreaReference(map);
     if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
       this.requestNewOverpassDataForWizard(false);
@@ -368,7 +368,7 @@ export class OverpassService {
    * Creates new changeset on the API and returns its ID in the callback.
    * Put /api/0.6/changeset/create
    */
-  public putChangeset(changeset: any, testUpload?: boolean): void {
+  putChangeset(changeset: any, testUpload?: boolean): void {
     if (!this.storageSrv.edits) {
       return alert('Create some edits before trying to upload changes please.');
     }
@@ -800,11 +800,11 @@ export class OverpassService {
       2500,
     );
   }
-  public getRandomKey(collection: any): any {
+  getRandomKey(collection: any): any {
     let keys = Array.from(collection.keys());
     return keys[Math.floor(Math.random() * keys.length)];
   }
-  public getStopDataIDB(stopId: number): any {
+  getStopDataIDB(stopId: number): any {
     this.dbSrv.getRoutesForStop(stopId).then((relations: IPtRelation[]) => {
       if (relations.length === 0) {
         console.log('LOG (overpass s.) No routes found for stop with id ' + stopId + 'in IDB');
@@ -841,7 +841,7 @@ export class OverpassService {
       throw new Error(JSON.stringify(err));
     });
   }
-  public getPlatformDataIDB(platformId: number): any {
+  getPlatformDataIDB(platformId: number): any {
     this.dbSrv.getRoutesForPlatform(platformId).then((relations: IPtRelation[]) => {
       if (relations.length === 0) {
         console.log('LOG (overpass s.) No routes found for platform with id ' + platformId + 'in IDB');
@@ -956,7 +956,7 @@ export class OverpassService {
    * Continuous query for auto route wizard
    * @param {boolean} find: boolean
    */
-  public requestNewOverpassDataForWizard(find: boolean): void {
+  requestNewOverpassDataForWizard(find: boolean): void {
     console.log('LOG. (overpass s.) Requesting new overpass data for wizard modal map');
     let wizardMode = this.ngRedux.getState()['app']['wizardMode'];
     if (wizardMode === 'route wizard') {
@@ -1120,7 +1120,7 @@ export class OverpassService {
    * Downloads route_master relations for currently added route relations.
    * @minNumOfRelations: number[]
    */
-  public getRouteMastersForWizard(resIDs: number[]): void {
+  getRouteMastersForWizard(resIDs: number[]): void {
     let requestBody: string = `
             [out:json][timeout:25][bbox:{{bbox}}];
             (

@@ -7,7 +7,7 @@ export class RootEpics {
     //
   }
 
-  public createEpics(): any {
+  createEpics(): any {
     return [
       // 'app',
     ];

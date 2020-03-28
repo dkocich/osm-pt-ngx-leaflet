@@ -20,7 +20,7 @@ export class LangComponent {
     this.switchLanguage(translate.defaultLang);
   }
 
-  public switchLanguage(language: string): void {
+  switchLanguage(language: string): void {
     this.translate.use(language);
   }
 }

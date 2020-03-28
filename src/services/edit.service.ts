@@ -15,11 +15,11 @@ import { IAppState } from '../store/model';
 
 @Injectable()
 export class EditService {
-  public editingMode: EventEmitter<boolean>      = new EventEmitter(false);
-  public currentEditStep: number;
-  public totalEditSteps: number;
-  public currentTotalSteps: EventEmitter<object> = new EventEmitter();
-  public elementChanges: any                     = [];
+  editingMode: EventEmitter<boolean>      = new EventEmitter(false);
+  currentEditStep: number;
+  totalEditSteps: number;
+  currentTotalSteps: EventEmitter<object> = new EventEmitter();
+  elementChanges: any                     = [];
   private editing: boolean;
 
   constructor(
@@ -88,7 +88,7 @@ export class EditService {
   /**
    * Handles reapplying of unsaved edits after the page was reloaded.
    */
-  public continueEditing(): void {
+  continueEditing(): void {
     this.storageSrv.edits = JSON.parse(localStorage.getItem('edits'));
     this.updateCounter();
     // TODO add logic to apply all already created changes
@@ -107,7 +107,7 @@ export class EditService {
    * @param type - some comment about a created change
    * @param change - change object
    */
-  public addChange(element: any, type: string, change: object): any {
+  addChange(element: any, type: string, change: object): any {
     const edits: object[] = this.storageSrv.edits;
     const editObj: any    = {
       change,
@@ -266,7 +266,7 @@ export class EditService {
    * @param {string} creatingElementOfType
    * @param {any} event
    */
-  public createElement(creatingElementOfType: string, event: any): void {
+  createElement(creatingElementOfType: string, event: any): void {
     let newId: number = this.findNewId();
     const marker      = this.initializeNewMarker(
       creatingElementOfType,
@@ -314,7 +314,7 @@ export class EditService {
   /**
    * Creates completely new route with basic object structure.
    */
-  public createRoute(): void {
+  createRoute(): void {
     const newId                    = this.findNewId();
     const newRoute: IPtRelationNew = {
       id       : newId,
@@ -388,7 +388,7 @@ export class EditService {
    * @param {number} relId
    * @param {number} routeMasterId
    */
-  public changeRouteMasterMembers(relId: number, routeMasterId: number): void {
+  changeRouteMasterMembers(relId: number, routeMasterId: number): void {
     console.log(
       'LOOOOOOG test ', typeof relId, relId,
       typeof routeMasterId, routeMasterId,
@@ -420,7 +420,7 @@ export class EditService {
   /**
    * @param featureId
    */
-  public redrawMembersHighlight(featureId?: number): void {
+  redrawMembersHighlight(featureId?: number): void {
     const rel = JSON.parse(
       JSON.stringify(
         this.storageSrv.elementsMap.get(
@@ -541,7 +541,7 @@ export class EditService {
    * @param marker
    * @param event
    */
-  public repositionElement(marker: any, event: any): void {
+  repositionElement(marker: any, event: any): void {
     const opt         = event.target.options;
     const newPosition = event.target.getLatLng();
     let change        = {
@@ -572,7 +572,7 @@ export class EditService {
    * Binds events to created markers.
    * @param marker
    */
-  public createNewMarkerEvents(marker: any): void {
+  createNewMarkerEvents(marker: any): void {
     marker.on('dragend', (event) => {
       this.repositionElement(marker, event);
     });
@@ -589,7 +589,7 @@ export class EditService {
    * @param {number} newId
    * @returns {any}
    */
-  public initializeNewMarker(
+  initializeNewMarker(
     creatingElementOfType: string,
     event: any,
     newId: number,
@@ -622,7 +622,7 @@ export class EditService {
     return marker;
   }
 
-  public findNewId(): number {
+  findNewId(): number {
     let newId: number = -1;
     while (this.storageSrv.elementsMap.has(newId) && newId > -100) {
       newId--;
@@ -634,7 +634,7 @@ export class EditService {
    * Handles switching between edits (undoing/applying changes, map move)
    * @param direction - "forward" or "backward"
    */
-  public step(direction: string): void {
+  step(direction: string): void {
     // TODO
     console.log('current edir step', this.currentEditStep);
     if (direction === 'forward') {
@@ -653,7 +653,7 @@ export class EditService {
    * Reorders members of a relation (stop types, platform types and other).
    * @rel
    */
-  public reorderMembers(rel: IPtRelation): void {
+  reorderMembers(rel: IPtRelation): void {
     if (!rel.members) {
       return alert(JSON.stringify(rel) + 'FIXME please select relation');
     }

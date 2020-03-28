@@ -23,42 +23,43 @@ import { IPtStop } from '../../core/ptStop.interface';
 })
 
 export class ModalComponent {
-  public tagKey;
-  public suggestedNames: string[];
-  public error: string;
+  tagKey;
+  suggestedNames: string[];
+  error: string;
 
   @ViewChildren('chosenRef') chosenRefS;
   @ViewChildren('newlyAddedValue') newlyAddedValue;
 
-  public nameErrorObject: INameErrorObject;
-  public refErrorObject: IRefErrorObject;
-  public wayErrorObject: IWayErrorObject;
-  public PTvErrorObject: IPTvErrorObject;
-  public ptPairErrorObject: IPTPairErrorObject;
+  nameErrorObject: INameErrorObject;
+  refErrorObject: IRefErrorObject;
+  wayErrorObject: IWayErrorObject;
+  PTvErrorObject: IPTvErrorObject;
+  ptPairErrorObject: IPTPairErrorObject;
 
-  public removedNearbySuggestions: any[]  = [];
-  public removedMissingSuggestions: any[] = [];
+  removedNearbySuggestions: any[]  = [];
+  removedMissingSuggestions: any[] = [];
 
-  public addedMissingSuggestionsRefs: any[]    = [];
-  public addedFromNearbySuggestionsRefs: any[] = [];
-  public newAddedRefs: any[]                   = [];
+  addedMissingSuggestionsRefs: any[]    = [];
+  addedFromNearbySuggestionsRefs: any[] = [];
+  newAddedRefs: any[]                   = [];
 
-  public missingRefRels: any[];
-  public nearbyRels: any[];
+  missingRefRels: any[];
+  nearbyRels: any[];
 
-  public platformTags = PtTags.expectedKeys;
-  public addedPlatformTagsValues = [];
-  public newAddedTagsForPlatform = new Map();
-  public newPlatformEvent;
-  public circleLayer = null;
+  platformTags = PtTags.expectedKeys;
+  addedPlatformTagsValues = [];
+  newAddedTagsForPlatform = new Map();
+  newPlatformEvent;
+  circleLayer = null;
 
-  public osmtogeojson: any = require('osmtogeojson');
+  osmtogeojson: any = require('osmtogeojson');
 
-  constructor(public bsModalRef: BsModalRef,
-              private editSrv: EditService,
-              private storageSrv: StorageService,
-              private mapSrv: MapService,
-              private warnSrv: WarnService,
+  constructor(
+    public bsModalRef: BsModalRef,
+    private editSrv: EditService,
+    private storageSrv: StorageService,
+    private mapSrv: MapService,
+    private warnSrv: WarnService,
   ) {
   }
 
@@ -68,7 +69,7 @@ export class ModalComponent {
    * @returns {void}
    */
 
-  public saveNameTag(name: string): void {
+  saveNameTag(name: string): void {
     if (name.length !== 0) {
       this.createChangeForNameTag(name);
       this.bsModalRef.hide();
@@ -91,7 +92,7 @@ export class ModalComponent {
   /**
    * Saves ref correction
    */
-  public saveRefTag(): void {
+  saveRefTag(): void {
     let refsForTag        = [];
     let refString: string = '';
 
@@ -132,7 +133,7 @@ export class ModalComponent {
     }
   }
 
-  public saveWayError(): void {
+  saveWayError(): void {
     this.createChangeForWayError();
     let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
     MapService.addHoverListenersToPopUp(popUpElement);
@@ -149,7 +150,7 @@ export class ModalComponent {
     this.bsModalRef.hide();
   }
 
-  public savePTvError(): void {
+  savePTvError(): void {
     this.createChangeForPTvError();
     let popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
     MapService.addHoverListenersToPopUp(popUpElement);
@@ -184,7 +185,7 @@ export class ModalComponent {
    * Closes the currently opened modal
    * @returns {void}
    */
-  public close(): void {
+  close(): void {
     this.bsModalRef.hide();
   }
 
@@ -235,7 +236,7 @@ export class ModalComponent {
    * @param rel
    * @returns {void}
    */
-  public addMissingSuggestedRefValue(rel: IPtRelation): void {
+  addMissingSuggestedRefValue(rel: IPtRelation): void {
     this.addedMissingSuggestionsRefs.push(rel);
     this.missingRefRels.forEach((item, ind) => {
       if (item.id === rel.id) {
@@ -475,11 +476,11 @@ export class ModalComponent {
     return matchedLayer;
   }
 
-  public addTagToPlatform(key: string, value: string): void {
+  addTagToPlatform(key: string, value: string): void {
     this.newAddedTagsForPlatform.set(key, value);
   }
 
-  public savePTPairError(): void {
+  savePTPairError(): void {
     let tags = {};
     this.newAddedTagsForPlatform.forEach((tagValue, tagKey) => {
       tags['tagKey'] = tagValue;

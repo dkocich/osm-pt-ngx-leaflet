@@ -27,30 +27,30 @@ interface IBaseMaps {
 
 @Injectable()
 export class MapService {
-  public map: L.Map;
-  public baseMaps: IBaseMaps;
-  public osmtogeojson: any = require('osmtogeojson');
-  public bounds;
-  public highlightStroke: any = undefined;
-  public editingMode: boolean;
-  // public popupBtnClick: EventEmitter<any> = new EventEmitter();
-  public markerClick: EventEmitter<any> = new EventEmitter();
-  public markerEdit: EventEmitter<object> = new EventEmitter();
-  public highlightTypeEmitter: EventEmitter<object> = new EventEmitter();
-  public highlightType: string = 'Stops';
-  public membersEditing: boolean;
-  public markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
-  public membersHighlightLayer: any = undefined;
+  map: L.Map;
+  baseMaps: IBaseMaps;
+  osmtogeojson: any = require('osmtogeojson');
+  bounds;
+  highlightStroke: any = undefined;
+  editingMode: boolean;
+  // popupBtnClick: EventEmitter<any> = new EventEmitter();
+  markerClick: EventEmitter<any> = new EventEmitter();
+  markerEdit: EventEmitter<object> = new EventEmitter();
+  highlightTypeEmitter: EventEmitter<object> = new EventEmitter();
+  highlightType: string = 'Stops';
+  membersEditing: boolean;
+  markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
+  membersHighlightLayer: any = undefined;
   private ptLayer: any;
-  public highlightFill: any = undefined;
+  highlightFill: any = undefined;
   private highlight: any = undefined;
   private markerFrom: any = undefined;
   private markerTo: any = undefined;
-  public popUpArr = [];
-  public popUpLayerGroup: L.LayerGroup;
-  public currentPopUpFeatureId: number;
-  public enableInfoRouteLabelsOption: EventEmitter<any> = new EventEmitter();
-  // public autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
+  popUpArr = [];
+  popUpLayerGroup: L.LayerGroup;
+  currentPopUpFeatureId: number;
+  enableInfoRouteLabelsOption: EventEmitter<any> = new EventEmitter();
+  // autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
   constructor(
     private confSrv: ConfService,
     private httpClient: HttpClient,
@@ -216,7 +216,7 @@ export class MapService {
    * Disables events propagation on map buttons (dragging of map, etc.).
    * @param elementId
    */
-  public disableMouseEvent(elementId: string): void {
+  disableMouseEvent(elementId: string): void {
     const element = document.getElementById(elementId) as HTMLElement;
     if (element) {
       L.DomEvent.disableClickPropagation(element);
@@ -227,7 +227,7 @@ export class MapService {
   /**
    * Zooms to position encoded in URL hash
    */
-  public zoomToHashedPosition(): void {
+  zoomToHashedPosition(): void {
     const h = window.location.hash
       .slice(5)
       .split('/')
@@ -238,7 +238,7 @@ export class MapService {
   /**
    * Clears layer with downloaded data.
    */
-  public clearLayer(): void {
+  clearLayer(): void {
     if (this.ptLayer) {
       this.map.removeLayer(this.ptLayer);
       delete this.ptLayer;
@@ -250,7 +250,7 @@ export class MapService {
    * @param transformedGeojson
    * @param map
    */
-  public renderTransformedGeojsonData(transformedGeojson: any, map: L.Map): void {
+  renderTransformedGeojsonData(transformedGeojson: any, map: L.Map): void {
     this.ptLayer = L.geoJSON(transformedGeojson, {
       filter: (feature) => {
         // filter away already rendered elements
@@ -287,7 +287,7 @@ export class MapService {
    * @param feature
    * @param layer
    */
-  public enableDrag(feature: any, layer: any): any {
+  enableDrag(feature: any, layer: any): any {
     layer.on('click', (e) => {
       if (!this.membersEditing) {
         this.handleMarkerClick(feature);
@@ -358,7 +358,7 @@ export class MapService {
   /**
    * @param res
    */
-  public renderData(res: any): void {
+  renderData(res: any): void {
     const transformed = this.osmtogeojson(res);
     this.ptLayer = L.geoJSON(transformed, {
       onEachFeature: (feature, layer) => {
@@ -377,7 +377,7 @@ export class MapService {
   /**
    * Clears active map highlight (stop markers, route lines).
    */
-  public clearHighlight(map: L.Map): void {
+  clearHighlight(map: L.Map): void {
     if (this.markerFrom !== undefined) {
       map.removeLayer(this.markerFrom);
       this.markerFrom = undefined;
@@ -407,7 +407,7 @@ export class MapService {
    * @param map
    * @returns {{lat: number, lng: number}}
    */
-  public findCoordinates(refId: number, map: any): L.LatLngExpression {
+  findCoordinates(refId: number, map: any): L.LatLngExpression {
     const element = map.get(refId);
     if (!element) {
       console.log('Warning - elem. not found ', refId, JSON.stringify(element));
@@ -420,7 +420,7 @@ export class MapService {
    * Highlights stop marker with a circle.
    * @param stop
    */
-  public showStop(stop: IPtStop): void {
+  showStop(stop: IPtStop): void {
     this.markerFrom = L.circleMarker(
       { lat: stop.lat, lng: stop.lon },
       Utils.FROM_TO_LABEL,
@@ -432,7 +432,7 @@ export class MapService {
    * Creates multiple relations highlights.
    * @param filteredRelationsForStop
    */
-  public showRelatedRoutes(filteredRelationsForStop: object[]): void {
+  showRelatedRoutes(filteredRelationsForStop: object[]): void {
     if (filteredRelationsForStop) {
       this.storageSrv.stopsForRoute = [];
       for (const rel of filteredRelationsForStop) {
@@ -444,7 +444,7 @@ export class MapService {
   /**
    * Adds highlight layer (contains point highl. and highl. for each related route).
    */
-  public addExistingHighlight(): void {
+  addExistingHighlight(): void {
     if (this.highlight) {
       this.highlight.addTo(this.map);
     }
@@ -455,7 +455,7 @@ export class MapService {
    * @param rel
    * @returns {boolean}
    */
-  public showRoutes(rel: any): boolean {
+  showRoutes(rel: any): boolean {
     const latlngs = Array();
     this.storageSrv.stopsForRoute = [];
     for (const member of rel.members) {
@@ -494,7 +494,7 @@ export class MapService {
   /**
    * Clears circles highlighting relation's current members.
    */
-  public clearCircleHighlight(): void {
+  clearCircleHighlight(): void {
     if (
       this.membersHighlightLayer &&
       this.map.hasLayer(this.membersHighlightLayer)
@@ -512,7 +512,7 @@ export class MapService {
    * @param elementsMap
    * @returns {boolean}
    */
-  public showRoute(rel: any, map: L.Map, elementsMap: any): boolean {
+  showRoute(rel: any, map: L.Map, elementsMap: any): boolean {
     for (const member of rel.members) {
       if (
         member.type === 'node' &&
@@ -604,7 +604,7 @@ export class MapService {
    * Verifies if highlight is still active.
    * @returns {any}
    */
-  public highlightIsActive(): boolean {
+  highlightIsActive(): boolean {
     return (
       this.highlightFill ||
       this.highlightStroke ||
@@ -654,7 +654,7 @@ export class MapService {
    * Draws tooltip with name of from/to stops.
    * @param rel
    */
-  public drawTooltipFromTo(rel: any): void {
+  drawTooltipFromTo(rel: any): void {
     const latlngFrom = this.getFirstNode();
     const latlngTo = this.getLastNode();
 
@@ -692,7 +692,7 @@ export class MapService {
    * @param latlng
    * @returns {any}
    */
-  public stylePoint(feature: any, latlng: any): any {
+  stylePoint(feature: any, latlng: any): any {
     let iconUrl = 'assets/marker-icon.png';
     let shadowUrl = '';
     const fp = feature.properties;
@@ -774,7 +774,7 @@ export class MapService {
    * @param feature
    * @returns {number}
    */
-  public getFeatureIdFromMarker(feature: any): number {
+  getFeatureIdFromMarker(feature: any): number {
     const featureTypeId = feature.id.split('/');
     const featureType = featureTypeId[0];
     return Number(featureTypeId[1]); // featureId
@@ -807,7 +807,7 @@ export class MapService {
    * @param e
    * @returns {void}
    */
-  public static colorPopUpByEvent (e: any): void {
+  static colorPopUpByEvent (e: any): void {
     let colorString = '';
     if (e.type === 'click' || e.type === 'mouseover') {
       colorString = 'lightblue';
@@ -827,7 +827,7 @@ export class MapService {
    * @param element
    * @returns {any}
    */
-  public static colorPopUpByColorName(colorName: string, element: any): void {
+  static colorPopUpByColorName(colorName: string, element: any): void {
     element.children[0].style.backgroundColor = colorName;
     element.lastElementChild.lastElementChild.style.backgroundColor = colorName;
   }
@@ -837,7 +837,7 @@ export class MapService {
    * @param popUpId
    * @returns {HTMLElement}
    */
-  public getPopUpFromArray(popUpId: number): HTMLElement {
+  getPopUpFromArray(popUpId: number): HTMLElement {
     for (let popUp of this.popUpArr) {
       if (popUp['_leaflet_id'] === popUpId) {
         return popUp.getElement();
@@ -849,7 +849,7 @@ export class MapService {
    * Removes the complete popup layer and enables marker click again
    * @returns {void}
    */
-  public removePopUps(): void {
+  removePopUps(): void {
     this.map.closePopup();
     if (this.popUpLayerGroup) {
       this.popUpLayerGroup.remove();
@@ -861,7 +861,7 @@ export class MapService {
    * @param popUpElement
    * @returns {void}
    */
-  public static addHoverListenersToPopUp(popUpElement: HTMLElement): void {
+  static addHoverListenersToPopUp(popUpElement: HTMLElement): void {
     L.DomEvent.addListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
     L.DomEvent.addListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
@@ -871,7 +871,7 @@ export class MapService {
    * @param popUpElement
    * @returns {void}
    */
-  public static removeHoverListenersToPopUp(popUpElement: HTMLElement): void {
+  static removeHoverListenersToPopUp(popUpElement: HTMLElement): void {
     L.DomEvent.removeListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
     L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
@@ -880,7 +880,7 @@ export class MapService {
    * Displays route info labels for the case of single route highlight
    * @param {number} relID
    */
-  public showRouteInfoLabels(relID: number): void {
+  showRouteInfoLabels(relID: number): void {
     let rel = this.storageSrv.elementsMap.get(relID);
     if (rel.tags.ref) {
       let textString = '     ' + rel.tags.ref + '     ';
@@ -892,7 +892,7 @@ export class MapService {
    * Handles displaying route info labels for the case of multiple route highlight
    * @param {Map<number, Polyline>} relHighlightsAndIDs
    */
-  public showMultipleRouteInfoLabels(relHighlightsAndIDs: Map<number, L.Polyline>): void {
+  showMultipleRouteInfoLabels(relHighlightsAndIDs: Map<number, L.Polyline>): void {
     relHighlightsAndIDs.forEach((highlight, id) => {
       let rel        = this.storageSrv.elementsMap.get(id);
       let textString = '     ' + rel.tags.ref + '     ';
@@ -904,14 +904,14 @@ export class MapService {
   /**
    * Clears the info label for single route highlight case
    */
-  public clearSingleRouteInfoLabels(): void {
+  clearSingleRouteInfoLabels(): void {
     this.highlightFill.setText(null);
   }
 
   /**
    * Clears the info labels for the case of multiple route highlights
    */
-  public clearMultipleRouteInfoLabels(): void {
+  clearMultipleRouteInfoLabels(): void {
     this.highlight.eachLayer((layer: L.Layer) => {
       if (layer instanceof L.Polyline) {
         let layerA: any = layer;
@@ -926,7 +926,7 @@ export class MapService {
    * @param elementsMap
    * @returns {any[]}
    */
-  public findStopsInBounds(map: L.Map, elementsMap: any): any[] {
+  findStopsInBounds(map: L.Map, elementsMap: any): any[] {
     let stopsInBounds = [];
     elementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {

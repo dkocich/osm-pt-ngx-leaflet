@@ -23,9 +23,9 @@ import { Hotkey, HotkeysService } from 'angular2-hotkeys';
   templateUrl: './settings.component.html',
 })
 export class SettingsComponent {
-  @select(['app', 'advancedExpMode']) public readonly advancedExpMode$: Observable<boolean>;
-  @select(['app', 'goodConnectMode']) public readonly goodConnectMode$: Observable<boolean>;
-  @select(['app', 'editing']) public readonly editing$: Observable<boolean>;
+  @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
+  @select(['app', 'goodConnectMode']) readonly goodConnectMode$: Observable<boolean>;
+  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
 
   constructor(
     public appActions: AppActions,
@@ -46,12 +46,12 @@ export class SettingsComponent {
     }, undefined, 'Toggle expert mode')]);
   }
 
-  public changeConnMode(goodConnectMode: boolean): void {
+  changeConnMode(goodConnectMode: boolean): void {
     this.appActions.actSetGoodConnectMode(goodConnectMode);
     localStorage.setItem('goodConnectMode', JSON.stringify(goodConnectMode));
   }
 
-  public changeExpMode(advancedExpMode: boolean): void {
+  changeExpMode(advancedExpMode: boolean): void {
     this.appActions.actToggleSwitchMode(false);
     this.processSrv.refreshSidebarView('cancel selection');
     this.mapSrv.removePopUps();
@@ -65,13 +65,13 @@ export class SettingsComponent {
     }
   }
 
-  public toggleConnMode(): void {
+  toggleConnMode(): void {
     const connMode = this.ngRedux.getState()['app']['goodConnectMode'];
     this.appActions.actSetGoodConnectMode(!connMode);
     localStorage.setItem('goodConnectMode', JSON.stringify(!connMode));
   }
 
-  public toggleExpMode(): void {
+  toggleExpMode(): void {
     const advancedExpMode = this.ngRedux.getState()['app']['advancedExpMode'];
     this.appActions.actToggleSwitchMode(false);
     this.processSrv.refreshSidebarView('cancel selection');

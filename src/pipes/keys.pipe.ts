@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'keys', pure: true })
 export class KeysPipe implements PipeTransform {
-  public transform(value: any, args: string[]): any {
+  transform(value: any, args: string[]): any {
     const keys = [];
     for (const key in value) {
       if (value.hasOwnProperty(key)) {

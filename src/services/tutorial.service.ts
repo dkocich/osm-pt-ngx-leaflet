@@ -13,10 +13,10 @@ import * as L from 'leaflet';
 
 @Injectable()
 export class TutorialService {
-  public intro = null;
-  public steps = null;
-  public tempEditSteps = 0;
-  public expertMode    = null;
+  intro = null;
+  steps = null;
+  tempEditSteps = 0;
+  expertMode    = null;
 
   constructor(public appActions: AppActions,
               public editSrv: EditService,
@@ -38,7 +38,7 @@ export class TutorialService {
     });
   }
 
-  public startTutorial(tutorialTitle: string, expertMode: string): void {
+  startTutorial(tutorialTitle: string, expertMode: string): void {
     if (tutorialTitle === 'Add new route' || tutorialTitle === 'Quick overview (expert)') {
       this.appActions.actSetAdvancedExpMode(true);
     }

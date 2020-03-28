@@ -31,17 +31,17 @@ import { IOsmElement } from '../../core/osmElement.interface';
 
 export class RouteMasterWizardComponent {
 
-  public map: L.Map;
-  public osmtogeojson: any     = require('osmtogeojson');
+  map: L.Map;
+  osmtogeojson: any     = require('osmtogeojson');
   private startEventProcessing = new Subject<L.LeafletEvent>();
-  public usedRM                = [];
+  usedRM                = [];
 
-  @Input() public tagKey: string   = '';
-  @Input() public tagValue: string = '';
+  @Input() tagKey: string   = '';
+  @Input() tagValue: string = '';
 
-  public newRMsMap: Map<string, Array<{ id: number, percentCoverage: number }>> = new Map();
+  newRMsMap: Map<string, Array<{ id: number, percentCoverage: number }>> = new Map();
 
-  public RMTags = {
+  RMTags = {
     type                      : 'route_master',
     route_master              : 'bus',
     ref                       : '',
@@ -54,15 +54,17 @@ export class RouteMasterWizardComponent {
 
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
 
-  constructor(private routeMasterWizardSrv: RouteMasterWizardService,
-              private storageSrv: StorageService,
-              public mapSrv: MapService,
-              private warnSrv: WarnService,
-              private overpassSrv: OverpassService,
-              public appActions: AppActions,
-              private processSrv: ProcessService,
-              private editSrv: EditService,
-              public modalRefRouteMasterWiz: BsModalRef) {
+  constructor(
+    private routeMasterWizardSrv: RouteMasterWizardService,
+    private storageSrv: StorageService,
+    public mapSrv: MapService,
+    private warnSrv: WarnService,
+    private overpassSrv: OverpassService,
+    public appActions: AppActions,
+    private processSrv: ProcessService,
+    private editSrv: EditService,
+    public modalRefRouteMasterWiz: BsModalRef
+  ) {
     this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
       this.newRMsMap = newRMsMap;
       this.selectTab(2);
@@ -70,7 +72,7 @@ export class RouteMasterWizardComponent {
     });
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
     this.routeMasterWizardSrv.elementsRenderedModalMap = new Set();
     this.map                                           = L.map('master-route-wizard-modal-map', {
       center       : this.mapSrv.map.getCenter(),
@@ -111,7 +113,7 @@ export class RouteMasterWizardComponent {
    * Finds suggestions in current bounds
    * @returns {void}
    */
-  public findSuggestions(): void {
+  findSuggestions(): void {
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForRouteMasterWizard) {
       this.overpassSrv.requestNewOverpassDataForWizard(true);
     } else {
@@ -137,7 +139,7 @@ export class RouteMasterWizardComponent {
    * Returns array of keys from map
    * @returns {string[]}
    */
-  public getKeys(): string[] {
+  getKeys(): string[] {
     let refs = [];
     this.newRMsMap.forEach((value, key) => {
       refs.push(key);
@@ -145,7 +147,7 @@ export class RouteMasterWizardComponent {
     return refs;
   }
 
-  public getValue(ref: string): Array<{ id: number, percentCoverage: number }> {
+  getValue(ref: string): Array<{ id: number, percentCoverage: number }> {
     return this.newRMsMap.get(ref);
   }
 
@@ -155,7 +157,7 @@ export class RouteMasterWizardComponent {
    * @param percentageCoverage
    * @returns {void}
    */
-  public viewRoute(routeID: number, percentageCoverage: number): void {
+  viewRoute(routeID: number, percentageCoverage: number): void {
     if (percentageCoverage === 100) {
       this.routeMasterWizardSrv.viewRoute(routeID);
     } else {
@@ -167,21 +169,21 @@ export class RouteMasterWizardComponent {
    * For moving from step 3 to 4
    * @returns {void}
    */
-  public saveStep3(): void {
+  saveStep3(): void {
     this.selectTab(4);
   }
 
-  public useRouteMaster(ref: string): void {
+  useRouteMaster(ref: string): void {
     this.usedRM = this.newRMsMap.get(ref);
     this.mapSrv.clearHighlight(this.routeMasterWizardSrv.map);
     this.selectTab(3);
   }
 
-  public getWholeRoute(id: number): IOsmElement {
+  getWholeRoute(id: number): IOsmElement {
     return this.routeMasterWizardSrv.modalMapElementsMap.get(id);
   }
 
-  public removeRoute(id: number): void {
+  removeRoute(id: number): void {
     let newRM = [];
     newRM          = [ ...newRM, ...this.usedRM ];
     newRM.forEach((rel, i) => {
@@ -192,7 +194,7 @@ export class RouteMasterWizardComponent {
     this.usedRM = newRM;
   }
 
-  public modifiesTags(action: string, key: string, event: FocusEvent, tags: object): any {
+  modifiesTags(action: string, key: string, event: FocusEvent, tags: object): any {
     switch (action) {
       case 'change tag':
         tags[key] = (event.target as HTMLInputElement).value;
@@ -208,7 +210,7 @@ export class RouteMasterWizardComponent {
     return tags;
   }
 
-  public createChangeTag(action: string, key: string, event?: FocusEvent): void {
+  createChangeTag(action: string, key: string, event?: FocusEvent): void {
     this.RMTags = this.modifiesTags(action, key, event, this.RMTags);
     if (action === 'add tag') {
       this.tagKey   = '';
@@ -220,7 +222,7 @@ export class RouteMasterWizardComponent {
    * Final step for saving the route master
    * @returns {void}
    */
-  public saveStep4(): void {
+  saveStep4(): void {
     let newRM  = {
       id       : this.editSrv.findNewId(),
       timestamp: new Date().toISOString().split('.')[0] + 'Z',
@@ -244,7 +246,7 @@ export class RouteMasterWizardComponent {
    * @param percentageCoverage
    * @returns {string}
    */
-  public getListItemColor(percentageCoverage: number): string {
+  getListItemColor(percentageCoverage: number): string {
     switch (true) {
       case percentageCoverage === 100:
         return 'lightgreen';

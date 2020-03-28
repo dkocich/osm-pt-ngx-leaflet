@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class DbService {
 
-  public db: Db;
+  db: Db;
 
   constructor(
     private storageSrv: StorageService,
@@ -13,7 +13,7 @@ export class DbService {
     this.db = new Db();
   }
 
-  public async addArea(areaPseudoId: string): Promise<void> {
+  async addArea(areaPseudoId: string): Promise<void> {
     this.db.table('AreasGrid').put(true, areaPseudoId)
       .then(() => {
         return;
@@ -23,7 +23,7 @@ export class DbService {
       });
   }
 
-  public async hasArea(areaPseudoId: string): Promise<boolean> {
+  async hasArea(areaPseudoId: string): Promise<boolean> {
     return this.db.table('AreasGrid').where(':id').equals(areaPseudoId).first()
       .then((item) => {
         return !!item;
@@ -33,7 +33,7 @@ export class DbService {
       });
   }
 
-  public deleteExpiredDataIDB(): void {
+  deleteExpiredDataIDB(): void {
     this.db.AreasGrid.clear()
       .then(() => {
         return;
@@ -162,7 +162,7 @@ export class DbService {
    * @param {string} type
    * @returns {any}
    */
-  public addResponseToIDB(response: any, type: string, id?: any): Promise<any> {
+  addResponseToIDB(response: any, type: string, id?: any): Promise<any> {
     let routeIds             = [];
     let routes               = [];
     let platforms            = [];
@@ -344,7 +344,7 @@ export class DbService {
    * @param {any[]} IDs
    * @returns {any}
    */
-  public addMultipleResponseToIDB(response: any, IDs: any[]): any {
+  addMultipleResponseToIDB(response: any, IDs: any[]): any {
     let parentRoutes         = new Map();
     let routes               = [];
     let platforms            = [];
@@ -518,7 +518,7 @@ export class DbService {
    * @param {number} relId
    * @returns {any}
    */
-  public getMembersForRoute(relId: number): any {
+  getMembersForRoute(relId: number): any {
     return this.db.transaction('r', this.db.PtStops, this.db.PtRoutes, this.db.PtPlatforms, () => {
       let memberIds = [];
       let stops = [];
