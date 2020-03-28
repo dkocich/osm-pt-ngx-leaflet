@@ -127,8 +127,6 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
 
   /**
    * Explores relations on click (together with the request to API)
-   * @param $event
-   * @param rel
    */
   exploreRelation($event: any, rel: any): void {
     if (!this.advancedExpMode) {
@@ -154,8 +152,6 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
 
   /**
    * Explores already available relations on hover (without delay and additional requests)
-   * @param $event
-   * @param rel
    */
   exploreAvailableRelation($event: any, rel: any): void {
     if (this.storageSrv.elementsDownloaded.has(rel.id) && this.advancedExpMode) {
@@ -227,10 +223,6 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
 
   /**
    * NgFor track function which helps to re-render rows faster.
-   *
-   * @param index
-   * @param item
-   * @returns {number}
    */
   trackByFn(index: number, item: any): number {
     return item.id;
@@ -238,7 +230,6 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
 
   /**
    * Explores stop for beginner view (used for mouseout event for route list).
-   * @returns {void}
    */
   private exploreStop(): void {
     if (!this.advancedExpMode) {

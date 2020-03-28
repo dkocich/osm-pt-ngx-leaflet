@@ -50,7 +50,6 @@ export class RouteMasterWizardService {
 
   /**
    * Fired when modal has rendered
-   * @returns {void}
    */
   onShownModal(): void {
     if (this.map) {
@@ -60,7 +59,6 @@ export class RouteMasterWizardService {
 
   /**
    * Renders data on modal map which was already present on the main map
-   * @returns {void}
    */
   renderAlreadyDownloadedData(): void {
     const obj: { elements: IOsmElement[] } = { elements: null };
@@ -76,7 +74,6 @@ export class RouteMasterWizardService {
   /**
    * Used when modal is closed,
    *  all data downloaded for modal map is processed for main application
-   * @returns {void}
    */
   processAllDownloadedOnMainMap(): void {
     for (let res of this.savedContinuousQueryResponses) {
@@ -92,8 +89,6 @@ export class RouteMasterWizardService {
 
   /**
    * Renders data on modal map
-   * @param transformedGeoJSON
-   * @param {Map} map
    */
   renderTransformedGeojsonDataRMWizard(transformedGeoJSON: any, map: L.Map): void {
     this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
@@ -226,8 +221,6 @@ export class RouteMasterWizardService {
 
   /**
    * Highlight selected member route of currently selected route master on map
-   * @param routeID
-   * @returns {void}
    */
   viewRoute(routeID: number): void {
     let route = this.modalMapElementsMap.get(routeID);

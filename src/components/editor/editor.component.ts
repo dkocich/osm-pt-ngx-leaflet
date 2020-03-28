@@ -167,7 +167,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   /**
    * Provides access to editing service function.
-   * @param type
    */
   createElement(type: string): void {
     this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
@@ -176,7 +175,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   /**
    * Checks if buttons used to move between edits should be active.
-   * @param type - "forward" or "backward" button
+   * @param {string} type - "forward" or "backward" button
    * @returns {boolean} - when true then button is disabled
    */
   isInactive(type: string): boolean {

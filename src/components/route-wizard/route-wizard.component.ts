@@ -131,7 +131,6 @@ export class RouteWizardComponent {
 
   /**
    * Finds suggestions in current bounds
-   * @returns {void}
    */
   findMissingRoutes(): void {
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForRouteWizard) {
@@ -143,8 +142,6 @@ export class RouteWizardComponent {
 
   /**
    * Uses selected suggested ref
-   * @param {string} ref
-   * @returns {void}
    */
   useRef(ref: string): void {
     this.mapSrv.clearHighlight(this.routeWizardSrv.map);
@@ -185,7 +182,6 @@ export class RouteWizardComponent {
 
   /**
    * Changes selected tab
-   * @param {number} step
    */
   private selectTab(step: number): void {
     this.stepTabs.tabs[step - 1].disabled = false;
@@ -197,7 +193,6 @@ export class RouteWizardComponent {
 
   /**
    * Handles marker click
-   * @param {number} featureId
    */
   private handleModalMapMarkerClick(featureId: number): void {
     if (this.stepTabs.tabs[2].active) {
@@ -208,7 +203,6 @@ export class RouteWizardComponent {
 
   /**
    * Adds new member to route
-   * @param newMember
    */
   private addNewMemberToRoute(newMember: any): void {
     this.addedNewRouteMembers = this.routeWizardSrv.addNewMemberToRoute(newMember, this.addedNewRouteMembers);
@@ -216,7 +210,6 @@ export class RouteWizardComponent {
 
   /**
    * Removes member from route
-   * @param {string} toRemoveMemberID
    */
   removeMember(toRemoveMemberID: string): void {
     this.addedNewRouteMembers = this.routeWizardSrv.removeMember(toRemoveMemberID, this.addedNewRouteMembers);
@@ -224,8 +217,6 @@ export class RouteWizardComponent {
 
   /**
    * View suggested route on map
-   * @param ref
-   * @returns {void}
    */
   viewSuggestedRoute(ref: string): void {
   this.currentlyViewedRef = ref;
@@ -242,7 +233,6 @@ export class RouteWizardComponent {
 
   /**
    * Saves step 3 of adding members
-   * @returns {void}
    */
   saveStep3(): void {
    this.selectTab(4);
@@ -250,10 +240,6 @@ export class RouteWizardComponent {
 
   /**
    * Handles when tags for route are updated
-   * @param {string} action
-   * @param key
-   * @param event
-   * @returns {void}
    */
   createChangeTag(action: string, key: any, event: any): void {
     this.newRoute = RouteWizardService.modifiesTags(action, key, event, this.newRoute);
@@ -265,7 +251,6 @@ export class RouteWizardComponent {
 
   /**
    * Saves final step
-   * @returns {void}
    */
   saveStep4(): void {
     RouteWizardService.assignRolesToMembers(this.addedNewRouteMembers);
@@ -280,8 +265,6 @@ export class RouteWizardComponent {
 
   /**
    * Jumps to step when tab directly clicked
-   * @param {string} step
-   * @returns {void}
    */
   jumpToStep(step: string): void {
     switch (step) {
@@ -305,8 +288,6 @@ export class RouteWizardComponent {
 
   /**
    * Changes connectivity of route on map
-   * @param {string} type
-   * @returns {void}
    */
   showConnectivity(type: string): void {
     this.routeWizardSrv.showConnectivity(type, {
@@ -317,8 +298,6 @@ export class RouteWizardComponent {
 
   /**
    * Determines the color by which the text should be highlighted for suggested new routes
-   * @param {string} ref
-   * @returns {string}
    */
   getTextColorForSuggestedRoutes(ref: string): string {
     let color = '';

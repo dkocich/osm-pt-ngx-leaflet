@@ -119,7 +119,6 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
 
   /**
    * Counts and list all errors
-   * @returns {void}
    */
   startValidation(): void {
     this.nameErrorsObj   = [];
@@ -136,7 +135,6 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
 
   /**
    * Starts name correction mode
-   * @returns {void}
    */
   startNameCorrection(): void {
     if (this.errorCorrectionMode.nameSuggestions) {
@@ -174,7 +172,6 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
 
   /**
    * Starts ref correction
-   * @returns {void}
    */
   startRefCorrection(): void {
     if (this.errorCorrectionMode.refSuggestions) {
@@ -195,7 +192,6 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
 
   /**
    * Starts PTv correction
-   * @returns {void}
    */
   startPTvCorrection(): void {
     if (this.errorCorrectionMode.PTvSuggestions) {
@@ -254,7 +250,6 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
 
   /**
    * Jumps to different location
-   * @param {number} index
    */
   jumpToLocation(index: number): void {
     this.errorHighlightSrv.jumpToLocation(index);
@@ -262,8 +257,6 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
 
   /**
    * Determines if given window should bw viewed
-   * @param {string} name
-   * @returns {boolean}
    */
   view(name: string): boolean {
     switch (name) {

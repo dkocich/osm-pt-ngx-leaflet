@@ -72,8 +72,6 @@ export class ErrorHighlightService {
 
   /**
    * Turns off marker click and starts switch location mode on
-   * @param {string} errorName
-   * @returns {void}
    */
   startCorrection(errorName: 'missing name tags' | 'missing refs' | 'way as parent' | 'PTv correction' | 'pt-pair'): void {
     this.storageSrv.currentIndex = 0;
@@ -121,8 +119,6 @@ export class ErrorHighlightService {
 
   /**
    * Generates the popup content
-   * @param {string} isCorrected
-   * @returns {HTMLElement}
    */
   private static makePopUpContent(isCorrected: string): HTMLElement {
     let popupContent       = L.DomUtil.create('div', 'content');
@@ -146,8 +142,6 @@ export class ErrorHighlightService {
 
   /**
    * Handles click events for popup
-   * @param popUp
-   * @param errorObj
    */
 
   private addClickListenerToPopUp(popUp: any, errorObj: any): void {
@@ -195,7 +189,6 @@ export class ErrorHighlightService {
 
   /**
    * Opens up modal
-   * @returns {void}
    */
   openModalWithComponentForName(errorObject: INameErrorObject): void {
     const featureId = Number(errorObject.stop.id);
@@ -215,7 +208,6 @@ export class ErrorHighlightService {
 
   /**
    * Opens up modal for ref
-   * @returns {void}
    */
   openModalWithComponentForRef(errorObject: IRefErrorObject): void {
     const featureId = Number(errorObject.stop.id);
@@ -257,7 +249,6 @@ export class ErrorHighlightService {
 
   /**
    * Opens modal for way as parent error
-   * @param {IWayErrorObject} errorObject
    */
   openModalWithComponentForWay(errorObject: IWayErrorObject): void {
     if (errorObject.corrected === 'false') {
@@ -274,7 +265,6 @@ export class ErrorHighlightService {
 
   /**
    * Opens modal for PTv errors
-   * @param {IWayErrorObject} errorObject
    */
   openModalWithComponentForPTv(errorObject: IWayErrorObject): void {
     if (errorObject.corrected === 'false') {
@@ -350,7 +340,6 @@ export class ErrorHighlightService {
 
   /**
    * Counts way errors
-   * @returns {void}
    */
   countWayErrors(): void {
     this.storageSrv.currentIndex = 0;
@@ -397,7 +386,6 @@ export class ErrorHighlightService {
 
   /**
    * Checks whether on Mobile/Desktop
-   * @returns {boolean}
    */
   isMobileDevice(): boolean {
     let md = new MobileDetect(window.navigator.userAgent);
@@ -406,7 +394,6 @@ export class ErrorHighlightService {
 
   /**
    * Moves to next location
-   * @returns {any}
    */
   nextLocation(): any {
     let errorsObj;
@@ -478,7 +465,6 @@ export class ErrorHighlightService {
 
   /**
    * Moves to previous location
-   * @returns {void}
    */
   previousLocation(): void {
 
@@ -640,8 +626,6 @@ export class ErrorHighlightService {
 
   /**
    * returns names of nearby nodes
-   * @param latlngm
-   * @returns {any[]}
    */
   getNearbyNodeNames(latlngm: any): any[] {
 
@@ -660,9 +644,6 @@ export class ErrorHighlightService {
 
   /**
    * Nearby route suggestions
-   * @param latlngm
-   * @param missingRefRels
-   * @returns {any[]}
    */
   getNearbyRoutesSuggestions(latlngm: any, missingRefRels: any): any[] {
 
@@ -705,8 +686,6 @@ export class ErrorHighlightService {
 
   /**
    * Returns most occurred name (top 5 most used names)
-   * @param {any[]} array
-   * @returns {any}
    */
   getMostUsedName(array: any[]): any {
     if (array.length === 0) {
@@ -740,8 +719,6 @@ export class ErrorHighlightService {
 
   /**
    * Adds popup
-   * @param errorObj
-   * @returns {void}
    */
   addSinglePopUp(errorObj: INameErrorObject | IRefErrorObject | IWayErrorObject | IPTvErrorObject): void {
     let stop = errorObj['stop'];
@@ -769,7 +746,6 @@ export class ErrorHighlightService {
 
   /**
    * Returns all stops in current map bounds and which are not downloaded
-   * @returns {any[]}
    */
   getAllStopsInCurrentBounds(): any[] {
     let inBounds = [];
@@ -795,8 +771,6 @@ export class ErrorHighlightService {
 
   /**
    * Jumps to error
-   * @param {number} index
-   * @returns {void}
    */
   jumpToLocation(index: number): void {
     let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
@@ -873,7 +847,6 @@ export class ErrorHighlightService {
 
   /**
    * Returns all stops in current map bounds and which are not downloaded
-   * @returns {any[]}
    */
   getNotDownloadedStopsInBounds(): any[] {
     let inBounds = [];
@@ -892,8 +865,6 @@ export class ErrorHighlightService {
 
   /**
    * Gets all parent relations for id
-   * @param id
-   * @returns {any}
    */
   private getParentRelations(id: any): any {
     let parentRels = [];
@@ -912,8 +883,6 @@ export class ErrorHighlightService {
 
   /**
    * Splits route_ref tag into individual refs
-   * @param {string} routeRefTag
-   * @returns {string[]}
    */
   private getAlreadyAddedRefsInTag(routeRefTag: string): string[] {
     return routeRefTag.split(';');
@@ -921,9 +890,6 @@ export class ErrorHighlightService {
 
   /**
    * Compares refs of parent relations with added refs of node
-   * @param parentRels
-   * @param addedRefs
-   * @returns {any}
    */
   private compareRefs(parentRels: any, addedRefs: any): any {
     let parentRefs  = [];

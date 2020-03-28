@@ -110,7 +110,6 @@ export class StorageService {
 
   /**
    * Sets user details after login.
-   * @param userDetails
    */
   setUserData(userDetails: any): void {
     console.log(userDetails);
@@ -134,8 +133,6 @@ export class StorageService {
 
   /**
    * Sets an object from a localStorage for a specific key.
-   * @param key
-   * @param value
    */
   setSessionStorageItem(key: string, value: any): void {
     sessionStorage.setItem(key, JSON.stringify(value));
@@ -143,8 +140,6 @@ export class StorageService {
 
   /**
    * Retrieves an object from a sessionStorage for a specific key.
-   * @param key
-   * @returns {any}
    */
   getSessionStorageItem(key: string): any {
     return JSON.parse(sessionStorage.getItem(key));
@@ -152,8 +147,6 @@ export class StorageService {
 
   /**
    * Pushes key's object to the sessionStorage.
-   * @param key
-   * @param value
    */
   pushToSessionStorageItem(key: string, value: object): void {
     const previousValue: any = sessionStorage.getItem(key);
@@ -162,8 +155,6 @@ export class StorageService {
 
   /**
    * Sets an object from a localStorage for a specific key.
-   * @param key
-   * @param value
    */
   setLocalStorageItem(key: string, value: any): void {
     sessionStorage.setItem(key, JSON.stringify(value));
@@ -171,8 +162,6 @@ export class StorageService {
 
   /**
    * Retrieves an object from a localStorage for a specific key.
-   * @param key
-   * @returns {any}
    */
   getLocalStorageItem(key: string): any {
     return JSON.parse(localStorage.getItem(key));
@@ -180,8 +169,6 @@ export class StorageService {
 
   /**
    * Pushes key's object to the localStorage.
-   * @param key
-   * @param value
    */
   pushToLocalStorageItem(key: string, value: object): void {
     const previousValue: string = localStorage.getItem(key);
@@ -210,7 +197,6 @@ export class StorageService {
 
   /**
    * Retrieves name of currently logged user.
-   * @returns {string|string|null}
    */
   getDisplayName(): string {
     return localStorage.getItem('display_name');
@@ -218,7 +204,6 @@ export class StorageService {
 
   /**
    * Retrieves imgHref of currently logged user.
-   * @returns {string}
    */
   getImgHref(): string {
     return localStorage.getItem('img_href');
@@ -226,8 +211,6 @@ export class StorageService {
 
   // /**
   //  * Overwrites last step in the history of edits.
-  //  * @param key
-  //  * @param value
   //  */
   // overwriteLastLocalStorageEdit(key: string, value: object): void {
   //     let edits: any = JSON.parse(localStorage.getItem(key));

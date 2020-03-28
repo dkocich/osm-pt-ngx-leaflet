@@ -113,10 +113,6 @@ export class StopBrowserComponent implements OnInit {
 
   /**
    * NgFor track function which helps to re-render rows faster.
-   *
-   * @param index
-   * @param item
-   * @returns {number}
    */
   trackByFn(index: number, item: any): number {
     return item.id;

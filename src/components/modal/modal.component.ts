@@ -65,8 +65,6 @@ export class ModalComponent {
 
   /**
    * Executed on click of save button for adding new name tag
-   * @param {string} name
-   * @returns {void}
    */
 
   saveNameTag(name: string): void {
@@ -168,7 +166,6 @@ export class ModalComponent {
 
   /**
    * Re-renders platform as stop
-   * @returns {void}
    */
   private rerenderPlatformAsStop(): void {
     this.mapSrv.map.removeLayer(this.getLayerFromMap(this.wayErrorObject.stop.id));
@@ -183,7 +180,6 @@ export class ModalComponent {
 
   /**
    * Closes the currently opened modal
-   * @returns {void}
    */
   close(): void {
     this.bsModalRef.hide();
@@ -191,7 +187,6 @@ export class ModalComponent {
 
   /**
    * Handles adding missing name
-   * @param {string} name
    */
   private createChangeForNameTag(name: string): void {
     let change: object;
@@ -233,8 +228,6 @@ export class ModalComponent {
 
   /**
    * Adds suggested ref value to ref list
-   * @param rel
-   * @returns {void}
    */
   addMissingSuggestedRefValue(rel: IPtRelation): void {
     this.addedMissingSuggestionsRefs.push(rel);
@@ -247,8 +240,6 @@ export class ModalComponent {
 
   /**
    * adds selected nearby suggestion
-   * @param rel
-   * @returns {any}
    */
   addNearbySuggestedRefValue(rel: any): void {
     this.addedFromNearbySuggestionsRefs.push(rel);
@@ -261,7 +252,6 @@ export class ModalComponent {
 
   /**
    * Remove the added ref value (added from suggestions (missing) by user)
-   * @param toRemoveRel
    */
   removeMissingSuggestedRefValue(toRemoveRel: any): void {
     let index ;
@@ -285,7 +275,6 @@ export class ModalComponent {
 
   /**
    * Remove the added ref value (added from suggestions (nearby) by user)
-   * @param toRemoveRel
    */
   removeNearbySuggestedRefValue(toRemoveRel: any): void {
 
@@ -310,7 +299,6 @@ export class ModalComponent {
 
   /**
    * Remove the added ref value (newly added by user)
-   * @param ref
    */
   removeNewRefValue(ref: any): void {
     let index = this.newAddedRefs.indexOf(ref);
@@ -321,7 +309,6 @@ export class ModalComponent {
 
   /**
    * Adds new ref value
-   * @param ref
    */
   addNewRefValue(ref: string): void {
     if (ref !== '') {
@@ -334,7 +321,6 @@ export class ModalComponent {
 
   /**
    *  Handles adding missing refs
-   * @param {string} ref
    */
   private createChangeForRefTag(ref: string): void {
     let change: any;
@@ -356,8 +342,6 @@ export class ModalComponent {
 
   /**
    * adds given node as child member of routes
-   * @param addedFromNearbySuggestionsRefs
-   * @returns {void}
    */
   private addToMembers(addedFromNearbySuggestionsRefs: any): void {
 
@@ -429,7 +413,6 @@ export class ModalComponent {
 
   /**
    * Determines if new refs were added
-   * @returns {boolean}
    */
   viewAddedRefs(): boolean {
     return this.newAddedRefs.length !== 0 ||
@@ -439,8 +422,6 @@ export class ModalComponent {
 
   /**
    * Returns tool tip text
-   * @param {string} name
-   * @returns {string}
    */
   getTooltipText(name: string): string {
     switch (name) {
@@ -461,8 +442,6 @@ export class ModalComponent {
 
   /**
    * Get layer from map from given stop ID
-   * @param {number} stopID
-   * @returns {any}
    */
   private getLayerFromMap(stopID: number): any {
     let matchedLayer = null;

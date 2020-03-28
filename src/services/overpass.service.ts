@@ -321,9 +321,6 @@ export class OverpassService {
       );
   }
 
-  /**
-   * @param requestBody
-   */
   requestOverpassData(requestBody: string): void {
     this.mapSrv.clearLayer();
     requestBody = this.replaceBboxString(requestBody);
@@ -407,8 +404,6 @@ export class OverpassService {
 
   /**
    * Downloads all data for currently selected node.
-   * @param featureId
-   * @param process
    */
   private getNodeDataOverpass(featureId: number, process: boolean): void {
     let requestBody = `
@@ -460,8 +455,6 @@ export class OverpassService {
 
   /**
    * Downloads all missing data for currently explored relation.
-   * @param rel
-   * @param missingElements
    */
   private getRelationData(rel: any, missingElements: number[]): void {
     if (missingElements.length === 0) {
@@ -527,18 +520,12 @@ export class OverpassService {
     return idsArr;
   }
 
-  /**
-   *
-   * @param {number[]} idsArr
-   */
   private markQueriedRelations(idsArr: number[]): void {
     idsArr.forEach((id) => this.storageSrv.queriedMasters.add(id));
   }
 
   /**
    * Replaces {{bbox}} query string to actual bbox of the map view.
-   * @param requestBody
-   * @returns {string}
    */
   private replaceBboxString(requestBody: string): string {
     const bboxStr: string = this.areaReference.overpassBox.join(', ');
@@ -548,7 +535,6 @@ export class OverpassService {
   /**
    * Create basic changeset body.
    * @param metadata - contains source and comment added by user
-   * @returns {string}
    */
   private createChangeset(metadata: object): any {
     console.log('LOG (overpass s.)', metadata['source'], metadata['comment']);
@@ -567,7 +553,6 @@ export class OverpassService {
 
   /**
    * Adds changeset ID as an attribute to the request.
-   * @param changeset_id
    */
   private addChangesetId(changeset_id: any): void {
     this.changeset_id = changeset_id;
@@ -578,12 +563,6 @@ export class OverpassService {
     console.log('LOG (overpass s.)', this.changeset, doc);
   }
 
-  /**
-   *
-   * @param err
-   * @param changeset_id
-   * @param testUpload
-   */
   private createdChangeset(err: any, changeset_id: any, testUpload?: boolean): void {
     if (err) {
       return alert(
@@ -770,7 +749,6 @@ export class OverpassService {
 
   /**
    * Tries to close changeset after it is uploaded.
-   * @param err
    */
   private uploadedChangeset(err: any): void {
     if (err) {
@@ -881,8 +859,6 @@ export class OverpassService {
 
   /**
    * Downloads multiple node data for error highlight
-   * @param toDownload
-   * @returns {void}
    */
   private downloadMultipleNodeData(toDownload: any): void {
     let requestBody = `
@@ -954,7 +930,6 @@ export class OverpassService {
 
   /**
    * Continuous query for auto route wizard
-   * @param {boolean} find: boolean
    */
   requestNewOverpassDataForWizard(find: boolean): void {
     console.log('LOG. (overpass s.) Requesting new overpass data for wizard modal map');
@@ -1053,8 +1028,6 @@ export class OverpassService {
 
   /**
    * Multiple node data download for route wizard
-   * @param idsArr
-   * @returns {void}
    */
   private getMultipleNodeDataForWizard(idsArr: number[]): void {
     let requestBody = `

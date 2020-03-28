@@ -151,10 +151,6 @@ export class ToolbarComponent implements OnInit {
     }
   }
 
-  /**
-   *
-   * @param selection
-   */
   showInfo(selection: object): void {
     alert(JSON.stringify(selection, null, '\t'));
   }

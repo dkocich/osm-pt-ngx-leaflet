@@ -78,8 +78,6 @@ export class ProcessService {
 
   /**
    * Returns element with specific ID directly from mapped object.
-   * @param featureId
-   * @param map
    */
   getElementById(featureId: number, map: any): any {
     if (map.has(featureId)) {
@@ -121,10 +119,6 @@ export class ProcessService {
     return id;
   }
 
-  /**
-   *
-   * @param response
-   */
   processResponse(response: IOverpassResponse): void {
     const responseId = this.getResponseId();
     const transformedGeojson = this.mapSrv.osmtogeojson(response);
@@ -135,10 +129,6 @@ export class ProcessService {
     this.mapSrv.renderTransformedGeojsonData(transformedGeojson, this.mapSrv.map);
   }
 
-  /**
-   *
-   * @param response
-   */
   processNodeResponse(response: any): void {
     for (const element of response.elements) {
       if (!this.storageSrv.elementsMap.has(element.id)) {
@@ -178,10 +168,6 @@ export class ProcessService {
     )}/${center.lng.toFixed(5)}`;
   }
 
-  /**
-   *
-   * @param response
-   */
   processMastersResponse(response: object): void {
     response['elements'].forEach((element) => {
       if (!this.storageSrv.elementsMap.has(element.id)) {
@@ -213,7 +199,6 @@ export class ProcessService {
 
   /**
    * Creates initial list of stops/relations.
-   * @param id
    */
   createLists(id: number): void {
     const response = this.storageSrv.localJsonStorage.get(id);
@@ -270,34 +255,18 @@ export class ProcessService {
     }
   }
 
-  /**
-   *
-   * @param data
-   */
   activateFilteredRouteView(data: boolean): void {
     this.showRelationsForStopSource.next(data);
   }
 
-  /**
-   *
-   * @param data
-   */
   activateFilteredStopView(data: boolean): void {
     this.showStopsForRouteSource.next(data);
   }
 
-  /**
-   *
-   * @param data
-   */
   refreshSidebarView(data: string): void {
     this.refreshSidebarViewsSource.next(data);
   }
 
-  /**
-   *
-   * @param element
-   */
   refreshTagView(element: any): void {
     if (element) {
       this.storageSrv.currentElementsChange.emit(
@@ -311,7 +280,6 @@ export class ProcessService {
 
   /**
    * Re-initiates a list of route's variants and refreshes relation browser window.
-   * @param rel
    */
   refreshRelationView(rel: IPtRelation): void {
     this.storageSrv.listOfVariants.length = 0;
@@ -326,10 +294,6 @@ export class ProcessService {
 
   /**
    * Explores relation by downloading its members and highlighting stops position with a line.
-   * @param rel
-   * @param refreshTagView?
-   * @param refreshMasterView?
-   * @param zoomToElement?
    */
   exploreRelation(
     rel: any,
@@ -413,9 +377,6 @@ export class ProcessService {
 
   /**
    * Runs rest of the route's highlighting process after the missing members are downloaded.
-   * @param rel
-   * @param zoomToElement
-   * @param refreshTagView
    */
   downloadedMissingMembers(
     rel: any,
@@ -444,10 +405,6 @@ export class ProcessService {
     }
   }
 
-  /**
-   *
-   * @param rel
-   */
   exploreMaster(rel: any): void {
     if (rel.members.length === 0) {
       return alert(
@@ -480,13 +437,6 @@ export class ProcessService {
     this.refreshRelationView(rel);
   }
 
-  /**
-   *
-   * @param stop
-   * @param {boolean} filterRelations
-   * @param {boolean} refreshTags
-   * @param {boolean} zoomTo
-   */
   exploreStop(
     stop: any,
     filterRelations: boolean,
@@ -512,7 +462,6 @@ export class ProcessService {
 
   /**
    * Filters relations (routes) for given stop.
-   * @param stop
    */
   filterRelationsByStop(stop: IPtStop): object[] {
     this.storageSrv.listOfRelationsForStop = [];
@@ -531,7 +480,6 @@ export class ProcessService {
 
   /**
    * Filters stops for given relation (route).
-   * @param rel
    */
   filterStopsByRelation(rel: IPtRelation): void {
     if (rel === undefined) {
@@ -556,7 +504,6 @@ export class ProcessService {
 
   /**
    * Zooms to the input element (point position or relation geometry).
-   * @param element
    */
   zoomToElement(element: IOsmElement): void {
     if (element.type === 'node') {
@@ -599,7 +546,6 @@ export class ProcessService {
 
   /**
    * Validates URL hash content (lat, lng, zoom)
-   * @returns {boolean}
    */
   hashIsValidPosition(): boolean {
     const h = window.location.hash

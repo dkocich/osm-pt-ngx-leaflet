@@ -72,7 +72,6 @@ export class DbService {
 
   /**
    * Fetches IDs of routes for which route masters were fetched from Overpass and added to IDB
-   * @returns {any}
    */
   getIdsQueriedRoutesForMaster(): any {
     this.db.MetaData.where('type').equals('route').each((route) => {
@@ -91,8 +90,6 @@ export class DbService {
 
   /**
    * Fetches routes for which the given stop is a member from IDB
-   * @param {number} stopId
-   * @returns {any}
    */
   getRoutesForStop(stopId: number): any {
     return this.db.transaction('r', this.db.MetaData, this.db.PtRoutes, () => {
@@ -116,8 +113,6 @@ export class DbService {
 
   /**
    * Fetches routes for which the given platform is a member from IDB
-   * @param {number} platformId
-   * @returns {any}
    */
 
   getRoutesForPlatform(platformId: number): any {
@@ -141,9 +136,7 @@ export class DbService {
   }
 
   /**
-   * Markes Routes for which parent masters have been fetched from overpass and added to IDB
-   * @param {number[]} routeIds
-   * @returns {any}
+   * Marks Routes for which parent masters have been fetched from overpass and added to IDB
    */
   addToQueriedRoutesForMasters(routeIds: number[]): any {
     return this.db.transaction('rw', this.db.MetaData, () => {
@@ -157,10 +150,6 @@ export class DbService {
 
   /**
    * Adds Overpass API 's response to IndexedDb
-   * @param response
-   * @param id
-   * @param {string} type
-   * @returns {any}
    */
   addResponseToIDB(response: any, type: string, id?: any): Promise<any> {
     let routeIds             = [];
@@ -340,9 +329,6 @@ export class DbService {
 
   /**
    * Adds multiple node download overpass API's response to IDB
-   * @param response
-   * @param {any[]} IDs
-   * @returns {any}
    */
   addMultipleResponseToIDB(response: any, IDs: any[]): any {
     let parentRoutes         = new Map();
@@ -515,8 +501,6 @@ export class DbService {
   }
   /**
    * Fetches stops/platform members for a given route from IDB
-   * @param {number} relId
-   * @returns {any}
    */
   getMembersForRoute(relId: number): any {
     return this.db.transaction('r', this.db.PtStops, this.db.PtRoutes, this.db.PtPlatforms, () => {
@@ -555,8 +539,6 @@ export class DbService {
 
   /**
    * Gets all parent route_masters for given routeIDs
-   * @param {number[]} routeIds
-   * @returns {any}
    */
 
   getRoutesForMasterRoute(routeIds: number[]): any {
@@ -578,7 +560,6 @@ export class DbService {
 
   /**
    * Deletes old data from IDB (everything except areas grid)
-   * @returns {any}
    */
   deleteExpiredPTDataIDB(): any {
     return this.db.transaction('rw', [this.db.PtStops, this.db.PtRoutes,
@@ -655,15 +636,6 @@ export class DbService {
 
   /**
    * Adds metadata to IDB
-   * @param {number[]} routeIds
-   * @param {number} id
-   * @param {string} type
-   * @param stopsMetaData
-   * @param platformsMetaData
-   * @param routesMetaData
-   * @param routeMastersMetaData
-   * @param waysMetaData
-   * @returns {any}
    */
   addMetaData(
     routeIds:             number[],
@@ -716,14 +688,6 @@ export class DbService {
 
   /**
    * Adds metadata to IDB for multiple node response
-   * @param stopsMetaData
-   * @param platformsMetaData
-   * @param routesMetaData
-   * @param routeMastersMetaData
-   * @param waysMetaData
-   * @param {any[]} IDs
-   * @param {Map<string, string[]>} parentRoutes
-   * @returns {any}
    */
   private addMetaDataForMultipleResponse(
     stopsMetaData: any,

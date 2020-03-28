@@ -52,7 +52,6 @@ export class RouteWizardService {
 
   /**
    * Fired when modal has rendered
-   * @returns {void}
    */
   onShownModal(): void {
     if (this.map) {
@@ -62,7 +61,6 @@ export class RouteWizardService {
 
   /**
    * Renders data on modal map which was already present on the main map
-   * @returns {void}
    */
   renderAlreadyDownloadedData(): void {
     let obj: any = {};
@@ -78,7 +76,6 @@ export class RouteWizardService {
   /**
    * Used when modal is closed,
    * all data downloaded for modal map is processed for main application
-   * @returns {void}
    */
   processAllDownloadedOnMainMap(): void {
     for (let res of this.savedContinuousQueryResponses) {
@@ -91,8 +88,6 @@ export class RouteWizardService {
 
   /**
    * Renders data on modal map
-   * @param transformedGeoJSON
-   * @param {Map} map
    */
   renderTransformedGeojsonDataForRouteWizard(transformedGeoJSON: any, map: L.Map): void {
     this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
@@ -120,9 +115,6 @@ export class RouteWizardService {
 
   /**
    * Enables click of nodes for modal map
-   * @param feature
-   * @param layer
-   * @returns {void}
    */
   enableClickForRouteWizardMap(feature: any, layer: any): void {
     layer.on('click', () => {
@@ -132,8 +124,6 @@ export class RouteWizardService {
 
   /**
    * Handles map click
-   * @param feature
-   * @returns {void}
    */
   private handleRouteWizardMarkerClick(feature: any): void {
     const featureId: number = this.mapSrv.getFeatureIdFromMarker(feature);
@@ -142,8 +132,6 @@ export class RouteWizardService {
 
   /**
    * Forms an array of route refs from nodes, also removes duplicates
-   * @param stopsInBoundsIDs
-   * @returns {any[]}
    */
   getRouteRefsFromNodes(stopsInBoundsIDs: any): any[] {
     let withRouteRefTag = [];
@@ -166,8 +154,6 @@ export class RouteWizardService {
 
   /**
    * Processes multiple node data
-   * @param downloadedResponse
-   * @returns {void}
    */
   findMissingRoutes(downloadedResponse: any): void {
     let stopsInBounds       = this.mapSrv.findStopsInBounds(this.map, this.modalMapElementsMap);
@@ -198,8 +184,6 @@ export class RouteWizardService {
 
   /**
    * Filters newly added ref from suggested refs
-   * @param {any[]} refs
-   * @returns {any}
    */
   private filterPreviouslyAddedRefs(refs: any[]): any {
     let index;
@@ -219,8 +203,6 @@ export class RouteWizardService {
 
   /**
    * Returns stops for given refs
-   * @param notAddedRefs
-   * @returns {any}
    */
   private getStopsForNewRoutes(notAddedRefs: any): any {
     let stopsForNewRoutes = new Map();
@@ -249,8 +231,6 @@ export class RouteWizardService {
 
   /**
    * Removes duplicates from array
-   * @param {any[]} arr
-   * @returns {any}
    */
   private static removeDuplicatesFromArray(arr: any[]): any {
     return arr.filter((value, index, self) => {
@@ -260,9 +240,6 @@ export class RouteWizardService {
 
   /**
    * Compares arrays and returns refs not added in route refs
-   * @param nodeRefs
-   * @param routeRefs
-   * @returns {any}
    */
   private static compareArrays(nodeRefs: any, routeRefs: any): any {
     let notAdded = [];
@@ -283,8 +260,6 @@ export class RouteWizardService {
 
   /**
    * Get individual refs from stops's route_ref
-   * @param {any[]} stops
-   * @returns {any}
    */
   static getIndividualRouteRefs(stops: any[]): any {
     let refs = [];
@@ -309,8 +284,6 @@ export class RouteWizardService {
 
   /**
    * Highlights route's members on map
-   * @param members
-   * @param adjustZoom
    */
   highlightRoute(members: any, adjustZoom: boolean): void {
     this.mapSrv.clearHighlight(this.map);
@@ -330,8 +303,6 @@ export class RouteWizardService {
 
   /**
    * Assign roles to members for new route
-   * @param members
-   * @returns {any}
    */
   static assignRolesToMembers(members: any): any {
     let probableRole: string = '';
@@ -354,7 +325,6 @@ export class RouteWizardService {
 
   /**
    * Adjust zoom to fit all members of route on map
-   * @param members
    */
   private adjustZoomForRoute(members: any): void {
     let latlngs: L.LatLng[] = [];
@@ -366,8 +336,6 @@ export class RouteWizardService {
 
   /**
    * Checks member count, for avoiding single member routes
-   * @param members
-   * @returns {any}
    */
   static checkMemberCount(members: any): any {
     return members.length !== 1;
@@ -375,7 +343,6 @@ export class RouteWizardService {
 
   /**
    * Handles highlighting of first route on starting of Step
-   * @param connectObj
    */
   highlightFirstRoute(connectObj: any): void {
     let members  = this.routesMap.get(this.routesMap.keys().next().value);
@@ -386,8 +353,6 @@ export class RouteWizardService {
 
   /**
    * Returns member counts (stops, platforms)
-   * @param members
-   * @returns {any}
    */
   static countNodeType(members: any): any {
     let stopsCount     = 0;
@@ -406,8 +371,6 @@ export class RouteWizardService {
   /**
    * Sets available connectivity, uses stop connectivity by default,
    * uses platforms if not available
-   * @param countObj
-   * @returns {any}
    */
   useAndSetAvailableConnectivity(countObj: any): any {
     let connectObj = this.resetAvailableConnectivity(countObj);
@@ -420,8 +383,6 @@ export class RouteWizardService {
 
   /**
    * Resets available connectivity
-   * @param countObj
-   * @returns {any}
    */
   private resetAvailableConnectivity(countObj: any): any {
     let canStopsConnect;
@@ -436,8 +397,6 @@ export class RouteWizardService {
 
   /**
    * Filters out empty tags before saving route
-   * @param route
-   * @returns {any}
    */
   static filterEmptyTags(route: any): any {
     let tags = route.tags;
@@ -453,8 +412,6 @@ export class RouteWizardService {
 
   /**
    * Highlights members of route with circle
-   * @param {any[]} members
-   * @returns {void}
    */
   highlightMembers(members: any[]): void {
     for (let member of members) {
@@ -471,7 +428,6 @@ export class RouteWizardService {
 
   /**
    * Clears member's highlight
-   * @returns {any}
    */
   clearMembersHighlight(): void {
     this.membersHighlightLayerGroup.clearLayers();
@@ -479,8 +435,6 @@ export class RouteWizardService {
 
   /**
    * Forms object for new route's members
-   * @param toAddNodes
-   * @returns {any}
    */
   static formRelMembers(toAddNodes: any): any {
     let relMembers = [];
@@ -496,11 +450,6 @@ export class RouteWizardService {
 
   /**
    * Fired when tags are modified
-   * @param {string} action
-   * @param key
-   * @param event
-   * @param newRoute
-   * @returns {any}
    */
   static modifiesTags(action: string, key: any, event: any, newRoute: any): any {
     switch (action) {
@@ -520,8 +469,6 @@ export class RouteWizardService {
 
   /**
    * Styles show connectivity buttons
-   * @param {string} type
-   * @returns {any}
    */
   private static styleButtons(type: string): any {
     switch (type) {
@@ -538,7 +485,6 @@ export class RouteWizardService {
 
   /**
    * Filters routes with one member
-   * @param routesMap
    */
   filterRoutesMap(routesMap: any): void {
     routesMap.forEach((value, key) => {
@@ -550,9 +496,6 @@ export class RouteWizardService {
 
   /**
    * View suggested route
-   * @param ref
-   * @param connectObj
-   * @returns {void}
    */
   viewSuggestedRoute(ref: any, connectObj: any): void {
     let members = this.routesMap.get(ref);
@@ -563,9 +506,6 @@ export class RouteWizardService {
 
   /**
    * Removes member from route
-   * @param {string} toRemoveMemberID
-   * @param addedNewRouteMembers
-   * @returns {any}
    */
   removeMember(toRemoveMemberID: string, addedNewRouteMembers: any): any {
     let members = [];
@@ -592,9 +532,6 @@ export class RouteWizardService {
 
   /**
    * Adds new member to route
-   * @param newMember
-   * @param addedNewRouteMembers
-   * @returns {any}
    */
   addNewMemberToRoute(newMember: any, addedNewRouteMembers: any): any {
     let members = [];
@@ -612,9 +549,6 @@ export class RouteWizardService {
 
   /**
    * Sets highlight type for highlighting route on map
-   * @param {string} type
-   * @param connectivityObj
-   * @returns {boolean}
    */
   setHighlightType(type: string, connectivityObj: any): boolean {
     switch (type) {
@@ -637,10 +571,6 @@ export class RouteWizardService {
 
   /**
    * Changes connectivity of route on map
-   * @param {string} type
-   * @param connectivityObj
-   * @param addedNewRouteMembers
-   * @returns {void}
    */
   showConnectivity(type: string, connectivityObj: any, addedNewRouteMembers: any): void {
     this.mapSrv.clearHighlight(this.map);
@@ -653,7 +583,6 @@ export class RouteWizardService {
 
   /**
    * Fetches ref of relations already downloaded
-   * @returns {any}
    */
   getFromAlreadyDownloadedRoutes(): any {
     let refsOfRoutes = [];

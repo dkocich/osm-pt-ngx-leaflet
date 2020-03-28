@@ -203,7 +203,6 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
 
   /***
    * Gets missing keys from allowed keys in beginnerMode
-   * @returns {string[]}
    */
   private getUnfilledKeys(): string[] {
     if (this.currentElement) {
@@ -214,9 +213,6 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
 
   /**
    * Adds tag for beginnerMode
-   * @param {string} key
-   * @param {string} value
-   * @returns {void}
    */
   addChangeBeginnerMode(key: string, value: string): void {
     this.tagKey = key;

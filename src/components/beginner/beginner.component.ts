@@ -74,8 +74,6 @@ export class BeginnerComponent {
 
   /**
    * Returns allowed keys (for tags) for beginner mode stops
-   * @param {string} key
-   * @returns {boolean}
    */
   private filterStopKeysForBeginner(key: string): boolean {
     return key === 'name' || key === 'ref';
@@ -83,8 +81,6 @@ export class BeginnerComponent {
 
   /**
    * Returns allowed keys (for tags) for beginner mode routes
-   * @param {string} key
-   * @returns {boolean}
    */
   private filterRouteKeysForBeginner(key: string): boolean {
     return key === 'name' || key === 'ref';
@@ -103,8 +99,6 @@ export class BeginnerComponent {
 
   /**
    * Determines whether given component should be viewed
-   * @param {string} windowName
-   * @returns {boolean}
    */
   shouldView(windowName: string): boolean {
 

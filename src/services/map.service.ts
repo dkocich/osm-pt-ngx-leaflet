@@ -214,7 +214,6 @@ export class MapService {
 
   /**
    * Disables events propagation on map buttons (dragging of map, etc.).
-   * @param elementId
    */
   disableMouseEvent(elementId: string): void {
     const element = document.getElementById(elementId) as HTMLElement;
@@ -247,8 +246,6 @@ export class MapService {
 
   /**
    * Renders GeoJson data on the map.
-   * @param transformedGeojson
-   * @param map
    */
   renderTransformedGeojsonData(transformedGeojson: any, map: L.Map): void {
     this.ptLayer = L.geoJSON(transformedGeojson, {
@@ -284,8 +281,6 @@ export class MapService {
 
   /**
    * Creates click events for leaflet elements.
-   * @param feature
-   * @param layer
    */
   enableDrag(feature: any, layer: any): any {
     layer.on('click', (e) => {
@@ -356,7 +351,6 @@ export class MapService {
   }
 
   /**
-   * @param res
    */
   renderData(res: any): void {
     const transformed = this.osmtogeojson(res);
@@ -403,8 +397,6 @@ export class MapService {
 
   /**
    * Returns coordinates for a stop specified by ID.
-   * @param refId
-   * @param map
    * @returns {{lat: number, lng: number}}
    */
   findCoordinates(refId: number, map: any): L.LatLngExpression {
@@ -418,7 +410,6 @@ export class MapService {
 
   /**
    * Highlights stop marker with a circle.
-   * @param stop
    */
   showStop(stop: IPtStop): void {
     this.markerFrom = L.circleMarker(
@@ -430,7 +421,6 @@ export class MapService {
 
   /**
    * Creates multiple relations highlights.
-   * @param filteredRelationsForStop
    */
   showRelatedRoutes(filteredRelationsForStop: object[]): void {
     if (filteredRelationsForStop) {
@@ -452,8 +442,6 @@ export class MapService {
 
   /**
    * Builds multiple relations highlights.
-   * @param rel
-   * @returns {boolean}
    */
   showRoutes(rel: any): boolean {
     const latlngs = Array();
@@ -507,10 +495,6 @@ export class MapService {
 
   /**
    * Builds and creates relation highlight.
-   * @param rel
-   * @param map
-   * @param elementsMap
-   * @returns {boolean}
    */
   showRoute(rel: any, map: L.Map, elementsMap: any): boolean {
     for (const member of rel.members) {
@@ -602,7 +586,6 @@ export class MapService {
 
   /**
    * Verifies if highlight is still active.
-   * @returns {any}
    */
   highlightIsActive(): boolean {
     return (
@@ -652,7 +635,6 @@ export class MapService {
 
   /**
    * Draws tooltip with name of from/to stops.
-   * @param rel
    */
   drawTooltipFromTo(rel: any): void {
     const latlngFrom = this.getFirstNode();
@@ -688,9 +670,6 @@ export class MapService {
 
   /**
    * Styles leaflet markers.
-   * @param feature
-   * @param latlng
-   * @returns {any}
    */
   stylePoint(feature: any, latlng: any): any {
     let iconUrl = 'assets/marker-icon.png';
@@ -753,7 +732,6 @@ export class MapService {
 
   /**
    * Styles leaflet lines.
-   * @param feature
    * @returns {{color: string, weight: number, opacity: number}}
    */
   private styleFeature(feature: any): object {
@@ -769,11 +747,6 @@ export class MapService {
     }
   }
 
-  /**
-   *
-   * @param feature
-   * @returns {number}
-   */
   getFeatureIdFromMarker(feature: any): number {
     const featureTypeId = feature.id.split('/');
     const featureType = featureTypeId[0];
@@ -782,7 +755,6 @@ export class MapService {
 
   /**
    * Emits event when users clicks map marker.
-   * @param feature
    */
   private handleMarkerClick(feature: any): void {
     const featureId: number = this.getFeatureIdFromMarker(feature);
@@ -790,10 +762,6 @@ export class MapService {
     this.storageSrv.tutorialStepCompleted.emit('click map marker');
   }
 
-  /**
-   *
-   * @param feature
-   */
   private handleMembershipToggle(feature: any): void {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     const marker: object = feature.target; // FIXME DELETE?
@@ -804,8 +772,6 @@ export class MapService {
 
   /**
    * Colors popup according to event
-   * @param e
-   * @returns {void}
    */
   static colorPopUpByEvent (e: any): void {
     let colorString = '';
@@ -823,9 +789,6 @@ export class MapService {
 
   /**
    * Colors popup according to the given popup name
-   * @param {string} colorName
-   * @param element
-   * @returns {any}
    */
   static colorPopUpByColorName(colorName: string, element: any): void {
     element.children[0].style.backgroundColor = colorName;
@@ -834,8 +797,6 @@ export class MapService {
 
   /**
    * Fetches popup element from currently added popups on map
-   * @param popUpId
-   * @returns {HTMLElement}
    */
   getPopUpFromArray(popUpId: number): HTMLElement {
     for (let popUp of this.popUpArr) {
@@ -847,7 +808,6 @@ export class MapService {
 
   /**
    * Removes the complete popup layer and enables marker click again
-   * @returns {void}
    */
   removePopUps(): void {
     this.map.closePopup();
@@ -858,8 +818,6 @@ export class MapService {
 
   /**
    * Adds mouseover and mouseout listeners from popup
-   * @param popUpElement
-   * @returns {void}
    */
   static addHoverListenersToPopUp(popUpElement: HTMLElement): void {
     L.DomEvent.addListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
@@ -868,8 +826,6 @@ export class MapService {
 
   /**
    * Removes mouseover and mouseout listeners from popup
-   * @param popUpElement
-   * @returns {void}
    */
   static removeHoverListenersToPopUp(popUpElement: HTMLElement): void {
     L.DomEvent.removeListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
@@ -878,7 +834,6 @@ export class MapService {
 
   /**
    * Displays route info labels for the case of single route highlight
-   * @param {number} relID
    */
   showRouteInfoLabels(relID: number): void {
     let rel = this.storageSrv.elementsMap.get(relID);
@@ -890,7 +845,6 @@ export class MapService {
 
   /**
    * Handles displaying route info labels for the case of multiple route highlight
-   * @param {Map<number, Polyline>} relHighlightsAndIDs
    */
   showMultipleRouteInfoLabels(relHighlightsAndIDs: Map<number, L.Polyline>): void {
     relHighlightsAndIDs.forEach((highlight, id) => {
@@ -922,9 +876,6 @@ export class MapService {
 
   /**
    * Returns all stops/platforms on the given map
-   * @param {Map} map
-   * @param elementsMap
-   * @returns {any[]}
    */
   findStopsInBounds(map: L.Map, elementsMap: any): any[] {
     let stopsInBounds = [];

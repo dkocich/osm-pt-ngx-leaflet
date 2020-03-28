@@ -111,7 +111,6 @@ export class RouteMasterWizardComponent {
 
   /**
    * Finds suggestions in current bounds
-   * @returns {void}
    */
   findSuggestions(): void {
     if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForRouteMasterWizard) {
@@ -123,8 +122,6 @@ export class RouteMasterWizardComponent {
 
   /**
    * Jumps to step when tab directly clicked
-   * @param {string} step
-   * @returns {void}
    */
   private selectTab(step: number): void {
     this.stepTabs.tabs[step - 1].disabled = false;
@@ -137,7 +134,6 @@ export class RouteMasterWizardComponent {
 
   /**
    * Returns array of keys from map
-   * @returns {string[]}
    */
   getKeys(): string[] {
     let refs = [];
@@ -153,9 +149,6 @@ export class RouteMasterWizardComponent {
 
   /**
    * Highlights the route on map
-   * @param routeID
-   * @param percentageCoverage
-   * @returns {void}
    */
   viewRoute(routeID: number, percentageCoverage: number): void {
     if (percentageCoverage === 100) {
@@ -167,7 +160,6 @@ export class RouteMasterWizardComponent {
 
   /**
    * For moving from step 3 to 4
-   * @returns {void}
    */
   saveStep3(): void {
     this.selectTab(4);
@@ -220,7 +212,6 @@ export class RouteMasterWizardComponent {
 
   /**
    * Final step for saving the route master
-   * @returns {void}
    */
   saveStep4(): void {
     let newRM  = {
@@ -243,8 +234,6 @@ export class RouteMasterWizardComponent {
 
   /**
    * returns colors for the list items according to percentage coverage area
-   * @param percentageCoverage
-   * @returns {string}
    */
   getListItemColor(percentageCoverage: number): string {
     switch (true) {

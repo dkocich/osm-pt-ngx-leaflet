@@ -56,9 +56,6 @@ export class EditService {
     );
 
     this.editingMode.subscribe(
-      /**
-       * @param data
-       */
       (data) => {
         console.log(
           'LOG (editing s.) Editing mode change in editSrv- ',
@@ -263,8 +260,6 @@ export class EditService {
 
   /**
    * Handles adding of different PT elements and fills attributes automatically.
-   * @param {string} creatingElementOfType
-   * @param {any} event
    */
   createElement(creatingElementOfType: string, event: any): void {
     let newId: number = this.findNewId();
@@ -345,7 +340,6 @@ export class EditService {
 
   /**
    * Creates new route_master with or without first route.
-   * @param {number} relId
    */
   createMaster(relId?: number): void {
     const newId        = this.findNewId();
@@ -385,8 +379,6 @@ export class EditService {
 
   /**
    * Adds/removes members from route_master relation.
-   * @param {number} relId
-   * @param {number} routeMasterId
    */
   changeRouteMasterMembers(relId: number, routeMasterId: number): void {
     console.log(
@@ -410,7 +402,6 @@ export class EditService {
 
   /**
    * Handles process of node's membership toggle.
-   * @param featureId
    */
   private handleMarkerMembershipToggleClick(featureId: number): void {
     this.redrawMembersHighlight(featureId);
@@ -418,7 +409,6 @@ export class EditService {
   }
 
   /**
-   * @param featureId
    */
   redrawMembersHighlight(featureId?: number): void {
     const rel = JSON.parse(
@@ -538,8 +528,6 @@ export class EditService {
 
   /**
    * Handles repositioning of newly created node elements.
-   * @param marker
-   * @param event
    */
   repositionElement(marker: any, event: any): void {
     const opt         = event.target.options;
@@ -570,7 +558,6 @@ export class EditService {
 
   /**
    * Binds events to created markers.
-   * @param marker
    */
   createNewMarkerEvents(marker: any): void {
     marker.on('dragend', (event) => {
@@ -584,10 +571,6 @@ export class EditService {
 
   /**
    * Creates new marker with unique ID, icon, options and metadata attributes.
-   * @param {string} creatingElementOfType
-   * @param event
-   * @param {number} newId
-   * @returns {any}
    */
   initializeNewMarker(
     creatingElementOfType: string,
@@ -698,8 +681,6 @@ export class EditService {
 
   /**
    * Checks if the last edit was made on the same tag like the new change.
-   * @param editObj
-   * @returns {boolean}
    */
   private shouldCombineChanges(editObj: any): boolean {
 
@@ -722,7 +703,6 @@ export class EditService {
 
   /**
    * Checks if last two changes are on the same tag and combines them in edit. history together.
-   * @param editObj
    */
   private combineChanges(editObj: any): void {
     console.log('LOG (editing s.) Combining changes');
@@ -761,7 +741,6 @@ export class EditService {
 
   /**
    * Checks if user browses history of edits.
-   * @returns {boolean}
    */
   private isBrowsingHistoryOfChanges(): boolean {
     return this.currentEditStep < this.storageSrv.edits.length;
@@ -769,7 +748,6 @@ export class EditService {
 
   /**
    * Deletes all more recent edits if an user makes some change while browsing in history.
-   * @param fromChangeNumber
    */
   private deleteMoreRecentChanges(fromChangeNumber: number): void {
     this.storageSrv.edits.length = fromChangeNumber;
@@ -1028,7 +1006,6 @@ export class EditService {
 
   /**
    * Deletes all unnecessary attributes from member object in a relation.
-   * @param editObj
    */
   private simplifyMembers(editObj: any): void {
     for (const member of editObj.change.to) {
@@ -1042,8 +1019,6 @@ export class EditService {
 
   /**
    * Compares strings of from/to changes in the edited object.
-   * @param editObj
-   * @returns {boolean}
    */
   private changeIsEqual(editObj: any): boolean {
     console.log(
