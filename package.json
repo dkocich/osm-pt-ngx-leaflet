@@ -75,7 +75,7 @@
     "@types/stylelint": "9.10.1",
     "@types/xmlbuilder": "0.0.35",
     "angular2-hotkeys": "2.2.0",
-    "angulartics2": "6.1.0",
+    "angulartics2": "9.0.0",
     "bootstrap": "3.4.1",
     "core-js": "2.5.7",
     "dexie": "2.0.4",
