@@ -96,7 +96,7 @@
     "ngx-toastr": "8.8.0",
     "osm-auth": "1.0.2",
     "osmtogeojson": "^3.0.0-beta.4",
-    "ramda": "0.25.0",
+    "ramda": "0.27.0",
     "raven-js": "3.26.1",
     "redux": "4.0.0",
     "redux-logger": "3.0.6",
