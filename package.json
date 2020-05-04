@@ -103,7 +103,7 @@
     "redux-observable": "0.19.0",
     "reflect-metadata": "0.1.12",
     "rxjs": "~6.5.5",
-    "rxjs-compat": "~6.5.4",
+    "rxjs-compat": "~6.5.5",
     "snyk": "1.298.1",
     "stylelint": "10.0.1",
     "stylelint-config-standard": "18.3.0",
