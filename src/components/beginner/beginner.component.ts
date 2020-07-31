@@ -97,8 +97,8 @@ export class BeginnerComponent {
    */
   shouldView(windowName: string): boolean {
 
-    let beginnerView = this.ngRedux.getState()['app']['beginnerView'];
-    let editing      = this.ngRedux.getState()['app']['editing'];
+    const beginnerView = this.ngRedux.getState()['app']['beginnerView'];
+    const editing      = this.ngRedux.getState()['app']['editing'];
 
     switch (windowName) {
       case 'route-browser':

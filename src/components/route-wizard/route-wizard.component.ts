@@ -170,7 +170,7 @@ export class RouteWizardComponent {
     this.newRouteMembersSuggestions = this.routeWizardSrv.routesMap.get(ref);
     this.addedNewRouteMembers       = this.routeWizardSrv.routesMap.get(ref);
     this.selectTab(3);
-    let countObj = RouteWizardService.countNodeType(this.addedNewRouteMembers);
+    const countObj = RouteWizardService.countNodeType(this.addedNewRouteMembers);
     this.routeWizardSrv.useAndSetAvailableConnectivity(countObj);
     this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers, true);
     this.routeWizardSrv.highlightMembers(this.addedNewRouteMembers);
@@ -192,7 +192,7 @@ export class RouteWizardComponent {
    */
   private handleModalMapMarkerClick(featureId: number): void {
     if (this.stepTabs.tabs[2].active) {
-      let newMember = this.processSrv.getElementById(featureId, this.routeWizardSrv.modalMapElementsMap);
+      const newMember = this.processSrv.getElementById(featureId, this.routeWizardSrv.modalMapElementsMap);
       this.addNewMemberToRoute(newMember);
     }
   }
@@ -252,7 +252,7 @@ export class RouteWizardComponent {
     RouteWizardService.assignRolesToMembers(this.addedNewRouteMembers);
     this.newRoute.members = RouteWizardService.formRelMembers(this.addedNewRouteMembers);
     this.newRoute.tags    = RouteWizardService.filterEmptyTags(this.newRoute);
-    let change            = { from: undefined, to: this.newRoute };
+    const change            = { from: undefined, to: this.newRoute };
     this.routeWizardSrv.modalMapElementsMap.set(this.newRoute.id, this.newRoute);
     this.editSrv.addChange(this.newRoute, 'add route', change);
     this.modalRefRouteWiz.hide();
@@ -274,7 +274,7 @@ export class RouteWizardComponent {
         this.viewSuggestedRoute(this.newRoutesRefs[0]);
         break;
       case '3':
-        let countObj = RouteWizardService.countNodeType(this.addedNewRouteMembers);
+        const countObj = RouteWizardService.countNodeType(this.addedNewRouteMembers);
         this.routeWizardSrv.useAndSetAvailableConnectivity(countObj);
         this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers, true);
         this.routeWizardSrv.highlightMembers(this.addedNewRouteMembers);
@@ -299,7 +299,7 @@ export class RouteWizardComponent {
     let color = '';
     this.routeWizardSrv.routesMap.forEach((members, suggestedRef) => {
       if (suggestedRef === ref) {
-        let membersLength = members.length;
+        const membersLength = members.length;
         if (membersLength > 10) {
           color = 'green';
         } else if (membersLength < 10 && membersLength > 5) {

@@ -77,10 +77,10 @@ export class StopBrowserComponent implements OnInit {
 
   private createChange(): void {
     const type = 'change members';
-    let elementsWithoutRole = this.currentElement['members'].filter((member) => {
+    const elementsWithoutRole = this.currentElement['members'].filter((member) => {
       return member['role'] === '';
     });
-    let change = {
+    const change = {
       from: JSON.parse(JSON.stringify(this.currentElement['members'])),
       to: JSON.parse(
         JSON.stringify([...this.listOfStopsForRoute, ...elementsWithoutRole]),

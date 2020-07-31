@@ -195,7 +195,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
    */
   private getUnfilledKeys(): string[] {
     if (this.currentElement) {
-      let existingKeys = Object.keys(this.currentElement.tags);
+      const existingKeys = Object.keys(this.currentElement.tags);
       return this.tagBrowserOptions.allowedKeys.filter((key) => !existingKeys.includes(key));
     }
   }

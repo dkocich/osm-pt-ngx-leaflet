@@ -64,7 +64,7 @@ export class RouteMasterWizardService {
       elements.push(element);
     });
     obj.elements = elements;
-    let transformed = this.osmtogeojson(obj);
+    const transformed = this.osmtogeojson(obj);
     this.renderTransformedGeojsonDataRMWizard(transformed, this.map);
   }
 
@@ -73,13 +73,13 @@ export class RouteMasterWizardService {
    *  all data downloaded for modal map is processed for main application
    */
   processAllDownloadedOnMainMap(): void {
-    for (let res of this.savedContinuousQueryResponses) {
+    for (const res of this.savedContinuousQueryResponses) {
       this.processSrv.processResponse(res);
     }
-    for (let res of this.savedMultipleNodeDataResponses) {
+    for (const res of this.savedMultipleNodeDataResponses) {
       this.processSrv.processNodeResponse(res);
     }
-    for (let res of this.savedMasterQueryResponses) {
+    for (const res of this.savedMasterQueryResponses) {
       this.processSrv.processMastersResponse(res);
     }
   }
@@ -106,10 +106,10 @@ export class RouteMasterWizardService {
   }
 
   findToBeComparedRels(response: IOverpassResponse): Map<number, number> {
-    let newDownloadedRoutes = [];
-    let oldDownloadedRoutes = [];
+    const newDownloadedRoutes = [];
+    const oldDownloadedRoutes = [];
     if (response) {
-      for (let element of response.elements) {
+      for (const element of response.elements) {
         if ((element.type === 'relation')
           && !((element.tags.public_transport === 'stop_area'))
           && (element['members'])) {
@@ -129,23 +129,23 @@ export class RouteMasterWizardService {
     console.log('LOG (route master wizard s.) Newly downloaded relations',
       newDownloadedRoutes, 'old already present relations', oldDownloadedRoutes);
 
-    let rels = [...newDownloadedRoutes, ...oldDownloadedRoutes];
-    let relsMap = new Map();
-    let refOfRels = [];
+    const rels = [...newDownloadedRoutes, ...oldDownloadedRoutes];
+    const relsMap = new Map();
+    const refOfRels = [];
     rels.forEach((rel: IPtRelation) => {
-      let noOfMembers = rel.members.length;
+      const noOfMembers = rel.members.length;
       let fullyDownloaded = 0;
-      for (let member of rel.members) {
-        let memberEle = this.modalMapElementsMap.get(member.ref);
+      for (const member of rel.members) {
+        const memberEle = this.modalMapElementsMap.get(member.ref);
         if (this.modalMapElementsMap.has(member.ref) && memberEle.type === 'node') {
-          let element = this.modalMapElementsMap.get(member.ref);
+          const element = this.modalMapElementsMap.get(member.ref);
           refOfRels.push(rel.tags.ref);
           if (this.nodesFullyDownloaded.has(element.id)) {
             fullyDownloaded++;
           }
         }
       }
-      let percentCoverage = (fullyDownloaded / noOfMembers) * 100;
+      const percentCoverage = (fullyDownloaded / noOfMembers) * 100;
       relsMap.set(rel.id, percentCoverage);
     });
     console.log('LOG (route master wizard s.) refs of routes relations to be compared:', refOfRels);
@@ -157,8 +157,8 @@ export class RouteMasterWizardService {
     let flag = false;
     relation['members'].forEach((member) => {
       if (this.modalMapElementsMap.has(member.ref) && this.modalMapElementsMap.get(member.ref).type === 'node') {
-        let element = this.modalMapElementsMap.get(member.ref);
-        let latlng = { lat: element.lat, lng: element.lon };
+        const element = this.modalMapElementsMap.get(member.ref);
+        const latlng = { lat: element.lat, lng: element.lon };
         if (this.map.getBounds().contains(latlng)) {
           flag = true;
         }
@@ -169,9 +169,9 @@ export class RouteMasterWizardService {
 
   findMissingRouteMasters(res: IOverpassResponse): void {
     this.newRMsMap = new Map();
-    let RMRefs: string[] = [];
+    const RMRefs: string[] = [];
 
-    for (let element of res['elements']) {
+    for (const element of res['elements']) {
       if (!this.modalMapElementsMap.has(element.id)) {
         this.modalMapElementsMap.set(element.id, element);
       }
@@ -185,20 +185,20 @@ export class RouteMasterWizardService {
     console.log('LOG (route master wizard s.) Refs of route masters to be compared:', RMRefs);
 
     this.relsMap.forEach((value, key) => {
-      let rel = this.modalMapElementsMap.get(key);
+      const rel = this.modalMapElementsMap.get(key);
       if (!RMRefs.includes(rel.tags.ref)) {
         if (this.newRMsMap.has(rel.tags.ref)) {
-          let alreadyAddedRels = this.newRMsMap.get(rel.tags.ref);
+          const alreadyAddedRels = this.newRMsMap.get(rel.tags.ref);
           alreadyAddedRels.push({ id: rel.id, percentCoverage: value });
         } else {
-          let rels = [];
+          const rels = [];
           rels.push({ id: rel.id, percentCoverage: value });
           this.newRMsMap.set(rel.tags.ref, rels);
         }
       }
     });
 
-    let filteredMap = new Map();
+    const filteredMap = new Map();
     this.newRMsMap.forEach((value, key) => {
       if (value.length >= 2) {
         filteredMap.set(key, value);
@@ -220,7 +220,7 @@ export class RouteMasterWizardService {
    * Highlight selected member route of currently selected route master on map
    */
   viewRoute(routeID: number): void {
-    let route = this.modalMapElementsMap.get(routeID);
+    const route = this.modalMapElementsMap.get(routeID);
     this.mapSrv.clearHighlight(this.map);
     this.storageSrv.stopsForRoute = [];
     this.storageSrv.platformsForRoute = [];

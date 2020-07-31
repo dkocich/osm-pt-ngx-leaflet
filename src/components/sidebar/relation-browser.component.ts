@@ -126,8 +126,8 @@ export class RelationBrowserComponent implements OnInit {
     if (!this.currentElement) {
       return;
     }
-    let rel = this.storageSrv.elementsMap.get(relId);
-    let found = rel.members.filter((member) => {
+    const rel = this.storageSrv.elementsMap.get(relId);
+    const found = rel.members.filter((member) => {
       return member.ref === this.currentElement.id;
     });
     return found.length > 0;

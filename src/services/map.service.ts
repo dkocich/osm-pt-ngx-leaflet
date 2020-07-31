@@ -550,7 +550,7 @@ export class MapService {
 
     // at least two nodes to form a polyline and not point
     if (latlngs.length > 1) {
-      let currentHighlightFill = JSON.parse(JSON.stringify(Utils.HIGHLIGHT_FILL));
+      const currentHighlightFill = JSON.parse(JSON.stringify(Utils.HIGHLIGHT_FILL));
       currentHighlightFill.color =
         rel.tags.colour || rel.tags.color || Utils.HIGHLIGHT_FILL.color;
       this.highlightStroke = L.polyline(latlngs, Utils.HIGHLIGHT_STROKE).bindTooltip(
@@ -761,7 +761,7 @@ export class MapService {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     const marker: object = feature.target; // FIXME DELETE?
     this.markerMembershipToggleClick.emit({ featureId });
-    let rel = this.storageSrv.elementsMap.get(this.storageSrv.currentElement.id);
+    const rel = this.storageSrv.elementsMap.get(this.storageSrv.currentElement.id);
     this.storageSrv.tutorialStepCompleted.emit('click change route members');
   }
 
@@ -794,7 +794,7 @@ export class MapService {
    * Fetches popup element from currently added popups on map
    */
   getPopUpFromArray(popUpId: number): HTMLElement {
-    for (let popUp of this.popUpArr) {
+    for (const popUp of this.popUpArr) {
       if (popUp['_leaflet_id'] === popUpId) {
         return popUp.getElement();
       }
@@ -831,9 +831,9 @@ export class MapService {
    * Displays route info labels for the case of single route highlight
    */
   showRouteInfoLabels(relID: number): void {
-    let rel = this.storageSrv.elementsMap.get(relID);
+    const rel = this.storageSrv.elementsMap.get(relID);
     if (rel.tags.ref) {
-      let textString = '     ' + rel.tags.ref + '     ';
+      const textString = '     ' + rel.tags.ref + '     ';
       this.highlightFill.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
     }
   }
@@ -843,9 +843,9 @@ export class MapService {
    */
   showMultipleRouteInfoLabels(relHighlightsAndIDs: Map<number, L.Polyline>): void {
     relHighlightsAndIDs.forEach((highlight, id) => {
-      let rel        = this.storageSrv.elementsMap.get(id);
-      let textString = '     ' + rel.tags.ref + '     ';
-      let layer: any =  highlight;
+      const rel        = this.storageSrv.elementsMap.get(id);
+      const textString = '     ' + rel.tags.ref + '     ';
+      const layer: any =  highlight;
       layer.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
     });
   }
@@ -863,7 +863,7 @@ export class MapService {
   clearMultipleRouteInfoLabels(): void {
     this.highlight.eachLayer((layer: L.Layer) => {
       if (layer instanceof L.Polyline) {
-        let layerA: any = layer;
+        const layerA: any = layer;
         layerA.setText(null);
       }
     });
@@ -873,7 +873,7 @@ export class MapService {
    * Returns all stops/platforms on the given map
    */
   findStopsInBounds(map: L.Map, elementsMap: any): any[] {
-    let stopsInBounds = [];
+    const stopsInBounds = [];
     elementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
         if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {

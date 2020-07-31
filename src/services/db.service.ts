@@ -93,10 +93,10 @@ export class DbService {
    */
   getRoutesForStop(stopId: number): any {
     return this.db.transaction('r', this.db.MetaData, this.db.PtRoutes, () => {
-      let filteredRoutes = [];
+      const filteredRoutes = [];
       return this.db.MetaData.get(stopId).then((data) => {
         if (data) {
-          let routeIds = data.parentRoutes;
+          const routeIds = data.parentRoutes;
           return this.db.PtRoutes.each((route) => {
             if (routeIds.includes(route.id)) {
               filteredRoutes.push(route);
@@ -117,10 +117,10 @@ export class DbService {
 
   getRoutesForPlatform(platformId: number): any {
     return this.db.transaction('r', this.db.MetaData, this.db.PtRoutes, () => {
-      let filteredRoutes = [];
+      const filteredRoutes = [];
       return this.db.MetaData.get(platformId).then((data) => {
         if (data) {
-          let routeIds = data.parentRoutes;
+          const routeIds = data.parentRoutes;
           return this.db.PtRoutes.each((route) => {
             if (routeIds.includes(route.id)) {
               filteredRoutes.push(route);
@@ -152,18 +152,18 @@ export class DbService {
    * Adds Overpass API 's response to IndexedDb
    */
   addResponseToIDB(response: any, type: string, id?: any): Promise<any> {
-    let routeIds             = [];
-    let routes               = [];
-    let platforms            = [];
-    let stops                = [];
-    let routeMasters         = [];
-    let ways                 = [];
-    let platformsMetaData    = [];
-    let stopsMetaData        = [];
-    let routesMetaData       = [];
-    let routeMastersMetaData = [];
-    let waysMetaData         = [];
-    for (let element of response.elements) {
+    const routeIds             = [];
+    const routes               = [];
+    const platforms            = [];
+    const stops                = [];
+    const routeMasters         = [];
+    const ways                 = [];
+    const platformsMetaData    = [];
+    const stopsMetaData        = [];
+    const routesMetaData       = [];
+    const routeMastersMetaData = [];
+    const waysMetaData         = [];
+    for (const element of response.elements) {
       switch (element.type) {
         case 'node':
           if (element.tags.public_transport === 'platform') {
@@ -331,19 +331,19 @@ export class DbService {
    * Adds multiple node download overpass API's response to IDB
    */
   addMultipleResponseToIDB(response: any, IDs: any[]): any {
-    let parentRoutes         = new Map();
-    let routes               = [];
-    let platforms            = [];
-    let stops                = [];
-    let routeMasters         = [];
-    let ways                 = [];
-    let platformsMetaData    = [];
-    let stopsMetaData        = [];
-    let routesMetaData       = [];
-    let routeMastersMetaData = [];
-    let waysMetaData         = [];
+    const parentRoutes         = new Map();
+    const routes               = [];
+    const platforms            = [];
+    const stops                = [];
+    const routeMasters         = [];
+    const ways                 = [];
+    const platformsMetaData    = [];
+    const stopsMetaData        = [];
+    const routesMetaData       = [];
+    const routeMastersMetaData = [];
+    const waysMetaData         = [];
 
-    for (let element of response.elements) {
+    for (const element of response.elements) {
       switch (element.type) {
         case 'node':
           if (element.tags.public_transport === 'platform') {
@@ -378,7 +378,7 @@ export class DbService {
               memberPlatforms: [],
               isCompletelyDownloaded: 0,
             });
-            for (let member of element.members) {
+            for (const member of element.members) {
               if (IDs.includes(member.ref)) {
                 let parents = [];
                 if (!parentRoutes.has(member.ref)) {
@@ -484,7 +484,7 @@ export class DbService {
       }).catch((err) => {
         console.log('LOG (db s.) Error in adding metadata, all previous metadata addition for' +
           ' this transaction will be rolled back for Overpass API \'s response for ids: ' + IDs + ' to IDB');
-        for (let id of IDs) {
+        for (const id of IDs) {
           if (this.storageSrv.completelyDownloadedStopsIDB.has(id)) {
             this.storageSrv.completelyDownloadedStopsIDB.delete(id);
           } else if (this.storageSrv.completelyDownloadedRoutesIDB.has(id)) {
@@ -504,11 +504,11 @@ export class DbService {
    */
   getMembersForRoute(relId: number): any {
     return this.db.transaction('r', this.db.PtStops, this.db.PtRoutes, this.db.PtPlatforms, () => {
-      let memberIds = [];
-      let stops = [];
-      let platforms = [];
+      const memberIds = [];
+      const stops = [];
+      const platforms = [];
       return this.db.PtRoutes.get(relId).then((route) => {
-        for (let member of route.members) {
+        for (const member of route.members) {
           memberIds.push(member['ref']);
         }
         return this.db.transaction('r', this.db.PtStops, this.db.PtRoutes, this.db.PtPlatforms, () => {
@@ -528,7 +528,7 @@ export class DbService {
           });
         }).then(() => {
           // In order to have the same format as Overpass API response and reuse the functions
-          let object = {
+          const object = {
             elements: stops.concat(platforms),
           };
           return Promise.resolve(object);
@@ -542,7 +542,7 @@ export class DbService {
    */
 
   getRoutesForMasterRoute(routeIds: number[]): any {
-    let filteredMasters = [];
+    const filteredMasters = [];
     return this.db.PtRouteMasters.each((routeMaster) => {
       routeMaster['members'].forEach((element) => {
         if (routeIds.includes(element['ref'])) {
@@ -550,7 +550,7 @@ export class DbService {
         }
       });
     }).then(() => {
-      let routesObject = {
+      const routesObject = {
         elements: filteredMasters,
       };
       console.log(routesObject);
@@ -651,7 +651,7 @@ export class DbService {
     return this.db.transaction('rw', [this.db.PtRoutes, this.db.PtStops,
       this.db.PtPlatforms, this.db.OSMWays, this.db.PtRouteMasters, this.db.MetaData], () => {
       if (type === 'stop_position') {
-        for (let stop of stopsMetaData) {
+        for (const stop of stopsMetaData) {
           if (stop.id === id) {
             stop.parentRoutes = routeIds;
             stop.isCompletelyDownloaded = 1;
@@ -660,7 +660,7 @@ export class DbService {
         }
       }
       if (type === 'platform') {
-        for (let platform of platformsMetaData) {
+        for (const platform of platformsMetaData) {
           if (platform.id === id) {
             platform.parentRoutes = routeIds;
             platform.isCompletelyDownloaded = 1;
@@ -669,7 +669,7 @@ export class DbService {
         }
       }
       if (type === 'route') {
-        for (let route of routesMetaData) {
+        for (const route of routesMetaData) {
           if (route.id === id) {
             route.isCompletelyDownloaded = 1;
             break;
@@ -677,7 +677,7 @@ export class DbService {
         }
       }
       if (type === 'route_master') {
-        for (let route of routesMetaData) {
+        for (const route of routesMetaData) {
           route.isQueriedForMasters = 1;
         }
       }
@@ -702,7 +702,7 @@ export class DbService {
     return this.db.transaction('rw', [this.db.PtRoutes, this.db.PtStops,
       this.db.PtPlatforms, this.db.OSMWays, this.db.PtRouteMasters, this.db.MetaData], () => {
 
-      for (let stop of stopsMetaData) {
+      for (const stop of stopsMetaData) {
         if (IDs.includes(stop.id)) {
           this.storageSrv.completelyDownloadedStopsIDB.add(stop.id);
           stop.isCompletelyDownloaded = 1;
@@ -712,7 +712,7 @@ export class DbService {
           break;
         }
       }
-      for (let platform of platformsMetaData) {
+      for (const platform of platformsMetaData) {
         if (IDs.includes(platform.id)) {
           this.storageSrv.completelyDownloadedPlatformsIDB.add(platform.id);
           platform.isCompletelyDownloaded = 1;
@@ -722,7 +722,7 @@ export class DbService {
           break;
         }
       }
-      for (let route of routesMetaData) {
+      for (const route of routesMetaData) {
         if (IDs.includes(route.id)) {
           this.storageSrv.completelyDownloadedRoutesIDB.add(route.id);
           route.isCompletelyDownloaded = 1;

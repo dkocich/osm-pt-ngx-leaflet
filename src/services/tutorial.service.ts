@@ -47,7 +47,7 @@ export class TutorialService {
     this.tempEditSteps              = 0;
     this.storageSrv.currentTutorial = tutorialTitle;
     this.steps                      = [];
-    for (let step of data[expertMode][tutorialTitle]) {
+    for (const step of data[expertMode][tutorialTitle]) {
       this.steps.push({
         element : step.element,
         intro   : step.intro,
@@ -105,7 +105,7 @@ export class TutorialService {
 
   private handleStepCompletion(action: string): void {
     if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      let title = this.storageSrv.currentTutorial;
+      const title = this.storageSrv.currentTutorial;
       switch (title) {
         case 'Add new route':
           this.moveToNextStep();
@@ -126,7 +126,7 @@ export class TutorialService {
 
   private leftKeyClick(event: any, fn: any): void {
     if (event.key === 'ArrowRight') {
-      let title = this.storageSrv.currentTutorial;
+      const title = this.storageSrv.currentTutorial;
       switch (title) {
         case 'Quick overview (beginner)':
           switch (this.storageSrv.currentTutorialStep) {

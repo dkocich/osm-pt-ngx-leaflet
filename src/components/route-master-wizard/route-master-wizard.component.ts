@@ -130,7 +130,7 @@ export class RouteMasterWizardComponent {
    * Returns array of keys from map
    */
   getKeys(): string[] {
-    let refs = [];
+    const refs = [];
     this.newRMsMap.forEach((value, key) => {
       refs.push(key);
     });
@@ -208,7 +208,7 @@ export class RouteMasterWizardComponent {
    * Final step for saving the route master
    */
   saveStep4(): void {
-    let newRM  = {
+    const newRM  = {
       id       : this.editSrv.findNewId(),
       timestamp: new Date().toISOString().split('.')[0] + 'Z',
       version  : 1,
@@ -219,7 +219,7 @@ export class RouteMasterWizardComponent {
       members  : this.usedRM,
       tags     : this.RMTags,
     };
-    let change = { from: undefined, to: newRM };
+    const change = { from: undefined, to: newRM };
     this.routeMasterWizardSrv.modalMapElementsMap.set(newRM.id, newRM);
     this.editSrv.addChange(newRM, 'add route', change);
     this.modalRefRouteMasterWiz.hide();

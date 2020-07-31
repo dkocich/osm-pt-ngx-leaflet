@@ -138,10 +138,10 @@ export class ErrorHighlightService {
    */
 
   private addClickListenerToPopUp(popUp: any, errorObj: any): void {
-    let stop = errorObj['stop'];
-    let popUpElement = popUp.getElement();
-    let popUpId = popUp['_leaflet_id'];
-    let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
+    const stop = errorObj['stop'];
+    const popUpElement = popUp.getElement();
+    const popUpId = popUp['_leaflet_id'];
+    const errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
 
     L.DomEvent.addListener(popUpElement, 'click', (e) => {
       const featureId = Number(stop.id);
@@ -169,7 +169,7 @@ export class ErrorHighlightService {
       }
       if (this.mapSrv.currentPopUpFeatureId && this.mapSrv.currentPopUpFeatureId !== popUpId &&
         this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId)) {
-        let previousPopUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
+        const previousPopUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
         MapService.colorPopUpByColorName('white', previousPopUpElement);
         MapService.addHoverListenersToPopUp(previousPopUpElement);
       }
@@ -188,8 +188,8 @@ export class ErrorHighlightService {
     const element   = this.processSrv.getElementById(featureId, this.storageSrv.elementsMap);
     const latlng = { lat: element.lat, lng: element.lon };
 
-    let nearbyNodes = this.getNearbyNodeNames(latlng);
-    let suggestedNames = this.getMostUsedName(nearbyNodes);
+    const nearbyNodes = this.getNearbyNodeNames(latlng);
+    const suggestedNames = this.getMostUsedName(nearbyNodes);
 
     const initialState = {
           error      : 'missing name tags',
@@ -213,10 +213,10 @@ export class ErrorHighlightService {
 
     if (parentRels.length !== 0) {
       if (errorObject.stop.tags['route_ref']) {
-        let addedRefs  = this.getAlreadyAddedRefsInTag(errorObject.stop.tags['route_ref']);
+        const addedRefs  = this.getAlreadyAddedRefsInTag(errorObject.stop.tags['route_ref']);
         missingRefRels = this.compareRefs(parentRels, addedRefs);
       } else {
-        for (let parent of parentRels) {
+        for (const parent of parentRels) {
           missingRefRels.push(parent);
         }
       }
@@ -229,7 +229,7 @@ export class ErrorHighlightService {
         refErrorObject: errorObject,
       };
     } else {
-      let nearbyRels = this.getNearbyRoutesSuggestions(latlng, missingRefRels);
+      const nearbyRels = this.getNearbyRoutesSuggestions(latlng, missingRefRels);
       initialState = {
         error      : 'missing refs',
         missingRefRels,
@@ -281,7 +281,7 @@ export class ErrorHighlightService {
 
     this.storageSrv.elementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-        let errorObj: INameErrorObject = { stop, corrected: 'false' };
+        const errorObj: INameErrorObject = { stop, corrected: 'false' };
         if (!stop.tags['name'] && this.mapSrv.map.getBounds().contains(stop)) {
           this.nameErrorsObj.push(errorObj);
         }
@@ -303,13 +303,13 @@ export class ErrorHighlightService {
     let missingRefRels = [];
     this.storageSrv.elementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
-        let errorObj: IRefErrorObject = { stop, corrected: 'false', missingConnectedRefs: undefined, totalConnectedRefs: undefined };
+        const errorObj: IRefErrorObject = { stop, corrected: 'false', missingConnectedRefs: undefined, totalConnectedRefs: undefined };
         if (this.mapSrv.map.getBounds().contains(stop)) {
           if (this.isMobileDevice()) {
             if (!stop.tags['route_ref']) {
               this.refErrorsObj.push(errorObj); }
           } else {
-            let parentRels = this.getParentRelations(stop.id);
+            const parentRels = this.getParentRelations(stop.id);
             if (parentRels.length !== 0) {
               if (stop.tags['route_ref']) {
                 addedRefs   = this.getAlreadyAddedRefsInTag(stop.tags['route_ref']);
@@ -341,9 +341,9 @@ export class ErrorHighlightService {
 
     this.storageSrv.elementsMap.forEach((stop) => {
         if (stop.type === 'node' && (stop.tags.public_transport === 'platform')) {
-          let errorObj: IWayErrorObject = { stop, corrected: 'false', wayIDs: undefined };
+          const errorObj: IWayErrorObject = { stop, corrected: 'false', wayIDs: undefined };
           if (this.mapSrv.map.getBounds().contains(stop)) {
-            let parentWaysIDs = [];
+            const parentWaysIDs = [];
             this.storageSrv.elementsMap.forEach((ele) => {
               if (ele.type === 'way' && ele.tags.highway && ele.nodes.includes(stop.id)) {
                 parentWaysIDs.push(ele.id);
@@ -367,7 +367,7 @@ export class ErrorHighlightService {
 
     this.storageSrv.elementsMap.forEach((stop) => {
       if (stop.type === 'node' && (stop.tags.highway && stop.tags.highway === 'bus_stop')) {
-        let errorObj: IPTvErrorObject = { stop, corrected: 'false' };
+        const errorObj: IPTvErrorObject = { stop, corrected: 'false' };
         if (this.mapSrv.map.getBounds().contains(stop)) {
             this.PTvErrorsObj.push(errorObj);
         }
@@ -381,7 +381,7 @@ export class ErrorHighlightService {
    * Checks whether on Mobile/Desktop
    */
   isMobileDevice(): boolean {
-    let md = new MobileDetect(window.navigator.userAgent);
+    const md = new MobileDetect(window.navigator.userAgent);
     return !!md.mobile();
   }
 
@@ -423,7 +423,7 @@ export class ErrorHighlightService {
       this.currentIndex            = 0;
       this.storageSrv.currentIndex = 0;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
-      let stop = errorsObj[this.currentIndex].stop;
+      const stop = errorsObj[this.currentIndex].stop;
       document.getElementById(errorsObj[errorsObj.length - 1].stop.id.toString() + appendStringID)
         .style.backgroundColor = 'white';
       document.getElementById(errorsObj[this.currentIndex]['stop'].id.toString() + appendStringID)
@@ -439,7 +439,7 @@ export class ErrorHighlightService {
       this.currentIndex++;
       this.storageSrv.currentIndex++;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
-      let stop = errorsObj[this.currentIndex].stop;
+      const stop = errorsObj[this.currentIndex].stop;
 
       document.getElementById(errorsObj[this.currentIndex - 1].stop.id.toString() + appendStringID)
         .style.backgroundColor = 'white';
@@ -496,7 +496,7 @@ export class ErrorHighlightService {
       this.currentIndex            = errorsObj.length - 1;
       this.storageSrv.currentIndex = errorsObj.length - 1;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
-      let stop = errorsObj[this.currentIndex].stop;
+      const stop = errorsObj[this.currentIndex].stop;
       document.getElementById(errorsObj[0].stop.id.toString() + appendStringID)
         .style.backgroundColor = 'white';
       document.getElementById(errorsObj[errorsObj.length - 1].stop.id.toString() + appendStringID)
@@ -513,7 +513,7 @@ export class ErrorHighlightService {
       this.currentIndex--;
       this.storageSrv.currentIndex--;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
-      let stop = errorsObj[this.currentIndex].stop;
+      const stop = errorsObj[this.currentIndex].stop;
       document.getElementById(errorsObj[this.currentIndex + 1].stop.id.toString() + appendStringID)
         .style.backgroundColor = 'white';
       document.getElementById(errorsObj[this.currentIndex].stop.id.toString() + appendStringID)
@@ -533,7 +533,7 @@ export class ErrorHighlightService {
    * Quits specific correction mode
    */
   quit(): void {
-    let errorCorrectionMode: ISuggestionsBrowserOptions = this.ngRedux.getState()['app']['errorCorrectionMode'];
+    const errorCorrectionMode: ISuggestionsBrowserOptions = this.ngRedux.getState()['app']['errorCorrectionMode'];
     if (errorCorrectionMode) {
       if (errorCorrectionMode.refSuggestions && errorCorrectionMode.refSuggestions.startCorrection) {
         this.appActions.actSetErrorCorrectionMode({
@@ -622,10 +622,10 @@ export class ErrorHighlightService {
    */
   getNearbyNodeNames(latlngm: any): any[] {
 
-    let inRangeNameArray = [];
+    const inRangeNameArray = [];
     this.mapSrv.map.eachLayer((layer) => {
       if (layer instanceof L.Marker) {
-        let m: L.Marker = layer;
+        const m: L.Marker = layer;
         m.getLatLng();
         if (m.getLatLng().distanceTo(latlngm) < 1000 && m.feature.properties.name) {
           inRangeNameArray.push(m.feature.properties.name);
@@ -640,34 +640,34 @@ export class ErrorHighlightService {
    */
   getNearbyRoutesSuggestions(latlngm: any, missingRefRels: any): any[] {
 
-    let inRange = [];
+    const inRange = [];
     let nearbyRels = [];
     this.mapSrv.map.eachLayer((layer) => {
       if (layer instanceof L.Marker) {
-        let m: L.Marker = layer;
+        const m: L.Marker = layer;
         m.getLatLng();
         if (m.getLatLng().distanceTo(latlngm) < 500 && m.feature.properties.name) {
-          let idTypestring: any =  layer.feature.id;
-          let featureTypeId = idTypestring.split('/');
+          const idTypestring: any =  layer.feature.id;
+          const featureTypeId = idTypestring.split('/');
           inRange.push(this.storageSrv.elementsMap.get(Number(featureTypeId[1])));
         }
       }
     });
 
-    for (let stop of inRange) {
-      let rels = this.getParentRelations(stop.id);
+    for (const stop of inRange) {
+      const rels = this.getParentRelations(stop.id);
       nearbyRels = nearbyRels.concat(rels);
     }
-    let values = {};
+    const values = {};
     nearbyRels = nearbyRels.filter((item) => {
-      let val     = item['id'];
-      let exists  = values[val];
+      const val     = item['id'];
+      const exists  = values[val];
       values[val] = true;
       return !exists ;
     });
 
     nearbyRels = nearbyRels.filter((item) => {
-      for (let rel of missingRefRels) {
+      for (const rel of missingRefRels) {
         if (rel.id ===  item.id) {
           return false;
         }
@@ -684,11 +684,11 @@ export class ErrorHighlightService {
     if (array.length === 0) {
       return null;
     }
-    let modeMap  = {};
+    const modeMap  = {};
     let maxEl    = array[0];
     let maxCount = 1;
-    for (let item of  array) {
-      let el = item;
+    for (const item of  array) {
+      const el = item;
       if (modeMap[el] === null) {
         modeMap[el] = 1;
       }
@@ -714,16 +714,16 @@ export class ErrorHighlightService {
    * Adds popup
    */
   addSinglePopUp(errorObj: INameErrorObject | IRefErrorObject | IWayErrorObject | IPTvErrorObject): void {
-    let stop = errorObj['stop'];
+    const stop = errorObj['stop'];
     this.mapSrv.removePopUps();
     this.mapSrv.map.eachLayer((layer) => {
       if (layer['_latlng']  && layer['feature']) {
         this.mapSrv.enableDrag(layer['feature'], layer);
       }
     });
-    let latlng = { lat: stop.lat, lng: stop.lon };
-    let popupContent = ErrorHighlightService.makePopUpContent(errorObj.corrected);
-    let popup =     L.popup({
+    const latlng = { lat: stop.lat, lng: stop.lon };
+    const popupContent = ErrorHighlightService.makePopUpContent(errorObj.corrected);
+    const popup =     L.popup({
       closeOnClick: false,
       closeButton : false,
       autoPan     : false,
@@ -741,8 +741,8 @@ export class ErrorHighlightService {
    * Returns all stops in current map bounds and which are not downloaded
    */
   getAllStopsInCurrentBounds(): any[] {
-    let inBounds = [];
-    let inBounds2 = [];
+    const inBounds = [];
+    const inBounds2 = [];
     this.storageSrv.elementsMap.forEach((element) => {
       if (element.type === 'node' &&
         (element.tags.bus === 'yes' || element.tags.public_transport) &&
@@ -766,7 +766,7 @@ export class ErrorHighlightService {
    * Jumps to error
    */
   jumpToLocation(index: number): void {
-    let errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
+    const errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
     if (errorCorrectionMode.nameSuggestions.startCorrection) {
       document.getElementById(this.nameErrorsObj[this.currentIndex].stop.id.toString() + '-name-error-list-id')
         .style.backgroundColor = 'white';
@@ -774,7 +774,7 @@ export class ErrorHighlightService {
       this.storageSrv.currentIndex = index;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name tags' });
       this.addSinglePopUp(this.nameErrorsObj[this.currentIndex]);
-      let stop = this.nameErrorsObj[this.currentIndex].stop;
+      const stop = this.nameErrorsObj[this.currentIndex].stop;
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
       document.getElementById(this.nameErrorsObj[this.currentIndex].stop.id.toString() + '-name-error-list-id')
         .style.backgroundColor = 'lightblue';
@@ -787,7 +787,7 @@ export class ErrorHighlightService {
       this.storageSrv.currentIndex = index;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'missing refs' });
       this.addSinglePopUp(this.refErrorsObj[this.currentIndex]);
-      let stop = this.refErrorsObj[this.currentIndex].stop;
+      const stop = this.refErrorsObj[this.currentIndex].stop;
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
       document.getElementById(this.refErrorsObj[this.currentIndex]
         .stop.id.toString() + '-ref-error-list-id')
@@ -801,7 +801,7 @@ export class ErrorHighlightService {
       this.storageSrv.currentIndex = index;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'way as parent' });
       this.addSinglePopUp(this.wayErrorsObj[this.currentIndex]);
-      let stop = this.wayErrorsObj[this.currentIndex].stop;
+      const stop = this.wayErrorsObj[this.currentIndex].stop;
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
       document.getElementById(this.wayErrorsObj[this.currentIndex]
         .stop.id.toString() + '-way-error-list-id')
@@ -815,7 +815,7 @@ export class ErrorHighlightService {
       this.storageSrv.currentIndex = index;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'PTv Correction' });
       this.addSinglePopUp(this.PTvErrorsObj[this.currentIndex]);
-      let stop = this.PTvErrorsObj[this.currentIndex].stop;
+      const stop = this.PTvErrorsObj[this.currentIndex].stop;
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
       document.getElementById(this.PTvErrorsObj[this.currentIndex]
         .stop.id.toString() + '-PTv-error-list-id')
@@ -829,7 +829,7 @@ export class ErrorHighlightService {
       this.storageSrv.currentIndex = index;
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject : 'pt-pair' });
       this.startPTPairCorrection(this.ptPairErrorsObj[this.currentIndex]);
-      let stop = this.ptPairErrorsObj[this.currentIndex].stop;
+      const stop = this.ptPairErrorsObj[this.currentIndex].stop;
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 17);
       document.getElementById(this.ptPairErrorsObj[this.currentIndex]
         .stop.id.toString() + '-pt-pair-error-list-id')
@@ -842,7 +842,7 @@ export class ErrorHighlightService {
    * Returns all stops in current map bounds and which are not downloaded
    */
   getNotDownloadedStopsInBounds(): any[] {
-    let inBounds = [];
+    const inBounds = [];
     this.storageSrv.elementsMap.forEach((element) => {
       if (element.type === 'node' &&
         (element.tags.bus === 'yes' || element.tags.public_transport) &&
@@ -860,11 +860,11 @@ export class ErrorHighlightService {
    * Gets all parent relations for id
    */
   private getParentRelations(id: any): any {
-    let parentRels = [];
+    const parentRels = [];
 
     this.storageSrv.elementsMap.forEach((element) => {
       if ((element.type === 'relation') && !(element.tags.public_transport === 'stop_area') && (element.members)) {
-          for (let member of element.members) {
+          for (const member of element.members) {
             if (member.ref === id && element.tags.ref) {
               parentRels.push(element);
             }
@@ -885,13 +885,13 @@ export class ErrorHighlightService {
    * Compares refs of parent relations with added refs of node
    */
   private compareRefs(parentRels: any, addedRefs: any): any {
-    let parentRefs  = [];
-    let missingRefs = [];
-    for (let parent of parentRels) {
+    const parentRefs  = [];
+    const missingRefs = [];
+    for (const parent of parentRels) {
       parentRefs.push(parent.tags.ref);
     }
     let flag = true;
-    for (let parent of parentRels) {
+    for (const parent of parentRels) {
 
       if (!addedRefs.includes(parent.tags.ref)) {
         flag = false;
@@ -904,11 +904,11 @@ export class ErrorHighlightService {
 
   startPTPairCorrection(ptPairErrorObj: IPTPairErrorObject): void {
     this.mapSrv.map.off('click', this.clickEventFunction);
-    let stopId    = ptPairErrorObj.stop.id;
+    const stopId    = ptPairErrorObj.stop.id;
     let stopLayer = null;
     this.mapSrv.map.eachLayer((layer) => {
       if (layer['feature'] && layer['_latlng']) {
-        let featureID = this.mapSrv.getFeatureIdFromMarker(layer['feature']);
+        const featureID = this.mapSrv.getFeatureIdFromMarker(layer['feature']);
         if (featureID === stopId) {
           stopLayer = layer;
         }
@@ -937,11 +937,11 @@ export class ErrorHighlightService {
   private onClickMapPTPairCorrection(event: L.LeafletEvent): void {
     if (this.ptPairErrorsObj[this.currentIndex].corrected === 'false' && this.errorCorrectionMode.ptPairSuggestions &&
       this.errorCorrectionMode.ptPairSuggestions.startCorrection) {
-      let circleBounds = this.circleHighlight.getBounds();
+      const circleBounds = this.circleHighlight.getBounds();
       if (circleBounds.contains(event['latlng']) && this.ptPairErrorsObj[this.currentIndex].corrected === 'false') {
         this.openModalWithComponentForPTPair(this.ptPairErrorsObj[this.currentIndex], event, this.circleHighlight);
       } else {
-        let response = confirm('The location you selected is too far away from the stop. Do you still want to continue?');
+        const response = confirm('The location you selected is too far away from the stop. Do you still want to continue?');
         if (response) {
           this.openModalWithComponentForPTPair(this.ptPairErrorsObj[this.currentIndex], event, this.circleHighlight);
         }
@@ -967,7 +967,7 @@ export class ErrorHighlightService {
     let platformLayer = null;
     this.mapSrv.map.eachLayer((layer) => {
       if (layer['feature'] && layer['_latlng']) {
-        let featureID = this.mapSrv.getFeatureIdFromMarker(layer['feature']);
+        const featureID = this.mapSrv.getFeatureIdFromMarker(layer['feature']);
         if (featureID === stop.id) {
           stopLayer = layer;
         }
@@ -994,7 +994,7 @@ export class ErrorHighlightService {
           }
         });
         if (!flag) {
-          let errorObj: IPTPairErrorObject = { stop, corrected: 'false' };
+          const errorObj: IPTPairErrorObject = { stop, corrected: 'false' };
           this.ptPairErrorsObj.push(errorObj);
         }
       }

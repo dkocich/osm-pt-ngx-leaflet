@@ -212,7 +212,7 @@ export class EditService {
             JSON.stringify(this.storageSrv.elementsMap.get(editObj.id)),
           );
         }
-        let masterRel = this.storageSrv.elementsMap.get(editObj.id);
+        const masterRel = this.storageSrv.elementsMap.get(editObj.id);
         this.processSrv.refreshTagView(masterRel);
         this.processSrv.refreshRelationView(masterRel);
         break;
@@ -258,7 +258,7 @@ export class EditService {
    * Handles adding of different PT elements and fills attributes automatically.
    */
   createElement(creatingElementOfType: string, event: any): void {
-    let newId: number = this.findNewId();
+    const newId: number = this.findNewId();
     const marker      = this.initializeNewMarker(
       creatingElementOfType,
       event,
@@ -268,7 +268,7 @@ export class EditService {
     this.storageSrv.markersMap.set(newId, marker);
     marker.addTo(this.mapSrv.map);
     const latlng            = marker.getLatLng();
-    let newElement: IPtStop = {
+    const newElement: IPtStop = {
       changeset: -999,
       id       : newId,
       lat      : latlng.lat,
@@ -298,7 +298,7 @@ export class EditService {
           creatingElementOfType,
         );
     }
-    let change = { from: undefined, to: newElement };
+    const change = { from: undefined, to: newElement };
     this.addChange(newElement, 'add element', change);
   }
 
@@ -330,7 +330,7 @@ export class EditService {
         'public_transport:version': '2',
       },
     };
-    let change                     = { from: undefined, to: newRoute };
+    const change                     = { from: undefined, to: newRoute };
     this.addChange(newRoute, 'add route', change);
   }
 
@@ -369,7 +369,7 @@ export class EditService {
       this.storageSrv.idsHaveMaster.add(relId);
       this.storageSrv.queriedMasters.add(relId); // FIXME ? Is it rel or master
     }
-    let change = { from: undefined, to: newMasterRel };
+    const change = { from: undefined, to: newMasterRel };
     this.addChange(newMasterRel, 'create master', change);
   }
 
@@ -381,9 +381,9 @@ export class EditService {
       'LOOOOOOG test ', typeof relId, relId,
       typeof routeMasterId, routeMasterId,
     );
-    let routeMaster = this.storageSrv.elementsMap.get(routeMasterId);
-    let change: any = { from: JSON.parse(JSON.stringify(routeMaster.members)) };
-    let newMember   = {
+    const routeMaster = this.storageSrv.elementsMap.get(routeMasterId);
+    const change: any = { from: JSON.parse(JSON.stringify(routeMaster.members)) };
+    const newMember   = {
       type: 'relation',
       ref : relId,
       role: '',
@@ -425,10 +425,10 @@ export class EditService {
     } else {
       this.mapSrv.clearCircleHighlight();
       const feature = this.storageSrv.elementsMap.get(featureId);
-      let change    = { from: JSON.parse(JSON.stringify(rel)), to: undefined }; // string to not influence toggle edits
+      const change    = { from: JSON.parse(JSON.stringify(rel)), to: undefined }; // string to not influence toggle edits
 
       let shouldPush: boolean;
-      let memberIds = [];
+      const memberIds = [];
       // push if selected node is not in members; delete if selected node is in members
       rel.members.forEach((member, index) => {
         if (member.type === 'node') {
@@ -478,7 +478,7 @@ export class EditService {
       // get all members to highlight
       if (rel['members'].length > 0) {
         this.storageSrv.elementsToHighlight.clear();
-        for (let member of rel.members) {
+        for (const member of rel.members) {
           if (member.type === 'node') {
             //  && member.ref !== featureId
             this.storageSrv.elementsToHighlight.add(member.ref);
@@ -501,11 +501,11 @@ export class EditService {
       );
 
       // create array of circles to highlight and add to map
-      let membersHighlight = [];
-      for (let id of Array.from(this.storageSrv.elementsToHighlight.values())) {
+      const membersHighlight = [];
+      for (const id of Array.from(this.storageSrv.elementsToHighlight.values())) {
         const node = this.storageSrv.elementsMap.get(id);
         console.log('LOG (editing s.) Creating circle for node:', node);
-        let circle = L.circleMarker([node.lat, node.lon], {
+        const circle = L.circleMarker([node.lat, node.lon], {
           radius : 15,
           color  : '#00ffff',
           opacity: 0.75,
@@ -528,7 +528,7 @@ export class EditService {
   repositionElement(marker: any, event: any): void {
     const opt         = event.target.options;
     const newPosition = event.target.getLatLng();
-    let change        = {
+    const change        = {
       from: {
         lat: opt.lat,
         lon: opt.lng,
@@ -668,7 +668,7 @@ export class EditService {
         newOrder.push(mem);
       }
     });
-    let change = {
+    const change = {
       from: JSON.parse(JSON.stringify(rel.members)),
       to  : JSON.parse(JSON.stringify(newOrder)),
     };
@@ -788,7 +788,7 @@ export class EditService {
           'LOG (editing s.) Should reapply this changed members',
           edit,
         );
-        let chmElem     = this.storageSrv.elementsMap.get(edit.id);
+        const chmElem     = this.storageSrv.elementsMap.get(edit.id);
         chmElem.members = edit.change.to;
         if (chmElem.tags.type === 'route_master') {
           this.storageSrv.idsHaveMaster.add(
@@ -864,7 +864,7 @@ export class EditService {
         console.log('LOG (editing s.) I should add route_master', edit);
         this.storageSrv.elementsMap.set(edit.id, edit.change.to);
         this.storageSrv.listOfMasters.push(edit.change.to); // un-shift
-        let masterRel = this.storageSrv.elementsMap.get(edit.id);
+        const masterRel = this.storageSrv.elementsMap.get(edit.id);
         this.processSrv.refreshTagView(masterRel);
         this.processSrv.refreshRelationView(masterRel);
         break;
@@ -913,7 +913,7 @@ export class EditService {
         break;
       case 'change members':
         console.log('LOG (editing s.) Should undo this changed members', edit);
-        let chmElem = this.storageSrv.elementsMap.get(edit.id);
+        const chmElem = this.storageSrv.elementsMap.get(edit.id);
         if (chmElem.tags.type === 'route_master') {
           this.storageSrv.idsHaveMaster.delete(
             chmElem.members[chmElem.members.length - 1].ref,
