@@ -74,7 +74,7 @@
   <div *ngIf="currentElement" class="content panel panel-body panel-default">
     <table class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
       <tbody>
-      <tr *ngFor="let tag of currentElement['tags'] | keys;">
+      <tr *ngFor="let tag of currentElement | tagsProp;">
           <ng-container *ngIf="!tagBrowserOptions.limitedKeys || tagBrowserOptions.allowedKeys.includes(tag.key)">
         <td>
           <ng-container *ngIf="!(editing$ | async)">{{tag.key}}</ng-container>

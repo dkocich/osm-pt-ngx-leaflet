@@ -30,7 +30,7 @@
                       <ul class="suggested-rm-list">
                         <li class="list-group-item clearfix" *ngFor="let route of getValue(ref)"
                             [ngStyle]="{'background-color' : getListItemColor(route.percentCoverage) }"
-                            (click)="viewRoute(route.id,route.percentCoverage, ref)">
+                            (click)="viewRoute(route.id, route.percentCoverage)">
                           <span> {{'Name'| translate }}:&nbsp;{{getWholeRoute(route.id).tags.name}}</span>
                         </li>
                       </ul>
@@ -76,7 +76,7 @@
                         <table
                           class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
                           <tbody>
-                          <tr *ngFor="let tag of RMTags | keys; ">
+                          <tr *ngFor="let tag of RMTags | keys">
 
                             <td>
                               <input type="text" value="{{tag.key}}" data-type="key" [readonly]="true">
@@ -132,7 +132,7 @@
   <li class="list-group-item"> {{index + 1}}.&nbsp;{{'Name' | translate}}:&nbsp;{{getWholeRoute(item.value.id).tags.name}}&nbsp;id:&nbsp;{{item.value.id}}
     <i class="fa fa-times pull-right" aria-hidden="true" (click)="removeRoute(item.value.id)"></i>
     <i class="fa fa-search pull-right" aria-hidden="true"
-       (click)="viewRoute(item.value.id,item.value.percentCoverage, getWholeRoute(item.value.id).tags.ref)"></i>
+       (click)="viewRoute(item.value.id, item.value.percentCoverage)"></i>
   </li>
 
 </ng-template>
