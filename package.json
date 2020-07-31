@@ -110,7 +110,7 @@
     "stylelint-config-standard": "18.3.0",
     "tslib": "^1.10.0",
     "tslint-eslint-rules": "5.4.0",
-    "xmlbuilder": "10.0.0",
+    "xmlbuilder": "15.1.1",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
