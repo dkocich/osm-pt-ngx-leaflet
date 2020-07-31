@@ -67,8 +67,7 @@ export class OverpassService {
         /*Gets the data from IDB and processes it (updates listOfStops etc.)*/
         console.log('LOG (overpass s.) Stop with id : ' + featureId + ' in IDB');
         this.getStopDataIDB(featureId);
-      }
-      else {
+      } else {
         if (!this.storageSrv.elementsDownloaded.has(featureId) && featureId > 0) {
           console.log('LOG (overpass s.) Stop/Platform with id : ' + featureId + ' was not in IDB, hence overpass ' +
             'query is made.');
@@ -89,8 +88,7 @@ export class OverpassService {
         }
         console.log('LOG (overpass s.) Downloading ' + toDownload + ' in background in slow connection mode');
         this.downloadMultipleNodeData(toDownload);
-      }
-      else {
+      } else {
         const toDownload = [];
         for (let i = 0; toDownload.length <= 25; i++) {
           const randomKey = this.getRandomKey(this.storageSrv.elementsMap);
@@ -252,8 +250,7 @@ export class OverpassService {
     idsArr.forEach((id) => {
       if (this.storageSrv.queriedRoutesForMastersIDB.has(id)) {
         routesQueriedInIDB.push(id);
-      }
-      else {
+      } else {
         routesNotQueriedNotInIDB.push(id);
       }
     });

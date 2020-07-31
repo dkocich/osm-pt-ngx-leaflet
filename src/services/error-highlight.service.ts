@@ -15,21 +15,6 @@ import { StorageService } from './storage.service';
 
 @Injectable()
 export class ErrorHighlightService {
-  modalRef: BsModalRef;
-  nameErrorsObj: INameErrorObject[]     = [];
-  refErrorsObj: IRefErrorObject[]       = [];
-  wayErrorsObj: IWayErrorObject[]       = [];
-  PTvErrorsObj: IPTvErrorObject[]       = [];
-  ptPairErrorsObj: IPTPairErrorObject[] = [];
-
-  currentIndex = 0;
-  currentMode: 'missing name tags' | 'pt-pair' | 'missing refs' | 'way as parent' | 'PTv correction';
-
-  errorCorrectionMode: ISuggestionsBrowserOptions;
-  errorCorrectionModeSubscription;
-
-  private circleHighlight: L.Circle = null;
-  private clickEventFunction = null;
 
   constructor(
     private modalService: BsModalService,
@@ -61,6 +46,44 @@ export class ErrorHighlightService {
     });
     this.errorCorrectionModeSubscription = ngRedux.select<ISuggestionsBrowserOptions>(['app', 'errorCorrectionMode'])
       .subscribe((data) => this.errorCorrectionMode = data);
+  }
+  modalRef: BsModalRef;
+  nameErrorsObj: INameErrorObject[]     = [];
+  refErrorsObj: IRefErrorObject[]       = [];
+  wayErrorsObj: IWayErrorObject[]       = [];
+  PTvErrorsObj: IPTvErrorObject[]       = [];
+  ptPairErrorsObj: IPTPairErrorObject[] = [];
+
+  currentIndex = 0;
+  currentMode: 'missing name tags' | 'pt-pair' | 'missing refs' | 'way as parent' | 'PTv correction';
+
+  errorCorrectionMode: ISuggestionsBrowserOptions;
+  errorCorrectionModeSubscription;
+
+  private circleHighlight: L.Circle = null;
+  private clickEventFunction = null;
+
+  /**
+   * Generates the popup content
+   */
+  private static makePopUpContent(isCorrected: string): HTMLElement {
+    let popupContent       = L.DomUtil.create('div', 'content');
+    popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true">';
+    switch (isCorrected) {
+      case 'true':
+        popupContent           = L.DomUtil.create('div', 'content');
+        popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
+        break;
+      case 'partial' :
+        popupContent           = L.DomUtil.create('div', 'content');
+        popupContent.innerHTML = '<i class="fa fa-question" aria-hidden="true"></i>';
+        break;
+      case 'false' :
+        popupContent           = L.DomUtil.create('div', 'content');
+        popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true">';
+        break;
+    }
+    return popupContent;
   }
 
   /**
@@ -108,29 +131,6 @@ export class ErrorHighlightService {
       stop = this.ptPairErrorsObj[0]['stop'];
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 17);
     }
-  }
-
-  /**
-   * Generates the popup content
-   */
-  private static makePopUpContent(isCorrected: string): HTMLElement {
-    let popupContent       = L.DomUtil.create('div', 'content');
-    popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true">';
-    switch (isCorrected) {
-      case 'true':
-        popupContent           = L.DomUtil.create('div', 'content');
-        popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
-        break;
-      case 'partial' :
-        popupContent           = L.DomUtil.create('div', 'content');
-        popupContent.innerHTML = '<i class="fa fa-question" aria-hidden="true"></i>';
-        break;
-      case 'false' :
-        popupContent           = L.DomUtil.create('div', 'content');
-        popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true">';
-        break;
-    }
-    return popupContent;
   }
 
   /**
@@ -691,8 +691,7 @@ export class ErrorHighlightService {
       const el = item;
       if (modeMap[el] === null) {
         modeMap[el] = 1;
-      }
-      else {
+      } else {
         modeMap[el]++;
       }
       if (modeMap[el] > maxCount) {

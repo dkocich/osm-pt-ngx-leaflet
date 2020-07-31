@@ -20,10 +20,6 @@ import {Hotkey, HotkeysService} from 'angular2-hotkeys';
   templateUrl: './relation-browser.component.html',
 })
 export class RelationBrowserComponent implements OnInit {
-  currentElement: IOsmElement | IPtRouteMasterNew;
-  listOfVariants = this.storageSrv.listOfVariants;
-  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
-  listOfMasters = this.storageSrv.listOfMasters;
 
   constructor(
     private editSrv: EditService,
@@ -40,6 +36,12 @@ export class RelationBrowserComponent implements OnInit {
       return false;
     }, undefined, 'Create a new route master'));
   }
+  currentElement: IOsmElement | IPtRouteMasterNew;
+  listOfVariants = this.storageSrv.listOfVariants;
+  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
+  listOfMasters = this.storageSrv.listOfMasters;
+
+  @ViewChild('masterModal') masterModal: ModalDirective;
 
   ngOnInit(): void {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
@@ -114,8 +116,6 @@ export class RelationBrowserComponent implements OnInit {
       routeMasterId,
     );
   }
-
-  @ViewChild('masterModal') masterModal: ModalDirective;
 
   showMasterModal(): void {
     this.masterModal.show();

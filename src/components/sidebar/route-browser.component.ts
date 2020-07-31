@@ -133,8 +133,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
         false,
       );
       this.storageSrv.tutorialStepCompleted.emit('click route from list');
-    }
-    else {
+    } else {
       this.processSrv.exploreRelation(
         this.storageSrv.elementsMap.get(rel.id),
         true,

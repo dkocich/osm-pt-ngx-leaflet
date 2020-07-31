@@ -7,6 +7,25 @@ import { StorageService } from './storage.service';
 
 @Injectable()
 export class RouteWizardService {
+  constructor(private storageSrv: StorageService,
+              private mapSrv: MapService,
+              private modalService: BsModalService,
+              private processSrv: ProcessService,
+              ) {
+    this.modalService.onShown.subscribe((data) => {
+      this.onShownModal();
+    });
+    this.modalService.onHidden.subscribe(() => {
+      this.processAllDownloadedOnMainMap();
+      this.storageSrv.currentElement = null;
+      this.storageSrv.currentElementsChange.emit(
+        JSON.parse(JSON.stringify(null)),
+      );
+      this.storageSrv.stopsForRoute     = [];
+      this.storageSrv.platformsForRoute = [];
+      this.mapSrv.highlightType         = 'Stops';
+    });
+  }
   map;
   routes = [];
   ptLayerModal;
@@ -27,24 +46,169 @@ export class RouteWizardService {
   membersHighlightLayerGroup    = L.layerGroup();
 
   modalRefRouteWiz: BsModalRef;
-  constructor(private storageSrv: StorageService,
-              private mapSrv: MapService,
-              private modalService: BsModalService,
-              private processSrv: ProcessService,
-              ) {
-    this.modalService.onShown.subscribe((data) => {
-      this.onShownModal();
+
+  /**
+   * Removes duplicates from array
+   */
+  private static removeDuplicatesFromArray(arr: any[]): any {
+    return arr.filter((value, index, self) => {
+      return self.indexOf(value) === index;
     });
-    this.modalService.onHidden.subscribe(() => {
-      this.processAllDownloadedOnMainMap();
-      this.storageSrv.currentElement = null;
-      this.storageSrv.currentElementsChange.emit(
-        JSON.parse(JSON.stringify(null)),
-      );
-      this.storageSrv.stopsForRoute     = [];
-      this.storageSrv.platformsForRoute = [];
-      this.mapSrv.highlightType         = 'Stops';
-    });
+  }
+
+  /**
+   * Compares arrays and returns refs not added in route refs
+   */
+  private static compareArrays(nodeRefs: any, routeRefs: any): any {
+    const notAdded = [];
+    for (const itemA of nodeRefs) {
+      let flag = false;
+      for (const itemB of routeRefs) {
+        if (itemA === itemB) {
+          flag = true;
+        }
+      }
+
+      if (flag === false) {
+        notAdded.push(itemA);
+      }
+    }
+    return notAdded;
+  }
+
+  /**
+   * Get individual refs from stops's route_ref
+   */
+  static getIndividualRouteRefs(stops: any[]): any {
+    const refs = [];
+    for (const stop of stops) {
+      refs.push(stop.tags.route_ref);
+    }
+    const ref_map = new Map();
+    for (const routeRefs of refs) {
+      const singleRefs = routeRefs.split(';');
+      for (const ref of singleRefs) {
+        if (ref_map.has(ref)) {
+          let val = ref_map.get(ref);
+          val++;
+          ref_map.set(ref, val);
+        } else {
+          ref_map.set(ref, 1);
+        }
+      }
+    }
+    return ref_map;
+  }
+
+  /**
+   * Assign roles to members for new route
+   */
+  static assignRolesToMembers(members: any): any {
+    let probableRole = '';
+    for (const member of members) {
+      switch (member.tags.public_transport) {
+        case 'platform':
+        case 'station':
+          probableRole = 'platform';
+          break;
+        case 'stop_position':
+          probableRole = 'stop';
+          break;
+        default:
+          alert('FIXME: suspicious role - ');
+          probableRole = 'stop';
+      }
+      member.role = probableRole;
+    }
+  }
+
+  /**
+   * Checks member count, for avoiding single member routes
+   */
+  static checkMemberCount(members: any): any {
+    return members.length !== 1;
+  }
+
+  /**
+   * Returns member counts (stops, platforms)
+   */
+  static countNodeType(members: any): any {
+    let stopsCount     = 0;
+    let platformsCount = 0;
+    for (const member of members) {
+      if (member.tags.public_transport === 'stop_position') {
+        stopsCount++;
+      }
+      if (member.tags.public_transport === 'platform') {
+        platformsCount++;
+      }
+    }
+    return { stopsCount, platformsCount };
+  }
+
+  /**
+   * Filters out empty tags before saving route
+   */
+  static filterEmptyTags(route: any): any {
+    const tags = route.tags;
+    for (const property in tags) {
+      if (tags.hasOwnProperty(property)) {
+        if (tags[property] === '') {
+          delete tags[property];
+        }
+      }
+    }
+    return tags;
+  }
+
+  /**
+   * Forms object for new route's members
+   */
+  static formRelMembers(toAddNodes: any): any {
+    const relMembers = [];
+    for (const node of toAddNodes) {
+      relMembers.push({
+        type: 'node',
+        ref : node.id,
+        role: node.role,
+      });
+    }
+    return relMembers;
+  }
+
+  /**
+   * Fired when tags are modified
+   */
+  static modifiesTags(action: string, key: any, event: any, newRoute: any): any {
+    switch (action) {
+      case 'change tag':
+        newRoute.tags[key] = event.target.value;
+        break;
+      case 'remove tag':
+        delete newRoute.tags[key];
+        break;
+      case 'add tag':
+        newRoute.tags[key] = event;
+        break;
+    }
+    newRoute.tags = { ...newRoute.tags };
+    return newRoute;
+  }
+
+  /**
+   * Styles show connectivity buttons
+   */
+  private static styleButtons(type: string): any {
+    switch (type) {
+      case 'Stops':
+        document.getElementById(type).style.backgroundColor        = 'cornflowerblue';
+        document.getElementById('Platforms').style.backgroundColor = 'white';
+        break;
+      case 'Platforms':
+        document.getElementById(type).style.backgroundColor    = 'cornflowerblue';
+        document.getElementById('Stops').style.backgroundColor = 'white';
+        break;
+    }
   }
 
   /**
@@ -227,59 +391,6 @@ export class RouteWizardService {
   }
 
   /**
-   * Removes duplicates from array
-   */
-  private static removeDuplicatesFromArray(arr: any[]): any {
-    return arr.filter((value, index, self) => {
-      return self.indexOf(value) === index;
-    });
-  }
-
-  /**
-   * Compares arrays and returns refs not added in route refs
-   */
-  private static compareArrays(nodeRefs: any, routeRefs: any): any {
-    const notAdded = [];
-    for (const itemA of nodeRefs) {
-      let flag = false;
-      for (const itemB of routeRefs) {
-        if (itemA === itemB) {
-          flag = true;
-        }
-      }
-
-      if (flag === false) {
-        notAdded.push(itemA);
-      }
-    }
-    return notAdded;
-  }
-
-  /**
-   * Get individual refs from stops's route_ref
-   */
-  static getIndividualRouteRefs(stops: any[]): any {
-    const refs = [];
-    for (const stop of stops) {
-      refs.push(stop.tags.route_ref);
-    }
-    const ref_map = new Map();
-    for (const routeRefs of refs) {
-      const singleRefs = routeRefs.split(';');
-      for (const ref of singleRefs) {
-        if (ref_map.has(ref)) {
-          let val = ref_map.get(ref);
-          val++;
-          ref_map.set(ref, val);
-        } else {
-          ref_map.set(ref, 1);
-        }
-      }
-    }
-    return ref_map;
-  }
-
-  /**
    * Highlights route's members on map
    */
   highlightRoute(members: any, adjustZoom: boolean): void {
@@ -299,28 +410,6 @@ export class RouteWizardService {
   }
 
   /**
-   * Assign roles to members for new route
-   */
-  static assignRolesToMembers(members: any): any {
-    let probableRole = '';
-    for (const member of members) {
-      switch (member.tags.public_transport) {
-        case 'platform':
-        case 'station':
-          probableRole = 'platform';
-          break;
-        case 'stop_position':
-          probableRole = 'stop';
-          break;
-        default:
-          alert('FIXME: suspicious role - ');
-          probableRole = 'stop';
-      }
-      member.role = probableRole;
-    }
-  }
-
-  /**
    * Adjust zoom to fit all members of route on map
    */
   private adjustZoomForRoute(members: any): void {
@@ -332,13 +421,6 @@ export class RouteWizardService {
   }
 
   /**
-   * Checks member count, for avoiding single member routes
-   */
-  static checkMemberCount(members: any): any {
-    return members.length !== 1;
-  }
-
-  /**
    * Handles highlighting of first route on starting of Step
    */
   highlightFirstRoute(connectObj: any): void {
@@ -346,23 +428,6 @@ export class RouteWizardService {
     const countObj = RouteWizardService.countNodeType(members);
     this.useAndSetAvailableConnectivity(countObj);
     this.highlightRoute(members, true);
-  }
-
-  /**
-   * Returns member counts (stops, platforms)
-   */
-  static countNodeType(members: any): any {
-    let stopsCount     = 0;
-    let platformsCount = 0;
-    for (const member of members) {
-      if (member.tags.public_transport === 'stop_position') {
-        stopsCount++;
-      }
-      if (member.tags.public_transport === 'platform') {
-        platformsCount++;
-      }
-    }
-    return { stopsCount, platformsCount };
   }
 
   /**
@@ -393,21 +458,6 @@ export class RouteWizardService {
   }
 
   /**
-   * Filters out empty tags before saving route
-   */
-  static filterEmptyTags(route: any): any {
-    const tags = route.tags;
-    for (const property in tags) {
-      if (tags.hasOwnProperty(property)) {
-        if (tags[property] === '') {
-          delete tags[property];
-        }
-      }
-    }
-    return tags;
-  }
-
-  /**
    * Highlights members of route with circle
    */
   highlightMembers(members: any[]): void {
@@ -428,56 +478,6 @@ export class RouteWizardService {
    */
   clearMembersHighlight(): void {
     this.membersHighlightLayerGroup.clearLayers();
-  }
-
-  /**
-   * Forms object for new route's members
-   */
-  static formRelMembers(toAddNodes: any): any {
-    const relMembers = [];
-    for (const node of toAddNodes) {
-      relMembers.push({
-        type: 'node',
-        ref : node.id,
-        role: node.role,
-      });
-    }
-    return relMembers;
-  }
-
-  /**
-   * Fired when tags are modified
-   */
-  static modifiesTags(action: string, key: any, event: any, newRoute: any): any {
-    switch (action) {
-      case 'change tag':
-        newRoute.tags[key] = event.target.value;
-        break;
-      case 'remove tag':
-        delete newRoute.tags[key];
-        break;
-      case 'add tag':
-        newRoute.tags[key] = event;
-        break;
-    }
-    newRoute.tags = { ...newRoute.tags };
-    return newRoute;
-  }
-
-  /**
-   * Styles show connectivity buttons
-   */
-  private static styleButtons(type: string): any {
-    switch (type) {
-      case 'Stops':
-        document.getElementById(type).style.backgroundColor        = 'cornflowerblue';
-        document.getElementById('Platforms').style.backgroundColor = 'white';
-        break;
-      case 'Platforms':
-        document.getElementById(type).style.backgroundColor    = 'cornflowerblue';
-        document.getElementById('Stops').style.backgroundColor = 'white';
-        break;
-    }
   }
 
   /**

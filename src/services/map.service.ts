@@ -22,29 +22,6 @@ interface IBaseMaps {
 
 @Injectable()
 export class MapService {
-  map: L.Map;
-  baseMaps: IBaseMaps;
-  osmtogeojson: any = require('osmtogeojson');
-  bounds;
-  highlightStroke: any = undefined;
-  editingMode: boolean;
-  // popupBtnClick: EventEmitter<any> = new EventEmitter();
-  markerClick: EventEmitter<any> = new EventEmitter();
-  markerEdit: EventEmitter<object> = new EventEmitter();
-  highlightTypeEmitter: EventEmitter<object> = new EventEmitter();
-  highlightType = 'Stops';
-  membersEditing: boolean;
-  markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
-  membersHighlightLayer: any = undefined;
-  private ptLayer: any;
-  highlightFill: any = undefined;
-  private highlight: any = undefined;
-  private markerFrom: any = undefined;
-  private markerTo: any = undefined;
-  popUpArr = [];
-  popUpLayerGroup: L.LayerGroup;
-  currentPopUpFeatureId: number;
-  enableInfoRouteLabelsOption: EventEmitter<any> = new EventEmitter();
   // autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
   constructor(
     private confSrv: ConfService,
@@ -205,6 +182,70 @@ export class MapService {
         },
       ),
     };
+  }
+  map: L.Map;
+  baseMaps: IBaseMaps;
+  osmtogeojson: any = require('osmtogeojson');
+  bounds;
+  highlightStroke: any = undefined;
+  editingMode: boolean;
+  // popupBtnClick: EventEmitter<any> = new EventEmitter();
+  markerClick: EventEmitter<any> = new EventEmitter();
+  markerEdit: EventEmitter<object> = new EventEmitter();
+  highlightTypeEmitter: EventEmitter<object> = new EventEmitter();
+  highlightType = 'Stops';
+  membersEditing: boolean;
+  markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
+  membersHighlightLayer: any = undefined;
+  private ptLayer: any;
+  highlightFill: any = undefined;
+  private highlight: any = undefined;
+  private markerFrom: any = undefined;
+  private markerTo: any = undefined;
+  popUpArr = [];
+  popUpLayerGroup: L.LayerGroup;
+  currentPopUpFeatureId: number;
+  enableInfoRouteLabelsOption: EventEmitter<any> = new EventEmitter();
+
+  /**
+   * Colors popup according to event
+   */
+  static colorPopUpByEvent (e: any): void {
+    let colorString = '';
+    if (e.type === 'click' || e.type === 'mouseover') {
+      colorString = 'lightblue';
+    }
+    if (e.type === 'mouseout') {
+      colorString = 'white';
+    }
+    if (e.target.className === 'leaflet-popup-content-wrapper') {
+      e.target.style.backgroundColor = colorString;
+      e.target.parentElement.lastElementChild.lastElementChild.style.backgroundColor = colorString;
+    }
+  }
+
+  /**
+   * Colors popup according to the given popup name
+   */
+  static colorPopUpByColorName(colorName: string, element: any): void {
+    element.children[0].style.backgroundColor = colorName;
+    element.lastElementChild.lastElementChild.style.backgroundColor = colorName;
+  }
+
+  /**
+   * Adds mouseover and mouseout listeners from popup
+   */
+  static addHoverListenersToPopUp(popUpElement: HTMLElement): void {
+    L.DomEvent.addListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
+    L.DomEvent.addListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
+  }
+
+  /**
+   * Removes mouseover and mouseout listeners from popup
+   */
+  static removeHoverListenersToPopUp(popUpElement: HTMLElement): void {
+    L.DomEvent.removeListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
+    L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
 
   /**
@@ -766,31 +807,6 @@ export class MapService {
   }
 
   /**
-   * Colors popup according to event
-   */
-  static colorPopUpByEvent (e: any): void {
-    let colorString = '';
-    if (e.type === 'click' || e.type === 'mouseover') {
-      colorString = 'lightblue';
-    }
-    if (e.type === 'mouseout') {
-      colorString = 'white';
-    }
-    if (e.target.className === 'leaflet-popup-content-wrapper') {
-      e.target.style.backgroundColor = colorString;
-      e.target.parentElement.lastElementChild.lastElementChild.style.backgroundColor = colorString;
-    }
-  }
-
-  /**
-   * Colors popup according to the given popup name
-   */
-  static colorPopUpByColorName(colorName: string, element: any): void {
-    element.children[0].style.backgroundColor = colorName;
-    element.lastElementChild.lastElementChild.style.backgroundColor = colorName;
-  }
-
-  /**
    * Fetches popup element from currently added popups on map
    */
   getPopUpFromArray(popUpId: number): HTMLElement {
@@ -809,22 +825,6 @@ export class MapService {
     if (this.popUpLayerGroup) {
       this.popUpLayerGroup.remove();
     }
-  }
-
-  /**
-   * Adds mouseover and mouseout listeners from popup
-   */
-  static addHoverListenersToPopUp(popUpElement: HTMLElement): void {
-    L.DomEvent.addListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
-    L.DomEvent.addListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
-  }
-
-  /**
-   * Removes mouseover and mouseout listeners from popup
-   */
-  static removeHoverListenersToPopUp(popUpElement: HTMLElement): void {
-    L.DomEvent.removeListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
-    L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
   }
 
   /**
