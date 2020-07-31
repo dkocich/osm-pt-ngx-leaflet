@@ -38,6 +38,7 @@
     "start": "ng serve --port=4200",
     "stylelint": "stylelint **/*.css **/*.less",
     "test": "ng test",
+    "postinstall": "ngcc",
     "test:all": "snyk test && NODE_ENV=development karma start"
   },
   "homepage": "https://github.com/dkocich/osm-pt-ngx-leaflet#readme",
@@ -51,6 +52,7 @@
     "@angular/core": "~9.1.2",
     "@angular/forms": "~9.1.2",
     "@angular/http": "7.2.16",
+    "@angular/localize": "^9.1.12",
     "@angular/platform-browser": "~9.1.2",
     "@angular/platform-browser-dynamic": "~9.1.2",
     "@angular/router": "~9.1.2",
