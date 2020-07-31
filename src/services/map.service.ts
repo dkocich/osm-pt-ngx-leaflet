@@ -11,13 +11,13 @@ import { ConfService } from './conf.service';
 import { StorageService } from './storage.service';
 
 interface MyTileLayer extends TileLayer {
-  app_code: string,
-  app_id: string,
-  mapID: string,
+  app_code: string;
+  app_id: string;
+  mapID: string;
 }
 
 interface IBaseMaps {
-  [key: string ]: TileLayer
+  [key: string ]: TileLayer;
 }
 
 @Injectable()

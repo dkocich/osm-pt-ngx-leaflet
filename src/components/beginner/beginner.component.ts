@@ -18,7 +18,7 @@ import { IAppState } from '../../store/model';
   templateUrl: './beginner.component.html',
 })
 export class BeginnerComponent {
-  @ViewChild('accordion1') a1: ElementRef
+  @ViewChild('accordion1') a1: ElementRef;
 
   @select(['app', 'beginnerView']) readonly beginnerView$: Observable<string>;
   @select(['app', 'errorCorrectionMode']) readonly errorCorrectionMode$: Observable<ISuggestionsBrowserOptions>;

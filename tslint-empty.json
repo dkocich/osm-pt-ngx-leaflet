@@ -1,6 +1,6 @@
 {
   "extends": [],
   "rules": {
-    "no-inferrable-types": true
+    "semicolon": true
   }
 }
