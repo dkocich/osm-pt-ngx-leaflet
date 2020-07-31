@@ -50,6 +50,7 @@ import { TransporterComponent } from './components/transporter/transporter.compo
 import { TutorialsComponent } from './components/tutorials/tutorials.component';
 import { Utils } from './core/utils.class';
 import { KeysPipe } from './pipes/keys.pipe';
+import { TagsPropPipe } from './pipes/tags-prop.pipe';
 import { RavenErrorHandler } from './raven-error-handler';
 import { AuthService } from './services/auth.service';
 import { ConfService } from './services/conf.service';
@@ -106,6 +107,7 @@ const conditional_providers = [
     TutorialsComponent,
 
     KeysPipe,
+    TagsPropPipe,
   ],
   imports: [
     AccordionModule.forRoot(),

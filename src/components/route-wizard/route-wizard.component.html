@@ -61,7 +61,7 @@
                       </button>
                       <div class="scrollable-panel" *ngIf="addedNewRouteMembers.length !== 0">
                         <bs-sortable
-                          (ngModelChange)="reorderMembers(addedNewRouteMembers)"
+                          (ngModelChange)="reorderMembers()"
                           [(ngModel)]="addedNewRouteMembers"
                           itemClass="sortable-item"
                           itemActiveClass="sortable-item-active"
@@ -90,7 +90,7 @@
                         <table
                           class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
                           <tbody>
-                          <tr *ngFor="let tag of newRoute.tags | keys; ">
+                          <tr *ngFor="let tag of newRoute | tagsProp; ">
 
                             <td>
                               <input type="text" value="{{tag.key}}" data-type="key" [readonly]="true">
@@ -103,7 +103,7 @@
                               <button class="btn btn-sm btn-danger fa fa-minus"
                                       aria-hidden="true" container="body"
                                       tooltip="{{ 'Remove tag' | translate }}"
-                                      (click)="createChangeTag('remove tag', tag.key)">
+                                      (click)="createChangeTag('remove tag', tag.key, $event)">
                               </button>
                             </td>
                           </tr>
