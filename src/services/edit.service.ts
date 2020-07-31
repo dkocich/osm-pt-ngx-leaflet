@@ -449,7 +449,7 @@ export class EditService {
 
       if (shouldPush || rel.members.length === 0) {
         // node should be added if there are no members before
-        let probableRole: string = '';
+        let probableRole = '';
         switch (feature.tags.public_transport) {
           case 'platform':
           case 'station':
@@ -602,7 +602,7 @@ export class EditService {
   }
 
   findNewId(): number {
-    let newId: number = -1;
+    let newId = -1;
     while (this.storageSrv.elementsMap.has(newId) && newId > -100) {
       newId--;
     }

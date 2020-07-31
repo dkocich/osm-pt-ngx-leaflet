@@ -32,8 +32,8 @@ export class RouteWizardComponent {
   newRouteMembersSuggestions = [];
   addedNewRouteMembers       = [];
 
-  @Input() tagKey: string   = '';
-  @Input() tagValue: string = '';
+  @Input() tagKey   = '';
+  @Input() tagValue = '';
 
   canStopsConnect     = false;
   canPlatformsConnect = false;

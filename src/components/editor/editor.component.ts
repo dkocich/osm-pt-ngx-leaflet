@@ -24,9 +24,9 @@ import { RouteWizardComponent } from '../route-wizard/route-wizard.component';
 
 export class EditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editModal') editModal: ModalDirective;
-  totalEditSteps: number        = 0;
-  currentEditStep: number       = 0;
-  creatingElementOfType: string = '';
+  totalEditSteps        = 0;
+  currentEditStep       = 0;
+  creatingElementOfType = '';
   @select(['app', 'editing']) readonly editing$: Observable<boolean>;
   @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
 

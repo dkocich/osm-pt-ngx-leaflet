@@ -89,7 +89,7 @@ export class ModalComponent {
    */
   saveRefTag(): void {
     let refsForTag        = [];
-    let refString: string = '';
+    let refString = '';
 
     for (const rel of this.addedMissingSuggestionsRefs) {
       refsForTag.push(rel.tags.ref);
@@ -360,7 +360,7 @@ export class ModalComponent {
         }
 
         const change = { from: JSON.parse(JSON.stringify(rel)), to: undefined }; // string to not influence toggle edits
-        let probableRole: string = '';
+        let probableRole = '';
         switch (this.refErrorObject.stop.tags.public_transport) {
           case 'platform':
           case 'station':

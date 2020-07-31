@@ -35,8 +35,8 @@ export class StorageService {
   currentElementsChange = new EventEmitter();
   selectedStopBeginnerMode: IOsmElement | undefined;
 
-  displayName: string = '';
-  imgHref: string     = '';
+  displayName = '';
+  imgHref     = '';
 
   edits: object[]                     = [];
   editsChanged: EventEmitter<boolean> = new EventEmitter();

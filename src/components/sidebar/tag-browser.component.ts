@@ -20,8 +20,8 @@ import { IAppState } from '../../store/model';
   templateUrl: './tag-browser.component.html',
 })
 export class TagBrowserComponent implements OnInit, OnDestroy {
-  @Input() tagKey: string = '';
-  @Input() tagValue: string = '';
+  @Input() tagKey = '';
+  @Input() tagValue = '';
   currentElement: IOsmElement =  this.storageSrv.currentElement;
   expectedKeys = PtTags.expectedKeys;
   expectedValues = PtTags.expectedValues;

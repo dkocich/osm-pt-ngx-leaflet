@@ -30,8 +30,8 @@ export class RouteMasterWizardComponent {
   private startEventProcessing = new Subject<L.LeafletEvent>();
   usedRM                = [];
 
-  @Input() tagKey: string   = '';
-  @Input() tagValue: string = '';
+  @Input() tagKey   = '';
+  @Input() tagValue = '';
 
   newRMsMap: Map<string, Array<{ id: number, percentCoverage: number }>> = new Map();
 

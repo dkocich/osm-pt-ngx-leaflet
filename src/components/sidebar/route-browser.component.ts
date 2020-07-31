@@ -31,7 +31,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   isRequesting: boolean;
   filteredView: boolean;
   private idsHaveMaster = new Set();
-  membersEditing: boolean = false;
+  membersEditing = false;
   @Input() routeBrowserOptions: IRouteBrowserOptions;
   @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
   private advancedExpModeSubscription: any;

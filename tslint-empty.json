@@ -1,6 +1,6 @@
 {
   "extends": [],
   "rules": {
-    "prefer-const": 1
+    "no-inferrable-types": true
   }
 }

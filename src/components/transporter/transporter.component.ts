@@ -55,9 +55,9 @@ export class TransporterComponent implements OnInit {
   queryRaw = decodeURIComponent(this.favoriteQueries[0].raw);
   editsSummary;
 
-  comment: string = '';
+  comment = '';
 
-  source: string = '';
+  source = '';
   constructor(
     private authSrv: AuthService,
     private mapSrv: MapService,

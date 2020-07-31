@@ -270,7 +270,7 @@ export class OverpassService {
         throw new Error(JSON.stringify(err));
       });
     }
-    let requestBody: string = `
+    let requestBody = `
             [out:json][timeout:25][bbox:{{bbox}}];
             (
               rel(id:${routesNotQueriedNotInIDB.join(', ')});
@@ -330,7 +330,7 @@ export class OverpassService {
       );
   }
 
-  uploadData(metadata: object, testUpload: boolean = false): void {
+  uploadData(metadata: object, testUpload = false): void {
     this.changeset = this.createChangeset(metadata);
     this.putChangeset(this.changeset, testUpload);
   }
@@ -1088,7 +1088,7 @@ export class OverpassService {
    * @minNumOfRelations: number[]
    */
   getRouteMastersForWizard(resIDs: number[]): void {
-    let requestBody: string = `
+    let requestBody = `
             [out:json][timeout:25][bbox:{{bbox}}];
             (
               rel(id:${resIDs.join(', ')});

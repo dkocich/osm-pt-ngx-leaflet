@@ -32,7 +32,7 @@ export class MapService {
   markerClick: EventEmitter<any> = new EventEmitter();
   markerEdit: EventEmitter<object> = new EventEmitter();
   highlightTypeEmitter: EventEmitter<object> = new EventEmitter();
-  highlightType: string = 'Stops';
+  highlightType = 'Stops';
   membersEditing: boolean;
   markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
   membersHighlightLayer: any = undefined;

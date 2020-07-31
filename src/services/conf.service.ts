@@ -26,5 +26,5 @@ export class ConfService {
   static readonly geocodingApiUrl = 'http://api.ipstack.com/';
   static readonly geocodingApiKey = '?access_key=2be8b578b9cef6bddf3a706d10c620dd';
 
-  cfgFilterLines: boolean = true;
+  cfgFilterLines = true;
 }

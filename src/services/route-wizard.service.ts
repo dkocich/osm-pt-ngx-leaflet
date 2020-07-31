@@ -302,7 +302,7 @@ export class RouteWizardService {
    * Assign roles to members for new route
    */
   static assignRolesToMembers(members: any): any {
-    let probableRole: string = '';
+    let probableRole = '';
     for (const member of members) {
       switch (member.tags.public_transport) {
         case 'platform':
