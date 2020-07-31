@@ -16,7 +16,7 @@ export class RouteMasterWizardService {
   osmtogeojson: any = require('osmtogeojson');
   modalMapElementsMap = new Map();
 
-  newRoutesMapReceived: EventEmitter<Map<string, Array<{ id: number, percentCoverage: number }>>> = new EventEmitter();
+  newRoutesMapReceived: EventEmitter<Map<string, { id: number, percentCoverage: number }[]>> = new EventEmitter();
 
   savedMultipleNodeDataResponses = [];
   savedContinuousQueryResponses = [];
@@ -26,7 +26,7 @@ export class RouteMasterWizardService {
   nodesFullyDownloaded = new Set();
 
   relsMap = new Map();
-  newRMsMap: Map<string, Array<{ id: number, percentCoverage: number }>> = new Map();
+  newRMsMap: Map<string, { id: number, percentCoverage: number }[]> = new Map();
 
   constructor(private storageSrv: StorageService,
               private mapSrv: MapService,

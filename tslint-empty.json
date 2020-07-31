@@ -1,6 +1,6 @@
 {
   "extends": [],
   "rules": {
-    "semicolon": true
+    "array-type": [true, "array"]
   }
 }

@@ -33,7 +33,7 @@ export class RouteMasterWizardComponent {
   @Input() tagKey   = '';
   @Input() tagValue = '';
 
-  newRMsMap: Map<string, Array<{ id: number, percentCoverage: number }>> = new Map();
+  newRMsMap: Map<string, { id: number, percentCoverage: number }[]> = new Map();
 
   RMTags = {
     type                      : 'route_master',
@@ -137,7 +137,7 @@ export class RouteMasterWizardComponent {
     return refs;
   }
 
-  getValue(ref: string): Array<{ id: number, percentCoverage: number }> {
+  getValue(ref: string): { id: number, percentCoverage: number }[] {
     return this.newRMsMap.get(ref);
   }
 
