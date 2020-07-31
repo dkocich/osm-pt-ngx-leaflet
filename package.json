@@ -38,14 +38,13 @@
     "start": "ng serve --port=4200",
     "stylelint": "stylelint **/*.css **/*.less",
     "test": "ng test",
-    "postinstall": "ngcc",
     "test:all": "snyk test && NODE_ENV=development karma start"
   },
   "homepage": "https://github.com/dkocich/osm-pt-ngx-leaflet#readme",
   "dependencies": {
-    "@angular-redux/form": "9.0.1",
-    "@angular-redux/router": "9.0.0",
-    "@angular-redux/store": "9.0.0",
+    "@angular-redux/form": "^10.0.0",
+    "@angular-redux/router": "^10.0.0",
+    "@angular-redux/store": "^10.0.0",
     "@angular/animations": "~9.1.2",
     "@angular/common": "~9.1.2",
     "@angular/compiler": "~9.1.2",
