@@ -73,7 +73,7 @@
     "@types/ramda": "0.26.44",
     "@types/redux-logger": "3.0.8",
     "@types/stylelint": "9.10.1",
-    "@types/xmlbuilder": "0.0.35",
+    "@types/xmlbuilder": "11.0.1",
     "angular2-hotkeys": "2.2.0",
     "angulartics2": "6.1.1",
     "bootstrap": "3.4.1",
