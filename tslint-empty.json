@@ -1,0 +1,6 @@
+{
+  "extends": [],
+  "rules": {
+    "prefer-const": 1
+  }
+}
