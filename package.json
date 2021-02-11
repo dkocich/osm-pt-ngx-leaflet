@@ -71,7 +71,7 @@
     "@types/karma-jasmine": "3.1.0",
     "@types/karma-jasmine-html-reporter": "1.5.1",
     "@types/leaflet": "1.5.17",
-    "@types/ramda": "0.26.44",
+    "@types/ramda": "0.27.35",
     "@types/redux-logger": "3.0.8",
     "@types/stylelint": "9.10.1",
     "@types/xmlbuilder": "0.0.35",
