@@ -83,7 +83,7 @@
     "eslint": "5.16.0",
     "eslint-plugin-cypress": "2.2.1",
     "express": "4.16.4",
-    "flux-standard-action": "2.0.4",
+    "flux-standard-action": "2.1.1",
     "font-awesome": "4.7.0",
     "intro.js": "2.9.3",
     "karma-phantomjs-launcher": "1.0.4",
