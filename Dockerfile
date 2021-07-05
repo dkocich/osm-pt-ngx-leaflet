@@ -11,7 +11,7 @@ RUN npm install
 # RUN npm run ngbuild -- --environment $env
 
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
-FROM nginx:1.14
+FROM nginx:1
 
 COPY --from=node /code/public/ /usr/share/nginx/html
 
