@@ -15,8 +15,10 @@
             <div>
               <tabset [justified]="true" type="pills" #stepTabs>
                 <tab heading="Step 1">
-                  <p class="text-success step-text">{{'Zoom into the required area on the map and find suggested route masters' | translate}}</p>
-                  <button class="btn btn-default" type="submit" (click)="findSuggestions()">{{'Find suggestions' | translate }}
+                  <p
+                    class="text-success step-text">{{'Zoom into the required area on the map and find suggested route masters' | translate}}</p>
+                  <button class="btn btn-default" type="submit"
+                          (click)="findSuggestions()">{{'Find suggestions' | translate }}
                   </button>
                 </tab>
                 <tab heading="Step 2">
@@ -76,23 +78,25 @@
                         <table
                           class="table-responsive table-condensed table-bordered table-hover table-striped wide-table">
                           <tbody>
-                          <tr *ngFor="let tag of RMTags | keys">
+                          <!-- FIXME compilation error -->
+                          FIXME route-master-wizard.component.html
+<!--                          <tr *ngFor="let tag of RMTags | keys">-->
 
-                            <td>
-                              <input type="text" value="{{tag.key}}" data-type="key" [readonly]="true">
-                            </td>
-                            <td>
-                              <input type="text" value="{{tag.value}}" data-type="value"
-                                     (blur)="createChangeTag('change tag', tag.key, $event)">
-                            </td>
-                            <td>
-                              <button class="btn btn-sm btn-danger fa fa-minus"
-                                      aria-hidden="true" container="body"
-                                      tooltip="{{ 'Remove tag' | translate }}"
-                                      (click)="createChangeTag('remove tag', tag.key)">
-                              </button>
-                            </td>
-                          </tr>
+<!--                            <td>-->
+<!--                              <input type="text" value="{{tag.key}}" data-type="key" [readonly]="true">-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                              <input type="text" value="{{tag.value}}" data-type="value"-->
+<!--                                     (blur)="createChangeTag('change tag', tag.key, $event)">-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                              <button class="btn btn-sm btn-danger fa fa-minus"-->
+<!--                                      aria-hidden="true" container="body"-->
+<!--                                      tooltip="{{ 'Remove tag' | translate }}"-->
+<!--                                      (click)="createChangeTag('remove tag', tag.key)">-->
+<!--                              </button>-->
+<!--                            </td>-->
+<!--                          </tr>-->
                           <tr>
                             <td>
                               <input #k class="form-control" type="text" minlength="1"
@@ -114,7 +118,9 @@
                       </div>
                     </div>
                     <div class="panel-footer clearfix">
-                      <button class="btn btn-default pull-right" (click)="saveStep4()">{{'Save Route Master' | translate }}r</button>
+                      <button class="btn btn-default pull-right"
+                              (click)="saveStep4()">{{'Save Route Master' | translate }}r
+                      </button>
                     </div>
                   </div>
                 </tab>
@@ -129,7 +135,8 @@
 </div>
 
 <ng-template #itemTemplate let-item="item" let-index="index">
-  <li class="list-group-item"> {{index + 1}}.&nbsp;{{'Name' | translate}}:&nbsp;{{getWholeRoute(item.value.id).tags.name}}&nbsp;id:&nbsp;{{item.value.id}}
+  <li class="list-group-item"> {{index + 1}}.&nbsp;{{'Name' | translate}}
+    :&nbsp;{{getWholeRoute(item.value.id).tags.name}}&nbsp;id:&nbsp;{{item.value.id}}
     <i class="fa fa-times pull-right" aria-hidden="true" (click)="removeRoute(item.value.id)"></i>
     <i class="fa fa-search pull-right" aria-hidden="true"
        (click)="viewRoute(item.value.id, item.value.percentCoverage)"></i>

@@ -31,7 +31,7 @@
           <td tooltip="{{ 'atrRefT' | translate }}" container="body"><b>{{ 'atrRef' | translate }}</b></td>
         </tr>
         </thead>
-        <tbody *ngIf="!editing$ | async">
+        <tbody *ngIf="(editing$ | async) === false">
         <tr *ngFor="let stop of listOfStopsForRoute; trackBy: trackByFn; let i = index;"
             class="explore" (click)="exploreStop($event, stop)" [class.selected]="currentElement && isSelected(stop.id)">
           <td>{{i + 1}}.</td>
