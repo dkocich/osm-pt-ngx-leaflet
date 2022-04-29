@@ -80,8 +80,8 @@
     "bootstrap": "3.4.1",
     "core-js": "2.5.7",
     "dexie": "2.0.4",
-    "eslint": "5.16.0",
-    "eslint-plugin-cypress": "2.2.1",
+    "eslint": "8.14.0",
+    "eslint-plugin-cypress": "2.12.1",
     "express": "4.16.4",
     "flux-standard-action": "2.0.4",
     "font-awesome": "4.7.0",
@@ -106,9 +106,9 @@
     "reflect-metadata": "0.1.13",
     "rxjs": "~6.5.5",
     "rxjs-compat": "~6.5.5",
-    "snyk": "1.298.1",
-    "stylelint": "10.0.1",
-    "stylelint-config-standard": "18.3.0",
+    "snyk": "1.914.0",
+    "stylelint": "14.8.1",
+    "stylelint-config-standard": "25.0.0",
     "tslib": "^1.10.0",
     "tslint-eslint-rules": "5.4.0",
     "xmlbuilder": "10.0.0",
@@ -137,7 +137,7 @@
     "typescript": "~3.8.3"
   },
   "optionalDependencies": {
-    "cypress": "4.2.0"
+    "cypress": "9.6.0"
   },
   "snyk": true
 }

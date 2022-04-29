@@ -1,6 +1,6 @@
 describe("Basic render test", () => {
   it("should assert that title is correct", () => {
-    cy.visit("localhost:8080");
+    cy.visit("localhost:4200");
     cy.title().should("include", "Public Transport editor for OSM");
   });
 
@@ -57,7 +57,7 @@ describe("Basic sidebar functionality", () => {
 
 describe("Basic map functionality", () => {
   it("should verify geocoder and coordinate saving to URL", () => {
-    cy.visit("localhost:8080");
+    cy.visit("localhost:4200");
     cy.url()
       .should("include", "#map=");
 
