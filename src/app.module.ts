@@ -121,7 +121,7 @@ const conditional_providers = [
     FormsModule,
     HttpClientModule,
     ModalModule.forRoot(),
-    NgHttpLoaderModule,
+    NgHttpLoaderModule.forRoot(),
     TooltipModule.forRoot(),
     TranslateModule.forRoot({
       loader: {

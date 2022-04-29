@@ -1,9 +1,12 @@
-<spinner
+<ng-http-loader
+  [backdrop]="true"
   [backgroundColor]="'#000000'"
+  [debounceDelay]="100"
+  [extraDuration]="100"
+  [minDuration]="250"
   [spinner]="spinkit.skThreeBounce"
-  [debounceDelay]="50"
 >
-</spinner>
+</ng-http-loader>
 
 <nav class="navbar navbar-default navbar-fixed-top hidden-xs" role="navigation">
   <div class="container-fluid">
