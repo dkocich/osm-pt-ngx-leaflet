@@ -1,6 +1,9 @@
 {
   "name": "osm-pt-ngx-leaflet",
   "scripts": {
+    "build": "ng build",
+    "heroku-postbuild": "echo This runs after the build",
+    "heroku-prebuild": "echo This runs before Heroku installs your dependencies"
   },
   "env": {
     "NPM_CONFIG_PRODUCTION": {
@@ -16,5 +19,6 @@
     {
       "url": "heroku/nodejs"
     }
-  ]
+  ],
+  "stack": "heroku-18"
 }

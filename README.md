@@ -1,5 +1,7 @@
 # osm-pt-ngx-leaflet
 
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/dkocich/osm-pt-ngx-leaflet) 
+
 Stable release (master branch)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/231206018f6e41d9bddee2b4bb4683dc)](https://app.codacy.com/app/dkocich/osm-pt-ngx-leaflet/dashboard)
 [![codebeat badge](https://codebeat.co/badges/525de5f2-8276-4e4a-ad5f-0b8c6c854f0d)](https://codebeat.co/projects/github-com-dkocich-osm-pt-ngx-leaflet-master)
@@ -19,25 +21,30 @@ Latest release (develop branch)
 
 An online web editor used to edit [public transport routes on OpenStreetMap](https://wiki.openstreetmap.org/wiki/Public_transport) with desktop and mobile devices.
 
-## How to start?
-
-If you want to submit issue or PR, please study the [Contributing.md](https://github.com/dkocich/osm-pt-ngx-leaflet/blob/master/CONTRIBUTING.md)
-
-This project requires [yarn](https://yarnpkg.com/) to run locally and it is built with
- [Angular](https://angular.io/), [Leaflet](http://leafletjs.com/) and [Webpack](https://webpack.js.org/).
-
-1.	Run `yarn install` to install all dependencies.
-2.	Run `npm start` to enable local development server.
-3.  Open the browser at `http://localhost:4200/` to see the app.
+If you want to submit issue or PR, please study the [Contributing.md](https://github.com/dkocich/osm-pt-ngx-leaflet/blob/master/.github/CONTRIBUTING.md).
 
 Visit the [wiki page](https://github.com/dkocich/osm-pt-ngx-leaflet/wiki) for more information.
 
-## Dev environment
-Project is tested and developed with node v10.2.1+, npm v6.1.0+, yarn v1.7.0+.
+## How to start?
+
+## Developing 👷
+
+#### Use a browser based development environment:
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/dkocich/osm-pt-ngx-leaflet)
+
+#### Setup project locally 
+
+This project requires [npm](https://npmpkg.com/) to run locally and it is built mainly with 
+ [Angular](https://angular.io/) and [Leaflet](http://leafletjs.com/).
+
+1. Run `npm install` to install all dependencies.
+2. Run `npm start` to enable local development server.
+3. Open the browser at `http://localhost:4200/` to see the application.
 
 ## Communication
 
-Contact me on Slack [osm-pt.slack.com](https://join.slack.com/t/osm-pt/shared_invite/enQtMjkzOTU1NTA3MTU5LWVkMWNlMTRkOTU5ZDcxMTExYzZmM2U3OTE4NDFjZTM3MmExMTQzMzRhY2VjOTYyMmI3ZjRmYjI3OWUwNDZkMWQ).
+Contact me via OSM messages [here](https://www.openstreetmap.org/user/dkocich).
 
 ## Acknowledgment
 

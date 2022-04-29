@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>osm auth</title>
+</head>
+<body>
+<script>
+  function stringQs(str) {
+    return str.split('&').filter(function (pair) {
+      return pair !== '';
+    }).reduce(function (obj, pair) {
+      let parts = pair.split('=');
+      obj[decodeURIComponent(parts[0])] = (null === parts[1]) ?
+        '' : decodeURIComponent(parts[1]);
+      return obj;
+    }, {});
+  }
+
+  let oauth_token = stringQs(window.location.href.split('?')[1]).oauth_token;
+  location.href = '/?oauth_token=' + oauth_token;
+</script>
+</body>
+</html>
+

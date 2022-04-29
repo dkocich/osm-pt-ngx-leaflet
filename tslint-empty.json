@@ -1,0 +1,6 @@
+{
+  "extends": [],
+  "rules": {
+    "array-type": [true, "array"]
+  }
+}
