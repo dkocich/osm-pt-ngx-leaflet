@@ -98,7 +98,7 @@
     "osm-auth": "1.0.2",
     "osmtogeojson": "^3.0.0-beta.4",
     "ramda": "0.27.1",
-    "raven-js": "3.26.4",
+    "raven-js": "3.27.2",
     "redux": "4.0.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-logger": "3.0.6",
