@@ -83,3 +83,4 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+/cypress/screenshots/app_spec.js/
