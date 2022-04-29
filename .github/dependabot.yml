@@ -3,18 +3,9 @@ updates:
   - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: weekly
-      time: "02:00"
-    open-pull-requests-limit: 10
+      interval: daily
+    open-pull-requests-limit: 5
     ignore:
-      - dependency-name: bl
-        versions:
-          - 4.0.3
-          - 4.0.4
-      - dependency-name: elliptic
-        versions:
-          - 6.5.3
-
       # For all packages, ignore all patch updates
       - dependency-name: "*"
         update-types: [ "version-update:semver-patch" ]
