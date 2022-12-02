@@ -32,7 +32,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   @Input() routeBrowserOptions: IRouteBrowserOptions;
   @select(['app', 'advancedExpMode'])
   readonly advancedExpMode$: Observable<boolean>;
-  private advancedExpModeSubscription: any;
+  private advancedExpModeSubscription;
   private advancedExpMode: boolean;
   constructor(
     private editSrv: EditService,
@@ -140,7 +140,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   /**
    * Explores relations on click (together with the request to API)
    */
-  exploreRelation($event: any, rel: any): void {
+  exploreRelation($event, rel): void {
     if (!this.advancedExpMode) {
       this.processSrv.refreshTagView(rel);
       this.appActions.actSetBeginnerView('route');
@@ -164,7 +164,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   /**
    * Explores already available relations on hover (without delay and additional requests)
    */
-  exploreAvailableRelation($event: any, rel: any): void {
+  exploreAvailableRelation($event, rel): void {
     if (
       this.storageSrv.elementsDownloaded.has(rel.id) &&
       this.advancedExpMode
@@ -178,7 +178,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
-  exploreMaster($event: any, rel: any): void {
+  exploreMaster($event, rel): void {
     this.processSrv.exploreMaster(this.storageSrv.elementsMap.get(rel.id));
   }
 
@@ -208,7 +208,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     return this.processSrv.haveSameIds(relId, this.currentElement.id);
   }
 
-  visibleInMap(relId: any): string {
+  visibleInMap(relId): string {
     const rel = this.storageSrv.elementsMap.get(relId);
     let nodesCounter = 0;
     for (const member of rel.members) {
@@ -236,7 +236,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   /**
    * NgFor track function which helps to re-render rows faster.
    */
-  trackByFn(index: number, item: any): number {
+  trackByFn(index: number, item): number {
     return item.id;
   }
 

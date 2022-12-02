@@ -35,15 +35,15 @@ export class ModalComponent {
   PTvErrorObject: IPTvErrorObject;
   ptPairErrorObject: IPTPairErrorObject;
 
-  removedNearbySuggestions: any[] = [];
-  removedMissingSuggestions: any[] = [];
+  removedNearbySuggestions = [];
+  removedMissingSuggestions = [];
 
-  addedMissingSuggestionsRefs: any[] = [];
-  addedFromNearbySuggestionsRefs: any[] = [];
-  newAddedRefs: any[] = [];
+  addedMissingSuggestionsRefs = [];
+  addedFromNearbySuggestionsRefs = [];
+  newAddedRefs = [];
 
-  missingRefRels: any[];
-  nearbyRels: any[];
+  missingRefRels;
+  nearbyRels;
 
   platformTags = PtTags.expectedKeys;
   addedPlatformTagsValues = [];
@@ -51,7 +51,7 @@ export class ModalComponent {
   newPlatformEvent;
   circleLayer = null;
 
-  osmtogeojson: any = require('osmtogeojson');
+  osmtogeojson = require('osmtogeojson');
 
   constructor(
     public bsModalRef: BsModalRef,
@@ -78,7 +78,7 @@ export class ModalComponent {
       );
       const popupContent = L.DomUtil.create('div', 'content');
       popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
-      const popupArr: any = this.mapSrv.popUpLayerGroup.getLayers();
+      const popupArr = this.mapSrv.popUpLayerGroup.getLayers();
       popupArr[0].setContent(popupContent);
       this.nameErrorObject.corrected = 'true';
       this.storageSrv.nameErrorsObj[this.storageSrv.currentIndex].corrected =
@@ -154,7 +154,7 @@ export class ModalComponent {
     );
     const popupContent = L.DomUtil.create('div', 'content');
     popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
-    const popupArr: any = this.mapSrv.popUpLayerGroup.getLayers();
+    const popupArr = this.mapSrv.popUpLayerGroup.getLayers();
     popupArr[0].setContent(popupContent);
     this.wayErrorObject.corrected = 'true';
     this.storageSrv.wayErrorsObj[this.storageSrv.currentIndex].corrected =
@@ -178,7 +178,7 @@ export class ModalComponent {
     );
     const popupContent = L.DomUtil.create('div', 'content');
     popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
-    const popupArr: any = this.mapSrv.popUpLayerGroup.getLayers();
+    const popupArr = this.mapSrv.popUpLayerGroup.getLayers();
     popupArr[0].setContent(popupContent);
     this.PTvErrorObject.corrected = 'true';
     this.storageSrv.PTvErrorsObj[this.storageSrv.currentIndex].corrected =
@@ -200,7 +200,7 @@ export class ModalComponent {
     this.storageSrv.elementsRendered.delete(
       'node/' + this.wayErrorObject.stop.id
     );
-    const obj: any = {};
+    const obj = {};
     const elements = [];
     elements.push(this.storageSrv.elementsMap.get(this.wayErrorObject.stop.id));
     obj.elements = elements;
@@ -231,8 +231,7 @@ export class ModalComponent {
   }
 
   private createChangeForWayError(): void {
-    let change: any;
-    change = {
+    const change = {
       from: {
         key: 'public_transport',
         value: this.wayErrorObject.stop.tags['public_transport'],
@@ -247,9 +246,8 @@ export class ModalComponent {
   }
 
   private createChangeForPTvError(): void {
-    let change: object;
     this.storageSrv.currentElement.tags['public_transport'] = 'platform';
-    change = {
+    const change = {
       key: 'public_transport',
       value: 'platform',
     };
@@ -273,7 +271,7 @@ export class ModalComponent {
   /**
    * adds selected nearby suggestion
    */
-  addNearbySuggestedRefValue(rel: any): void {
+  addNearbySuggestedRefValue(rel): void {
     this.addedFromNearbySuggestionsRefs.push(rel);
     this.nearbyRels.forEach((item, ind) => {
       if (item.id === rel.id) {
@@ -287,7 +285,7 @@ export class ModalComponent {
   /**
    * Remove the added ref value (added from suggestions (missing) by user)
    */
-  removeMissingSuggestedRefValue(toRemoveRel: any): void {
+  removeMissingSuggestedRefValue(toRemoveRel): void {
     let index;
     for (const rel of this.addedMissingSuggestionsRefs) {
       if (rel.id === toRemoveRel.id) {
@@ -310,7 +308,7 @@ export class ModalComponent {
   /**
    * Remove the added ref value (added from suggestions (nearby) by user)
    */
-  removeNearbySuggestedRefValue(toRemoveRel: any): void {
+  removeNearbySuggestedRefValue(toRemoveRel): void {
     let index;
     for (const rel of this.addedFromNearbySuggestionsRefs) {
       if (rel.id === toRemoveRel.id) {
@@ -333,7 +331,7 @@ export class ModalComponent {
   /**
    * Remove the added ref value (newly added by user)
    */
-  removeNewRefValue(ref: any): void {
+  removeNewRefValue(ref): void {
     const index = this.newAddedRefs.indexOf(ref);
     if (index > -1) {
       this.newAddedRefs.splice(index, 1);
@@ -356,7 +354,7 @@ export class ModalComponent {
    *  Handles adding missing refs
    */
   private createChangeForRefTag(ref: string): void {
-    let change: any;
+    let change;
     if (ref !== '') {
       change = {
         from: {
@@ -376,7 +374,7 @@ export class ModalComponent {
   /**
    * adds given node as child member of routes
    */
-  private addToMembers(addedFromNearbySuggestionsRefs: any): void {
+  private addToMembers(addedFromNearbySuggestionsRefs): void {
     if (addedFromNearbySuggestionsRefs.length !== 0) {
       for (const relation of addedFromNearbySuggestionsRefs) {
         const rel = JSON.parse(
@@ -438,7 +436,7 @@ export class ModalComponent {
     }
     this.refErrorObject.corrected = val;
     this.storageSrv.refErrorsObj[this.storageSrv.currentIndex].corrected = val;
-    const popupArr: any = this.mapSrv.popUpLayerGroup.getLayers();
+    const popupArr = this.mapSrv.popUpLayerGroup.getLayers();
     popupArr[0].setContent(popupContent);
   }
 
@@ -480,7 +478,7 @@ export class ModalComponent {
   /**
    * Get layer from map from given stop ID
    */
-  private getLayerFromMap(stopID: number): any {
+  private getLayerFromMap(stopID: number) {
     let matchedLayer = null;
     this.mapSrv.map.eachLayer((layer) => {
       if (layer['_latlng'] && layer['feature']) {

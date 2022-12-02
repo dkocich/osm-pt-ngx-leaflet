@@ -34,7 +34,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
   readonly advancedExpMode$: Observable<boolean>;
   @Input() tagBrowserOptions: ITagBrowserOptions;
   unfilledKeys = [];
-  private advancedExpModeSubscription: any;
+  private advancedExpModeSubscription;
   private advancedExpMode: boolean;
 
   constructor(
@@ -73,13 +73,13 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     }
   }
 
-  private checkUnchanged(change: any): boolean {
+  private checkUnchanged(change): boolean {
     return (
       change.from.key === change.to.key && change.from.value === change.to.value
     );
   }
 
-  createChange(type: string, key?: string, event?: any): void {
+  createChange(type: string, key?: string, event?): void {
     let change: object;
 
     if (type === 'change tag') {
@@ -191,11 +191,11 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     return !this.tagKey || !this.tagValue;
   }
 
-  keyChange($event: any): void {
+  keyChange($event): void {
     console.log('LOG (tag-browser)', $event);
   }
 
-  valueChange($event: any): void {
+  valueChange($event): void {
     console.log('LOG (tag-browser)', $event);
   }
 

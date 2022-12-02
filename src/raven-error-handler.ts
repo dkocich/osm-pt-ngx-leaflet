@@ -9,7 +9,7 @@ if (Utils.isProductionDeployment()) {
 }
 
 export class RavenErrorHandler implements ErrorHandler {
-  handleError(err: any): void {
+  handleError(err): void {
     Raven.captureException(err);
   }
 }

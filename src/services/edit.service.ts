@@ -15,7 +15,7 @@ export class EditService {
   currentEditStep: number;
   totalEditSteps: number;
   currentTotalSteps: EventEmitter<object> = new EventEmitter();
-  elementChanges: any = [];
+  elementChanges = [];
   private editing: boolean;
 
   constructor(
@@ -94,9 +94,9 @@ export class EditService {
    * @param type - some comment about a created change
    * @param change - change object
    */
-  addChange(element: any, type: string, change: object): any {
+  addChange(element, type: string, change: object) {
     const edits: object[] = this.storageSrv.edits;
-    const editObj: any = {
+    const editObj = {
       change,
       id: element.id,
       type,
@@ -251,7 +251,7 @@ export class EditService {
   /**
    * Handles adding of different PT elements and fills attributes automatically.
    */
-  createElement(creatingElementOfType: string, event: any): void {
+  createElement(creatingElementOfType: string, event): void {
     const newId: number = this.findNewId();
     const marker = this.initializeNewMarker(
       creatingElementOfType,
@@ -379,7 +379,7 @@ export class EditService {
       routeMasterId
     );
     const routeMaster = this.storageSrv.elementsMap.get(routeMasterId);
-    const change: any = {
+    const change = {
       from: JSON.parse(JSON.stringify(routeMaster.members)),
     };
     const newMember = {
@@ -522,7 +522,7 @@ export class EditService {
   /**
    * Handles repositioning of newly created node elements.
    */
-  repositionElement(marker: any, event: any): void {
+  repositionElement(marker, event): void {
     const opt = event.target.options;
     const newPosition = event.target.getLatLng();
     const change = {
@@ -552,7 +552,7 @@ export class EditService {
   /**
    * Binds events to created markers.
    */
-  createNewMarkerEvents(marker: any): void {
+  createNewMarkerEvents(marker): void {
     marker.on('dragend', (event) => {
       this.repositionElement(marker, event);
     });
@@ -565,11 +565,7 @@ export class EditService {
   /**
    * Creates new marker with unique ID, icon, options and metadata attributes.
    */
-  initializeNewMarker(
-    creatingElementOfType: string,
-    event: any,
-    newId: number
-  ): any {
+  initializeNewMarker(creatingElementOfType: string, event, newId: number) {
     let iconUrl;
     switch (creatingElementOfType) {
       case 'stop':
@@ -675,7 +671,7 @@ export class EditService {
   /**
    * Checks if the last edit was made on the same tag like the new change.
    */
-  private shouldCombineChanges(editObj: any): boolean {
+  private shouldCombineChanges(editObj): boolean {
     const last = this.storageSrv.edits[this.storageSrv.edits.length - 1];
     console.log('decre emitted');
     switch (editObj.type) {
@@ -694,7 +690,7 @@ export class EditService {
   /**
    * Checks if last two changes are on the same tag and combines them in edit. history together.
    */
-  private combineChanges(editObj: any): void {
+  private combineChanges(editObj): void {
     console.log('LOG (editing s.) Combining changes');
     const last = this.storageSrv.edits[this.storageSrv.edits.length - 1];
     if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
@@ -744,7 +740,7 @@ export class EditService {
    * Applies current step of edit.
    * @param edit - edit object
    */
-  private applyChange(edit: any): void {
+  private applyChange(edit): void {
     if (!edit.id) {
       alert('FIXME: missing edit id ' + JSON.stringify(edit));
     }
@@ -871,7 +867,7 @@ export class EditService {
    * Undoes/deletes current step of edit.
    * @param edit - edit object
    */
-  private undoChange(edit: any): void {
+  private undoChange(edit): void {
     switch (edit.type) {
       case 'add tag':
         console.log('LOG (editing s.) Should remove this added tag: ', edit);
@@ -986,7 +982,7 @@ export class EditService {
   /**
    * Deletes all unnecessary attributes from member object in a relation.
    */
-  private simplifyMembers(editObj: any): void {
+  private simplifyMembers(editObj): void {
     for (const member of editObj.change.to) {
       for (const key of Object.keys(member)) {
         if (['type', 'ref', 'role'].indexOf(key) === -1) {
@@ -999,7 +995,7 @@ export class EditService {
   /**
    * Compares strings of from/to changes in the edited object.
    */
-  private changeIsEqual(editObj: any): boolean {
+  private changeIsEqual(editObj): boolean {
     console.log(
       JSON.stringify(editObj.change.from).length,
       JSON.stringify(editObj.change.to).length

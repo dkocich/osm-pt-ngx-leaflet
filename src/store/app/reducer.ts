@@ -14,7 +14,7 @@ export const INITIAL_STATE: IAppState = {
   tutorialMode: null,
 };
 
-export function appReducer(state: IAppState = INITIAL_STATE, action: AnyAction): any {
+export function appReducer(state: IAppState = INITIAL_STATE, actionAction) {
   switch (action.type) {
     case AppActions.TOGGLE_EDITING:
       return {

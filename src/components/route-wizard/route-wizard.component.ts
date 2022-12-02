@@ -21,9 +21,9 @@ import { AppActions } from '../../store/app/actions';
 export class RouteWizardComponent {
   map: L.Map;
   newRoutesRefs = [];
-  osmtogeojson: any = require('osmtogeojson');
+  osmtogeojson = require('osmtogeojson');
   private startEventProcessing = new Subject<L.LeafletEvent>();
-  newRoute: any = {};
+  newRoute = {};
   newRouteMembersSuggestions = [];
   addedNewRouteMembers = [];
 
@@ -111,7 +111,7 @@ export class RouteWizardComponent {
     L.control.scale().addTo(this.map);
     this.routeWizardSrv.map = this.map;
     this.routeWizardSrv.renderAlreadyDownloadedData();
-    this.routeWizardSrv.modalMapElementsMap = new Map<any, any>(
+    this.routeWizardSrv.modalMapElementsMap = new Map(
       this.storageSrv.elementsMap
     );
     this.routeWizardSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
@@ -203,7 +203,7 @@ export class RouteWizardComponent {
   /**
    * Adds new member to route
    */
-  private addNewMemberToRoute(newMember: any): void {
+  private addNewMemberToRoute(newMember): void {
     this.addedNewRouteMembers = this.routeWizardSrv.addNewMemberToRoute(
       newMember,
       this.addedNewRouteMembers
@@ -249,7 +249,7 @@ export class RouteWizardComponent {
   /**
    * Handles when tags for route are updated
    */
-  createChangeTag(action: string, key: any, event: any): void {
+  createChangeTag(action: string, key, event): void {
     this.newRoute = RouteWizardService.modifiesTags(
       action,
       key,

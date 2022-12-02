@@ -78,7 +78,7 @@ export class ProcessService {
   /**
    * Returns element with specific ID directly from mapped object.
    */
-  getElementById(featureId: number, map: any): any {
+  getElementById(featureId: number, map) {
     if (map.has(featureId)) {
       return map.get(featureId);
     }
@@ -134,7 +134,7 @@ export class ProcessService {
     );
   }
 
-  processNodeResponse(response: any): void {
+  processNodeResponse(response): void {
     for (const element of response.elements) {
       if (!this.storageSrv.elementsMap.has(element.id)) {
         this.storageSrv.elementsMap.set(element.id, element);
@@ -276,7 +276,7 @@ export class ProcessService {
     this.refreshSidebarViewsSource.next(data);
   }
 
-  refreshTagView(element: any): void {
+  refreshTagView(element): void {
     if (element) {
       this.storageSrv.currentElementsChange.emit(
         JSON.parse(JSON.stringify(element))
@@ -308,7 +308,7 @@ export class ProcessService {
    * Explores relation by downloading its members and highlighting stops position with a line.
    */
   exploreRelation(
-    rel: any,
+    rel,
     refreshTagView?: boolean,
     refreshMasterView?: boolean,
     zoomToElement?: boolean
@@ -398,7 +398,7 @@ export class ProcessService {
    * Runs rest of the route's highlighting process after the missing members are downloaded.
    */
   downloadedMissingMembers(
-    rel: any,
+    rel,
     zoomToElement: boolean,
     refreshTagView: boolean
   ): void {
@@ -424,7 +424,7 @@ export class ProcessService {
     }
   }
 
-  exploreMaster(rel: any): void {
+  exploreMaster(rel): void {
     if (rel.members.length === 0) {
       return alert(
         "Problem occurred - this relation doesn't contain any route variants."
@@ -457,7 +457,7 @@ export class ProcessService {
   }
 
   exploreStop(
-    stop: any,
+    stop,
     filterRelations: boolean,
     refreshTags: boolean,
     zoomTo: boolean
@@ -599,7 +599,7 @@ export class ProcessService {
   numIsBetween(num: number, min: number, max: number): boolean {
     return min < num && num < max;
   }
-  getRelationDataIDB(rel: any): any {
+  getRelationDataIDB(rel) {
     this.dbSrv
       .getMembersForRoute(rel.id)
       .then((res) => {

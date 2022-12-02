@@ -70,7 +70,7 @@ import { AppActions } from './store/app/actions';
 import { RootEpics } from './store/epics';
 import { StoreModule } from './store/module';
 
-export function HttpLoaderFactory(http: HttpClient): any {
+export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 

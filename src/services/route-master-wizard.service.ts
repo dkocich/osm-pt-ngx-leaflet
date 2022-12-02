@@ -13,7 +13,7 @@ export class RouteMasterWizardService {
   map;
   routes = [];
   ptLayerModal;
-  osmtogeojson: any = require('osmtogeojson');
+  osmtogeojson = require('osmtogeojson');
   modalMapElementsMap = new Map();
 
   newRoutesMapReceived: EventEmitter<
@@ -91,10 +91,7 @@ export class RouteMasterWizardService {
   /**
    * Renders data on modal map
    */
-  renderTransformedGeojsonDataRMWizard(
-    transformedGeoJSON: any,
-    map: L.Map
-  ): void {
+  renderTransformedGeojsonDataRMWizard(transformedGeoJSON, map: L.Map): void {
     this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
       filter: (feature) => {
         return (

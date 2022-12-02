@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  ngOnInit(): any {
+  ngOnInit() {
     this.dbSrv.deleteExpiredDataIDB();
     this.dbSrv
       .deleteExpiredPTDataIDB()

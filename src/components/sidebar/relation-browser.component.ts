@@ -83,7 +83,7 @@ export class RelationBrowserComponent implements OnInit {
   /**
    * NgFor track function which helps to re-render rows faster.
    */
-  trackByFn(index: number, item: any): number {
+  trackByFn(index: number, item): number {
     return item.id;
   }
 
@@ -95,7 +95,7 @@ export class RelationBrowserComponent implements OnInit {
     return this.storageSrv.elementsDownloaded.has(relId) || relId < 0; // show created
   }
 
-  exploreRelation($event: any, relId: number): void {
+  exploreRelation($event, relId: number): void {
     this.processSrv.exploreRelation(
       this.storageSrv.elementsMap.get(relId),
       true,

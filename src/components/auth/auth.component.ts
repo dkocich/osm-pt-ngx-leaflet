@@ -33,7 +33,7 @@ export class AuthComponent {
     this.authSrv.oauth.authenticate(this.gotAuthenticatedCallback);
   };
 
-  private gotAuthenticatedCallback = (err: any, response: any): void => {
+  private gotAuthenticatedCallback = (err, response): void => {
     if (err) {
       throw new Error(JSON.stringify(err));
     }
@@ -46,7 +46,7 @@ export class AuthComponent {
     this.storageSrv.clearLocalStorage();
   };
 
-  private done = (err: any, res: any): any => {
+  private done = (err, res) => {
     if (err) {
       document.getElementById('user').innerHTML =
         'error! try clearing your browser cache';
@@ -81,7 +81,7 @@ export class AuthComponent {
     );
   };
 
-  private gotDetailsCallback = (err: any, xmlResponse: any): void => {
+  private gotDetailsCallback = (err, xmlResponse): void => {
     this.done(err, xmlResponse);
   };
 }

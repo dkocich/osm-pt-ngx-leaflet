@@ -21,7 +21,7 @@ describe('Store Module', () => {
         const testbed = getTestBed();
 
         mockEpics = {
-          createEpics(): any {
+          createEpics() {
             return [];
           },
         } as RootEpics;

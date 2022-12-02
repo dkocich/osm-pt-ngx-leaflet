@@ -158,7 +158,7 @@ export class ErrorHighlightService {
    * Handles click events for popup
    */
 
-  private addClickListenerToPopUp(popUp: any, errorObj: any): void {
+  private addClickListenerToPopUp(popUp, errorObj): void {
     const stop = errorObj['stop'];
     const popUpElement = popUp.getElement();
     const popUpId = popUp['_leaflet_id'];
@@ -251,7 +251,7 @@ export class ErrorHighlightService {
     const latlng = { lat: element.lat, lng: element.lon };
     const parentRels = this.getParentRelations(errorObject.stop.id);
 
-    let missingRefRels: any = [];
+    let missingRefRels = [];
     let initialState;
 
     if (parentRels.length !== 0) {
@@ -293,8 +293,7 @@ export class ErrorHighlightService {
    */
   openModalWithComponentForWay(errorObject: IWayErrorObject): void {
     if (errorObject.corrected === 'false') {
-      let initialState;
-      initialState = {
+      const initialState = {
         error: 'way as parent',
         wayErrorObject: errorObject,
       };
@@ -308,8 +307,7 @@ export class ErrorHighlightService {
    */
   openModalWithComponentForPTv(errorObject: IWayErrorObject): void {
     if (errorObject.corrected === 'false') {
-      let initialState;
-      initialState = {
+      const initialState = {
         error: 'PTv',
         PTvErrorObject: errorObject,
       };
@@ -467,7 +465,7 @@ export class ErrorHighlightService {
   /**
    * Moves to next location
    */
-  nextLocation(): any {
+  nextLocation() {
     let errorsObj;
     let typeOfErrorObject;
     let appendStringID;
@@ -719,7 +717,7 @@ export class ErrorHighlightService {
   /**
    * returns names of nearby nodes
    */
-  getNearbyNodeNames(latlngm: any): any[] {
+  getNearbyNodeNames(latlngm) {
     const inRangeNameArray = [];
     this.mapSrv.map.eachLayer((layer) => {
       if (layer instanceof L.Marker) {
@@ -739,7 +737,7 @@ export class ErrorHighlightService {
   /**
    * Nearby route suggestions
    */
-  getNearbyRoutesSuggestions(latlngm: any, missingRefRels: any): any[] {
+  getNearbyRoutesSuggestions(latlngm, missingRefRels) {
     const inRange = [];
     let nearbyRels = [];
     this.mapSrv.map.eachLayer((layer) => {
@@ -750,7 +748,7 @@ export class ErrorHighlightService {
           m.getLatLng().distanceTo(latlngm) < 500 &&
           m.feature.properties.name
         ) {
-          const idTypestring: any = layer.feature.id;
+          const idTypestring = layer.feature.id;
           const featureTypeId = idTypestring.split('/');
           inRange.push(
             this.storageSrv.elementsMap.get(Number(featureTypeId[1]))
@@ -785,7 +783,7 @@ export class ErrorHighlightService {
   /**
    * Returns most occurred name (top 5 most used names)
    */
-  getMostUsedName(array: any[]): any {
+  getMostUsedName(array) {
     if (array.length === 0) {
       return null;
     }
@@ -854,7 +852,7 @@ export class ErrorHighlightService {
   /**
    * Returns all stops in current map bounds and which are not downloaded
    */
-  getAllStopsInCurrentBounds(): any[] {
+  getAllStopsInCurrentBounds() {
     const inBounds = [];
     const inBounds2 = [];
     this.storageSrv.elementsMap.forEach((element) => {
@@ -998,7 +996,7 @@ export class ErrorHighlightService {
   /**
    * Returns all stops in current map bounds and which are not downloaded
    */
-  getNotDownloadedStopsInBounds(): any[] {
+  getNotDownloadedStopsInBounds() {
     const inBounds = [];
     this.storageSrv.elementsMap.forEach((element) => {
       if (
@@ -1017,7 +1015,7 @@ export class ErrorHighlightService {
   /**
    * Gets all parent relations for id
    */
-  private getParentRelations(id: any): any {
+  private getParentRelations(id) {
     const parentRels = [];
 
     this.storageSrv.elementsMap.forEach((element) => {
@@ -1046,7 +1044,7 @@ export class ErrorHighlightService {
   /**
    * Compares refs of parent relations with added refs of node
    */
-  private compareRefs(parentRels: any, addedRefs: any): any {
+  private compareRefs(parentRels, addedRefs) {
     const parentRefs = [];
     const missingRefs = [];
     for (const parent of parentRels) {
@@ -1146,8 +1144,7 @@ export class ErrorHighlightService {
     circleLayer: L.Layer
   ): void {
     if (errorObject.corrected === 'false') {
-      let initialState;
-      initialState = {
+      const initialState = {
         error: 'pt-pair',
         ptPairErrorObject: errorObject,
         newPlatformEvent: event,

@@ -17,7 +17,7 @@ import { StorageService } from '../../services/storage.service';
 })
 export class StopBrowserComponent implements OnInit {
   listOfStopsForRoute: IPtStop[] = this.storageSrv.listOfStopsForRoute;
-  currentElement: any;
+  currentElement;
   listOfStops: IPtStop[] = this.storageSrv.listOfStops;
   filteredView: boolean;
   @select(['app', 'editing']) readonly editing$: Observable<boolean>;
@@ -88,7 +88,7 @@ export class StopBrowserComponent implements OnInit {
     this.editSrv.addChange(this.currentElement, type, change);
   }
 
-  private onDrop(args: any): void {
+  private onDrop(args): void {
     if (this.currentElement.type !== 'relation') {
       return alert(
         'Current element has incorrent type. Select relation one more time please.'
@@ -101,7 +101,7 @@ export class StopBrowserComponent implements OnInit {
     this.processSrv.activateFilteredStopView(false);
   }
 
-  exploreStop($event: any, stop: IPtStop): void {
+  exploreStop($event, stop: IPtStop): void {
     this.processSrv.exploreStop(stop, true, true, true);
   }
 
@@ -112,7 +112,7 @@ export class StopBrowserComponent implements OnInit {
   /**
    * NgFor track function which helps to re-render rows faster.
    */
-  trackByFn(index: number, item: any): number {
+  trackByFn(index: number, item): number {
     return item.id;
   }
 }

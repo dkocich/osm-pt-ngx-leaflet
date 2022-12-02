@@ -18,8 +18,8 @@ export class StorageService {
   markersMap = new Map();
   elementsToHighlight = new Set();
 
-  localJsonStorage: any = new Map();
-  localGeojsonStorage: any = new Map();
+  localJsonStorage = new Map();
+  localGeojsonStorage = new Map();
   listOfStops: IPtStop[] = [];
   listOfRelations: object[] = [];
   listOfAreas: object[] = [];
@@ -116,7 +116,7 @@ export class StorageService {
   /**
    * Sets user details after login.
    */
-  setUserData(userDetails: any): void {
+  setUserData(userDetails): void {
     console.log(userDetails);
     this.displayName = userDetails.displayName;
     this.imgHref = userDetails.img_href;
@@ -139,14 +139,14 @@ export class StorageService {
   /**
    * Sets an object from a localStorage for a specific key.
    */
-  setSessionStorageItem(key: string, value: any): void {
+  setSessionStorageItem(key: string, value): void {
     sessionStorage.setItem(key, JSON.stringify(value));
   }
 
   /**
    * Retrieves an object from a sessionStorage for a specific key.
    */
-  getSessionStorageItem(key: string): any {
+  getSessionStorageItem(key: string) {
     return JSON.parse(sessionStorage.getItem(key));
   }
 
@@ -154,21 +154,21 @@ export class StorageService {
    * Pushes key's object to the sessionStorage.
    */
   pushToSessionStorageItem(key: string, value: object): void {
-    const previousValue: any = sessionStorage.getItem(key);
+    const previousValue = sessionStorage.getItem(key);
     sessionStorage.setItem(key, JSON.stringify(previousValue + value));
   }
 
   /**
    * Sets an object from a localStorage for a specific key.
    */
-  setLocalStorageItem(key: string, value: any): void {
+  setLocalStorageItem(key: string, value): void {
     sessionStorage.setItem(key, JSON.stringify(value));
   }
 
   /**
    * Retrieves an object from a localStorage for a specific key.
    */
-  getLocalStorageItem(key: string): any {
+  getLocalStorageItem(key: string) {
     return JSON.parse(localStorage.getItem(key));
   }
 
@@ -218,7 +218,7 @@ export class StorageService {
   //  * Overwrites last step in the history of edits.
   //  */
   // overwriteLastLocalStorageEdit(key: string, value: object): void {
-  //     let edits: any = JSON.parse(localStorage.getItem(key));
+  //     let edits = JSON.parse(localStorage.getItem(key));
   //     edits[edits.length - 1] = value;
   //     localStorage.setItem(key, JSON.stringify(edits));
   // }
@@ -226,7 +226,7 @@ export class StorageService {
   // /**
   //  *
   //  */
-  // private countUniqueEdits(): any {
+  // private countUniqueEdits() {
   //     let idsArray = [];
   //     // let arr =  this.edits;
   //     //

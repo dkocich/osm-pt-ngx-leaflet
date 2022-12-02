@@ -46,7 +46,7 @@ export class DbService {
       });
   }
 
-  getCompletelyDownloadedElementsId(): any {
+  getCompletelyDownloadedElementsId() {
     this.db.MetaData.where('isCompletelyDownloaded')
       .equals(1)
       .each((element) => {
@@ -81,7 +81,7 @@ export class DbService {
   /**
    * Fetches IDs of routes for which route masters were fetched from Overpass and added to IDB
    */
-  getIdsQueriedRoutesForMaster(): any {
+  getIdsQueriedRoutesForMaster() {
     this.db.MetaData.where('type')
       .equals('route')
       .each((route) => {
@@ -107,7 +107,7 @@ export class DbService {
   /**
    * Fetches routes for which the given stop is a member from IDB
    */
-  getRoutesForStop(stopId: number): any {
+  getRoutesForStop(stopId: number) {
     return this.db.transaction('r', this.db.MetaData, this.db.PtRoutes, () => {
       const filteredRoutes = [];
       return this.db.MetaData.get(stopId).then((data) => {
@@ -131,7 +131,7 @@ export class DbService {
    * Fetches routes for which the given platform is a member from IDB
    */
 
-  getRoutesForPlatform(platformId: number): any {
+  getRoutesForPlatform(platformId: number) {
     return this.db.transaction('r', this.db.MetaData, this.db.PtRoutes, () => {
       const filteredRoutes = [];
       return this.db.MetaData.get(platformId).then((data) => {
@@ -154,7 +154,7 @@ export class DbService {
   /**
    * Marks Routes for which parent masters have been fetched from overpass and added to IDB
    */
-  addToQueriedRoutesForMasters(routeIds: number[]): any {
+  addToQueriedRoutesForMasters(routeIds: number[]) {
     return this.db.transaction('rw', this.db.MetaData, () => {
       return this.db.MetaData.where('id')
         .anyOf(routeIds)
@@ -176,7 +176,7 @@ export class DbService {
   /**
    * Adds Overpass API 's response to IndexedDb
    */
-  addResponseToIDB(response: any, type: string, id?: any): Promise<any> {
+  addResponseToIDB(response, type: string, id?): Promise<any> {
     const routeIds = [];
     const routes = [];
     const platforms = [];
@@ -449,7 +449,7 @@ export class DbService {
   /**
    * Adds multiple node download overpass API's response to IDB
    */
-  addMultipleResponseToIDB(response: any, IDs: any[]): any {
+  addMultipleResponseToIDB(response, IDs) {
     const parentRoutes = new Map();
     const routes = [];
     const platforms = [];
@@ -703,7 +703,7 @@ export class DbService {
   /**
    * Fetches stops/platform members for a given route from IDB
    */
-  getMembersForRoute(relId: number): any {
+  getMembersForRoute(relId: number) {
     return this.db.transaction(
       'r',
       this.db.PtStops,
@@ -776,7 +776,7 @@ export class DbService {
    * Gets all parent route_masters for given routeIDs
    */
 
-  getRoutesForMasterRoute(routeIds: number[]): any {
+  getRoutesForMasterRoute(routeIds: number[]) {
     const filteredMasters = [];
     return this.db.PtRouteMasters.each((routeMaster) => {
       routeMaster['members'].forEach((element) => {
@@ -796,7 +796,7 @@ export class DbService {
   /**
    * Deletes old data from IDB (everything except areas grid)
    */
-  deleteExpiredPTDataIDB(): any {
+  deleteExpiredPTDataIDB() {
     return this.db.transaction(
       'rw',
       [
@@ -956,12 +956,12 @@ export class DbService {
     routeIds: number[],
     id: number,
     type: string,
-    stopsMetaData: any,
-    platformsMetaData: any,
-    routesMetaData: any,
-    routeMastersMetaData: any,
-    waysMetaData: any
-  ): any {
+    stopsMetaData,
+    platformsMetaData,
+    routesMetaData,
+    routeMastersMetaData,
+    waysMetaData
+  ) {
     return this.db.transaction(
       'rw',
       [
@@ -1021,14 +1021,14 @@ export class DbService {
    * Adds metadata to IDB for multiple node response
    */
   private addMetaDataForMultipleResponse(
-    stopsMetaData: any,
-    platformsMetaData: any,
-    routesMetaData: any,
-    routeMastersMetaData: any,
-    waysMetaData: any,
-    IDs: any[],
+    stopsMetaData,
+    platformsMetaData,
+    routesMetaData,
+    routeMastersMetaData,
+    waysMetaData,
+    IDs,
     parentRoutes: Map<string, string[]>
-  ): any {
+  ) {
     return this.db.transaction(
       'rw',
       [

@@ -8,7 +8,7 @@ describe('KeysPipe', () => {
   });
 
   it('transforms X to Y', () => {
-    const value: any = 'X';
+    const value = 'X';
     const args: string[] = [];
 
     expect(pipe.transform(value, args)).toEqual('Y');

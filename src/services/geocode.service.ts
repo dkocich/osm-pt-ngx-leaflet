@@ -18,7 +18,7 @@ export class GeocodeService {
     this.httpClient = httpClient;
   }
 
-  geocode(address: string): any {
+  geocode(address: string) {
     return this.httpClient
       .get<IResponseGeocodeGMaps>(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
@@ -53,7 +53,7 @@ export class GeocodeService {
       );
   }
 
-  getCurrentLocation(): any {
+  getCurrentLocation() {
     return this.httpClient
       .get<IResponseIp>('https://ipv4.myexternalip.com/json')
       .subscribe(

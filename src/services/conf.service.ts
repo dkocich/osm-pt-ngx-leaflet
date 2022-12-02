@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-const p = require('../../package.json');
+import p from '../../package.json';
 
 @Injectable()
 export class ConfService {

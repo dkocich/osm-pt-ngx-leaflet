@@ -4,7 +4,7 @@ import { ISuggestionsBrowserOptions } from '../core/editingOptions.interface';
 
 export interface IRootAppState {
   // app: IAppState;
-  routes?: any;
+  routes?;
 }
 
 export interface IAppState {

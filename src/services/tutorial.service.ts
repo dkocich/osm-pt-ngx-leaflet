@@ -141,7 +141,7 @@ export class TutorialService {
     }
   }
 
-  private leftKeyClick(event: any, fn: any): void {
+  private leftKeyClick(event, fn): void {
     if (event.key === 'ArrowRight') {
       const title = this.storageSrv.currentTutorial;
       switch (title) {

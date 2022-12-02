@@ -25,7 +25,7 @@ export class OverpassService {
   changeset;
   private changeset_id: string;
   private areaReference: IAreaRef;
-  osmtogeojson: any = require('osmtogeojson');
+  osmtogeojson = require('osmtogeojson');
 
   constructor(
     private authSrv: AuthService,
@@ -415,7 +415,7 @@ export class OverpassService {
    * Creates new changeset on the API and returns its ID in the callback.
    * Put /api/0.6/changeset/create
    */
-  putChangeset(changeset: any, testUpload?: boolean): void {
+  putChangeset(changeset, testUpload?: boolean): void {
     if (!this.storageSrv.edits) {
       return alert('Create some edits before trying to upload changes please.');
     }
@@ -527,7 +527,7 @@ export class OverpassService {
   /**
    * Downloads all missing data for currently explored relation.
    */
-  private getRelationData(rel: any, missingElements: number[]): void {
+  private getRelationData(rel, missingElements: number[]): void {
     if (missingElements.length === 0) {
       return alert(
         'This relation has no stops or platforms. Please add them first and repeat your action. \n' +
@@ -616,7 +616,7 @@ export class OverpassService {
    * Create basic changeset body.
    * @param metadata - contains source and comment added by user
    */
-  private createChangeset(metadata: object): any {
+  private createChangeset(metadata: object) {
     console.log('LOG (overpass s.)', metadata['source'], metadata['comment']);
     const changeset = create('osm')
       .ele('changeset')
@@ -634,7 +634,7 @@ export class OverpassService {
   /**
    * Adds changeset ID as an attribute to the request.
    */
-  private addChangesetId(changeset_id: any): void {
+  private addChangesetId(changeset_id): void {
     this.changeset_id = changeset_id;
     const parser = new DOMParser();
     const doc = parser.parseFromString(this.changeset, 'application/xml');
@@ -643,11 +643,7 @@ export class OverpassService {
     console.log('LOG (overpass s.)', this.changeset, doc);
   }
 
-  private createdChangeset(
-    err: any,
-    changeset_id: any,
-    testUpload?: boolean
-  ): void {
+  private createdChangeset(err, changeset_id, testUpload?: boolean): void {
     if (err) {
       return alert(
         'Error while creating new changeset. Try again please. ' +
@@ -668,7 +664,7 @@ export class OverpassService {
     }
     const changedElements = [];
     const changedElementsArr = Array.from(idsChanged.keys());
-    changedElementsArr.sort((a: any, b: any) => {
+    changedElementsArr.sort((a, b) => {
       return a - b; // Sort numerically and ascending
     });
     for (const changedElementId of changedElementsArr) {
@@ -834,7 +830,7 @@ export class OverpassService {
   /**
    * Tries to close changeset after it is uploaded.
    */
-  private uploadedChangeset(err: any): void {
+  private uploadedChangeset(err): void {
     if (err) {
       return alert(
         'Error after data uploading. Changeset is not closed. It should close automatically soon. ' +
@@ -862,11 +858,11 @@ export class OverpassService {
       2500
     );
   }
-  getRandomKey(collection: any): any {
+  getRandomKey(collection) {
     const keys = Array.from(collection.keys());
     return keys[Math.floor(Math.random() * keys.length)];
   }
-  getStopDataIDB(stopId: number): any {
+  getStopDataIDB(stopId: number) {
     this.dbSrv
       .getRoutesForStop(stopId)
       .then((relations: IPtRelation[]) => {
@@ -919,7 +915,7 @@ export class OverpassService {
         throw new Error(JSON.stringify(err));
       });
   }
-  getPlatformDataIDB(platformId: number): any {
+  getPlatformDataIDB(platformId: number) {
     this.dbSrv
       .getRoutesForPlatform(platformId)
       .then((relations: IPtRelation[]) => {
@@ -976,7 +972,7 @@ export class OverpassService {
   /**
    * Downloads multiple node data for error highlight
    */
-  private downloadMultipleNodeData(toDownload: any): void {
+  private downloadMultipleNodeData(toDownload): void {
     let requestBody = `
       [out:json][timeout:25];
       (

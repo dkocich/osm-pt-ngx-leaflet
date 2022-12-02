@@ -21,7 +21,7 @@ import { AppActions } from '../../store/app/actions';
 })
 export class RouteMasterWizardComponent {
   map: L.Map;
-  osmtogeojson: any = require('osmtogeojson');
+  osmtogeojson = require('osmtogeojson');
   private startEventProcessing = new Subject<L.LeafletEvent>();
   usedRM = [];
 
@@ -187,12 +187,7 @@ export class RouteMasterWizardComponent {
     this.usedRM = newRM;
   }
 
-  modifiesTags(
-    action: string,
-    key: string,
-    event: FocusEvent,
-    tags: object
-  ): any {
+  modifiesTags(action: string, key: string, event: FocusEvent, tags: object) {
     switch (action) {
       case 'change tag':
         tags[key] = (event.target as HTMLInputElement).value;

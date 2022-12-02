@@ -6,7 +6,7 @@ export class RootEpics {
     //
   }
 
-  createEpics(): any {
+  createEpics() {
     return [
       // 'app',
     ];

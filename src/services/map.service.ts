@@ -184,9 +184,9 @@ export class MapService {
   }
   map: L.Map;
   baseMaps: IBaseMaps;
-  osmtogeojson: any = require('osmtogeojson');
+  osmtogeojson = require('osmtogeojson');
   bounds;
-  highlightStroke: any = undefined;
+  highlightStroke = undefined;
   editingMode: boolean;
   // popupBtnClick: EventEmitter<any> = new EventEmitter();
   markerClick: EventEmitter<any> = new EventEmitter();
@@ -195,12 +195,12 @@ export class MapService {
   highlightType = 'Stops';
   membersEditing: boolean;
   markerMembershipToggleClick: EventEmitter<any> = new EventEmitter();
-  membersHighlightLayer: any = undefined;
-  private ptLayer: any;
-  highlightFill: any = undefined;
-  private highlight: any = undefined;
-  private markerFrom: any = undefined;
-  private markerTo: any = undefined;
+  membersHighlightLayer = undefined;
+  private ptLayer;
+  highlightFill = undefined;
+  private highlight = undefined;
+  private markerFrom = undefined;
+  private markerTo = undefined;
   popUpArr = [];
   popUpLayerGroup: L.LayerGroup;
   currentPopUpFeatureId: number;
@@ -209,7 +209,7 @@ export class MapService {
   /**
    * Colors popup according to event
    */
-  static colorPopUpByEvent(e: any): void {
+  static colorPopUpByEvent(e): void {
     let colorString = '';
     if (e.type === 'click' || e.type === 'mouseover') {
       colorString = 'lightblue';
@@ -227,7 +227,7 @@ export class MapService {
   /**
    * Colors popup according to the given popup name
    */
-  static colorPopUpByColorName(colorName: string, element: any): void {
+  static colorPopUpByColorName(colorName: string, element): void {
     element.children[0].style.backgroundColor = colorName;
     element.lastElementChild.lastElementChild.style.backgroundColor = colorName;
   }
@@ -296,7 +296,7 @@ export class MapService {
   /**
    * Renders GeoJson data on the map.
    */
-  renderTransformedGeojsonData(transformedGeojson: any, map: L.Map): void {
+  renderTransformedGeojsonData(transformedGeojson, map: L.Map): void {
     this.ptLayer = L.geoJSON(transformedGeojson, {
       filter: (feature) => {
         // filter away already rendered elements
@@ -331,7 +331,7 @@ export class MapService {
   /**
    * Creates click events for leaflet elements.
    */
-  enableDrag(feature: any, layer: any): any {
+  enableDrag(feature, layer) {
     layer.on('click', (e) => {
       if (!this.membersEditing) {
         this.handleMarkerClick(feature);
@@ -401,7 +401,7 @@ export class MapService {
 
   /**
    */
-  renderData(res: any): void {
+  renderData(res): void {
     const transformed = this.osmtogeojson(res);
     this.ptLayer = L.geoJSON(transformed, {
       onEachFeature: (feature, layer) => {
@@ -448,7 +448,7 @@ export class MapService {
    * Returns coordinates for a stop specified by ID.
    * @returns {{lat: number, lng: number}}
    */
-  findCoordinates(refId: number, map: any): L.LatLngExpression {
+  findCoordinates(refId: number, map): L.LatLngExpression {
     const element = map.get(refId);
     if (!element) {
       console.log('Warning - elem. not found ', refId, JSON.stringify(element));
@@ -492,7 +492,7 @@ export class MapService {
   /**
    * Builds multiple relations highlights.
    */
-  showRoutes(rel: any): boolean {
+  showRoutes(rel): boolean {
     const latlngs = [];
     this.storageSrv.stopsForRoute = [];
     for (const member of rel.members) {
@@ -553,7 +553,7 @@ export class MapService {
   /**
    * Builds and creates relation highlight.
    */
-  showRoute(rel: any, map: L.Map, elementsMap: any): boolean {
+  showRoute(rel, map: L.Map, elementsMap): boolean {
     for (const member of rel.members) {
       if (
         member.type === 'node' &&
@@ -706,7 +706,7 @@ export class MapService {
   /**
    * Draws tooltip with name of from/to stops.
    */
-  drawTooltipFromTo(rel: any): void {
+  drawTooltipFromTo(rel): void {
     const latlngFrom = this.getFirstNode();
     const latlngTo = this.getLastNode();
 
@@ -741,7 +741,7 @@ export class MapService {
   /**
    * Styles leaflet markers.
    */
-  stylePoint(feature: any, latlng: any): any {
+  stylePoint(feature, latlng) {
     let iconUrl = 'assets/marker-icon.png';
     let shadowUrl = '';
     const fp = feature.properties;
@@ -805,7 +805,7 @@ export class MapService {
    * Styles leaflet lines.
    * @returns {{color: string, weight: number, opacity: number}}
    */
-  private styleFeature(feature: any): object {
+  private styleFeature(feature): object {
     switch (feature.properties.route) {
       case 'bus':
         return Utils.REL_BUS_STYLE;
@@ -818,7 +818,7 @@ export class MapService {
     }
   }
 
-  getFeatureIdFromMarker(feature: any): number {
+  getFeatureIdFromMarker(feature): number {
     const featureTypeId = feature.id.split('/');
     const featureType = featureTypeId[0];
     return Number(featureTypeId[1]); // featureId
@@ -827,13 +827,13 @@ export class MapService {
   /**
    * Emits event when users clicks map marker.
    */
-  private handleMarkerClick(feature: any): void {
+  private handleMarkerClick(feature): void {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     this.markerClick.emit(featureId);
     this.storageSrv.tutorialStepCompleted.emit('click map marker');
   }
 
-  private handleMembershipToggle(feature: any): void {
+  private handleMembershipToggle(feature): void {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     const marker: object = feature.target; // FIXME DELETE?
     this.markerMembershipToggleClick.emit({ featureId });
@@ -887,7 +887,7 @@ export class MapService {
     relHighlightsAndIDs.forEach((highlight, id) => {
       const rel = this.storageSrv.elementsMap.get(id);
       const textString = '     ' + rel.tags.ref + '     ';
-      const layer: any = highlight;
+      const layer = highlight;
       layer.setText(textString, {
         repeat: true,
         attributes: { fill: 'blue', stroke: 'black' },
@@ -908,7 +908,7 @@ export class MapService {
   clearMultipleRouteInfoLabels(): void {
     this.highlight.eachLayer((layer: L.Layer) => {
       if (layer instanceof L.Polyline) {
-        const layerA: any = layer;
+        const layerA = layer;
         layerA.setText(null);
       }
     });
@@ -917,7 +917,7 @@ export class MapService {
   /**
    * Returns all stops/platforms on the given map
    */
-  findStopsInBounds(map: L.Map, elementsMap: any): any[] {
+  findStopsInBounds(map: L.Map, elementsMap) {
     const stopsInBounds = [];
     elementsMap.forEach((stop) => {
       if (

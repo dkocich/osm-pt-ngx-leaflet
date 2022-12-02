@@ -59,7 +59,7 @@ export class BeginnerComponent {
       startCorrection: false,
     },
   };
-  a2: any;
+  a2;
 
   constructor(
     private appActions: AppActions,

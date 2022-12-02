@@ -24,7 +24,7 @@ export class NavigatorComponent implements OnInit {
     this.map = this.mapSrv.map;
   }
 
-  goto(): any {
+  goto() {
     if (!this.address) {
       return;
     }

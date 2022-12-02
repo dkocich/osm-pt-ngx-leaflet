@@ -30,7 +30,7 @@ export class RouteWizardService {
   map;
   routes = [];
   ptLayerModal;
-  osmtogeojson: any = require('osmtogeojson');
+  osmtogeojson = require('osmtogeojson');
   modalMapElementsMap = new Map();
 
   autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
@@ -51,7 +51,7 @@ export class RouteWizardService {
   /**
    * Removes duplicates from array
    */
-  private static removeDuplicatesFromArray(arr: any[]): any {
+  private static removeDuplicatesFromArray(arr) {
     return arr.filter((value, index, self) => {
       return self.indexOf(value) === index;
     });
@@ -60,7 +60,7 @@ export class RouteWizardService {
   /**
    * Compares arrays and returns refs not added in route refs
    */
-  private static compareArrays(nodeRefs: any, routeRefs: any): any {
+  private static compareArrays(nodeRefs, routeRefs) {
     const notAdded = [];
     for (const itemA of nodeRefs) {
       let flag = false;
@@ -80,7 +80,7 @@ export class RouteWizardService {
   /**
    * Get individual refs from stops's route_ref
    */
-  static getIndividualRouteRefs(stops: any[]): any {
+  static getIndividualRouteRefs(stops) {
     const refs = [];
     for (const stop of stops) {
       refs.push(stop.tags.route_ref);
@@ -104,7 +104,7 @@ export class RouteWizardService {
   /**
    * Assign roles to members for new route
    */
-  static assignRolesToMembers(members: any): any {
+  static assignRolesToMembers(members) {
     let probableRole = '';
     for (const member of members) {
       switch (member.tags.public_transport) {
@@ -126,14 +126,14 @@ export class RouteWizardService {
   /**
    * Checks member count, for avoiding single member routes
    */
-  static checkMemberCount(members: any): any {
+  static checkMemberCount(members) {
     return members.length !== 1;
   }
 
   /**
    * Returns member counts (stops, platforms)
    */
-  static countNodeType(members: any): any {
+  static countNodeType(members) {
     let stopsCount = 0;
     let platformsCount = 0;
     for (const member of members) {
@@ -150,7 +150,7 @@ export class RouteWizardService {
   /**
    * Filters out empty tags before saving route
    */
-  static filterEmptyTags(route: any): any {
+  static filterEmptyTags(route) {
     const tags = route.tags;
     for (const property in tags) {
       if (tags.hasOwnProperty(property)) {
@@ -165,7 +165,7 @@ export class RouteWizardService {
   /**
    * Forms object for new route's members
    */
-  static formRelMembers(toAddNodes: any): any {
+  static formRelMembers(toAddNodes) {
     const relMembers = [];
     for (const node of toAddNodes) {
       relMembers.push({
@@ -180,12 +180,7 @@ export class RouteWizardService {
   /**
    * Fired when tags are modified
    */
-  static modifiesTags(
-    action: string,
-    key: any,
-    event: any,
-    newRoute: any
-  ): any {
+  static modifiesTags(action: string, key, event, newRoute) {
     switch (action) {
       case 'change tag':
         newRoute.tags[key] = event.target.value;
@@ -204,7 +199,7 @@ export class RouteWizardService {
   /**
    * Styles show connectivity buttons
    */
-  private static styleButtons(type: string): any {
+  private static styleButtons(type: string) {
     switch (type) {
       case 'Stops':
         document.getElementById(type).style.backgroundColor = 'cornflowerblue';
@@ -230,7 +225,7 @@ export class RouteWizardService {
    * Renders data on modal map which was already present on the main map
    */
   renderAlreadyDownloadedData(): void {
-    const obj: any = {};
+    const obj = {};
     const elements = [];
     this.storageSrv.elementsMap.forEach((element) => {
       elements.push(element);
@@ -257,7 +252,7 @@ export class RouteWizardService {
    * Renders data on modal map
    */
   renderTransformedGeojsonDataForRouteWizard(
-    transformedGeoJSON: any,
+    transformedGeoJSON,
     map: L.Map
   ): void {
     this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
@@ -291,7 +286,7 @@ export class RouteWizardService {
   /**
    * Enables click of nodes for modal map
    */
-  enableClickForRouteWizardMap(feature: any, layer: any): void {
+  enableClickForRouteWizardMap(feature, layer): void {
     layer.on('click', () => {
       this.handleRouteWizardMarkerClick(feature);
     });
@@ -300,7 +295,7 @@ export class RouteWizardService {
   /**
    * Handles map click
    */
-  private handleRouteWizardMarkerClick(feature: any): void {
+  private handleRouteWizardMarkerClick(feature): void {
     const featureId: number = this.mapSrv.getFeatureIdFromMarker(feature);
     this.autoRouteMapNodeClick.emit(featureId);
   }
@@ -308,7 +303,7 @@ export class RouteWizardService {
   /**
    * Forms an array of route refs from nodes, also removes duplicates
    */
-  getRouteRefsFromNodes(stopsInBoundsIDs: any): any[] {
+  getRouteRefsFromNodes(stopsInBoundsIDs) {
     const withRouteRefTag = [];
     let ref_map;
     const refValues = [];
@@ -330,13 +325,13 @@ export class RouteWizardService {
   /**
    * Processes multiple node data
    */
-  findMissingRoutes(downloadedResponse: any): void {
+  findMissingRoutes(downloadedResponse): void {
     const stopsInBounds = this.mapSrv.findStopsInBounds(
       this.map,
       this.modalMapElementsMap
     );
     const nodeRefs = this.getRouteRefsFromNodes(stopsInBounds);
-    let refsOfRoutes: any[] = [];
+    let refsOfRoutes = [];
     if (downloadedResponse) {
       for (const element of downloadedResponse.elements) {
         if (!this.modalMapElementsMap.has(element.id)) {
@@ -371,7 +366,7 @@ export class RouteWizardService {
   /**
    * Filters newly added ref from suggested refs
    */
-  private filterPreviouslyAddedRefs(refs: any[]): any {
+  private filterPreviouslyAddedRefs(refs) {
     let index;
     this.modalMapElementsMap.forEach((element) => {
       if (
@@ -392,7 +387,7 @@ export class RouteWizardService {
   /**
    * Returns stops for given refs
    */
-  private getStopsForNewRoutes(notAddedRefs: any): any {
+  private getStopsForNewRoutes(notAddedRefs) {
     const stopsForNewRoutes = new Map();
     this.modalMapElementsMap.forEach((stop) => {
       if (
@@ -400,7 +395,7 @@ export class RouteWizardService {
         (stop.tags.bus === 'yes' || stop.tags.public_transport) &&
         stop.tags.route_ref
       ) {
-        const stops: any[] = [];
+        const stops = [];
         stops.push(stop);
         const refMap = RouteWizardService.getIndividualRouteRefs(stops);
         const individualRefs = [];
@@ -426,7 +421,7 @@ export class RouteWizardService {
   /**
    * Highlights route's members on map
    */
-  highlightRoute(members: any, adjustZoom: boolean): void {
+  highlightRoute(members, adjustZoom: boolean): void {
     this.mapSrv.clearHighlight(this.map);
     const routeMembers = members;
     RouteWizardService.assignRolesToMembers(routeMembers);
@@ -445,7 +440,7 @@ export class RouteWizardService {
   /**
    * Adjust zoom to fit all members of route on map
    */
-  private adjustZoomForRoute(members: any): void {
+  private adjustZoomForRoute(members): void {
     const latlngs: L.LatLng[] = [];
     for (const member of members) {
       latlngs.push(L.latLng(member.lat, member.lon));
@@ -456,7 +451,7 @@ export class RouteWizardService {
   /**
    * Handles highlighting of first route on starting of Step
    */
-  highlightFirstRoute(connectObj: any): void {
+  highlightFirstRoute(connectObj): void {
     const members = this.routesMap.get(this.routesMap.keys().next().value);
     const countObj = RouteWizardService.countNodeType(members);
     this.useAndSetAvailableConnectivity(countObj);
@@ -467,7 +462,7 @@ export class RouteWizardService {
    * Sets available connectivity, uses stop connectivity by default,
    * uses platforms if not available
    */
-  useAndSetAvailableConnectivity(countObj: any): any {
+  useAndSetAvailableConnectivity(countObj) {
     const connectObj = this.resetAvailableConnectivity(countObj);
     if (connectObj.canStopsConnect) {
       this.setHighlightType('Stops', connectObj);
@@ -479,7 +474,7 @@ export class RouteWizardService {
   /**
    * Resets available connectivity
    */
-  private resetAvailableConnectivity(countObj: any): any {
+  private resetAvailableConnectivity(countObj) {
     let canStopsConnect;
     let canPlatformsConnect;
 
@@ -500,7 +495,7 @@ export class RouteWizardService {
   /**
    * Highlights members of route with circle
    */
-  highlightMembers(members: any[]): void {
+  highlightMembers(members): void {
     for (const member of members) {
       const latlng = { lat: member.lat, lng: member.lon };
       const circle = L.circleMarker(latlng, {
@@ -523,7 +518,7 @@ export class RouteWizardService {
   /**
    * Filters routes with one member
    */
-  filterRoutesMap(routesMap: any): void {
+  filterRoutesMap(routesMap): void {
     routesMap.forEach((value, key) => {
       if (RouteWizardService.checkMemberCount(value)) {
         this.routesMap.set(key, value);
@@ -534,7 +529,7 @@ export class RouteWizardService {
   /**
    * View suggested route
    */
-  viewSuggestedRoute(ref: any, connectObj: any): void {
+  viewSuggestedRoute(ref, connectObj): void {
     const members = this.routesMap.get(ref);
     const countObj = RouteWizardService.countNodeType(members);
     this.useAndSetAvailableConnectivity(countObj);
@@ -544,7 +539,7 @@ export class RouteWizardService {
   /**
    * Removes member from route
    */
-  removeMember(toRemoveMemberID: string, addedNewRouteMembers: any): any {
+  removeMember(toRemoveMemberID: string, addedNewRouteMembers) {
     const members = [];
     let index;
     for (const member of addedNewRouteMembers) {
@@ -570,7 +565,7 @@ export class RouteWizardService {
   /**
    * Adds new member to route
    */
-  addNewMemberToRoute(newMember: any, addedNewRouteMembers: any): any {
+  addNewMemberToRoute(newMember, addedNewRouteMembers) {
     const members = [];
     members.push(newMember);
     addedNewRouteMembers = addedNewRouteMembers.concat(members);
@@ -587,7 +582,7 @@ export class RouteWizardService {
   /**
    * Sets highlight type for highlighting route on map
    */
-  setHighlightType(type: string, connectivityObj: any): boolean {
+  setHighlightType(type: string, connectivityObj): boolean {
     switch (type) {
       case 'Stops':
         if (connectivityObj.canStopsConnect) {
@@ -609,11 +604,7 @@ export class RouteWizardService {
   /**
    * Changes connectivity of route on map
    */
-  showConnectivity(
-    type: string,
-    connectivityObj: any,
-    addedNewRouteMembers: any
-  ): void {
+  showConnectivity(type: string, connectivityObj, addedNewRouteMembers): void {
     this.mapSrv.clearHighlight(this.map);
     const countObj = RouteWizardService.countNodeType(addedNewRouteMembers);
     this.resetAvailableConnectivity(countObj);
@@ -625,7 +616,7 @@ export class RouteWizardService {
   /**
    * Fetches ref of relations already downloaded
    */
-  getFromAlreadyDownloadedRoutes(): any {
+  getFromAlreadyDownloadedRoutes() {
     const refsOfRoutes = [];
     this.modalMapElementsMap.forEach((element) => {
       if (

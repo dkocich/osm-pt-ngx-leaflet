@@ -145,7 +145,7 @@ export class TransporterComponent implements OnInit {
     return true;
   }
 
-  setQuery(event: any): void {
+  setQuery(event): void {
     this.queryShort = event.target.textContent;
     const filtered = this.favoriteQueries.filter((iter) => {
       return iter.short === event.target.textContent;
