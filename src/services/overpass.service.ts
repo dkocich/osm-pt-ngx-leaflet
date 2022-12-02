@@ -39,7 +39,7 @@ export class OverpassService {
     private ngRedux: NgRedux<IAppState>,
     public appActions: AppActions,
     private routeWizardSrv: RouteWizardService,
-    private routeMasterWizardSrv: RouteMasterWizardService,
+    private routeMasterWizardSrv: RouteMasterWizardService
   ) {
     /**
      * @param data - string containing ID of clicked marker
@@ -53,24 +53,34 @@ export class OverpassService {
           this.storageSrv.elementsMap.get(featureId),
           false,
           false,
-          false,
+          false
         );
       }
 
       /*Checks if node was downloaded earlier and all it's data was added to IDB */
       if (this.storageSrv.completelyDownloadedPlatformsIDB.has(featureId)) {
         /*Gets the data from IDB and processes it (updates listOfStops etc.)*/
-        console.log('LOG (overpass s.) Platform with id : ' + featureId + ' in IDB');
+        console.log(
+          'LOG (overpass s.) Platform with id : ' + featureId + ' in IDB'
+        );
         this.getPlatformDataIDB(featureId);
-
       } else if (this.storageSrv.completelyDownloadedStopsIDB.has(featureId)) {
         /*Gets the data from IDB and processes it (updates listOfStops etc.)*/
-        console.log('LOG (overpass s.) Stop with id : ' + featureId + ' in IDB');
+        console.log(
+          'LOG (overpass s.) Stop with id : ' + featureId + ' in IDB'
+        );
         this.getStopDataIDB(featureId);
       } else {
-        if (!this.storageSrv.elementsDownloaded.has(featureId) && featureId > 0) {
-          console.log('LOG (overpass s.) Stop/Platform with id : ' + featureId + ' was not in IDB, hence overpass ' +
-            'query is made.');
+        if (
+          !this.storageSrv.elementsDownloaded.has(featureId) &&
+          featureId > 0
+        ) {
+          console.log(
+            'LOG (overpass s.) Stop/Platform with id : ' +
+              featureId +
+              ' was not in IDB, hence overpass ' +
+              'query is made.'
+          );
           this.getNodeDataOverpass(featureId, true);
           this.storageSrv.elementsDownloaded.add(featureId);
         }
@@ -80,25 +90,37 @@ export class OverpassService {
         const toDownload = [];
         for (let i = 0; toDownload.length <= 5; i++) {
           const randomKey = this.getRandomKey(this.storageSrv.elementsMap);
-          if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
-            !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
+          if (
+            !this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
+            !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)
+          ) {
             // gets the data from overpass query and adds to IDB
             toDownload.push(randomKey);
           }
         }
-        console.log('LOG (overpass s.) Downloading ' + toDownload + ' in background in slow connection mode');
+        console.log(
+          'LOG (overpass s.) Downloading ' +
+            toDownload +
+            ' in background in slow connection mode'
+        );
         this.downloadMultipleNodeData(toDownload);
       } else {
         const toDownload = [];
         for (let i = 0; toDownload.length <= 25; i++) {
           const randomKey = this.getRandomKey(this.storageSrv.elementsMap);
-          if (!this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
-            !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)) {
+          if (
+            !this.storageSrv.completelyDownloadedPlatformsIDB.has(randomKey) &&
+            !this.storageSrv.completelyDownloadedStopsIDB.has(randomKey)
+          ) {
             // gets the data from overpass query and adds to IDB
             toDownload.push(randomKey);
           }
         }
-        console.log('LOG (overpass s.) Downloading ' + toDownload + ' in background in slow connection mode');
+        console.log(
+          'LOG (overpass s.) Downloading ' +
+            toDownload +
+            ' in background in slow connection mode'
+        );
         this.downloadMultipleNodeData(toDownload);
       }
     });
@@ -132,25 +154,29 @@ export class OverpassService {
           this.dbSrv.addArea(this.areaReference.areaPseudoId);
           this.warnSrv.showSuccess();
 
-          const errorCorrectionMode = this.ngRedux.getState()['app']['errorCorrectionMode'];
+          const errorCorrectionMode =
+            this.ngRedux.getState()['app']['errorCorrectionMode'];
           if (errorCorrectionMode) {
-            if (errorCorrectionMode.refSuggestions === null && errorCorrectionMode.waySuggestions === null) {
+            if (
+              errorCorrectionMode.refSuggestions === null &&
+              errorCorrectionMode.waySuggestions === null
+            ) {
               this.errorHighlightSrv.countNameErrors();
               this.errorHighlightSrv.countPTvErrors();
               this.errorHighlightSrv.countPTPairErrors();
               this.appActions.actSetErrorCorrectionMode({
                 nameSuggestions: {
-                  found          : true,
+                  found: true,
                   startCorrection: false,
                 },
-                refSuggestions : null,
-                waySuggestions : null,
-                PTvSuggestions : {
-                  found          : true,
+                refSuggestions: null,
+                waySuggestions: null,
+                PTvSuggestions: {
+                  found: true,
                   startCorrection: false,
                 },
                 ptPairSuggestions: {
-                  found          : true,
+                  found: true,
                   startCorrection: false,
                 },
               });
@@ -162,25 +188,26 @@ export class OverpassService {
                 this.errorHighlightSrv.countPTPairErrors();
                 this.appActions.actSetErrorCorrectionMode({
                   nameSuggestions: {
-                    found          : true,
+                    found: true,
                     startCorrection: false,
                   },
-                  refSuggestions : {
-                    found          : true,
+                  refSuggestions: {
+                    found: true,
                     startCorrection: false,
                   },
-                  waySuggestions : null,
-                  PTvSuggestions : {
-                    found          : true,
+                  waySuggestions: null,
+                  PTvSuggestions: {
+                    found: true,
                     startCorrection: false,
                   },
                   ptPairSuggestions: {
-                    found          : true,
+                    found: true,
                     startCorrection: false,
                   },
                 });
               } else {
-                const toDownload = this.errorHighlightSrv.getNotDownloadedStopsInBounds();
+                const toDownload =
+                  this.errorHighlightSrv.getNotDownloadedStopsInBounds();
                 if (toDownload.length === 0) {
                   this.errorHighlightSrv.countNameErrors();
                   this.errorHighlightSrv.countRefErrors();
@@ -189,23 +216,23 @@ export class OverpassService {
                   this.errorHighlightSrv.countPTPairErrors();
                   this.appActions.actSetErrorCorrectionMode({
                     nameSuggestions: {
-                      found          : true,
+                      found: true,
                       startCorrection: false,
                     },
-                    refSuggestions : {
-                      found          : true,
+                    refSuggestions: {
+                      found: true,
                       startCorrection: false,
                     },
-                    waySuggestions : {
-                      found          : true,
+                    waySuggestions: {
+                      found: true,
                       startCorrection: false,
                     },
-                    PTvSuggestions : {
-                      found          : true,
+                    PTvSuggestions: {
+                      found: true,
                       startCorrection: false,
                     },
                     ptPairSuggestions: {
-                      found          : true,
+                      found: true,
                       startCorrection: false,
                     },
                   });
@@ -218,12 +245,17 @@ export class OverpassService {
           // FIXME
           // this.processSrv.drawStopAreas();
           // this.getRouteMasters();
-          this.storageSrv.tutorialStepCompleted.emit('new continuous overpass data');
+          this.storageSrv.tutorialStepCompleted.emit(
+            'new continuous overpass data'
+          );
         },
         (err) => {
           this.warnSrv.showError();
-          console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
-        },
+          console.error(
+            'LOG (overpass s.) Stops response error',
+            JSON.stringify(err)
+          );
+        }
       );
   }
 
@@ -238,13 +270,13 @@ export class OverpassService {
     const idsArr: number[] = this.findRouteIdsWithoutMaster();
     if (idsArr.length <= minNumOfRelations) {
       return console.log(
-        'LOG (overpass s.) Not enough relations to download - stop',
+        'LOG (overpass s.) Not enough relations to download - stop'
       );
     } else if (!idsArr.length) {
       // do not query masters if all relations are already known
       return;
     }
-    const routesQueriedInIDB:       number[] = [];
+    const routesQueriedInIDB: number[] = [];
     const routesNotQueriedNotInIDB: number[] = [];
 
     idsArr.forEach((id) => {
@@ -255,17 +287,27 @@ export class OverpassService {
       }
     });
 
-    console.log('LOG (db s.) Total Routes which were not queried: ' + idsArr + ' out of which routes ' +
-      'present in IDB (already queried an all parent route masters present in IDB) :' + routesQueriedInIDB + ' , not in IDB ' +
-      'and not queried : ' + routesNotQueriedNotInIDB);
+    console.log(
+      'LOG (db s.) Total Routes which were not queried: ' +
+        idsArr +
+        ' out of which routes ' +
+        'present in IDB (already queried an all parent route masters present in IDB) :' +
+        routesQueriedInIDB +
+        ' , not in IDB ' +
+        'and not queried : ' +
+        routesNotQueriedNotInIDB
+    );
     if (routesQueriedInIDB.length !== 0) {
-      this.dbSrv.getRoutesForMasterRoute(routesQueriedInIDB).then((res) => {
-        this.markQueriedRelations(routesQueriedInIDB);
-        this.processSrv.processMastersResponse(res);
-      }).catch((err) => {
-        console.log('LOG (overpass s.) Error in fetching routes from IDB');
-        throw new Error(JSON.stringify(err));
-      });
+      this.dbSrv
+        .getRoutesForMasterRoute(routesQueriedInIDB)
+        .then((res) => {
+          this.markQueriedRelations(routesQueriedInIDB);
+          this.processSrv.processMastersResponse(res);
+        })
+        .catch((err) => {
+          console.log('LOG (overpass s.) Error in fetching routes from IDB');
+          throw new Error(JSON.stringify(err));
+        });
     }
     let requestBody = `
             [out:json][timeout:25][bbox:{{bbox}}];
@@ -275,20 +317,24 @@ export class OverpassService {
             );
             out meta;`;
     console.log(
-      'LOG (overpass s.) Querying rel.\'s route masters with query:',
-      requestBody,
+      "LOG (overpass s.) Querying rel.'s route masters with query:",
+      requestBody
     );
     requestBody = this.replaceBboxString(requestBody);
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, {
+        headers: Utils.HTTP_HEADERS,
+      })
       .subscribe(
         (res) => {
           if (!res) {
             return alert(
-              'No response from API. Try to select other master relation again please.',
+              'No response from API. Try to select other master relation again please.'
             );
           }
-          console.log('LOG (overpass s.) Response for route_master from Overpass API');
+          console.log(
+            'LOG (overpass s.) Response for route_master from Overpass API'
+          );
           console.log(res);
           this.warnSrv.showSuccess();
           this.markQueriedRelations(routesNotQueriedNotInIDB);
@@ -300,7 +346,9 @@ export class OverpassService {
           //   console.log(idsArr);
           // });
           this.dbSrv.addResponseToIDB(res, 'route_master').catch((err) => {
-            console.log('LOG (overpass s.) Error in adding route_master related response to IDB');
+            console.log(
+              'LOG (overpass s.) Error in adding route_master related response to IDB'
+            );
             console.error(err);
             throw new Error(JSON.stringify(err));
           });
@@ -308,7 +356,7 @@ export class OverpassService {
         (err) => {
           this.warnSrv.showError();
           throw new Error(JSON.stringify(err));
-        },
+        }
       );
   }
 
@@ -316,14 +364,16 @@ export class OverpassService {
     this.mapSrv.clearLayer();
     requestBody = this.replaceBboxString(requestBody);
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, {
+        headers: Utils.HTTP_HEADERS,
+      })
       .subscribe(
         (res) => {
           this.mapSrv.renderData(res);
         },
         (err) => {
           throw new Error(JSON.stringify(err));
-        },
+        }
       );
   }
 
@@ -334,21 +384,30 @@ export class OverpassService {
 
   async initDownloader(map: L.Map): Promise<void> {
     this.setupAreaReference(map);
-    if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
+    if (
+      this.minZoomLevelIsValid(map) &&
+      (await this.shouldDownloadMissingArea())
+    ) {
       this.requestNewOverpassData();
     }
   }
 
   async initDownloaderForModalMap(map: L.Map): Promise<void> {
     this.setupAreaReference(map);
-    if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
-      this.requestNewOverpassDataForWizard((false));
+    if (
+      this.minZoomLevelIsValid(map) &&
+      (await this.shouldDownloadMissingArea())
+    ) {
+      this.requestNewOverpassDataForWizard(false);
     }
   }
 
   async initDownloaderForModalMapRMW(map: L.Map): Promise<void> {
     this.setupAreaReference(map);
-    if (this.minZoomLevelIsValid(map) && await this.shouldDownloadMissingArea()) {
+    if (
+      this.minZoomLevelIsValid(map) &&
+      (await this.shouldDownloadMissingArea())
+    ) {
       this.requestNewOverpassDataForWizard(false);
     }
   }
@@ -370,7 +429,7 @@ export class OverpassService {
           options: { header: { 'Content-Type': 'text/xml' } },
           path: '/api/0.6/changeset/create',
         },
-        this.createdChangeset.bind(this),
+        this.createdChangeset.bind(this)
       );
     }
   }
@@ -382,7 +441,11 @@ export class OverpassService {
     const north: string = (Number(south) + 0.05).toFixed(2);
     const east: string = (Number(west) + 0.05).toFixed(2);
     const areaPseudoId = south + 'x' + west;
-    this.areaReference = { areaPseudoId, overpassBox: [south, west, north, east], viewCenter };
+    this.areaReference = {
+      areaPseudoId,
+      overpassBox: [south, west, north, east],
+      viewCenter,
+    };
   }
 
   private minZoomLevelIsValid(map: L.Map): boolean {
@@ -390,7 +453,7 @@ export class OverpassService {
   }
 
   private async shouldDownloadMissingArea(): Promise<boolean> {
-    return !await this.dbSrv.hasArea(this.areaReference.areaPseudoId);
+    return !(await this.dbSrv.hasArea(this.areaReference.areaPseudoId));
   }
 
   /**
@@ -407,17 +470,23 @@ export class OverpassService {
     console.log('LOG (overpass s.) Querying nodes', requestBody);
     requestBody = this.replaceBboxString(requestBody.trim());
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, {
+        headers: Utils.HTTP_HEADERS,
+      })
       .subscribe(
         (res) => {
           if (!res) {
-            return alert('No response from API. Try to select element again please.');
+            return alert(
+              'No response from API. Try to select element again please.'
+            );
           }
           console.log('LOG (overpass s.)', res);
           if (process) {
             this.processSrv.processNodeResponse(res);
-            if (!(this.ngRedux.getState()['app']['advancedExpMode'])) {
-              this.processSrv.filterRelationsByStop(this.storageSrv.elementsMap.get(featureId));
+            if (!this.ngRedux.getState()['app']['advancedExpMode']) {
+              this.processSrv.filterRelationsByStop(
+                this.storageSrv.elementsMap.get(featureId)
+              );
             } else {
               this.getRouteMasters(10);
             }
@@ -425,23 +494,34 @@ export class OverpassService {
             // Only add to elements map and not update listOfStops etc. when process is equal to false
             for (const element of res['elements']) {
               if (!this.storageSrv.elementsMap.has(element.id)) {
-                this.storageSrv.elementsMap.set(element.id, element); }
+                this.storageSrv.elementsMap.set(element.id, element);
+              }
             }
           }
           if (res['elements'][0]) {
-            this.dbSrv.addResponseToIDB(res, res['elements'][0].tags.public_transport, featureId).catch((err) => {
-              console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
-                ' in adding related metadata to IDB for route with id : ' + featureId);
-              console.error(err);
-              throw new Error(JSON.stringify(err));
-            });
+            this.dbSrv
+              .addResponseToIDB(
+                res,
+                res['elements'][0].tags.public_transport,
+                featureId
+              )
+              .catch((err) => {
+                console.log(
+                  "LOG (overpass s.) Error in adding Overpass API 's response OR" +
+                    ' in adding related metadata to IDB for route with id : ' +
+                    featureId
+                );
+                console.error(err);
+                throw new Error(JSON.stringify(err));
+              });
           }
           this.warnSrv.showSuccess();
         },
         (err) => {
           this.warnSrv.showError();
           throw new Error(JSON.stringify(err));
-        });
+        }
+      );
   }
 
   /**
@@ -451,7 +531,7 @@ export class OverpassService {
     if (missingElements.length === 0) {
       return alert(
         'This relation has no stops or platforms. Please add them first and repeat your action. \n' +
-        JSON.stringify(rel),
+          JSON.stringify(rel)
       );
     }
     const requestBody = `
@@ -464,10 +544,12 @@ export class OverpassService {
     console.log(
       'LOG (overpass s.) Should download missing members with query:',
       requestBody,
-      missingElements,
+      missingElements
     );
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, {
+        headers: Utils.HTTP_HEADERS,
+      })
       .subscribe(
         (res) => {
           if (!res) {
@@ -478,15 +560,21 @@ export class OverpassService {
           const transformedGeojson = this.mapSrv.osmtogeojson(res);
           // FIXME save all requests...
           // this.storageSrv.localGeojsonStorage = transformedGeojson;
-          this.mapSrv.renderTransformedGeojsonData(transformedGeojson, this.mapSrv.map);
+          this.mapSrv.renderTransformedGeojsonData(
+            transformedGeojson,
+            this.mapSrv.map
+          );
           this.dbSrv.addResponseToIDB(res, 'route', rel.id).catch((err) => {
-            console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
-              ' in adding related metadata to IDB for route with id : ' + rel.id);
+            console.log(
+              "LOG (overpass s.) Error in adding Overpass API 's response OR" +
+                ' in adding related metadata to IDB for route with id : ' +
+                rel.id
+            );
           });
           // continue with the rest of "exploreRelation" function
           console.log(
             'LOG (overpass s.) Continue with downloaded missing members',
-            rel,
+            rel
           );
           this.storageSrv.elementsDownloaded.add(rel.id);
           this.processSrv.downloadedMissingMembers(rel, true, true);
@@ -495,7 +583,8 @@ export class OverpassService {
         (err) => {
           this.warnSrv.showError();
           throw new Error(JSON.stringify(err));
-        });
+        }
+      );
   }
 
   /**
@@ -554,16 +643,20 @@ export class OverpassService {
     console.log('LOG (overpass s.)', this.changeset, doc);
   }
 
-  private createdChangeset(err: any, changeset_id: any, testUpload?: boolean): void {
+  private createdChangeset(
+    err: any,
+    changeset_id: any,
+    testUpload?: boolean
+  ): void {
     if (err) {
       return alert(
         'Error while creating new changeset. Try again please. ' +
-        JSON.stringify(err),
+          JSON.stringify(err)
       );
     }
     console.log(
       'LOG (overpass s.) Created new changeset with ID: ',
-      changeset_id,
+      changeset_id
     );
     this.addChangesetId(changeset_id);
     const osmChangeContent = '<osmChange></osmChange>';
@@ -579,9 +672,7 @@ export class OverpassService {
       return a - b; // Sort numerically and ascending
     });
     for (const changedElementId of changedElementsArr) {
-      changedElements.push(
-        this.storageSrv.elementsMap.get(changedElementId),
-      );
+      changedElements.push(this.storageSrv.elementsMap.get(changedElementId));
     }
 
     console.log('LOG (overpass s.) Changed documents: ', changedElements);
@@ -606,8 +697,9 @@ export class OverpassService {
         for (const key of Object.keys(el)) {
           // do not add some attributes because they are added automatically on API
           if (
-            ['members', 'tags', 'type', 'timestamp', 'uid', 'user']
-              .indexOf(key) === -1
+            ['members', 'tags', 'type', 'timestamp', 'uid', 'user'].indexOf(
+              key
+            ) === -1
           ) {
             // adds - id="123", uid="123", etc.
             if (['version'].indexOf(key) > -1) {
@@ -671,8 +763,9 @@ export class OverpassService {
         for (const key of Object.keys(el)) {
           // do not add some attributes because they are added automatically on API
           if (
-            ['members', 'tags', 'type', 'timestamp', 'uid', 'user']
-              .indexOf(key) === -1
+            ['members', 'tags', 'type', 'timestamp', 'uid', 'user'].indexOf(
+              key
+            ) === -1
           ) {
             // adds - id="123", uid="123", etc.
             if (['version'].indexOf(key) > -1) {
@@ -733,7 +826,7 @@ export class OverpassService {
           options: { header: { 'Content-Type': 'text/xml' } },
           path: '/api/0.6/changeset/' + this.changeset_id + '/upload',
         },
-        this.uploadedChangeset.bind(this),
+        this.uploadedChangeset.bind(this)
       );
     }
   }
@@ -745,13 +838,13 @@ export class OverpassService {
     if (err) {
       return alert(
         'Error after data uploading. Changeset is not closed. It should close automatically soon. ' +
-        JSON.stringify(err),
+          JSON.stringify(err)
       );
     }
     // Upload was successful, safe to call the callback.
     // Add delay to allow for postgres replication #1646 #2678
     window.setTimeout(
-      function(): void {
+      function (): void {
         console.log('LOG (overpass s.) Timeout 2500');
         // callback(null, this.changeset);
         // Still attempt to close changeset, but ignore response because iD/issues/2667
@@ -763,10 +856,10 @@ export class OverpassService {
           },
           () => {
             return true;
-          },
+          }
         );
       }.bind(this),
-      2500,
+      2500
     );
   }
   getRandomKey(collection: any): any {
@@ -774,78 +867,110 @@ export class OverpassService {
     return keys[Math.floor(Math.random() * keys.length)];
   }
   getStopDataIDB(stopId: number): any {
-    this.dbSrv.getRoutesForStop(stopId).then((relations: IPtRelation[]) => {
-      if (relations.length === 0) {
-        console.log('LOG (overpass s.) No routes found for stop with id ' + stopId + 'in IDB');
-      } else {
-        console.log('LOG (overpass s.) Fetched routes : [ ' + relations.map((relation) => {
-          return relation['id'];
-        }) + ' ] for stop with ID: ' + stopId + ' from IDB');
-      }
-      for (const relation of relations) {
-        if (!this.storageSrv.elementsMap.has(relation.id)) {
-          this.storageSrv.elementsMap.set(relation.id, relation);
-          if (!relation.tags) {
-            continue;
-          }
-          if (relation.tags.public_transport === 'stop_area') {
-            this.storageSrv.listOfAreas.push(relation);
-          } else {
-            this.storageSrv.listOfRelations.push(relation);
-          }
+    this.dbSrv
+      .getRoutesForStop(stopId)
+      .then((relations: IPtRelation[]) => {
+        if (relations.length === 0) {
+          console.log(
+            'LOG (overpass s.) No routes found for stop with id ' +
+              stopId +
+              'in IDB'
+          );
+        } else {
+          console.log(
+            'LOG (overpass s.) Fetched routes : [ ' +
+              relations.map((relation) => {
+                return relation['id'];
+              }) +
+              ' ] for stop with ID: ' +
+              stopId +
+              ' from IDB'
+          );
         }
-      }
-      this.storageSrv.logStats();
-      this.storageSrv.elementsDownloaded.add(stopId);
-      if (!(this.ngRedux.getState()['app']['advancedExpMode'])) {
-        const element = this.storageSrv.elementsMap.get(stopId);
-        this.storageSrv.selectedStopBeginnerMode = element;
-        this.processSrv.filterRelationsByStop(element);
-        this.appActions.actSetBeginnerView('stop');
-      }
-      this.getRouteMasters(10);
-    }).catch((err) => {
-      console.log('LOG (overpass s.) Could not fetch ids of relations for a stop with id :' + stopId);
-      console.error(err);
-      throw new Error(JSON.stringify(err));
-    });
-  }
-  getPlatformDataIDB(platformId: number): any {
-    this.dbSrv.getRoutesForPlatform(platformId).then((relations: IPtRelation[]) => {
-      if (relations.length === 0) {
-        console.log('LOG (overpass s.) No routes found for platform with id ' + platformId + 'in IDB');
-      } else {
-        console.log('LOG (overpass s.) Fetched routes : [ ' + relations.map((relation) => {
-          return relation['id'];
-        }) + ' ] for platform with ID: ' + platformId + ' from IDB');
-      }
-      for (const relation of relations) {
-        if (!this.storageSrv.elementsMap.has(relation.id)) {
-          this.storageSrv.elementsMap.set(relation.id, relation);
-          if (!relation.tags) {
-            continue;
-          }
-          if (relation.tags.public_transport === 'stop_area') {
-            this.storageSrv.listOfAreas.push(relation);
-          } else {
-            this.storageSrv.listOfRelations.push(relation);
+        for (const relation of relations) {
+          if (!this.storageSrv.elementsMap.has(relation.id)) {
+            this.storageSrv.elementsMap.set(relation.id, relation);
+            if (!relation.tags) {
+              continue;
+            }
+            if (relation.tags.public_transport === 'stop_area') {
+              this.storageSrv.listOfAreas.push(relation);
+            } else {
+              this.storageSrv.listOfRelations.push(relation);
+            }
           }
         }
         this.storageSrv.logStats();
-      }
-      this.storageSrv.elementsDownloaded.add(platformId);
-      if (!(this.ngRedux.getState()['app']['advancedExpMode'])) {
-        const element = this.storageSrv.elementsMap.get(platformId);
-        this.storageSrv.selectedStopBeginnerMode = element;
-        this.processSrv.filterRelationsByStop(element);
-        this.appActions.actSetBeginnerView('stop');
-      }
-      this.getRouteMasters(10);
-    }).catch((err) => {
-      console.log('LOG (overpass s.) Could not fetch ids of relations for a platform with id :' + platformId);
-      console.error(err);
-      throw new Error(JSON.stringify(err));
-    });
+        this.storageSrv.elementsDownloaded.add(stopId);
+        if (!this.ngRedux.getState()['app']['advancedExpMode']) {
+          const element = this.storageSrv.elementsMap.get(stopId);
+          this.storageSrv.selectedStopBeginnerMode = element;
+          this.processSrv.filterRelationsByStop(element);
+          this.appActions.actSetBeginnerView('stop');
+        }
+        this.getRouteMasters(10);
+      })
+      .catch((err) => {
+        console.log(
+          'LOG (overpass s.) Could not fetch ids of relations for a stop with id :' +
+            stopId
+        );
+        console.error(err);
+        throw new Error(JSON.stringify(err));
+      });
+  }
+  getPlatformDataIDB(platformId: number): any {
+    this.dbSrv
+      .getRoutesForPlatform(platformId)
+      .then((relations: IPtRelation[]) => {
+        if (relations.length === 0) {
+          console.log(
+            'LOG (overpass s.) No routes found for platform with id ' +
+              platformId +
+              'in IDB'
+          );
+        } else {
+          console.log(
+            'LOG (overpass s.) Fetched routes : [ ' +
+              relations.map((relation) => {
+                return relation['id'];
+              }) +
+              ' ] for platform with ID: ' +
+              platformId +
+              ' from IDB'
+          );
+        }
+        for (const relation of relations) {
+          if (!this.storageSrv.elementsMap.has(relation.id)) {
+            this.storageSrv.elementsMap.set(relation.id, relation);
+            if (!relation.tags) {
+              continue;
+            }
+            if (relation.tags.public_transport === 'stop_area') {
+              this.storageSrv.listOfAreas.push(relation);
+            } else {
+              this.storageSrv.listOfRelations.push(relation);
+            }
+          }
+          this.storageSrv.logStats();
+        }
+        this.storageSrv.elementsDownloaded.add(platformId);
+        if (!this.ngRedux.getState()['app']['advancedExpMode']) {
+          const element = this.storageSrv.elementsMap.get(platformId);
+          this.storageSrv.selectedStopBeginnerMode = element;
+          this.processSrv.filterRelationsByStop(element);
+          this.appActions.actSetBeginnerView('stop');
+        }
+        this.getRouteMasters(10);
+      })
+      .catch((err) => {
+        console.log(
+          'LOG (overpass s.) Could not fetch ids of relations for a platform with id :' +
+            platformId
+        );
+        console.error(err);
+        throw new Error(JSON.stringify(err));
+      });
   }
 
   /**
@@ -859,14 +984,21 @@ export class OverpassService {
       );
       (._;<;);
       out meta;`;
-    console.log('LOG.(overpass s.) Multiple node data download query', requestBody);
-    requestBody     = this.replaceBboxString(requestBody.trim());
+    console.log(
+      'LOG.(overpass s.) Multiple node data download query',
+      requestBody
+    );
+    requestBody = this.replaceBboxString(requestBody.trim());
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, {
+        headers: Utils.HTTP_HEADERS,
+      })
       .subscribe(
         (res) => {
           if (!res) {
-            return alert('No response from API. Try to select element again please.');
+            return alert(
+              'No response from API. Try to select element again please.'
+            );
           }
 
           console.log('res', res);
@@ -880,30 +1012,33 @@ export class OverpassService {
             }
           }
           this.dbSrv.addMultipleResponseToIDB(res, toDownload).catch((err) => {
-            console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
-              ' in adding related metadata to IDB for route with ids : ' , toDownload);
+            console.log(
+              "LOG (overpass s.) Error in adding Overpass API 's response OR" +
+                ' in adding related metadata to IDB for route with ids : ',
+              toDownload
+            );
             console.error(err);
             throw new Error(JSON.stringify(err));
           });
           this.appActions.actSetErrorCorrectionMode({
             nameSuggestions: {
-              found          : true,
+              found: true,
               startCorrection: false,
             },
-            refSuggestions : {
-              found          : true,
+            refSuggestions: {
+              found: true,
               startCorrection: false,
             },
-            waySuggestions : {
-              found          : true,
+            waySuggestions: {
+              found: true,
               startCorrection: false,
             },
-            PTvSuggestions : {
-              found          : true,
+            PTvSuggestions: {
+              found: true,
               startCorrection: false,
             },
             ptPairSuggestions: {
-              found          : true,
+              found: true,
               startCorrection: false,
             },
           });
@@ -916,14 +1051,17 @@ export class OverpassService {
         (err) => {
           this.warnSrv.showError();
           throw new Error(JSON.stringify(err));
-        });
+        }
+      );
   }
 
   /**
    * Continuous query for auto route wizard
    */
   requestNewOverpassDataForWizard(find: boolean): void {
-    console.log('LOG. (overpass s.) Requesting new overpass data for wizard modal map');
+    console.log(
+      'LOG. (overpass s.) Requesting new overpass data for wizard modal map'
+    );
     const wizardMode = this.ngRedux.getState()['app']['wizardMode'];
     if (wizardMode === 'route wizard') {
       this.setupAreaReference(this.routeWizardSrv.map);
@@ -935,7 +1073,7 @@ export class OverpassService {
     this.httpClient
       .post<IOverpassResponse>(ConfService.overpassUrl, requestBody, {
         responseType: 'json',
-        headers     : Utils.HTTP_HEADERS,
+        headers: Utils.HTTP_HEADERS,
       })
       .subscribe(
         (res: IOverpassResponse) => {
@@ -943,25 +1081,35 @@ export class OverpassService {
             this.routeWizardSrv.savedContinuousQueryResponses.push(res);
             for (const element of res.elements) {
               if (!this.routeWizardSrv.modalMapElementsMap.has(element.id)) {
-                this.routeWizardSrv.modalMapElementsMap.set(element.id, element); }
+                this.routeWizardSrv.modalMapElementsMap.set(
+                  element.id,
+                  element
+                );
+              }
             }
             this.dbSrv.addArea(this.areaReference.areaPseudoId);
             const transformed = this.osmtogeojson(res);
-            this.routeWizardSrv.renderTransformedGeojsonDataForRouteWizard(transformed, this.routeWizardSrv.map);
+            this.routeWizardSrv.renderTransformedGeojsonDataForRouteWizard(
+              transformed,
+              this.routeWizardSrv.map
+            );
             this.warnSrv.showSuccess();
             if (find) {
-              const stopsInBounds = this.mapSrv.findStopsInBounds(this.routeWizardSrv.map, this.routeWizardSrv.modalMapElementsMap);
+              const stopsInBounds = this.mapSrv.findStopsInBounds(
+                this.routeWizardSrv.map,
+                this.routeWizardSrv.modalMapElementsMap
+              );
               const toDownload = stopsInBounds.filter((stop) => {
-                return !(this.routeWizardSrv.nodesFullyDownloaded.has(stop));
+                return !this.routeWizardSrv.nodesFullyDownloaded.has(stop);
               });
-              const routeRefs = this.routeWizardSrv.getRouteRefsFromNodes(stopsInBounds);
+              const routeRefs =
+                this.routeWizardSrv.getRouteRefsFromNodes(stopsInBounds);
               if (routeRefs.length !== 0) {
                 if (toDownload.length !== 0) {
                   this.getMultipleNodeDataForWizard(toDownload);
                 } else {
                   this.routeWizardSrv.findMissingRoutes(null);
                 }
-
               } else {
                 this.routeWizardSrv.routesReceived.emit(null);
               }
@@ -969,38 +1117,70 @@ export class OverpassService {
           }
 
           if (wizardMode === 'route master wizard') {
-            console.log('LOG. (overpass  s.) Response of new overpass data for wizard modal map : ', res);
+            console.log(
+              'LOG. (overpass  s.) Response of new overpass data for wizard modal map : ',
+              res
+            );
 
             this.routeMasterWizardSrv.savedContinuousQueryResponses.push(res);
             for (const element of res.elements) {
-              if (!this.routeMasterWizardSrv.modalMapElementsMap.has(element.id)) {
-                this.routeMasterWizardSrv.modalMapElementsMap.set(element.id, element);
+              if (
+                !this.routeMasterWizardSrv.modalMapElementsMap.has(element.id)
+              ) {
+                this.routeMasterWizardSrv.modalMapElementsMap.set(
+                  element.id,
+                  element
+                );
               }
             }
             this.dbSrv.addArea(this.areaReference.areaPseudoId);
             const transformed = this.osmtogeojson(res);
-            this.routeMasterWizardSrv.renderTransformedGeojsonDataRMWizard(transformed, this.routeMasterWizardSrv.map);
+            this.routeMasterWizardSrv.renderTransformedGeojsonDataRMWizard(
+              transformed,
+              this.routeMasterWizardSrv.map
+            );
             this.warnSrv.showSuccess();
 
             if (find) {
-              console.log('LOG. (overpass  s.) Process of finding missing route masters started');
-              const stopsInBounds = this.mapSrv.findStopsInBounds(this.routeMasterWizardSrv.map,
-                this.routeMasterWizardSrv.modalMapElementsMap);
-              console.log('LOG. (overpass  s.) Stops in current modal map\'s bounds', stopsInBounds);
-              const toDownload    = stopsInBounds.filter((stop) => {
-                return !(this.routeMasterWizardSrv.nodesFullyDownloaded.has(stop));
+              console.log(
+                'LOG. (overpass  s.) Process of finding missing route masters started'
+              );
+              const stopsInBounds = this.mapSrv.findStopsInBounds(
+                this.routeMasterWizardSrv.map,
+                this.routeMasterWizardSrv.modalMapElementsMap
+              );
+              console.log(
+                "LOG. (overpass  s.) Stops in current modal map's bounds",
+                stopsInBounds
+              );
+              const toDownload = stopsInBounds.filter((stop) => {
+                return !this.routeMasterWizardSrv.nodesFullyDownloaded.has(
+                  stop
+                );
               });
-              console.log('LOG. (overpass  s.) Already fully downloaded nodes :',
-                this.routeMasterWizardSrv.nodesFullyDownloaded, ', To be downloaded nodes : ', toDownload);
+              console.log(
+                'LOG. (overpass  s.) Already fully downloaded nodes :',
+                this.routeMasterWizardSrv.nodesFullyDownloaded,
+                ', To be downloaded nodes : ',
+                toDownload
+              );
               if (toDownload.length !== 0) {
-                console.log('LOG. (overpass  s.) To be downloaded nodes not zero');
+                console.log(
+                  'LOG. (overpass  s.) To be downloaded nodes not zero'
+                );
                 this.getMultipleNodeDataForWizard(toDownload);
               } else {
                 console.log('LOG. (overpass  s.) To be downloaded nodes zero');
-                const relsMap = this.routeMasterWizardSrv.findToBeComparedRels(null);
-                console.log('LOG. (overpass  s.) Relations to be compared: ', relsMap);
+                const relsMap =
+                  this.routeMasterWizardSrv.findToBeComparedRels(null);
+                console.log(
+                  'LOG. (overpass  s.) Relations to be compared: ',
+                  relsMap
+                );
                 if (relsMap.size !== 0) {
-                  console.log('LOG. (overpass  s.) Relations to be compared not zero getting route masters: ');
+                  console.log(
+                    'LOG. (overpass  s.) Relations to be compared not zero getting route masters: '
+                  );
                   const keys: number[] = Array.from(relsMap.keys());
                   this.getRouteMastersForWizard(keys);
                 } else {
@@ -1012,8 +1192,11 @@ export class OverpassService {
         },
         (err) => {
           this.warnSrv.showError();
-          console.error('LOG (overpass s.) Stops response error', JSON.stringify(err));
-        },
+          console.error(
+            'LOG (overpass s.) Stops response error',
+            JSON.stringify(err)
+          );
+        }
       );
   }
 
@@ -1031,16 +1214,26 @@ export class OverpassService {
     console.log('LOG (overpass s.) Querying multiple nodes :', requestBody);
     requestBody = this.replaceBboxString(requestBody.trim());
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, {
+        headers: Utils.HTTP_HEADERS,
+      })
       .subscribe(
         (res: IOverpassResponse) => {
-          console.log('LOG (overpass s.) Multiple node data query response:', res);
+          console.log(
+            'LOG (overpass s.) Multiple node data query response:',
+            res
+          );
           if (!res) {
-            return alert('No response from API. Try to select element again please.');
+            return alert(
+              'No response from API. Try to select element again please.'
+            );
           }
           this.dbSrv.addMultipleResponseToIDB(res, idsArr).catch((err) => {
-            console.log('LOG (overpass s.) Error in adding Overpass API \'s response OR' +
-              ' in adding related metadata to IDB for route with ids : ' , idsArr);
+            console.log(
+              "LOG (overpass s.) Error in adding Overpass API 's response OR" +
+                ' in adding related metadata to IDB for route with ids : ',
+              idsArr
+            );
             console.error(err);
             throw new Error(JSON.stringify(err));
           });
@@ -1058,12 +1251,20 @@ export class OverpassService {
             }
             this.routeMasterWizardSrv.savedMultipleNodeDataResponses.push(res);
             for (const element of res['elements']) {
-              if (!this.routeMasterWizardSrv.modalMapElementsMap.has(element.id)) {
-                this.routeMasterWizardSrv.modalMapElementsMap.set(element.id, element);
+              if (
+                !this.routeMasterWizardSrv.modalMapElementsMap.has(element.id)
+              ) {
+                this.routeMasterWizardSrv.modalMapElementsMap.set(
+                  element.id,
+                  element
+                );
               }
             }
             const relsMap = this.routeMasterWizardSrv.findToBeComparedRels(res);
-            console.log('LOG (overpass s.) Relations to be compared ( at least one member in map bounds): ', relsMap);
+            console.log(
+              'LOG (overpass s.) Relations to be compared ( at least one member in map bounds): ',
+              relsMap
+            );
             if (relsMap.size !== 0) {
               const keys: number[] = Array.from(relsMap.keys());
               this.getRouteMastersForWizard(keys);
@@ -1077,7 +1278,8 @@ export class OverpassService {
         (err) => {
           this.warnSrv.showError();
           throw new Error(err.toString());
-        });
+        }
+      );
   }
 
   /**
@@ -1093,20 +1295,24 @@ export class OverpassService {
             );
             out meta;`;
     console.log(
-      'LOG (overpass s.) Querying rel.\'s route masters with query:',
-      requestBody,
+      "LOG (overpass s.) Querying rel.'s route masters with query:",
+      requestBody
     );
     requestBody = this.replaceBboxString(requestBody);
     this.httpClient
-      .post(ConfService.overpassUrl, requestBody, { headers: Utils.HTTP_HEADERS })
+      .post(ConfService.overpassUrl, requestBody, {
+        headers: Utils.HTTP_HEADERS,
+      })
       .subscribe(
         (res: IOverpassResponse) => {
           if (!res) {
             return alert(
-              'No response from API. Try to select other master relation again please.',
+              'No response from API. Try to select other master relation again please.'
             );
           }
-          console.log('LOG (overpass s.) Response for route_master from Overpass API');
+          console.log(
+            'LOG (overpass s.) Response for route_master from Overpass API'
+          );
           console.log(res);
 
           res.elements.forEach((element) => {
@@ -1124,8 +1330,7 @@ export class OverpassService {
         (err) => {
           this.warnSrv.showError();
           throw new Error(JSON.stringify(err));
-        },
+        }
       );
   }
-
 }

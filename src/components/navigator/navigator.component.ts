@@ -6,10 +6,7 @@ import { MapService } from '../../services/map.service';
 @Component({
   providers: [],
   selector: 'navigator',
-  styleUrls: [
-    './navigator.component.less',
-    '../../styles/main.less',
-  ],
+  styleUrls: ['./navigator.component.less', '../../styles/main.less'],
   templateUrl: './navigator.component.html',
 })
 export class NavigatorComponent implements OnInit {
@@ -17,10 +14,7 @@ export class NavigatorComponent implements OnInit {
 
   private map: Map;
 
-  constructor(
-    private geocodeSrv: GeocodeService,
-    private mapSrv: MapService,
-  ) {
+  constructor(private geocodeSrv: GeocodeService, private mapSrv: MapService) {
     this.address = '';
   }
 

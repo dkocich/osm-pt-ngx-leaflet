@@ -34,11 +34,11 @@ describe('NavigatorComponent', () => {
 
   describe('ngOnInit', () => {
     it('makes expected calls', () => {
-      const mapServiceStub: MapService = fixture.debugElement.injector.get(MapService);
+      const mapServiceStub: MapService =
+        fixture.debugElement.injector.get(MapService);
       spyOn(mapServiceStub, 'disableMouseEvent');
       comp.ngOnInit();
       expect(mapServiceStub.disableMouseEvent).toHaveBeenCalled();
     });
   });
-
 });

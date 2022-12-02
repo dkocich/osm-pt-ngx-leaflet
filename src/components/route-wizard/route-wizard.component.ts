@@ -15,64 +15,61 @@ import { AppActions } from '../../store/app/actions';
 
 @Component({
   selector: 'route-wizard',
-  styleUrls: [
-    './route-wizard.component.less',
-    '../../styles/main.less',
-  ],
+  styleUrls: ['./route-wizard.component.less', '../../styles/main.less'],
   templateUrl: './route-wizard.component.html',
 })
-
 export class RouteWizardComponent {
-
   map: L.Map;
-  newRoutesRefs              = [];
-  osmtogeojson: any          = require('osmtogeojson');
-  private startEventProcessing      = new Subject<L.LeafletEvent>();
-  newRoute: any              = {};
+  newRoutesRefs = [];
+  osmtogeojson: any = require('osmtogeojson');
+  private startEventProcessing = new Subject<L.LeafletEvent>();
+  newRoute: any = {};
   newRouteMembersSuggestions = [];
-  addedNewRouteMembers       = [];
+  addedNewRouteMembers = [];
 
-  @Input() tagKey   = '';
+  @Input() tagKey = '';
   @Input() tagValue = '';
 
-  canStopsConnect     = false;
+  canStopsConnect = false;
   canPlatformsConnect = false;
-  currentlyViewedRef  = null;
+  currentlyViewedRef = null;
 
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
 
-  constructor(private storageSrv: StorageService,
-              public mapSrv: MapService,
-              private warnSrv: WarnService,
-              private overpassSrv: OverpassService,
-              private routeWizardSrv: RouteWizardService,
-              private processSrv: ProcessService,
-              private editSrv: EditService,
-              public  modalRefRouteWiz: BsModalRef,
-              public appActions: AppActions,
-
+  constructor(
+    private storageSrv: StorageService,
+    public mapSrv: MapService,
+    private warnSrv: WarnService,
+    private overpassSrv: OverpassService,
+    private routeWizardSrv: RouteWizardService,
+    private processSrv: ProcessService,
+    private editSrv: EditService,
+    public modalRefRouteWiz: BsModalRef,
+    public appActions: AppActions
   ) {
-
     this.routeWizardSrv.routesReceived.subscribe((routesMap) => {
       if (routesMap === null) {
-        alert('No suggestions available for the chosen map bounds. Please select again.');
+        alert(
+          'No suggestions available for the chosen map bounds. Please select again.'
+        );
       } else {
         this.routeWizardSrv.routesMap = new Map();
-        this.newRoutesRefs            = [];
+        this.newRoutesRefs = [];
         this.routeWizardSrv.filterRoutesMap(routesMap);
         if (this.routeWizardSrv.routesMap.size !== 0) {
-          this.routeWizardSrv.highlightFirstRoute(
-            {
-              canStopsConnect    : this.canStopsConnect,
-              canPlatformsConnect: this.canPlatformsConnect,
-            });
+          this.routeWizardSrv.highlightFirstRoute({
+            canStopsConnect: this.canStopsConnect,
+            canPlatformsConnect: this.canPlatformsConnect,
+          });
           this.routeWizardSrv.routesMap.forEach((value, key) => {
             this.newRoutesRefs.push(key);
           });
           this.currentlyViewedRef = this.newRoutesRefs[0];
           this.selectTab(2);
         } else {
-          alert('No suggestions available for the chosen map bounds. Please select again.');
+          alert(
+            'No suggestions available for the chosen map bounds. Please select again.'
+          );
         }
       }
     });
@@ -82,7 +79,7 @@ export class RouteWizardComponent {
     });
 
     this.routeWizardSrv.refreshAvailableConnectivity.subscribe((data) => {
-      this.canStopsConnect     = data.canStopsConnect;
+      this.canStopsConnect = data.canStopsConnect;
       this.canPlatformsConnect = data.canPlatformsConnect;
     });
   }
@@ -90,36 +87,38 @@ export class RouteWizardComponent {
   ngOnInit(): void {
     this.selectTab(1);
     this.routeWizardSrv.elementsRenderedModalMap = new Set();
-    this.map                                 = L.map('auto-route-modal-map', {
-      center       : this.mapSrv.map.getCenter(),
-      layers       : [L.tileLayer(
-        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-        {
-          attribution  : `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank'
+    this.map = L.map('auto-route-modal-map', {
+      center: this.mapSrv.map.getCenter(),
+      layers: [
+        L.tileLayer(
+          'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+          {
+            attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank'
             rel='noopener'>OpenStreetMap</a>&nbsp;&copy;&nbsp;<a href='https://cartodb.com/attributions'
             target='_blank' rel='noopener'>CartoDB</a>`,
-          maxNativeZoom: 19,
-          maxZoom      : 22,
-        },
-      )],
-      maxZoom      : 22,
-      minZoom      : 4,
-      zoom         : 14,
+            maxNativeZoom: 19,
+            maxZoom: 22,
+          }
+        ),
+      ],
+      maxZoom: 22,
+      minZoom: 4,
+      zoom: 14,
       zoomAnimation: false,
-      zoomControl  : false,
+      zoomControl: false,
     });
     L.control.zoom({ position: 'topright' }).addTo(this.map);
     L.control.scale().addTo(this.map);
     this.routeWizardSrv.map = this.map;
     this.routeWizardSrv.renderAlreadyDownloadedData();
-    this.routeWizardSrv.modalMapElementsMap = new Map<any, any>(this.storageSrv.elementsMap);
+    this.routeWizardSrv.modalMapElementsMap = new Map<any, any>(
+      this.storageSrv.elementsMap
+    );
     this.routeWizardSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
       this.startEventProcessing.next(event);
     });
-    this.startEventProcessing.pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-      )
+    this.startEventProcessing
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(() => {
         this.overpassSrv.initDownloaderForModalMap(this.routeWizardSrv.map);
       });
@@ -142,35 +141,36 @@ export class RouteWizardComponent {
   useRef(ref: string): void {
     this.mapSrv.clearHighlight(this.routeWizardSrv.map);
     this.routeWizardSrv.clearMembersHighlight();
-    const newId                     = this.editSrv.findNewId();
-    this.newRoute                   = {
-      id       : newId,
+    const newId = this.editSrv.findNewId();
+    this.newRoute = {
+      id: newId,
       timestamp: new Date().toISOString().split('.')[0] + 'Z',
-      version  : 1,
+      version: 1,
       changeset: -999,
-      uid      : Number(localStorage.getItem('id')),
-      user     : localStorage.getItem('display_name'),
-      type     : 'relation',
-      members  : [],
-      tags     : {
-        type                      : 'route',
-        route                     : 'bus',
+      uid: Number(localStorage.getItem('id')),
+      user: localStorage.getItem('display_name'),
+      type: 'relation',
+      members: [],
+      tags: {
+        type: 'route',
+        route: 'bus',
         ref,
         'public_transport:version': '2',
-        network                   : '',
-        operator                  : '',
-        name                      : '',
-        from                      : '',
-        to                        : '',
-        wheelchair                : '',
-        colour                    : '',
-
+        network: '',
+        operator: '',
+        name: '',
+        from: '',
+        to: '',
+        wheelchair: '',
+        colour: '',
       },
     };
     this.newRouteMembersSuggestions = this.routeWizardSrv.routesMap.get(ref);
-    this.addedNewRouteMembers       = this.routeWizardSrv.routesMap.get(ref);
+    this.addedNewRouteMembers = this.routeWizardSrv.routesMap.get(ref);
     this.selectTab(3);
-    const countObj = RouteWizardService.countNodeType(this.addedNewRouteMembers);
+    const countObj = RouteWizardService.countNodeType(
+      this.addedNewRouteMembers
+    );
     this.routeWizardSrv.useAndSetAvailableConnectivity(countObj);
     this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers, true);
     this.routeWizardSrv.highlightMembers(this.addedNewRouteMembers);
@@ -181,8 +181,8 @@ export class RouteWizardComponent {
    */
   private selectTab(step: number): void {
     this.stepTabs.tabs[step - 1].disabled = false;
-    this.stepTabs.tabs[step - 1].active   = true;
-    for (let i = step + 1; i < 5 && i !== 0 ; i++) {
+    this.stepTabs.tabs[step - 1].active = true;
+    for (let i = step + 1; i < 5 && i !== 0; i++) {
       this.stepTabs.tabs[i - 1].disabled = true;
     }
   }
@@ -192,7 +192,10 @@ export class RouteWizardComponent {
    */
   private handleModalMapMarkerClick(featureId: number): void {
     if (this.stepTabs.tabs[2].active) {
-      const newMember = this.processSrv.getElementById(featureId, this.routeWizardSrv.modalMapElementsMap);
+      const newMember = this.processSrv.getElementById(
+        featureId,
+        this.routeWizardSrv.modalMapElementsMap
+      );
       this.addNewMemberToRoute(newMember);
     }
   }
@@ -201,22 +204,31 @@ export class RouteWizardComponent {
    * Adds new member to route
    */
   private addNewMemberToRoute(newMember: any): void {
-    this.addedNewRouteMembers = this.routeWizardSrv.addNewMemberToRoute(newMember, this.addedNewRouteMembers);
+    this.addedNewRouteMembers = this.routeWizardSrv.addNewMemberToRoute(
+      newMember,
+      this.addedNewRouteMembers
+    );
   }
 
   /**
    * Removes member from route
    */
   removeMember(toRemoveMemberID: string): void {
-    this.addedNewRouteMembers = this.routeWizardSrv.removeMember(toRemoveMemberID, this.addedNewRouteMembers);
+    this.addedNewRouteMembers = this.routeWizardSrv.removeMember(
+      toRemoveMemberID,
+      this.addedNewRouteMembers
+    );
   }
 
   /**
    * View suggested route on map
    */
   viewSuggestedRoute(ref: string): void {
-  this.currentlyViewedRef = ref;
-  this.routeWizardSrv.viewSuggestedRoute(ref, { canStopsConnect : this.canStopsConnect, canPlatformsConnect: this.canPlatformsConnect });
+    this.currentlyViewedRef = ref;
+    this.routeWizardSrv.viewSuggestedRoute(ref, {
+      canStopsConnect: this.canStopsConnect,
+      canPlatformsConnect: this.canPlatformsConnect,
+    });
   }
 
   /**
@@ -231,17 +243,22 @@ export class RouteWizardComponent {
    * Saves step 3 of adding members
    */
   saveStep3(): void {
-   this.selectTab(4);
+    this.selectTab(4);
   }
 
   /**
    * Handles when tags for route are updated
    */
   createChangeTag(action: string, key: any, event: any): void {
-    this.newRoute = RouteWizardService.modifiesTags(action, key, event, this.newRoute);
+    this.newRoute = RouteWizardService.modifiesTags(
+      action,
+      key,
+      event,
+      this.newRoute
+    );
     if (action === 'add tag') {
-      this.tagKey             = '';
-      this.tagValue           = '';
+      this.tagKey = '';
+      this.tagValue = '';
     }
   }
 
@@ -250,10 +267,15 @@ export class RouteWizardComponent {
    */
   saveStep4(): void {
     RouteWizardService.assignRolesToMembers(this.addedNewRouteMembers);
-    this.newRoute.members = RouteWizardService.formRelMembers(this.addedNewRouteMembers);
-    this.newRoute.tags    = RouteWizardService.filterEmptyTags(this.newRoute);
-    const change            = { from: undefined, to: this.newRoute };
-    this.routeWizardSrv.modalMapElementsMap.set(this.newRoute.id, this.newRoute);
+    this.newRoute.members = RouteWizardService.formRelMembers(
+      this.addedNewRouteMembers
+    );
+    this.newRoute.tags = RouteWizardService.filterEmptyTags(this.newRoute);
+    const change = { from: undefined, to: this.newRoute };
+    this.routeWizardSrv.modalMapElementsMap.set(
+      this.newRoute.id,
+      this.newRoute
+    );
     this.editSrv.addChange(this.newRoute, 'add route', change);
     this.modalRefRouteWiz.hide();
     this.appActions.actSetWizardMode(null);
@@ -274,7 +296,9 @@ export class RouteWizardComponent {
         this.viewSuggestedRoute(this.newRoutesRefs[0]);
         break;
       case '3':
-        const countObj = RouteWizardService.countNodeType(this.addedNewRouteMembers);
+        const countObj = RouteWizardService.countNodeType(
+          this.addedNewRouteMembers
+        );
         this.routeWizardSrv.useAndSetAvailableConnectivity(countObj);
         this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers, true);
         this.routeWizardSrv.highlightMembers(this.addedNewRouteMembers);
@@ -286,10 +310,14 @@ export class RouteWizardComponent {
    * Changes connectivity of route on map
    */
   showConnectivity(type: string): void {
-    this.routeWizardSrv.showConnectivity(type, {
-      canStopsConnect    : this.canStopsConnect,
-      canPlatformsConnect: this.canPlatformsConnect,
-    }, this.addedNewRouteMembers);
+    this.routeWizardSrv.showConnectivity(
+      type,
+      {
+        canStopsConnect: this.canStopsConnect,
+        canPlatformsConnect: this.canPlatformsConnect,
+      },
+      this.addedNewRouteMembers
+    );
   }
 
   /**
@@ -311,5 +339,4 @@ export class RouteWizardComponent {
     });
     return color;
   }
-
 }

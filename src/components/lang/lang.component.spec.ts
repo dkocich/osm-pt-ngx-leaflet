@@ -34,5 +34,4 @@ describe('LangComponent', () => {
       expect(LangComponent.prototype.switchLanguage).toHaveBeenCalled();
     });
   });
-
 });

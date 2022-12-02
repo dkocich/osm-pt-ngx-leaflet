@@ -75,7 +75,8 @@ describe('EditorComponent', () => {
 
   describe('ngOnInit', () => {
     it('makes expected calls', () => {
-      const editServiceStub: EditService = fixture.debugElement.injector.get(EditService);
+      const editServiceStub: EditService =
+        fixture.debugElement.injector.get(EditService);
       spyOn(editServiceStub, 'createElement');
       comp.ngOnInit();
       expect(editServiceStub.createElement).toHaveBeenCalled();
@@ -84,7 +85,8 @@ describe('EditorComponent', () => {
 
   describe('ngAfterViewInit', () => {
     it('makes expected calls', () => {
-      const storageServiceStub: StorageService = fixture.debugElement.injector.get(StorageService);
+      const storageServiceStub: StorageService =
+        fixture.debugElement.injector.get(StorageService);
       spyOn(storageServiceStub, 'getLocalStorageItem');
       spyOn(storageServiceStub, 'setLocalStorageItem');
       comp.ngAfterViewInit();
@@ -95,8 +97,10 @@ describe('EditorComponent', () => {
 
   describe('continueEditing', () => {
     it('makes expected calls', () => {
-      const editServiceStub: EditService = fixture.debugElement.injector.get(EditService);
-      const storageServiceStub: StorageService = fixture.debugElement.injector.get(StorageService);
+      const editServiceStub: EditService =
+        fixture.debugElement.injector.get(EditService);
+      const storageServiceStub: StorageService =
+        fixture.debugElement.injector.get(StorageService);
       spyOn(editServiceStub, 'continueEditing');
       spyOn(storageServiceStub, 'getLocalStorageItem');
       comp.continueEditing();
@@ -104,5 +108,4 @@ describe('EditorComponent', () => {
       expect(storageServiceStub.getLocalStorageItem).toHaveBeenCalled();
     });
   });
-
 });

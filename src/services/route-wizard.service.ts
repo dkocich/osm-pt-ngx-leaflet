@@ -7,11 +7,12 @@ import { StorageService } from './storage.service';
 
 @Injectable()
 export class RouteWizardService {
-  constructor(private storageSrv: StorageService,
-              private mapSrv: MapService,
-              private modalService: BsModalService,
-              private processSrv: ProcessService,
-              ) {
+  constructor(
+    private storageSrv: StorageService,
+    private mapSrv: MapService,
+    private modalService: BsModalService,
+    private processSrv: ProcessService
+  ) {
     this.modalService.onShown.subscribe((data) => {
       this.onShownModal();
     });
@@ -19,11 +20,11 @@ export class RouteWizardService {
       this.processAllDownloadedOnMainMap();
       this.storageSrv.currentElement = null;
       this.storageSrv.currentElementsChange.emit(
-        JSON.parse(JSON.stringify(null)),
+        JSON.parse(JSON.stringify(null))
       );
-      this.storageSrv.stopsForRoute     = [];
+      this.storageSrv.stopsForRoute = [];
       this.storageSrv.platformsForRoute = [];
-      this.mapSrv.highlightType         = 'Stops';
+      this.mapSrv.highlightType = 'Stops';
     });
   }
   map;
@@ -33,8 +34,8 @@ export class RouteWizardService {
   modalMapElementsMap = new Map();
 
   autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
-  routesReceived: EventEmitter<any> =  new EventEmitter();
-  refreshAvailableConnectivity: EventEmitter<any> =  new EventEmitter();
+  routesReceived: EventEmitter<any> = new EventEmitter();
+  refreshAvailableConnectivity: EventEmitter<any> = new EventEmitter();
 
   savedMultipleNodeDataResponses = [];
   savedContinuousQueryResponses = [];
@@ -43,7 +44,7 @@ export class RouteWizardService {
   nodesFullyDownloaded = new Set();
 
   routesMap: Map<string, any[]> = new Map();
-  membersHighlightLayerGroup    = L.layerGroup();
+  membersHighlightLayerGroup = L.layerGroup();
 
   modalRefRouteWiz: BsModalRef;
 
@@ -133,7 +134,7 @@ export class RouteWizardService {
    * Returns member counts (stops, platforms)
    */
   static countNodeType(members: any): any {
-    let stopsCount     = 0;
+    let stopsCount = 0;
     let platformsCount = 0;
     for (const member of members) {
       if (member.tags.public_transport === 'stop_position') {
@@ -169,7 +170,7 @@ export class RouteWizardService {
     for (const node of toAddNodes) {
       relMembers.push({
         type: 'node',
-        ref : node.id,
+        ref: node.id,
         role: node.role,
       });
     }
@@ -179,7 +180,12 @@ export class RouteWizardService {
   /**
    * Fired when tags are modified
    */
-  static modifiesTags(action: string, key: any, event: any, newRoute: any): any {
+  static modifiesTags(
+    action: string,
+    key: any,
+    event: any,
+    newRoute: any
+  ): any {
     switch (action) {
       case 'change tag':
         newRoute.tags[key] = event.target.value;
@@ -201,11 +207,11 @@ export class RouteWizardService {
   private static styleButtons(type: string): any {
     switch (type) {
       case 'Stops':
-        document.getElementById(type).style.backgroundColor        = 'cornflowerblue';
+        document.getElementById(type).style.backgroundColor = 'cornflowerblue';
         document.getElementById('Platforms').style.backgroundColor = 'white';
         break;
       case 'Platforms':
-        document.getElementById(type).style.backgroundColor    = 'cornflowerblue';
+        document.getElementById(type).style.backgroundColor = 'cornflowerblue';
         document.getElementById('Stops').style.backgroundColor = 'white';
         break;
     }
@@ -250,11 +256,16 @@ export class RouteWizardService {
   /**
    * Renders data on modal map
    */
-  renderTransformedGeojsonDataForRouteWizard(transformedGeoJSON: any, map: L.Map): void {
+  renderTransformedGeojsonDataForRouteWizard(
+    transformedGeoJSON: any,
+    map: L.Map
+  ): void {
     this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
       filter: (feature) => {
-        if (!this.elementsRenderedModalMap.has(feature.id) &&
-          'public_transport' in feature.properties && feature.id[0] === 'n'
+        if (
+          !this.elementsRenderedModalMap.has(feature.id) &&
+          'public_transport' in feature.properties &&
+          feature.id[0] === 'n'
         ) {
           return true;
         } else {
@@ -270,7 +281,10 @@ export class RouteWizardService {
       },
     });
 
-    console.log('LOG (map s.) Adding PTlayer to modal map again', this.ptLayerModal);
+    console.log(
+      'LOG (map s.) Adding PTlayer to modal map again',
+      this.ptLayerModal
+    );
     this.ptLayerModal.addTo(map);
   }
 
@@ -297,7 +311,7 @@ export class RouteWizardService {
   getRouteRefsFromNodes(stopsInBoundsIDs: any): any[] {
     const withRouteRefTag = [];
     let ref_map;
-    const refValues       = [];
+    const refValues = [];
     for (const id of stopsInBoundsIDs) {
       const stop = this.modalMapElementsMap.get(id);
       if (stop.tags.route_ref) {
@@ -317,24 +331,35 @@ export class RouteWizardService {
    * Processes multiple node data
    */
   findMissingRoutes(downloadedResponse: any): void {
-    const stopsInBounds       = this.mapSrv.findStopsInBounds(this.map, this.modalMapElementsMap);
-    const nodeRefs            = this.getRouteRefsFromNodes(stopsInBounds);
+    const stopsInBounds = this.mapSrv.findStopsInBounds(
+      this.map,
+      this.modalMapElementsMap
+    );
+    const nodeRefs = this.getRouteRefsFromNodes(stopsInBounds);
     let refsOfRoutes: any[] = [];
     if (downloadedResponse) {
       for (const element of downloadedResponse.elements) {
         if (!this.modalMapElementsMap.has(element.id)) {
           this.modalMapElementsMap.set(element.id, element);
         }
-        if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {
+        if (
+          element.type === 'relation' &&
+          element.tags.public_transport !== 'stop_area' &&
+          element.tags.ref
+        ) {
           refsOfRoutes.push(element.tags.ref);
         }
       }
     }
     const refs = this.getFromAlreadyDownloadedRoutes();
     refsOfRoutes = refsOfRoutes.concat(refs);
-    const uniqueRefsOfRoutes = RouteWizardService.removeDuplicatesFromArray(refsOfRoutes);
-    let notAddedRefs       = RouteWizardService.compareArrays(nodeRefs, uniqueRefsOfRoutes);
-    notAddedRefs           = this.filterPreviouslyAddedRefs(notAddedRefs);
+    const uniqueRefsOfRoutes =
+      RouteWizardService.removeDuplicatesFromArray(refsOfRoutes);
+    let notAddedRefs = RouteWizardService.compareArrays(
+      nodeRefs,
+      uniqueRefsOfRoutes
+    );
+    notAddedRefs = this.filterPreviouslyAddedRefs(notAddedRefs);
 
     if (notAddedRefs.length !== 0) {
       this.routesReceived.emit(this.getStopsForNewRoutes(notAddedRefs));
@@ -349,10 +374,12 @@ export class RouteWizardService {
   private filterPreviouslyAddedRefs(refs: any[]): any {
     let index;
     this.modalMapElementsMap.forEach((element) => {
-      if (element.type === 'relation'
-        && element.tags.public_transport !== 'stop_area' &&
-        element.tags.ref
-        && refs.includes(element.tags.ref)) {
+      if (
+        element.type === 'relation' &&
+        element.tags.public_transport !== 'stop_area' &&
+        element.tags.ref &&
+        refs.includes(element.tags.ref)
+      ) {
         index = refs.indexOf(element.tags.ref);
       }
     });
@@ -368,13 +395,19 @@ export class RouteWizardService {
   private getStopsForNewRoutes(notAddedRefs: any): any {
     const stopsForNewRoutes = new Map();
     this.modalMapElementsMap.forEach((stop) => {
-      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport) && stop.tags.route_ref) {
+      if (
+        stop.type === 'node' &&
+        (stop.tags.bus === 'yes' || stop.tags.public_transport) &&
+        stop.tags.route_ref
+      ) {
         const stops: any[] = [];
         stops.push(stop);
         const refMap = RouteWizardService.getIndividualRouteRefs(stops);
         const individualRefs = [];
-        Array.from(refMap).map(([key]) => { individualRefs.push(key); });
-        individualRefs.forEach((val) =>  {
+        Array.from(refMap).map(([key]) => {
+          individualRefs.push(key);
+        });
+        individualRefs.forEach((val) => {
           if (notAddedRefs.includes(val)) {
             if (stopsForNewRoutes.get(val)) {
               stopsForNewRoutes.get(val).push(stop);
@@ -397,11 +430,11 @@ export class RouteWizardService {
     this.mapSrv.clearHighlight(this.map);
     const routeMembers = members;
     RouteWizardService.assignRolesToMembers(routeMembers);
-    const rel                           = {
+    const rel = {
       members: routeMembers,
-      tags   : { name: 'nil' },
+      tags: { name: 'nil' },
     };
-    this.storageSrv.stopsForRoute     = [];
+    this.storageSrv.stopsForRoute = [];
     this.storageSrv.platformsForRoute = [];
     this.mapSrv.showRoute(rel, this.map, this.modalMapElementsMap);
     if (adjustZoom) {
@@ -424,7 +457,7 @@ export class RouteWizardService {
    * Handles highlighting of first route on starting of Step
    */
   highlightFirstRoute(connectObj: any): void {
-    const members  = this.routesMap.get(this.routesMap.keys().next().value);
+    const members = this.routesMap.get(this.routesMap.keys().next().value);
     const countObj = RouteWizardService.countNodeType(members);
     this.useAndSetAvailableConnectivity(countObj);
     this.highlightRoute(members, true);
@@ -450,11 +483,18 @@ export class RouteWizardService {
     let canStopsConnect;
     let canPlatformsConnect;
 
-    countObj.stopsCount > 1 ? canStopsConnect = true : canStopsConnect = false;
-    countObj.platformsCount > 1 ? canPlatformsConnect = true : canPlatformsConnect = false;
+    countObj.stopsCount > 1
+      ? (canStopsConnect = true)
+      : (canStopsConnect = false);
+    countObj.platformsCount > 1
+      ? (canPlatformsConnect = true)
+      : (canPlatformsConnect = false);
 
-    this.refreshAvailableConnectivity.emit({ canStopsConnect , canPlatformsConnect });
-    return { canStopsConnect , canPlatformsConnect };
+    this.refreshAvailableConnectivity.emit({
+      canStopsConnect,
+      canPlatformsConnect,
+    });
+    return { canStopsConnect, canPlatformsConnect };
   }
 
   /**
@@ -463,9 +503,9 @@ export class RouteWizardService {
   highlightMembers(members: any[]): void {
     for (const member of members) {
       const latlng = { lat: member.lat, lng: member.lon };
-      const circle   = L.circleMarker(latlng, {
-        radius : 15,
-        color  : '#00ffff',
+      const circle = L.circleMarker(latlng, {
+        radius: 15,
+        color: '#00ffff',
         opacity: 0.75,
       });
       this.membersHighlightLayerGroup.addLayer(circle);
@@ -569,7 +609,11 @@ export class RouteWizardService {
   /**
    * Changes connectivity of route on map
    */
-  showConnectivity(type: string, connectivityObj: any, addedNewRouteMembers: any): void {
+  showConnectivity(
+    type: string,
+    connectivityObj: any,
+    addedNewRouteMembers: any
+  ): void {
     this.mapSrv.clearHighlight(this.map);
     const countObj = RouteWizardService.countNodeType(addedNewRouteMembers);
     this.resetAvailableConnectivity(countObj);
@@ -584,9 +628,16 @@ export class RouteWizardService {
   getFromAlreadyDownloadedRoutes(): any {
     const refsOfRoutes = [];
     this.modalMapElementsMap.forEach((element) => {
-      if (element.type === 'relation' && element.tags.public_transport !== 'stop_area' && element.tags.ref) {
+      if (
+        element.type === 'relation' &&
+        element.tags.public_transport !== 'stop_area' &&
+        element.tags.ref
+      ) {
         for (const member of element.members) {
-          const stopsInBoundsIDs = this.mapSrv.findStopsInBounds(this.map, this.modalMapElementsMap);
+          const stopsInBoundsIDs = this.mapSrv.findStopsInBounds(
+            this.map,
+            this.modalMapElementsMap
+          );
           if (stopsInBoundsIDs.includes(member.id)) {
             refsOfRoutes.push(element.tags.ref);
           }

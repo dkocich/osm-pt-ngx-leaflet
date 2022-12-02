@@ -18,7 +18,13 @@ describe('ErrorHighlightService', () => {
 
   beforeEach(() => {
     service = new ErrorHighlightService(
-      modalService, ngRedux, processSrv, appActions, mapSrv, storageSrv);
+      modalService,
+      ngRedux,
+      processSrv,
+      appActions,
+      mapSrv,
+      storageSrv
+    );
   });
 
   it('works', () => {

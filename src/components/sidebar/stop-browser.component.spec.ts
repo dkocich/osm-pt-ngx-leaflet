@@ -70,5 +70,4 @@ describe('StopBrowserComponent', () => {
   // it('listOfStops defaults to: storageSrv.listOfStops', () => {
   //   expect(comp.listOfStops).toEqual(storageSrv.listOfStops);
   // });
-
 });

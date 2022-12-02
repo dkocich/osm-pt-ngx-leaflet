@@ -19,11 +19,17 @@ describe('OverpassService', () => {
 
   beforeEach(() => {
     service = new OverpassService(
-      authSrv, dbSrv, httpClient, processSrv, storageSrv, mapSrv, warnSrv);
+      authSrv,
+      dbSrv,
+      httpClient,
+      processSrv,
+      storageSrv,
+      mapSrv,
+      warnSrv
+    );
   });
 
   it('works', () => {
     expect(1).toEqual(2);
   });
-
 });

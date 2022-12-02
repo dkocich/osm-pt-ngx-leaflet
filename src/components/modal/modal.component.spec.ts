@@ -104,9 +104,12 @@ describe('ModalComponent', () => {
 
   describe('saveWayError', () => {
     it('makes expected calls', () => {
-      const bsModalRefStub: BsModalRef = fixture.debugElement.injector.get(BsModalRef);
-      const mapServiceStub: MapService = fixture.debugElement.injector.get(MapService);
-      const warnServiceStub: WarnService = fixture.debugElement.injector.get(WarnService);
+      const bsModalRefStub: BsModalRef =
+        fixture.debugElement.injector.get(BsModalRef);
+      const mapServiceStub: MapService =
+        fixture.debugElement.injector.get(MapService);
+      const warnServiceStub: WarnService =
+        fixture.debugElement.injector.get(WarnService);
       spyOn(bsModalRefStub, 'hide');
       spyOn(mapServiceStub, 'getPopUpFromArray');
       spyOn(warnServiceStub, 'showGenericSuccess');
@@ -119,11 +122,11 @@ describe('ModalComponent', () => {
 
   describe('close', () => {
     it('makes expected calls', () => {
-      const bsModalRefStub: BsModalRef = fixture.debugElement.injector.get(BsModalRef);
+      const bsModalRefStub: BsModalRef =
+        fixture.debugElement.injector.get(BsModalRef);
       spyOn(bsModalRefStub, 'hide');
       comp.close();
       expect(bsModalRefStub.hide).toHaveBeenCalled();
     });
   });
-
 });

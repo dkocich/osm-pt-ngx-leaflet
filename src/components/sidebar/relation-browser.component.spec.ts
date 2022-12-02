@@ -68,5 +68,4 @@ describe('RelationBrowserComponent', () => {
   // it('listOfMasters defaults to: storageSrv.listOfMasters', () => {
   //   expect(comp.listOfMasters).toEqual(StorageService.listOfMasters);
   // });
-
 });

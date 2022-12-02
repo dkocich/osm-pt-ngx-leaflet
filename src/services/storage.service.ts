@@ -1,32 +1,38 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { INameErrorObject, IPTPairErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject } from '../core/errorObject.interface';
+import {
+  INameErrorObject,
+  IPTPairErrorObject,
+  IPTvErrorObject,
+  IRefErrorObject,
+  IWayErrorObject,
+} from '../core/errorObject.interface';
 import { IOsmElement } from '../core/osmElement.interface';
 import { IPtStop } from '../core/ptStop.interface';
 
 @Injectable()
 export class StorageService {
-  elementsDownloaded  = new Set();
-  queriedMasters      = new Set();
-  elementsRendered    = new Set();
-  elementsMap         = new Map();
-  markersMap          = new Map();
+  elementsDownloaded = new Set();
+  queriedMasters = new Set();
+  elementsRendered = new Set();
+  elementsMap = new Map();
+  markersMap = new Map();
   elementsToHighlight = new Set();
 
-  localJsonStorage: any     = new Map();
-  localGeojsonStorage: any  = new Map();
-  listOfStops: IPtStop[]    = [];
+  localJsonStorage: any = new Map();
+  localGeojsonStorage: any = new Map();
+  listOfStops: IPtStop[] = [];
   listOfRelations: object[] = [];
-  listOfAreas: object[]     = [];
-  listOfMasters: object[]   = [];
-  listOfVariants: object[]  = [];
+  listOfAreas: object[] = [];
+  listOfMasters: object[] = [];
+  listOfVariants: object[] = [];
 
   // filtering of sidebar
-  listOfStopsForRoute: IPtStop[]   = [];
+  listOfStopsForRoute: IPtStop[] = [];
   listOfRelationsForStop: object[] = [];
 
-  stopsForRoute: number[]     = [];
+  stopsForRoute: number[] = [];
   platformsForRoute: number[] = [];
-  waysForRoute: number[]      = [];
+  waysForRoute: number[] = [];
   relationsForRoute: number[] = [];
 
   idsHaveMaster = new Set();
@@ -36,30 +42,30 @@ export class StorageService {
   selectedStopBeginnerMode: IOsmElement | undefined;
 
   displayName = '';
-  imgHref     = '';
+  imgHref = '';
 
-  edits: object[]                     = [];
+  edits: object[] = [];
   editsChanged: EventEmitter<boolean> = new EventEmitter();
-  stats: EventEmitter<object>         = new EventEmitter();
+  stats: EventEmitter<object> = new EventEmitter();
 
-  tempStepAdded: EventEmitter<boolean>        = new EventEmitter();
+  tempStepAdded: EventEmitter<boolean> = new EventEmitter();
   tutorialStepCompleted: EventEmitter<string> = new EventEmitter();
-  currentTutorial                             = null;
-  currentTutorialStep                         = 0;
+  currentTutorial = null;
+  currentTutorialStep = 0;
   // checkComplete: EventEmitter<boolean> = new EventEmitter();
 
-  completelyDownloadedRoutesIDB    = new Set();
-  completelyDownloadedStopsIDB     = new Set();
+  completelyDownloadedRoutesIDB = new Set();
+  completelyDownloadedStopsIDB = new Set();
   completelyDownloadedPlatformsIDB = new Set();
-  queriedRoutesForMastersIDB       = new Set();
+  queriedRoutesForMastersIDB = new Set();
 
-  nameErrorsObj: INameErrorObject[]        = [];
-  refErrorsObj: IRefErrorObject[]          = [];
-  wayErrorsObj: IWayErrorObject[]          = [];
-  PTvErrorsObj: IPTvErrorObject[]          = [];
+  nameErrorsObj: INameErrorObject[] = [];
+  refErrorsObj: IRefErrorObject[] = [];
+  wayErrorsObj: IWayErrorObject[] = [];
+  PTvErrorsObj: IPTvErrorObject[] = [];
   ptPairErrorsObject: IPTPairErrorObject[] = [];
 
-  currentIndex                              = 0;
+  currentIndex = 0;
   refreshErrorObjects: EventEmitter<object> = new EventEmitter();
 
   constructor() {
@@ -89,7 +95,7 @@ export class StorageService {
       'elMap: ',
       this.elementsMap.size,
       'queriedM: ',
-      this.queriedMasters.size,
+      this.queriedMasters.size
     );
     const stats = {
       a: this.listOfAreas.length,

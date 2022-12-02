@@ -61,10 +61,15 @@ export class Utils {
     );
     (._;>;);
     out meta;`;
-  static HTTP_HEADERS: HttpHeaders = new HttpHeaders(
-    { 'Content-Type': 'application/X-www-form-urlencoded' });
+  static HTTP_HEADERS: HttpHeaders = new HttpHeaders({
+    'Content-Type': 'application/X-www-form-urlencoded',
+  });
 
   static isProductionDeployment(): boolean {
-    return ['osm-pt.herokuapp.com', 'osm-pt-dev.herokuapp.com'].indexOf(window.location.hostname) > -1;
+    return (
+      ['osm-pt.herokuapp.com', 'osm-pt-dev.herokuapp.com'].indexOf(
+        window.location.hostname
+      ) > -1
+    );
   }
 }

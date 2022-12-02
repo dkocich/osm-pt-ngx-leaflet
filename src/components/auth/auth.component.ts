@@ -6,10 +6,7 @@ import { StorageService } from '../../services/storage.service';
 @Component({
   providers: [],
   selector: 'auth',
-  styleUrls: [
-    './auth.component.less',
-    '../../styles/main.less',
-  ],
+  styleUrls: ['./auth.component.less', '../../styles/main.less'],
   templateUrl: './auth.component.html',
 })
 export class AuthComponent {
@@ -18,7 +15,7 @@ export class AuthComponent {
 
   constructor(
     private authSrv: AuthService,
-    private storageSrv: StorageService,
+    private storageSrv: StorageService
   ) {
     this.displayName = this.getDisplayName();
     this.imgHref = this.storageSrv.getImgHref();
@@ -26,32 +23,33 @@ export class AuthComponent {
 
   isAuthenticated = (): boolean => {
     return this.authSrv.oauth.authenticated();
-  }
+  };
 
   private getDisplayName = (): string => {
     return this.storageSrv.getDisplayName();
-  }
+  };
 
   authenticate = (): void => {
     this.authSrv.oauth.authenticate(this.gotAuthenticatedCallback);
-  }
+  };
 
   private gotAuthenticatedCallback = (err: any, response: any): void => {
     if (err) {
       throw new Error(JSON.stringify(err));
     }
     this.showDetails();
-  }
+  };
 
   logout = (): void => {
     this.authSrv.oauth.logout();
     document.getElementById('display_name').innerHTML = '';
     this.storageSrv.clearLocalStorage();
-  }
+  };
 
   private done = (err: any, res: any): any => {
     if (err) {
-      document.getElementById('user').innerHTML = 'error! try clearing your browser cache';
+      document.getElementById('user').innerHTML =
+        'error! try clearing your browser cache';
       document.getElementById('user').style.display = 'block';
       throw new Error(JSON.stringify(err));
     }
@@ -69,7 +67,7 @@ export class AuthComponent {
     };
     this.storageSrv.setUserData(userDetails);
     // document.getElementById("display_name").innerHTML = userDetails["display_name"];
-  }
+  };
 
   private showDetails = (): void => {
     this.authSrv.oauth.xhr(
@@ -79,11 +77,11 @@ export class AuthComponent {
         singlepage: true,
         url: ConfService.apiUrl,
       },
-      this.gotDetailsCallback.bind(this),
+      this.gotDetailsCallback.bind(this)
     );
-  }
+  };
 
   private gotDetailsCallback = (err: any, xmlResponse: any): void => {
     this.done(err, xmlResponse);
-  }
+  };
 }

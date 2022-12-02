@@ -15,10 +15,7 @@ import { TransporterComponent } from '../transporter/transporter.component';
 @Component({
   providers: [],
   selector: 'toolbar',
-  styleUrls: [
-    './toolbar.component.less',
-    '../../styles/main.less',
-  ],
+  styleUrls: ['./toolbar.component.less', '../../styles/main.less'],
   templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent implements OnInit {
@@ -37,7 +34,8 @@ export class ToolbarComponent implements OnInit {
   singleRelID = null;
   multipleRelsHighlightsAndIDs: Map<number, L.Polyline> = null;
 
-  @select(['app', 'errorCorrectionMode']) readonly errorCorrectionMode$: Observable<string>;
+  @select(['app', 'errorCorrectionMode'])
+  readonly errorCorrectionMode$: Observable<string>;
 
   constructor(
     private confSrv: ConfService,
@@ -45,7 +43,7 @@ export class ToolbarComponent implements OnInit {
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
     public storageSrv: StorageService,
-    private hotkeysService: HotkeysService,
+    private hotkeysService: HotkeysService
   ) {
     this.downloading = true;
     this.filtering = this.confSrv.cfgFilterLines;
@@ -53,7 +51,9 @@ export class ToolbarComponent implements OnInit {
       if (data === 'tag') {
         console.log(
           'LOG (toolbar) Current selected element changed - ',
-          data, this.currentElement, this.storageSrv.currentElement,
+          data,
+          this.currentElement,
+          this.storageSrv.currentElement
         );
         this.currentElement = this.storageSrv.currentElement;
       } else if (data === 'cancel selection') {
@@ -65,7 +65,8 @@ export class ToolbarComponent implements OnInit {
     this.mapSrv.highlightTypeEmitter.subscribe((data) => {
       this.htRadioModel = data.highlightType;
     });
-    this.mapSrv.enableInfoRouteLabelsOption.subscribe((data: {type: string, id: number, highlightFill: L.Polyline}) => {
+    this.mapSrv.enableInfoRouteLabelsOption.subscribe(
+      (data: { type: string; id: number; highlightFill: L.Polyline }) => {
         if (data && data.type === 'single') {
           this.singleRelID = data.id;
           this.enableInfoRouteLabels = true;
@@ -78,17 +79,24 @@ export class ToolbarComponent implements OnInit {
           this.enableInfoRouteLabels = true;
         }
         if (!data) {
-        this.singleRelID = null;
-        this.multipleRelsHighlightsAndIDs = null;
-        this.routeLabelShown = false;
-        this.enableInfoRouteLabels = false;
+          this.singleRelID = null;
+          this.multipleRelsHighlightsAndIDs = null;
+          this.routeLabelShown = false;
+          this.enableInfoRouteLabels = false;
+        }
       }
-    });
+    );
     this.hotkeysService.add([
-      new Hotkey('d', (): boolean => {
-        this.toggleDownloading();
-        return false;
-      }, undefined, 'Toggle downloading data')]);
+      new Hotkey(
+        'd',
+        (): boolean => {
+          this.toggleDownloading();
+          return false;
+        },
+        undefined,
+        'Toggle downloading data'
+      ),
+    ]);
   }
 
   ngOnInit(): void {
@@ -141,7 +149,7 @@ export class ToolbarComponent implements OnInit {
         this.storageSrv.elementsMap.get(this.currentElement.id),
         true,
         false,
-        false,
+        false
       );
     }
   }
@@ -168,11 +176,17 @@ export class ToolbarComponent implements OnInit {
   getLoadAndZoomUrl(): void {
     const josmHref =
       'http://127.0.0.1:8111/load_and_zoom?' +
-      'left=' + this.mapSrv.map.getBounds().getWest() +
-      '&right=' + this.mapSrv.map.getBounds().getEast() +
-      '&top=' + this.mapSrv.map.getBounds().getNorth() +
-      '&bottom=' + this.mapSrv.map.getBounds().getSouth() +
-      '&select=' + this.currentElement.type + this.currentElement.id;
+      'left=' +
+      this.mapSrv.map.getBounds().getWest() +
+      '&right=' +
+      this.mapSrv.map.getBounds().getEast() +
+      '&top=' +
+      this.mapSrv.map.getBounds().getNorth() +
+      '&bottom=' +
+      this.mapSrv.map.getBounds().getSouth() +
+      '&select=' +
+      this.currentElement.type +
+      this.currentElement.id;
     window.open(josmHref, '_blank');
   }
 
@@ -183,8 +197,10 @@ export class ToolbarComponent implements OnInit {
     }
     const idHref =
       'https://www.openstreetmap.org/edit?editor=id#map=' +
-      zoomlevel + '/' +
-      selection['lat'] + '/' +
+      zoomlevel +
+      '/' +
+      selection['lat'] +
+      '/' +
       selection['lon'];
     window.open(idHref);
   }
@@ -197,18 +213,20 @@ export class ToolbarComponent implements OnInit {
    * Handles toggling of route info labels
    */
   toggleRouteInfoLabels(): void {
-   if (!this.routeLabelShown) {
-     if (this.storageSrv.currentElement.type === 'node') {
-       this.mapSrv.showMultipleRouteInfoLabels(this.multipleRelsHighlightsAndIDs);
-     } else if (this.storageSrv.currentElement.type === 'relation') {
-       this.mapSrv.showRouteInfoLabels(this.singleRelID);
-     }
-     this.routeLabelShown = true;
-   }  else {
-     this.mapSrv.clearSingleRouteInfoLabels();
-     this.mapSrv.clearMultipleRouteInfoLabels();
-     this.routeLabelShown = false;
-   }
+    if (!this.routeLabelShown) {
+      if (this.storageSrv.currentElement.type === 'node') {
+        this.mapSrv.showMultipleRouteInfoLabels(
+          this.multipleRelsHighlightsAndIDs
+        );
+      } else if (this.storageSrv.currentElement.type === 'relation') {
+        this.mapSrv.showRouteInfoLabels(this.singleRelID);
+      }
+      this.routeLabelShown = true;
+    } else {
+      this.mapSrv.clearSingleRouteInfoLabels();
+      this.mapSrv.clearMultipleRouteInfoLabels();
+      this.routeLabelShown = false;
+    }
   }
 
   hasRef(): boolean {

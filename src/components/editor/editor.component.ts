@@ -15,20 +15,17 @@ import { RouteWizardComponent } from '../route-wizard/route-wizard.component';
 @Component({
   providers: [],
   selector: 'editor',
-  styleUrls: [
-    './editor.component.less',
-    '../../styles/main.less',
-  ],
+  styleUrls: ['./editor.component.less', '../../styles/main.less'],
   templateUrl: './editor.component.html',
 })
-
 export class EditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editModal') editModal: ModalDirective;
-  totalEditSteps        = 0;
-  currentEditStep       = 0;
+  totalEditSteps = 0;
+  currentEditStep = 0;
   creatingElementOfType = '';
   @select(['app', 'editing']) readonly editing$: Observable<boolean>;
-  @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
+  @select(['app', 'advancedExpMode'])
+  readonly advancedExpMode$: Observable<boolean>;
 
   modalRefRouteWiz: BsModalRef;
   modalRefRouteMasterWiz: BsModalRef;
@@ -41,44 +38,82 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
     private modalService: BsModalService,
-    private hotkeysService: HotkeysService,
+    private hotkeysService: HotkeysService
   ) {
-    this.hotkeysService.add([new Hotkey('shift+e', (): boolean => {
-      if (this.isAuthenticated()) {
-        this.toggleEditMode();
-      }
-      return false;
-    }, undefined, 'Toggle edit mode'), new Hotkey('1', (): boolean => {
-      if (this.ngRedux.getState()['app']['editing']) {
-        this.createElement('platform');
-      }
-      return false;
-    }, undefined, 'Create new platform'),
-      new Hotkey('ctrl+r', (): boolean => {
-        if (this.ngRedux.getState()['app']['editing'] && this.ngRedux.getState()['app']['advancedExpMode']) {
-          this.routeCreationWizard();
-        }
-        return false;
-      }, undefined, 'Open route creation wizard'),
-      new Hotkey('ctrl+m', (): boolean => {
-        if (this.ngRedux.getState()['app']['editing'] && this.ngRedux.getState()['app']['advancedExpMode']) {
-
-          this.routeMasterCreationWizard();
-        }
-        return false;
-      }, undefined, 'Open route master creation wizard'),
-      new Hotkey('left', (): boolean => {
-        if (this.ngRedux.getState()['app']['editing']) {
-          this.stepBackward();
-        }
-        return false;
-      }, undefined, 'Undo edit'),
-      new Hotkey('right', (): boolean => {
-        if (this.ngRedux.getState()['app']['editing']) {
-          this.stepForward();
-        }
-        return false;
-      }, undefined, 'Redo edit')]);
+    this.hotkeysService.add([
+      new Hotkey(
+        'shift+e',
+        (): boolean => {
+          if (this.isAuthenticated()) {
+            this.toggleEditMode();
+          }
+          return false;
+        },
+        undefined,
+        'Toggle edit mode'
+      ),
+      new Hotkey(
+        '1',
+        (): boolean => {
+          if (this.ngRedux.getState()['app']['editing']) {
+            this.createElement('platform');
+          }
+          return false;
+        },
+        undefined,
+        'Create new platform'
+      ),
+      new Hotkey(
+        'ctrl+r',
+        (): boolean => {
+          if (
+            this.ngRedux.getState()['app']['editing'] &&
+            this.ngRedux.getState()['app']['advancedExpMode']
+          ) {
+            this.routeCreationWizard();
+          }
+          return false;
+        },
+        undefined,
+        'Open route creation wizard'
+      ),
+      new Hotkey(
+        'ctrl+m',
+        (): boolean => {
+          if (
+            this.ngRedux.getState()['app']['editing'] &&
+            this.ngRedux.getState()['app']['advancedExpMode']
+          ) {
+            this.routeMasterCreationWizard();
+          }
+          return false;
+        },
+        undefined,
+        'Open route master creation wizard'
+      ),
+      new Hotkey(
+        'left',
+        (): boolean => {
+          if (this.ngRedux.getState()['app']['editing']) {
+            this.stepBackward();
+          }
+          return false;
+        },
+        undefined,
+        'Undo edit'
+      ),
+      new Hotkey(
+        'right',
+        (): boolean => {
+          if (this.ngRedux.getState()['app']['editing']) {
+            this.stepForward();
+          }
+          return false;
+        },
+        undefined,
+        'Redo edit'
+      ),
+    ]);
   }
 
   ngOnInit(): void {
@@ -89,7 +124,10 @@ export class EditorComponent implements OnInit, AfterViewInit {
     });
     // @ts-ignore
     this.mapSrv.map.on('click', (event: MouseEvent) => {
-      if (this.ngRedux.getState()['app']['editing'] && this.creatingElementOfType !== '') {
+      if (
+        this.ngRedux.getState()['app']['editing'] &&
+        this.creatingElementOfType !== ''
+      ) {
         this.editSrv.createElement(this.creatingElementOfType, event);
         this.creatingElementOfType = '';
         this.storageSrv.tutorialStepCompleted.emit('click on map');
@@ -143,7 +181,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
   stepBackward(): void {
     this.currentEditStep--;
     this.editSrv.currentTotalSteps.emit({
-      current: this.currentEditStep, total: this.totalEditSteps,
+      current: this.currentEditStep,
+      total: this.totalEditSteps,
     });
     this.editSrv.step('backward');
   }
@@ -155,7 +194,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.currentEditStep++;
     console.log('LOG (editor)', this.currentEditStep, this.totalEditSteps);
     this.editSrv.currentTotalSteps.emit({
-      current: this.currentEditStep, total: this.totalEditSteps,
+      current: this.currentEditStep,
+      total: this.totalEditSteps,
     });
     this.editSrv.step('forward');
   }
@@ -164,7 +204,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
    * Provides access to editing service function.
    */
   createElement(type: string): void {
-    this.creatingElementOfType = this.creatingElementOfType === type ? '' : type;
+    this.creatingElementOfType =
+      this.creatingElementOfType === type ? '' : type;
     this.storageSrv.tutorialStepCompleted.emit('click platform button');
   }
 
@@ -208,12 +249,18 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   routeCreationWizard(): void {
-    this.modalRefRouteWiz = this.modalService.show(RouteWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+    this.modalRefRouteWiz = this.modalService.show(RouteWizardComponent, {
+      class: 'modal-lg',
+      ignoreBackdropClick: true,
+    });
     this.appActions.actSetWizardMode('route wizard');
   }
 
   routeMasterCreationWizard(): void {
-    this.modalRefRouteMasterWiz = this.modalService.show(RouteMasterWizardComponent, { class: 'modal-lg', ignoreBackdropClick: true });
+    this.modalRefRouteMasterWiz = this.modalService.show(
+      RouteMasterWizardComponent,
+      { class: 'modal-lg', ignoreBackdropClick: true }
+    );
     this.appActions.actSetWizardMode('route master wizard');
   }
 }

@@ -20,21 +20,20 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 @Component({
   providers: [{ provide: CarouselConfig, useValue: { noPause: false } }],
   selector: 'app',
-  styleUrls: [
-    './app.component.less',
-  ],
+  styleUrls: ['./app.component.less'],
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
   spinkit = Spinkit;
-  advancedMode: boolean = Boolean(localStorage.getItem('advancedMode'));
+  advancedMode = Boolean(localStorage.getItem('advancedMode'));
 
   @ViewChild(ToolbarComponent) toolbarComponent: ToolbarComponent;
   @ViewChild(AuthComponent) authComponent: AuthComponent;
   @ViewChild('helpModal') helpModal: ModalDirective;
 
   @select(['app', 'editing']) readonly editing$: Observable<boolean>;
-  @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
+  @select(['app', 'advancedExpMode'])
+  readonly advancedExpMode$: Observable<boolean>;
   @select(['app', 'tutorialMode']) readonly tutorialMode$: Observable<boolean>;
   private startEventProcessing = new Subject<L.LeafletEvent>();
 
@@ -47,7 +46,7 @@ export class AppComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
-    private authSrv: AuthService,
+    private authSrv: AuthService
   ) {
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());
@@ -56,12 +55,17 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): any {
     this.dbSrv.deleteExpiredDataIDB();
-    this.dbSrv.deleteExpiredPTDataIDB().then(() => {
-      console.log('LOG (app component) Successfully checked and deleted old items from IDB');
-    }).catch((err) => {
-      console.log('LOG (app component) Error in deleting old items from IDB');
-      console.log(err);
-    });
+    this.dbSrv
+      .deleteExpiredPTDataIDB()
+      .then(() => {
+        console.log(
+          'LOG (app component) Successfully checked and deleted old items from IDB'
+        );
+      })
+      .catch((err) => {
+        console.log('LOG (app component) Error in deleting old items from IDB');
+        console.log(err);
+      });
     this.dbSrv.getCompletelyDownloadedElementsId();
     this.dbSrv.getIdsQueriedRoutesForMaster();
     const map = L.map('map', {
@@ -82,19 +86,15 @@ export class AppComponent implements OnInit {
     this.mapSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
       this.startEventProcessing.next(event);
     });
-    this.startEventProcessing.pipe(
-        debounceTime(500),
-        distinctUntilChanged()
-      )
+    this.startEventProcessing
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe((event: L.LeafletEvent) => {
         this.processSrv.addPositionToUrlHash();
         this.overpassSrv.initDownloader(this.mapSrv.map);
         this.processSrv.filterDataInBounds();
       });
 
-    if (
-      window.location.hash !== '' && this.processSrv.hashIsValidPosition()
-    ) {
+    if (window.location.hash !== '' && this.processSrv.hashIsValidPosition()) {
       this.mapSrv.zoomToHashedPosition();
     } else {
       this.geocodeSrv.getCurrentLocation();

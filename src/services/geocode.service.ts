@@ -2,7 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import { Location } from '../core/location.class';
-import { IResponseFreeGeoIp, IResponseGeocodeGMaps, IResponseIp, } from '../core/responses.interface';
+import {
+  IResponseFreeGeoIp,
+  IResponseGeocodeGMaps,
+  IResponseIp,
+} from '../core/responses.interface';
 import { ConfService } from './conf.service';
 import { MapService } from './map.service';
 
@@ -10,16 +14,17 @@ import { MapService } from './map.service';
 export class GeocodeService {
   httpClient: HttpClient;
 
-  constructor(
-    httpClient: HttpClient,
-    private mapSrv: MapService,
-  ) {
+  constructor(httpClient: HttpClient, private mapSrv: MapService) {
     this.httpClient = httpClient;
   }
 
   geocode(address: string): any {
-    return this.httpClient.get<IResponseGeocodeGMaps>(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}`)
+    return this.httpClient
+      .get<IResponseGeocodeGMaps>(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          address
+        )}`
+      )
       .subscribe(
         (response: IResponseGeocodeGMaps) => {
           if (response.status !== 'OK') {
@@ -38,38 +43,41 @@ export class GeocodeService {
             {
               lat: viewPort.northeast.lat,
               lng: viewPort.northeast.lng,
-            },
+            }
           );
           this.mapSrv.map.fitBounds(location.viewBounds, {});
         },
         (err) => {
           throw new Error(JSON.stringify(err));
-        },
+        }
       );
   }
 
   getCurrentLocation(): any {
-    return this.httpClient.get<IResponseIp>('https://ipv4.myexternalip.com/json')
+    return this.httpClient
+      .get<IResponseIp>('https://ipv4.myexternalip.com/json')
       .subscribe(
         (resp1: IResponseIp) => {
-          this.httpClient.get<IResponseFreeGeoIp>(`${ConfService.geocodingApiUrl}${resp1.ip}${ConfService.geocodingApiKey}`)
+          this.httpClient
+            .get<IResponseFreeGeoIp>(
+              `${ConfService.geocodingApiUrl}${resp1.ip}${ConfService.geocodingApiKey}`
+            )
             .subscribe(
               (resp2: IResponseFreeGeoIp) => {
                 const location = new Location();
-                location.address =
-                  `${resp2.city}, ${resp2.region_code} ${resp2.zip_code}, ${resp2.country_code}`;
+                location.address = `${resp2.city}, ${resp2.region_code} ${resp2.zip_code}, ${resp2.country_code}`;
                 location.latitude = resp2.latitude;
                 location.longitude = resp2.longitude;
                 this.mapSrv.map.panTo([location.latitude, location.longitude]);
               },
               (err) => {
                 throw new Error(JSON.stringify(err));
-              },
+              }
             );
         },
         (err) => {
           throw new Error(JSON.stringify(err));
-        },
+        }
       );
   }
 }

@@ -10,16 +10,19 @@ export class WarnService {
 
   constructor(
     private toastrSrv: ToastrService,
-    private translateSrv: TranslateService,
+    private translateSrv: TranslateService
   ) {
     /**
      * Listens to language change event and translates error and success messages
      */
-    this.translateSrv.onLangChange.subscribe((event: TranslationChangeEvent) => {
-      this.successMessage = event.translations[this.successMessage];
-      this.errorMessage = event.translations[this.errorMessage];
-      this.genericSuccessMessage = event.translations[this.genericSuccessMessage];
-    });
+    this.translateSrv.onLangChange.subscribe(
+      (event: TranslationChangeEvent) => {
+        this.successMessage = event.translations[this.successMessage];
+        this.errorMessage = event.translations[this.errorMessage];
+        this.genericSuccessMessage =
+          event.translations[this.genericSuccessMessage];
+      }
+    );
   }
 
   showError(): void {
@@ -33,5 +36,4 @@ export class WarnService {
   showGenericSuccess(): void {
     this.toastrSrv.success(this.genericSuccessMessage);
   }
-
 }

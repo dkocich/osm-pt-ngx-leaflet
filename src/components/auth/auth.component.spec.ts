@@ -28,5 +28,4 @@ describe('AuthComponent', () => {
   it('can load instance', () => {
     expect(comp).toBeTruthy();
   });
-
 });

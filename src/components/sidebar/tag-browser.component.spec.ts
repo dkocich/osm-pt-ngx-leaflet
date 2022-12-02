@@ -53,5 +53,4 @@ describe('TagBrowserComponent', () => {
   it('expectedValues defaults to: PtTags.expectedValues', () => {
     expect(comp.expectedValues).toEqual(PtTags.expectedValues);
   });
-
 });

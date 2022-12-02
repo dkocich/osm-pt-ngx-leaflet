@@ -1,7 +1,13 @@
 import { Component, ViewChildren } from '@angular/core';
 import * as L from 'leaflet';
 import { BsModalRef } from 'ngx-bootstrap';
-import { INameErrorObject, IPTPairErrorObject, IPTvErrorObject, IRefErrorObject, IWayErrorObject } from '../../core/errorObject.interface';
+import {
+  INameErrorObject,
+  IPTPairErrorObject,
+  IPTvErrorObject,
+  IRefErrorObject,
+  IWayErrorObject,
+} from '../../core/errorObject.interface';
 import { IPtRelation } from '../../core/ptRelation.interface';
 import { IPtStop } from '../../core/ptStop.interface';
 import { PtTags } from '../../core/ptTags.class';
@@ -12,13 +18,9 @@ import { WarnService } from '../../services/warn.service';
 
 @Component({
   selector: 'modal-content',
-  styleUrls: [
-    './modal.component.less',
-    '../../styles/main.less',
-  ],
+  styleUrls: ['./modal.component.less', '../../styles/main.less'],
   templateUrl: './modal.component.html',
 })
-
 export class ModalComponent {
   tagKey;
   suggestedNames: string[];
@@ -33,12 +35,12 @@ export class ModalComponent {
   PTvErrorObject: IPTvErrorObject;
   ptPairErrorObject: IPTPairErrorObject;
 
-  removedNearbySuggestions: any[]  = [];
+  removedNearbySuggestions: any[] = [];
   removedMissingSuggestions: any[] = [];
 
-  addedMissingSuggestionsRefs: any[]    = [];
+  addedMissingSuggestionsRefs: any[] = [];
   addedFromNearbySuggestionsRefs: any[] = [];
-  newAddedRefs: any[]                   = [];
+  newAddedRefs: any[] = [];
 
   missingRefRels: any[];
   nearbyRels: any[];
@@ -56,9 +58,8 @@ export class ModalComponent {
     private editSrv: EditService,
     private storageSrv: StorageService,
     private mapSrv: MapService,
-    private warnSrv: WarnService,
-  ) {
-  }
+    private warnSrv: WarnService
+  ) {}
 
   /**
    * Executed on click of save button for adding new name tag
@@ -68,16 +69,23 @@ export class ModalComponent {
     if (name.length !== 0) {
       this.createChangeForNameTag(name);
       this.bsModalRef.hide();
-      const popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
+      const popUpElement = this.mapSrv.getPopUpFromArray(
+        this.mapSrv.currentPopUpFeatureId
+      );
       MapService.addHoverListenersToPopUp(popUpElement);
-      this.mapSrv.popUpArr   = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
-      const popupContent       = L.DomUtil.create('div', 'content');
+      this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter(
+        (popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId
+      );
+      const popupContent = L.DomUtil.create('div', 'content');
       popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
-      const popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
+      const popupArr: any = this.mapSrv.popUpLayerGroup.getLayers();
       popupArr[0].setContent(popupContent);
-      this.nameErrorObject.corrected                                        = 'true';
-      this.storageSrv.nameErrorsObj[this.storageSrv.currentIndex].corrected = 'true';
-      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing name tags' });
+      this.nameErrorObject.corrected = 'true';
+      this.storageSrv.nameErrorsObj[this.storageSrv.currentIndex].corrected =
+        'true';
+      this.storageSrv.refreshErrorObjects.emit({
+        typeOfErrorObject: 'missing name tags',
+      });
       this.warnSrv.showGenericSuccess();
     } else {
       alert('Entered name cannot be empty');
@@ -88,7 +96,7 @@ export class ModalComponent {
    * Saves ref correction
    */
   saveRefTag(): void {
-    let refsForTag        = [];
+    let refsForTag = [];
     let refString = '';
 
     for (const rel of this.addedMissingSuggestionsRefs) {
@@ -104,7 +112,10 @@ export class ModalComponent {
     refsForTag.sort();
     if (refsForTag.length !== 0) {
       refsForTag.forEach((item, index) => {
-        refString = (index !== refsForTag.length - 1) ? refString + item + ';' : refString + item;
+        refString =
+          index !== refsForTag.length - 1
+            ? refString + item + ';'
+            : refString + item;
       });
 
       if (this.refErrorObject.stop.tags.route_ref) {
@@ -114,14 +125,18 @@ export class ModalComponent {
       this.createChangeForRefTag(refString);
       this.addToMembers(this.addedFromNearbySuggestionsRefs);
       this.bsModalRef.hide();
-      const popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
+      const popUpElement = this.mapSrv.getPopUpFromArray(
+        this.mapSrv.currentPopUpFeatureId
+      );
       MapService.addHoverListenersToPopUp(popUpElement);
       this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter((popup) => {
         return popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId;
       });
       this.checkErrorIfCorrected();
       this.refErrorObject.missingConnectedRefs = this.missingRefRels.length;
-      this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'missing refs' });
+      this.storageSrv.refreshErrorObjects.emit({
+        typeOfErrorObject: 'missing refs',
+      });
       this.warnSrv.showGenericSuccess();
     } else {
       alert('Nothing to save');
@@ -130,16 +145,23 @@ export class ModalComponent {
 
   saveWayError(): void {
     this.createChangeForWayError();
-    const popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
+    const popUpElement = this.mapSrv.getPopUpFromArray(
+      this.mapSrv.currentPopUpFeatureId
+    );
     MapService.addHoverListenersToPopUp(popUpElement);
-    this.mapSrv.popUpArr   = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
-    const popupContent       = L.DomUtil.create('div', 'content');
+    this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter(
+      (popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId
+    );
+    const popupContent = L.DomUtil.create('div', 'content');
     popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
-    const popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
+    const popupArr: any = this.mapSrv.popUpLayerGroup.getLayers();
     popupArr[0].setContent(popupContent);
-    this.wayErrorObject.corrected                                        = 'true';
-    this.storageSrv.wayErrorsObj[this.storageSrv.currentIndex].corrected = 'true';
-    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'way as parent' });
+    this.wayErrorObject.corrected = 'true';
+    this.storageSrv.wayErrorsObj[this.storageSrv.currentIndex].corrected =
+      'true';
+    this.storageSrv.refreshErrorObjects.emit({
+      typeOfErrorObject: 'way as parent',
+    });
     this.rerenderPlatformAsStop();
     this.warnSrv.showGenericSuccess();
     this.bsModalRef.hide();
@@ -147,16 +169,23 @@ export class ModalComponent {
 
   savePTvError(): void {
     this.createChangeForPTvError();
-    const popUpElement = this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId);
+    const popUpElement = this.mapSrv.getPopUpFromArray(
+      this.mapSrv.currentPopUpFeatureId
+    );
     MapService.addHoverListenersToPopUp(popUpElement);
-    this.mapSrv.popUpArr   = this.mapSrv.popUpArr.filter((popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId);
-    const popupContent       = L.DomUtil.create('div', 'content');
+    this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter(
+      (popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId
+    );
+    const popupContent = L.DomUtil.create('div', 'content');
     popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
-    const popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
+    const popupArr: any = this.mapSrv.popUpLayerGroup.getLayers();
     popupArr[0].setContent(popupContent);
-    this.PTvErrorObject.corrected                                        = 'true';
-    this.storageSrv.PTvErrorsObj[this.storageSrv.currentIndex].corrected = 'true';
-    this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'PTv correction' });
+    this.PTvErrorObject.corrected = 'true';
+    this.storageSrv.PTvErrorsObj[this.storageSrv.currentIndex].corrected =
+      'true';
+    this.storageSrv.refreshErrorObjects.emit({
+      typeOfErrorObject: 'PTv correction',
+    });
     this.warnSrv.showGenericSuccess();
     this.bsModalRef.hide();
   }
@@ -165,12 +194,16 @@ export class ModalComponent {
    * Re-renders platform as stop
    */
   private rerenderPlatformAsStop(): void {
-    this.mapSrv.map.removeLayer(this.getLayerFromMap(this.wayErrorObject.stop.id));
-    this.storageSrv.elementsRendered.delete('node/' + this.wayErrorObject.stop.id);
+    this.mapSrv.map.removeLayer(
+      this.getLayerFromMap(this.wayErrorObject.stop.id)
+    );
+    this.storageSrv.elementsRendered.delete(
+      'node/' + this.wayErrorObject.stop.id
+    );
     const obj: any = {};
     const elements = [];
     elements.push(this.storageSrv.elementsMap.get(this.wayErrorObject.stop.id));
-    obj.elements    = elements;
+    obj.elements = elements;
     const transformed = this.osmtogeojson(obj);
     this.mapSrv.renderTransformedGeojsonData(transformed, this.mapSrv.map);
   }
@@ -201,11 +234,11 @@ export class ModalComponent {
     let change: any;
     change = {
       from: {
-        key  : 'public_transport',
+        key: 'public_transport',
         value: this.wayErrorObject.stop.tags['public_transport'],
       },
-      to  : {
-        key  : 'public_transport',
+      to: {
+        key: 'public_transport',
         value: 'stop_position',
       },
     };
@@ -216,8 +249,8 @@ export class ModalComponent {
   private createChangeForPTvError(): void {
     let change: object;
     this.storageSrv.currentElement.tags['public_transport'] = 'platform';
-    change                                      = {
-      key  : 'public_transport',
+    change = {
+      key: 'public_transport',
       value: 'platform',
     };
     this.editSrv.addChange(this.storageSrv.currentElement, 'add tag', change);
@@ -230,7 +263,9 @@ export class ModalComponent {
     this.addedMissingSuggestionsRefs.push(rel);
     this.missingRefRels.forEach((item, ind) => {
       if (item.id === rel.id) {
-        this.removedMissingSuggestions = this.removedMissingSuggestions.concat(this.missingRefRels.splice(ind, 1));
+        this.removedMissingSuggestions = this.removedMissingSuggestions.concat(
+          this.missingRefRels.splice(ind, 1)
+        );
       }
     });
   }
@@ -242,7 +277,9 @@ export class ModalComponent {
     this.addedFromNearbySuggestionsRefs.push(rel);
     this.nearbyRels.forEach((item, ind) => {
       if (item.id === rel.id) {
-        this.removedNearbySuggestions = this.removedNearbySuggestions.concat(this.nearbyRels.splice(ind, 1));
+        this.removedNearbySuggestions = this.removedNearbySuggestions.concat(
+          this.nearbyRels.splice(ind, 1)
+        );
       }
     });
   }
@@ -251,8 +288,8 @@ export class ModalComponent {
    * Remove the added ref value (added from suggestions (missing) by user)
    */
   removeMissingSuggestedRefValue(toRemoveRel: any): void {
-    let index ;
-    for (const rel of  this.addedMissingSuggestionsRefs) {
+    let index;
+    for (const rel of this.addedMissingSuggestionsRefs) {
       if (rel.id === toRemoveRel.id) {
         index = this.addedMissingSuggestionsRefs.indexOf(rel);
       }
@@ -274,9 +311,8 @@ export class ModalComponent {
    * Remove the added ref value (added from suggestions (nearby) by user)
    */
   removeNearbySuggestedRefValue(toRemoveRel: any): void {
-
-    let index ;
-    for (const rel of  this.addedFromNearbySuggestionsRefs) {
+    let index;
+    for (const rel of this.addedFromNearbySuggestionsRefs) {
       if (rel.id === toRemoveRel.id) {
         index = this.addedFromNearbySuggestionsRefs.indexOf(rel);
       }
@@ -341,21 +377,16 @@ export class ModalComponent {
    * adds given node as child member of routes
    */
   private addToMembers(addedFromNearbySuggestionsRefs: any): void {
-
     if (addedFromNearbySuggestionsRefs.length !== 0) {
       for (const relation of addedFromNearbySuggestionsRefs) {
         const rel = JSON.parse(
-          JSON.stringify(
-            this.storageSrv.elementsMap.get(
-              relation.id,
-            ),
-          ),
+          JSON.stringify(this.storageSrv.elementsMap.get(relation.id))
         );
 
         if (!rel || rel.type !== 'relation') {
           return alert(
             'Relation was not found ' +
-            JSON.stringify(this.storageSrv.currentElement),
+              JSON.stringify(this.storageSrv.currentElement)
           );
         }
 
@@ -370,7 +401,10 @@ export class ModalComponent {
             probableRole = 'stop';
             break;
           default:
-            alert('FIXME: suspicious role - ' + this.refErrorObject.stop.tags.public_transport);
+            alert(
+              'FIXME: suspicious role - ' +
+                this.refErrorObject.stop.tags.public_transport
+            );
             probableRole = 'stop';
         }
         const memberToToggle = {
@@ -383,28 +417,28 @@ export class ModalComponent {
         change.to = rel;
 
         this.editSrv.addChange(rel, 'toggle members', change);
-
       }
     }
-
   }
 
   private checkErrorIfCorrected(): void {
     let val;
-    const popupContent       = L.DomUtil.create('div', 'content');
+    const popupContent = L.DomUtil.create('div', 'content');
     if (this.missingRefRels.length === 0) {
       val = 'true';
       popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
     } else if (this.addedMissingSuggestionsRefs.length !== 0) {
       val = 'partial';
-      popupContent.innerHTML = '<i class="fa fa-question" aria-hidden="true"></i>';
+      popupContent.innerHTML =
+        '<i class="fa fa-question" aria-hidden="true"></i>';
     } else {
       val = 'false';
-      popupContent.innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
+      popupContent.innerHTML =
+        '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
     }
     this.refErrorObject.corrected = val;
     this.storageSrv.refErrorsObj[this.storageSrv.currentIndex].corrected = val;
-    const popupArr: any      = this.mapSrv.popUpLayerGroup.getLayers();
+    const popupArr: any = this.mapSrv.popUpLayerGroup.getLayers();
     popupArr[0].setContent(popupContent);
   }
 
@@ -412,9 +446,11 @@ export class ModalComponent {
    * Determines if new refs were added
    */
   viewAddedRefs(): boolean {
-    return this.newAddedRefs.length !== 0 ||
+    return (
+      this.newAddedRefs.length !== 0 ||
       this.addedMissingSuggestionsRefs.length !== 0 ||
-      this.addedFromNearbySuggestionsRefs.length !== 0;
+      this.addedFromNearbySuggestionsRefs.length !== 0
+    );
   }
 
   /**
@@ -422,18 +458,22 @@ export class ModalComponent {
    */
   getTooltipText(name: string): string {
     switch (name) {
-      case  'nearby rels':
-        return 'List of nearby routes (within 1/2 km) which ' +
+      case 'nearby rels':
+        return (
+          'List of nearby routes (within 1/2 km) which ' +
           'do not have the given stop/platform as a member.' +
           'Select from the list to add the node as a member.' +
-          'Please note that route_ref of the node tag will also be updated accordingly.';
+          'Please note that route_ref of the node tag will also be updated accordingly.'
+        );
       case 'added refs':
         return 'Added References';
       case 'add new ref':
         return 'Enter new reference';
       case 'missing refs':
-        return 'List of routes which have the stop/platform as a member but reference is not added in route_ref tag of the stop/platform.' +
-          'Select from the list to add to the route_ref tag';
+        return (
+          'List of routes which have the stop/platform as a member but reference is not added in route_ref tag of the stop/platform.' +
+          'Select from the list to add to the route_ref tag'
+        );
     }
   }
 
@@ -443,7 +483,7 @@ export class ModalComponent {
   private getLayerFromMap(stopID: number): any {
     let matchedLayer = null;
     this.mapSrv.map.eachLayer((layer) => {
-      if (layer['_latlng']  && layer['feature']) {
+      if (layer['_latlng'] && layer['feature']) {
         if (this.mapSrv.getFeatureIdFromMarker(layer['feature']) === stopID) {
           matchedLayer = layer;
         }
@@ -465,32 +505,32 @@ export class ModalComponent {
       tags[this.platformTags[i]] = val;
     });
     const newId: number = this.editSrv.findNewId();
-    const marker      = this.editSrv.initializeNewMarker(
+    const marker = this.editSrv.initializeNewMarker(
       'platform',
       this.newPlatformEvent,
-      newId,
+      newId
     );
     this.editSrv.createNewMarkerEvents(marker);
     this.storageSrv.markersMap.set(newId, marker);
     marker.addTo(this.mapSrv.map);
-    const latlng                     = marker.getLatLng();
-    const newElement: IPtStop          = {
+    const latlng = marker.getLatLng();
+    const newElement: IPtStop = {
       changeset: -999,
-      id       : newId,
-      lat      : latlng.lat,
-      lon      : latlng.lng,
+      id: newId,
+      lat: latlng.lat,
+      lon: latlng.lng,
       tags,
       timestamp: new Date().toISOString().split('.')[0] + 'Z',
-      type     : 'node',
-      uid      : Number(localStorage.getItem('id')),
-      user     : localStorage.getItem('display_name'),
-      version  : 1,
+      type: 'node',
+      uid: Number(localStorage.getItem('id')),
+      user: localStorage.getItem('display_name'),
+      version: 1,
     };
     newElement.tags.public_transport = 'platform';
-    const change                       = { from: undefined, to: newElement };
+    const change = { from: undefined, to: newElement };
     this.editSrv.addChange(newElement, 'add element', change);
     let stopLayer = null;
-    const stopId    = this.ptPairErrorObject.stop.id;
+    const stopId = this.ptPairErrorObject.stop.id;
     this.mapSrv.map.eachLayer((layer) => {
       if (layer['feature'] && layer['_latlng']) {
         const featureID = this.mapSrv.getFeatureIdFromMarker(layer['feature']);
@@ -501,8 +541,9 @@ export class ModalComponent {
     });
     stopLayer.closePopup();
     this.circleLayer.removeFrom(this.mapSrv.map);
-    this.ptPairErrorObject.corrected                                           = 'true';
-    this.storageSrv.ptPairErrorsObject[this.storageSrv.currentIndex].corrected = 'true';
+    this.ptPairErrorObject.corrected = 'true';
+    this.storageSrv.ptPairErrorsObject[this.storageSrv.currentIndex].corrected =
+      'true';
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'pt-pair' });
     this.warnSrv.showGenericSuccess();
     this.bsModalRef.hide();

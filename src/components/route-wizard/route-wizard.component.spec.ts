@@ -7,9 +7,8 @@ describe('RouteModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RouteWizardComponent ],
-    })
-    .compileComponents();
+      declarations: [RouteWizardComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

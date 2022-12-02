@@ -15,9 +15,7 @@ describe('SettingsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [SettingsComponent],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [
-        { provide: AppActions, useValue: appActionsStub },
-      ],
+      providers: [{ provide: AppActions, useValue: appActionsStub }],
     });
     fixture = TestBed.createComponent(SettingsComponent);
     comp = fixture.componentInstance;
@@ -26,5 +24,4 @@ describe('SettingsComponent', () => {
   it('can load instance', () => {
     expect(comp).toBeTruthy();
   });
-
 });

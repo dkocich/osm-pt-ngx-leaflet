@@ -19,12 +19,13 @@ import { IAppState } from '../../store/model';
 })
 export class TutorialsComponent implements OnInit {
   tutorialsData = null;
-  @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
-  constructor(private ngRedux: NgRedux<IAppState>,
-              private tutorialSrv: TutorialService,
-              public appActions: AppActions,
-  ) {
-  }
+  @select(['app', 'advancedExpMode'])
+  readonly advancedExpMode$: Observable<boolean>;
+  constructor(
+    private ngRedux: NgRedux<IAppState>,
+    private tutorialSrv: TutorialService,
+    public appActions: AppActions
+  ) {}
 
   ngOnInit(): void {
     this.tutorialSrv.intro = introJs();

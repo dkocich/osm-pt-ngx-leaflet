@@ -13,5 +13,4 @@ describe('KeysPipe', () => {
 
     expect(pipe.transform(value, args)).toEqual('Y');
   });
-
 });

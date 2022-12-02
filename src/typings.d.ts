@@ -1,5 +1,5 @@
 /* SystemJS module definition */
-declare var module: INodeModule;
+declare let module: INodeModule;
 
 interface INodeModule {
   id: string;

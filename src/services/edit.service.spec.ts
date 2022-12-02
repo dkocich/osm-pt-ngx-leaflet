@@ -16,5 +16,4 @@ describe('EditService', () => {
   it('works', () => {
     expect(1).toEqual(2);
   });
-
 });

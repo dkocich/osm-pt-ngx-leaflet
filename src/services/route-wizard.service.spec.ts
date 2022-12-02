@@ -11,11 +11,15 @@ describe('RouteWizardService', () => {
   let processSrv: ProcessService;
   let storageSrv: StorageService;
   beforeEach(() => {
-    service = new RouteWizardService(storageSrv, mapSrv, modalService, processSrv);
+    service = new RouteWizardService(
+      storageSrv,
+      mapSrv,
+      modalService,
+      processSrv
+    );
   });
 
   it('works', () => {
     expect(1).toEqual(2);
   });
-
 });

@@ -50,8 +50,10 @@ describe('BeginnerComponent', () => {
 
   describe('back', () => {
     it('makes expected calls', () => {
-      const appActionsStub: AppActions = fixture.debugElement.injector.get(AppActions);
-      const processServiceStub: ProcessService = fixture.debugElement.injector.get(ProcessService);
+      const appActionsStub: AppActions =
+        fixture.debugElement.injector.get(AppActions);
+      const processServiceStub: ProcessService =
+        fixture.debugElement.injector.get(ProcessService);
       spyOn(appActionsStub, 'actSetBeginnerView');
       spyOn(processServiceStub, 'refreshSidebarView');
       spyOn(processServiceStub, 'exploreStop');
@@ -61,5 +63,4 @@ describe('BeginnerComponent', () => {
       expect(processServiceStub.exploreStop).toHaveBeenCalled();
     });
   });
-
 });

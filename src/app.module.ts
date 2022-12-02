@@ -74,17 +74,22 @@ export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http);
 }
 
-const ROUTES: Routes = [
-  { path: '', component: AppComponent },
-];
+const ROUTES: Routes = [{ path: '', component: AppComponent }];
 
 const conditional_providers = [
-  Utils.isProductionDeployment() ? { provide: ErrorHandler, useClass: RavenErrorHandler } : [],
+  Utils.isProductionDeployment()
+    ? { provide: ErrorHandler, useClass: RavenErrorHandler }
+    : [],
 ];
 
 @NgModule({
   bootstrap: [AppComponent],
-  entryComponents: [RouteWizardComponent, AppComponent, ModalComponent, RouteMasterWizardComponent],
+  entryComponents: [
+    RouteWizardComponent,
+    AppComponent,
+    ModalComponent,
+    RouteMasterWizardComponent,
+  ],
   declarations: [
     AppComponent,
     AuthComponent,
@@ -163,10 +168,10 @@ const conditional_providers = [
 
     KeysPipe,
 
-    { provide: APP_BASE_HREF, useValue : '/' },
+    { provide: APP_BASE_HREF, useValue: '/' },
 
     AppActions,
     RootEpics,
   ],
 })
-export class AppModule { }
+export class AppModule {}

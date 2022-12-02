@@ -16,34 +16,29 @@ import { AppActions } from '../../store/app/actions';
 
 @Component({
   selector: 'route-master-wizard',
-  styleUrls: [
-    './route-master-wizard.component.less',
-    '../../styles/main.less',
-  ],
+  styleUrls: ['./route-master-wizard.component.less', '../../styles/main.less'],
   templateUrl: './route-master-wizard.component.html',
 })
-
 export class RouteMasterWizardComponent {
-
   map: L.Map;
-  osmtogeojson: any     = require('osmtogeojson');
+  osmtogeojson: any = require('osmtogeojson');
   private startEventProcessing = new Subject<L.LeafletEvent>();
-  usedRM                = [];
+  usedRM = [];
 
-  @Input() tagKey   = '';
+  @Input() tagKey = '';
   @Input() tagValue = '';
 
-  newRMsMap: Map<string, { id: number, percentCoverage: number }[]> = new Map();
+  newRMsMap: Map<string, { id: number; percentCoverage: number }[]> = new Map();
 
   RMTags = {
-    type                      : 'route_master',
-    route_master              : 'bus',
-    ref                       : '',
+    type: 'route_master',
+    route_master: 'bus',
+    ref: '',
     'public_transport:version': '2',
-    name                      : '',
-    operator                  : '',
-    network                   : '',
-    colour                    : '',
+    name: '',
+    operator: '',
+    network: '',
+    colour: '',
   };
 
   @ViewChild('stepTabs') stepTabs: TabsetComponent;
@@ -62,44 +57,51 @@ export class RouteMasterWizardComponent {
     this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
       this.newRMsMap = newRMsMap;
       this.selectTab(2);
-
     });
   }
 
   ngOnInit(): void {
     this.routeMasterWizardSrv.elementsRenderedModalMap = new Set();
-    this.map                                           = L.map('master-route-wizard-modal-map', {
-      center       : this.mapSrv.map.getCenter(),
-      layers       : [L.tileLayer(
-        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-        {
-          attribution  : `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank'
+    this.map = L.map('master-route-wizard-modal-map', {
+      center: this.mapSrv.map.getCenter(),
+      layers: [
+        L.tileLayer(
+          'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+          {
+            attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank'
             rel='noopener'>OpenStreetMap</a>&nbsp;&copy;&nbsp;<a href='https://cartodb.com/attributions'
             target='_blank' rel='noopener'>CartoDB</a>`,
-          maxNativeZoom: 19,
-          maxZoom      : 22,
-        },
-      )],
-      maxZoom      : 22,
-      minZoom      : 4,
-      zoom         : 14,
+            maxNativeZoom: 19,
+            maxZoom: 22,
+          }
+        ),
+      ],
+      maxZoom: 22,
+      minZoom: 4,
+      zoom: 14,
       zoomAnimation: false,
-      zoomControl  : false,
+      zoomControl: false,
     });
     L.control.zoom({ position: 'topright' }).addTo(this.map);
     L.control.scale().addTo(this.map);
     this.routeMasterWizardSrv.map = this.map;
     this.routeMasterWizardSrv.renderAlreadyDownloadedData();
-    this.routeMasterWizardSrv.modalMapElementsMap = new Map<number, IOsmElement>(this.storageSrv.elementsMap);
-    this.routeMasterWizardSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
-      this.startEventProcessing.next(event);
-    });
-    this.startEventProcessing.pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-      )
+    this.routeMasterWizardSrv.modalMapElementsMap = new Map<
+      number,
+      IOsmElement
+    >(this.storageSrv.elementsMap);
+    this.routeMasterWizardSrv.map.on(
+      'zoomend moveend',
+      (event: L.LeafletEvent) => {
+        this.startEventProcessing.next(event);
+      }
+    );
+    this.startEventProcessing
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(() => {
-        this.overpassSrv.initDownloaderForModalMapRMW(this.routeMasterWizardSrv.map);
+        this.overpassSrv.initDownloaderForModalMapRMW(
+          this.routeMasterWizardSrv.map
+        );
       });
   }
 
@@ -107,7 +109,10 @@ export class RouteMasterWizardComponent {
    * Finds suggestions in current bounds
    */
   findSuggestions(): void {
-    if (this.mapSrv.map.getZoom() > ConfService.minDownloadZoomForRouteMasterWizard) {
+    if (
+      this.mapSrv.map.getZoom() >
+      ConfService.minDownloadZoomForRouteMasterWizard
+    ) {
       this.overpassSrv.requestNewOverpassDataForWizard(true);
     } else {
       alert('Not sufficient zoom level');
@@ -119,7 +124,7 @@ export class RouteMasterWizardComponent {
    */
   private selectTab(step: number): void {
     this.stepTabs.tabs[step - 1].disabled = false;
-    this.stepTabs.tabs[step - 1].active   = true;
+    this.stepTabs.tabs[step - 1].active = true;
     for (let i = step + 1; i < 5; i++) {
       console.log('i-1', i - 1);
       this.stepTabs.tabs[i - 1].disabled = true;
@@ -137,7 +142,7 @@ export class RouteMasterWizardComponent {
     return refs;
   }
 
-  getValue(ref: string): { id: number, percentCoverage: number }[] {
+  getValue(ref: string): { id: number; percentCoverage: number }[] {
     return this.newRMsMap.get(ref);
   }
 
@@ -148,7 +153,9 @@ export class RouteMasterWizardComponent {
     if (percentageCoverage === 100) {
       this.routeMasterWizardSrv.viewRoute(routeID);
     } else {
-      alert('Cannot highlight the route as it has not been downloaded completly');
+      alert(
+        'Cannot highlight the route as it has not been downloaded completly'
+      );
     }
   }
 
@@ -171,7 +178,7 @@ export class RouteMasterWizardComponent {
 
   removeRoute(id: number): void {
     let newRM = [];
-    newRM          = [ ...newRM, ...this.usedRM ];
+    newRM = [...newRM, ...this.usedRM];
     newRM.forEach((rel, i) => {
       if (rel.id === id) {
         newRM.splice(i, 1);
@@ -180,7 +187,12 @@ export class RouteMasterWizardComponent {
     this.usedRM = newRM;
   }
 
-  modifiesTags(action: string, key: string, event: FocusEvent, tags: object): any {
+  modifiesTags(
+    action: string,
+    key: string,
+    event: FocusEvent,
+    tags: object
+  ): any {
     switch (action) {
       case 'change tag':
         tags[key] = (event.target as HTMLInputElement).value;
@@ -199,7 +211,7 @@ export class RouteMasterWizardComponent {
   createChangeTag(action: string, key: string, event?: FocusEvent): void {
     this.RMTags = this.modifiesTags(action, key, event, this.RMTags);
     if (action === 'add tag') {
-      this.tagKey   = '';
+      this.tagKey = '';
       this.tagValue = '';
     }
   }
@@ -208,16 +220,16 @@ export class RouteMasterWizardComponent {
    * Final step for saving the route master
    */
   saveStep4(): void {
-    const newRM  = {
-      id       : this.editSrv.findNewId(),
+    const newRM = {
+      id: this.editSrv.findNewId(),
       timestamp: new Date().toISOString().split('.')[0] + 'Z',
-      version  : 1,
+      version: 1,
       changeset: -999,
-      uid      : Number(localStorage.getItem('id')),
-      user     : localStorage.getItem('display_name'),
-      type     : 'relation',
-      members  : this.usedRM,
-      tags     : this.RMTags,
+      uid: Number(localStorage.getItem('id')),
+      user: localStorage.getItem('display_name'),
+      type: 'relation',
+      members: this.usedRM,
+      tags: this.RMTags,
     };
     const change = { from: undefined, to: newRM };
     this.routeMasterWizardSrv.modalMapElementsMap.set(newRM.id, newRM);
@@ -233,9 +245,9 @@ export class RouteMasterWizardComponent {
     switch (true) {
       case percentageCoverage === 100:
         return 'lightgreen';
-      case (percentageCoverage < 50):
+      case percentageCoverage < 50:
         return 'lightcoral';
-      case (percentageCoverage < 100 && percentageCoverage > 50):
+      case percentageCoverage < 100 && percentageCoverage > 50:
         return 'lightsalmon';
       default:
         return '';

@@ -18,5 +18,4 @@ describe('ExpertComponent', () => {
   it('can load instance', () => {
     expect(comp).toBeTruthy();
   });
-
 });

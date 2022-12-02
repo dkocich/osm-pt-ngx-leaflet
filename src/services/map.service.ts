@@ -17,7 +17,7 @@ interface MyTileLayer extends TileLayer {
 }
 
 interface IBaseMaps {
-  [key: string ]: TileLayer;
+  [key: string]: TileLayer;
 }
 
 @Injectable()
@@ -27,8 +27,7 @@ export class MapService {
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState>,
-    // private tutorialSrv: TutorialService,
+    private ngRedux: NgRedux<IAppState> // private tutorialSrv: TutorialService,
   ) {
     // @ts-ignore
     this.baseMaps = {
@@ -43,7 +42,7 @@ export class MapService {
             target='_blank' rel='noopener'>CartoDB</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        },
+        }
       ),
       CartoDB_light: L.tileLayer(
         'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
@@ -53,35 +52,35 @@ export class MapService {
             target='_blank' rel='noopener'>CartoDB</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        },
+        }
       ),
       Esri: L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-        'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+          'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
         {
           attribution: `Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap,
             iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan,
             METI, Esri China (Hong Kong), and the GIS User Community`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        },
+        }
       ),
       Esri_imagery: L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/' +
-        'World_Imagery/MapServer/tile/{z}/{y}/{x}',
+          'World_Imagery/MapServer/tile/{z}/{y}/{x}',
         {
           attribution: `Tiles &copy; Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye,
             Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community `,
           maxNativeZoom: 19,
           maxZoom: 22,
-        },
+        }
       ),
       HERE_satelliteDay: L.tileLayer(
         'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/' +
-        'satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
+          'satellite.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
         {
           attribution:
-            'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
+            "Map &copy; 1987-2014 <a href='https://developer.here.com' target='_blank' rel='noopener'>HERE</a>",
           subdomains: '1234',
           // @ts-ignore
           mapID: 'newest',
@@ -94,14 +93,14 @@ export class MapService {
           language: 'eng',
           format: 'png8',
           size: '256',
-        },
+        }
       ),
       HERE_hybridDay: L.tileLayer(
         'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/' +
-        'hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
+          'hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
         {
           attribution:
-            'Map &copy; 1987-2014 <a href=\'https://developer.here.com\' target=\'_blank\' rel=\'noopener\'>HERE</a>',
+            "Map &copy; 1987-2014 <a href='https://developer.here.com' target='_blank' rel='noopener'>HERE</a>",
           subdomains: '1234',
           // mapID: 'newest',
           // app_id: ConfService.hereAppId,
@@ -114,11 +113,11 @@ export class MapService {
           language: 'eng',
           format: 'png8',
           size: '256',
-        },
+        }
       ),
       MapBox_imagery: L.tileLayer(
         'https://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=' +
-        ConfService.mapboxToken,
+          ConfService.mapboxToken,
         {
           attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank'
             rel='noopener'>&copy;&nbsp;Mapbox</a>,&nbsp;<a href='https://www.openstreetmap.org/about/'
@@ -127,11 +126,11 @@ export class MapService {
             rel='noopener'>Improve this map</a>`,
           maxNativeZoom: 20,
           maxZoom: 22,
-        },
+        }
       ),
       MapBox_streets: L.tileLayer(
         'https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=' +
-        ConfService.mapboxToken,
+          ConfService.mapboxToken,
         {
           attribution: `<a href='https://www.mapbox.com/about/maps/' target='_blank'
             rel='noopener'>&copy;&nbsp;Mapbox</a>,&nbsp;<a href='https://www.openstreetmap.org/about/'
@@ -140,7 +139,7 @@ export class MapService {
             rel='noopener'>Improve this map</a>`,
           maxNativeZoom: 20,
           maxZoom: 22,
-        },
+        }
       ),
       OSM_hot: L.tileLayer(
         'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
@@ -151,7 +150,7 @@ export class MapService {
             target='_blank' rel='noopener'>Humanitarian OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        },
+        }
       ),
       OSM_standard: L.tileLayer(
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -162,7 +161,7 @@ export class MapService {
             target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        },
+        }
       ),
       OSM_PT: L.tileLayer('http://www.openptmap.org/tiles/{z}/{x}/{y}.png', {
         attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>
@@ -179,7 +178,7 @@ export class MapService {
             target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        },
+        }
       ),
     };
   }
@@ -210,7 +209,7 @@ export class MapService {
   /**
    * Colors popup according to event
    */
-  static colorPopUpByEvent (e: any): void {
+  static colorPopUpByEvent(e: any): void {
     let colorString = '';
     if (e.type === 'click' || e.type === 'mouseover') {
       colorString = 'lightblue';
@@ -220,7 +219,8 @@ export class MapService {
     }
     if (e.target.className === 'leaflet-popup-content-wrapper') {
       e.target.style.backgroundColor = colorString;
-      e.target.parentElement.lastElementChild.lastElementChild.style.backgroundColor = colorString;
+      e.target.parentElement.lastElementChild.lastElementChild.style.backgroundColor =
+        colorString;
     }
   }
 
@@ -236,16 +236,32 @@ export class MapService {
    * Adds mouseover and mouseout listeners from popup
    */
   static addHoverListenersToPopUp(popUpElement: HTMLElement): void {
-    L.DomEvent.addListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
-    L.DomEvent.addListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
+    L.DomEvent.addListener(
+      popUpElement,
+      'mouseout',
+      MapService.colorPopUpByEvent
+    );
+    L.DomEvent.addListener(
+      popUpElement,
+      'mouseover',
+      MapService.colorPopUpByEvent
+    );
   }
 
   /**
    * Removes mouseover and mouseout listeners from popup
    */
   static removeHoverListenersToPopUp(popUpElement: HTMLElement): void {
-    L.DomEvent.removeListener(popUpElement, 'mouseout', MapService.colorPopUpByEvent);
-    L.DomEvent.removeListener(popUpElement, 'mouseover', MapService.colorPopUpByEvent);
+    L.DomEvent.removeListener(
+      popUpElement,
+      'mouseout',
+      MapService.colorPopUpByEvent
+    );
+    L.DomEvent.removeListener(
+      popUpElement,
+      'mouseover',
+      MapService.colorPopUpByEvent
+    );
   }
 
   /**
@@ -263,10 +279,7 @@ export class MapService {
    * Zooms to position encoded in URL hash
    */
   zoomToHashedPosition(): void {
-    const h = window.location.hash
-      .slice(5)
-      .split('/')
-      .map(Number);
+    const h = window.location.hash.slice(5).split('/').map(Number);
     this.map.setView({ lat: h[1], lng: h[2] }, h[0]);
   }
 
@@ -368,7 +381,7 @@ export class MapService {
       if (distance > 100) {
         marker.setLatLng(originalCoords).update();
         alert(
-          'Current node was dragged more than 100 meters away which is not allowed - resetting position.',
+          'Current node was dragged more than 100 meters away which is not allowed - resetting position.'
         );
         return;
       }
@@ -450,7 +463,7 @@ export class MapService {
   showStop(stop: IPtStop): void {
     this.markerFrom = L.circleMarker(
       { lat: stop.lat, lng: stop.lon },
-      Utils.FROM_TO_LABEL,
+      Utils.FROM_TO_LABEL
     );
     this.highlight = L.layerGroup([this.markerFrom]);
   }
@@ -480,7 +493,7 @@ export class MapService {
    * Builds multiple relations highlights.
    */
   showRoutes(rel: any): boolean {
-    const latlngs = Array();
+    const latlngs = [];
     this.storageSrv.stopsForRoute = [];
     for (const member of rel.members) {
       if (
@@ -488,7 +501,10 @@ export class MapService {
         ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
         this.storageSrv.stopsForRoute.push(member.ref);
-        const latlng: L.LatLngExpression = this.findCoordinates(member.ref, this.storageSrv.elementsMap);
+        const latlng: L.LatLngExpression = this.findCoordinates(
+          member.ref,
+          this.storageSrv.elementsMap
+        );
         if (latlng) {
           latlngs.push(latlng);
         }
@@ -499,10 +515,15 @@ export class MapService {
         rel.tags.colour ||
         rel.tags.color ||
         '#' + (Math.floor(Math.random() * 0xffffff) | 0x0f0f0f).toString(16);
-      this.highlightFill = L.polyline(latlngs, Utils.HIGHLIGHT_FILL).bindTooltip(
-        rel.tags.name,
-      );
-      this.enableInfoRouteLabelsOption.emit({ type: 'multiple', id: rel.id, highlightFill: this.highlightFill });
+      this.highlightFill = L.polyline(
+        latlngs,
+        Utils.HIGHLIGHT_FILL
+      ).bindTooltip(rel.tags.name);
+      this.enableInfoRouteLabelsOption.emit({
+        type: 'multiple',
+        id: rel.id,
+        highlightFill: this.highlightFill,
+      });
       if (this.highlight) {
         this.highlight.addLayer(this.highlightFill);
       } else {
@@ -538,7 +559,6 @@ export class MapService {
         member.type === 'node' &&
         ['stop', 'stop_entry_only', 'stop_exit_only'].indexOf(member.role) > -1
       ) {
-
         if (member.ref) {
           this.storageSrv.stopsForRoute.push(member.ref);
         }
@@ -547,8 +567,9 @@ export class MapService {
         }
       } else if (
         member.type === 'node' &&
-        ['platform', 'platform_entry_only', 'platform_exit_only']
-          .indexOf(member.role) > -1
+        ['platform', 'platform_entry_only', 'platform_exit_only'].indexOf(
+          member.role
+        ) > -1
       ) {
         if (member.ref) {
           this.storageSrv.platformsForRoute.push(member.ref);
@@ -556,7 +577,6 @@ export class MapService {
         if (member.id) {
           this.storageSrv.platformsForRoute.push(member.id);
         }
-
       } else if (member.type === 'way') {
         this.storageSrv.waysForRoute.push(member.ref);
       } else if (member.type === 'relation') {
@@ -581,7 +601,7 @@ export class MapService {
         memberRefs = this.storageSrv.platformsForRoute;
         break;
     }
-    const latlngs = Array();
+    const latlngs = [];
     for (const ref of memberRefs) {
       const latlng: L.LatLngExpression = this.findCoordinates(ref, elementsMap);
       if (latlng) {
@@ -591,29 +611,40 @@ export class MapService {
 
     // at least two nodes to form a polyline and not point
     if (latlngs.length > 1) {
-      const currentHighlightFill = JSON.parse(JSON.stringify(Utils.HIGHLIGHT_FILL));
+      const currentHighlightFill = JSON.parse(
+        JSON.stringify(Utils.HIGHLIGHT_FILL)
+      );
       currentHighlightFill.color =
         rel.tags.colour || rel.tags.color || Utils.HIGHLIGHT_FILL.color;
-      this.highlightStroke = L.polyline(latlngs, Utils.HIGHLIGHT_STROKE).bindTooltip(
-        rel.tags.name,
-      );
+      this.highlightStroke = L.polyline(
+        latlngs,
+        Utils.HIGHLIGHT_STROKE
+      ).bindTooltip(rel.tags.name);
       this.highlightFill = L.polyline(
         latlngs,
-        currentHighlightFill,
+        currentHighlightFill
       ).bindTooltip(rel.tags.name);
       this.highlight = L.layerGroup([
         this.highlightStroke,
         this.highlightFill,
       ]).addTo(map);
-      this.enableInfoRouteLabelsOption.emit({ type: 'single', id: rel.id, highlightFill: this.highlightFill });
+      this.enableInfoRouteLabelsOption.emit({
+        type: 'single',
+        id: rel.id,
+        highlightFill: this.highlightFill,
+      });
       return true;
     } else {
       if (rel.members.length <= 1) {
-        console.log('LOG (map s.) This is new relation -> do not highlight route');
+        console.log(
+          'LOG (map s.) This is new relation -> do not highlight route'
+        );
       } else {
         alert(
           'Problem has occurred while drawing line connecting its members (no added stops?).' +
-          ' Please add members and try again.' + '\n\n' + JSON.stringify(rel),
+            ' Please add members and try again.' +
+            '\n\n' +
+            JSON.stringify(rel)
         );
       }
       return false;
@@ -636,12 +667,15 @@ export class MapService {
     let latlngFrom;
     switch (this.highlightType) {
       case 'Stops':
-        latlngFrom = this.findCoordinates(this.storageSrv.stopsForRoute[0], this.storageSrv.elementsMap); // get first and last ID reference
+        latlngFrom = this.findCoordinates(
+          this.storageSrv.stopsForRoute[0],
+          this.storageSrv.elementsMap
+        ); // get first and last ID reference
         return latlngFrom;
       case 'Platforms':
         latlngFrom = this.findCoordinates(
           this.storageSrv.platformsForRoute[0],
-          this.storageSrv.elementsMap,
+          this.storageSrv.elementsMap
         ); // get first and last ID reference
         return latlngFrom;
     }
@@ -653,17 +687,17 @@ export class MapService {
       case 'Stops':
         latlngTo = this.findCoordinates(
           this.storageSrv.stopsForRoute[
-          this.storageSrv.stopsForRoute.length - 1
-            ],
-          this.storageSrv.elementsMap,
+            this.storageSrv.stopsForRoute.length - 1
+          ],
+          this.storageSrv.elementsMap
         );
         return latlngTo;
       case 'Platforms':
         latlngTo = this.findCoordinates(
           this.storageSrv.platformsForRoute[
-          this.storageSrv.platformsForRoute.length - 1
-            ],
-          this.storageSrv.elementsMap,
+            this.storageSrv.platformsForRoute.length - 1
+          ],
+          this.storageSrv.elementsMap
         );
         return latlngTo;
     }
@@ -687,16 +721,16 @@ export class MapService {
         className: 'from-to-label',
         offset: [0, 0],
         permanent: true,
-      },
+      }
     );
-    this.markerFrom = L.circleMarker(latlngFrom, Utils.FROM_TO_LABEL).bindTooltip(
-      from + ' (' + route + ' ' + ref + ')',
-      {
-        className: 'from-to-label',
-        offset: [0, 0],
-        permanent: true,
-      },
-    );
+    this.markerFrom = L.circleMarker(
+      latlngFrom,
+      Utils.FROM_TO_LABEL
+    ).bindTooltip(from + ' (' + route + ' ' + ref + ')', {
+      className: 'from-to-label',
+      offset: [0, 0],
+      permanent: true,
+    });
     if (this.highlight) {
       this.highlight.addLayer(this.markerFrom, this.markerTo);
     } else {
@@ -730,8 +764,9 @@ export class MapService {
       }
     } else if ('railway' in fp) {
       if (
-        ['crossing', 'level_crossing', 'railway_crossing']
-          .indexOf(fp['railway']) > -1
+        ['crossing', 'level_crossing', 'railway_crossing'].indexOf(
+          fp['railway']
+        ) > -1
       ) {
         iconUrl = 'assets/transport/railway/crossing.png';
       } else if (fp['railway'] === ['tram_stop']) {
@@ -802,7 +837,9 @@ export class MapService {
     const featureId: number = this.getFeatureIdFromMarker(feature);
     const marker: object = feature.target; // FIXME DELETE?
     this.markerMembershipToggleClick.emit({ featureId });
-    const rel = this.storageSrv.elementsMap.get(this.storageSrv.currentElement.id);
+    const rel = this.storageSrv.elementsMap.get(
+      this.storageSrv.currentElement.id
+    );
     this.storageSrv.tutorialStepCompleted.emit('click change route members');
   }
 
@@ -834,19 +871,27 @@ export class MapService {
     const rel = this.storageSrv.elementsMap.get(relID);
     if (rel.tags.ref) {
       const textString = '     ' + rel.tags.ref + '     ';
-      this.highlightFill.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
+      this.highlightFill.setText(textString, {
+        repeat: true,
+        attributes: { fill: 'blue', stroke: 'black' },
+      });
     }
   }
 
   /**
    * Handles displaying route info labels for the case of multiple route highlight
    */
-  showMultipleRouteInfoLabels(relHighlightsAndIDs: Map<number, L.Polyline>): void {
+  showMultipleRouteInfoLabels(
+    relHighlightsAndIDs: Map<number, L.Polyline>
+  ): void {
     relHighlightsAndIDs.forEach((highlight, id) => {
-      const rel        = this.storageSrv.elementsMap.get(id);
+      const rel = this.storageSrv.elementsMap.get(id);
       const textString = '     ' + rel.tags.ref + '     ';
-      const layer: any =  highlight;
-      layer.setText(textString, { repeat: true, attributes: { fill: 'blue', stroke: 'black' } });
+      const layer: any = highlight;
+      layer.setText(textString, {
+        repeat: true,
+        attributes: { fill: 'blue', stroke: 'black' },
+      });
     });
   }
 
@@ -875,7 +920,10 @@ export class MapService {
   findStopsInBounds(map: L.Map, elementsMap: any): any[] {
     const stopsInBounds = [];
     elementsMap.forEach((stop) => {
-      if (stop.type === 'node' && (stop.tags.bus === 'yes' || stop.tags.public_transport)) {
+      if (
+        stop.type === 'node' &&
+        (stop.tags.bus === 'yes' || stop.tags.public_transport)
+      ) {
         if (map.getBounds().contains({ lat: stop.lat, lng: stop.lon })) {
           stopsInBounds.push(stop.id);
         }

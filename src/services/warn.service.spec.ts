@@ -14,5 +14,4 @@ describe('WarnService', () => {
   it('works', () => {
     expect(1).toEqual(2);
   });
-
 });

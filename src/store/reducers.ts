@@ -5,10 +5,10 @@ import { routerReducer } from '@angular-redux/router';
 import { combineReducers } from 'redux';
 import { appReducer } from './app/reducer';
 
-export const rootReducer  = composeReducers(
+export const rootReducer = composeReducers(
   defaultFormReducer(),
   combineReducers({
     app: appReducer,
     router: routerReducer,
-  }),
+  })
 );

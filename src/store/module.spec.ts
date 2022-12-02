@@ -1,5 +1,8 @@
 import { DevToolsExtension, NgRedux } from '@angular-redux/store';
-import { MockNgRedux, NgReduxTestingModule } from '@angular-redux/store/testing';
+import {
+  MockNgRedux,
+  NgReduxTestingModule,
+} from '@angular-redux/store/testing';
 import { async, getTestBed, TestBed } from '@angular/core/testing';
 import { RootEpics } from './epics';
 import { StoreModule } from './module';
@@ -12,18 +15,20 @@ describe('Store Module', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [NgReduxTestingModule],
-    }).compileComponents().then(() => {
-      const testbed = getTestBed();
+    })
+      .compileComponents()
+      .then(() => {
+        const testbed = getTestBed();
 
-      mockEpics = {
-        createEpics(): any {
-          return [];
-        },
-      } as RootEpics;
+        mockEpics = {
+          createEpics(): any {
+            return [];
+          },
+        } as RootEpics;
 
-      devTools = testbed.get(DevToolsExtension);
-      mockNgRedux = MockNgRedux.getInstance();
-    });
+        devTools = testbed.get(DevToolsExtension);
+        mockNgRedux = MockNgRedux.getInstance();
+      });
   }));
 
   it('should configure the store when the module is loaded', async(() => {

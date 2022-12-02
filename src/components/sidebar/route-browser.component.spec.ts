@@ -98,5 +98,4 @@ describe('RouteBrowserComponent', () => {
   it('membersEditing defaults to: false', () => {
     expect(comp.membersEditing).toEqual(false);
   });
-
 });

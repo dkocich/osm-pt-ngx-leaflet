@@ -12,15 +12,14 @@ import { IAppState } from '../../store/model';
 
 @Component({
   selector: 'settings',
-  styleUrls: [
-    './settings.component.less',
-    '../../styles/main.less',
-  ],
+  styleUrls: ['./settings.component.less', '../../styles/main.less'],
   templateUrl: './settings.component.html',
 })
 export class SettingsComponent {
-  @select(['app', 'advancedExpMode']) readonly advancedExpMode$: Observable<boolean>;
-  @select(['app', 'goodConnectMode']) readonly goodConnectMode$: Observable<boolean>;
+  @select(['app', 'advancedExpMode'])
+  readonly advancedExpMode$: Observable<boolean>;
+  @select(['app', 'goodConnectMode'])
+  readonly goodConnectMode$: Observable<boolean>;
   @select(['app', 'editing']) readonly editing$: Observable<boolean>;
 
   constructor(
@@ -31,15 +30,28 @@ export class SettingsComponent {
     private mapSrv: MapService,
     private tutorialSrv: TutorialService,
     private ngRedux: NgRedux<IAppState>,
-    private hotkeysService: HotkeysService,
+    private hotkeysService: HotkeysService
   ) {
-    this.hotkeysService.add([new Hotkey('shift+c', (): boolean => {
-      this.toggleConnMode();
-      return false;
-    }, undefined, 'Toggle connection mode'), new Hotkey('shift+a', (): boolean => {
-      this.toggleExpMode();
-      return false;
-    }, undefined, 'Toggle expert mode')]);
+    this.hotkeysService.add([
+      new Hotkey(
+        'shift+c',
+        (): boolean => {
+          this.toggleConnMode();
+          return false;
+        },
+        undefined,
+        'Toggle connection mode'
+      ),
+      new Hotkey(
+        'shift+a',
+        (): boolean => {
+          this.toggleExpMode();
+          return false;
+        },
+        undefined,
+        'Toggle expert mode'
+      ),
+    ]);
   }
 
   changeConnMode(goodConnectMode: boolean): void {
@@ -56,7 +68,10 @@ export class SettingsComponent {
     this.appActions.actSetErrorCorrectionMode(null);
     this.appActions.actSetAdvancedExpMode(advancedExpMode);
     localStorage.setItem('advancedMode', JSON.stringify(advancedExpMode));
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false && advancedExpMode) {
+    if (
+      this.ngRedux.getState()['app']['tutorialMode'] === false &&
+      advancedExpMode
+    ) {
       this.storageSrv.tutorialStepCompleted.emit();
     }
   }
@@ -77,7 +92,10 @@ export class SettingsComponent {
     this.appActions.actSetErrorCorrectionMode(null);
     this.appActions.actSetAdvancedExpMode(!advancedExpMode);
     localStorage.setItem('advancedMode', JSON.stringify(!advancedExpMode));
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false && !advancedExpMode) {
+    if (
+      this.ngRedux.getState()['app']['tutorialMode'] === false &&
+      !advancedExpMode
+    ) {
       this.storageSrv.tutorialStepCompleted.emit();
     }
   }

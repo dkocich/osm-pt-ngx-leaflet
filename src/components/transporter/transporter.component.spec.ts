@@ -59,7 +59,8 @@ describe('TransporterComponent', () => {
 
   describe('ngOnInit', () => {
     it('makes expected calls', () => {
-      const mapServiceStub: MapService = fixture.debugElement.injector.get(MapService);
+      const mapServiceStub: MapService =
+        fixture.debugElement.injector.get(MapService);
       spyOn(mapServiceStub, 'disableMouseEvent');
       comp.ngOnInit();
       expect(mapServiceStub.disableMouseEvent).toHaveBeenCalled();
@@ -68,7 +69,8 @@ describe('TransporterComponent', () => {
 
   describe('verifyUpload', () => {
     it('makes expected calls', () => {
-      const overpassServiceStub: OverpassService = fixture.debugElement.injector.get(OverpassService);
+      const overpassServiceStub: OverpassService =
+        fixture.debugElement.injector.get(OverpassService);
       spyOn(overpassServiceStub, 'uploadData');
       comp.verifyUpload();
       expect(overpassServiceStub.uploadData).toHaveBeenCalled();
@@ -77,11 +79,11 @@ describe('TransporterComponent', () => {
 
   describe('uploadData', () => {
     it('makes expected calls', () => {
-      const overpassServiceStub: OverpassService = fixture.debugElement.injector.get(OverpassService);
+      const overpassServiceStub: OverpassService =
+        fixture.debugElement.injector.get(OverpassService);
       spyOn(overpassServiceStub, 'uploadData');
       comp.uploadData();
       expect(overpassServiceStub.uploadData).toHaveBeenCalled();
     });
   });
-
 });

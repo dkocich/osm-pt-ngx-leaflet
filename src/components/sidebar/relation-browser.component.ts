@@ -1,40 +1,45 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ProcessService} from '../../services/process.service';
-import {StorageService} from '../../services/storage.service';
-import {EditService} from '../../services/edit.service';
-import {ModalDirective} from 'ngx-bootstrap';
-import {IPtRouteMasterNew} from '../../core/ptRouteMasterNew.interface';
-import {IOsmElement} from '../../core/osmElement.interface';
-import {Observable} from 'rxjs';
-import {NgRedux, select} from '@angular-redux/store';
-import {IAppState} from '../../store/model';
-import {Hotkey, HotkeysService} from 'angular2-hotkeys';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ProcessService } from '../../services/process.service';
+import { StorageService } from '../../services/storage.service';
+import { EditService } from '../../services/edit.service';
+import { ModalDirective } from 'ngx-bootstrap';
+import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
+import { IOsmElement } from '../../core/osmElement.interface';
+import { Observable } from 'rxjs';
+import { NgRedux, select } from '@angular-redux/store';
+import { IAppState } from '../../store/model';
+import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 @Component({
   providers: [],
   selector: 'relation-browser',
-  styleUrls: [
-    './relation-browser.component.less',
-    '../../styles/main.less',
-  ],
+  styleUrls: ['./relation-browser.component.less', '../../styles/main.less'],
   templateUrl: './relation-browser.component.html',
 })
 export class RelationBrowserComponent implements OnInit {
-
   constructor(
     private editSrv: EditService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private hotkeysService: HotkeysService,
-    private ngRedux: NgRedux<IAppState>,
+    private ngRedux: NgRedux<IAppState>
   ) {
-    this.hotkeysService.add(new Hotkey('3', (): boolean => {
-      if (this.ngRedux.getState()['app']['editing'] && this.ngRedux.getState()['app']['advancedExpMode']) {
-
-        this.createMaster();
-      }
-      return false;
-    }, undefined, 'Create a new route master'));
+    this.hotkeysService.add(
+      new Hotkey(
+        '3',
+        (): boolean => {
+          if (
+            this.ngRedux.getState()['app']['editing'] &&
+            this.ngRedux.getState()['app']['advancedExpMode']
+          ) {
+            this.createMaster();
+          }
+          return false;
+        },
+        undefined,
+        'Create a new route master'
+      )
+    );
   }
   currentElement: IOsmElement | IPtRouteMasterNew;
   listOfVariants = this.storageSrv.listOfVariants;
@@ -46,7 +51,10 @@ export class RelationBrowserComponent implements OnInit {
   ngOnInit(): void {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
       if (data === 'tag') {
-        console.log('LOG (relation-browser) Current selected element changed - ', data);
+        console.log(
+          'LOG (relation-browser) Current selected element changed - ',
+          data
+        );
         if (this.storageSrv.currentElement.tags.type === 'route_master') {
           // prevent showing members of everything except route_master
           this.currentElement = this.storageSrv.currentElement;
@@ -62,8 +70,12 @@ export class RelationBrowserComponent implements OnInit {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
       if (data === 'relation') {
         this.listOfVariants = this.storageSrv.listOfVariants;
-        console.log('LOG (relation-browser) List of variants ', this.storageSrv.listOfVariants,
-          ' currentElement', this.storageSrv.currentElement);
+        console.log(
+          'LOG (relation-browser) List of variants ',
+          this.storageSrv.listOfVariants,
+          ' currentElement',
+          this.storageSrv.currentElement
+        );
       }
     });
   }
@@ -88,7 +100,7 @@ export class RelationBrowserComponent implements OnInit {
       this.storageSrv.elementsMap.get(relId),
       true,
       false,
-      true,
+      true
     );
   }
 
@@ -113,7 +125,7 @@ export class RelationBrowserComponent implements OnInit {
   changeRouteMasterMembers(routeMasterId: number): void {
     this.editSrv.changeRouteMasterMembers(
       this.currentElement.id,
-      routeMasterId,
+      routeMasterId
     );
   }
 
