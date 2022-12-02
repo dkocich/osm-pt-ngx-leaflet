@@ -17,7 +17,13 @@
         "plugin:@angular-eslint/template/process-inline-templates",
         "plugin:prettier/recommended" // <--- here we inherit from the recommended setup from eslint-plugin-prettier for TS
       ],
-      "rules": {}
+      "rules": {
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/ban-types": "warn",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "no-case-declarations": "warn",
+        "no-prototype-builtins": "warn"
+      }
     },
     {
       "files": ["*.html"],
