@@ -69,7 +69,7 @@
     "angulartics2": "6.1.1",
     "bootstrap": "3.4.1",
     "core-js": "2.5.7",
-    "dexie": "2.0.4",
+    "dexie": "3.2.2",
     "express": "4.16.4",
     "flux-standard-action": "2.0.4",
     "font-awesome": "4.7.0",
