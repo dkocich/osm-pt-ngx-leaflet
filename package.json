@@ -94,7 +94,7 @@
     "rxjs-compat": "~6.5.5",
     "stylelint": "14.15.0",
     "stylelint-config-standard": "29.0.0",
-    "tslib": "1.11.1",
+    "tslib": "1.14.1",
     "xmlbuilder": "10.0.0",
     "zone.js": "~0.10.3"
   },
