@@ -2,8 +2,8 @@
   "name": "osm-pt-ngx-leaflet",
   "version": "22.4.29",
   "engines": {
-    "node": "16.15",
-    "npm": "8.5"
+    "node": "16.18",
+    "npm": "8.19"
   },
   "description": "An OpenStreetMap public transport editor built with Leaflet and Angular.",
   "repository": {
@@ -23,8 +23,6 @@
   },
   "scripts": {
     "build": "ng build",
-    "cypress-open": "node_modules/.bin/cypress open",
-    "cypress-run": "node_modules/.bin/cypress run --record --key 5bed002a-82c7-44a6-9e99-8fee9727f7d2",
     "e2e": "ng e2e",
     "lint": "ng lint",
     "lint:all": "eslint src/**/*.ts src/components/**/*.ts src/*.ts",
@@ -122,25 +120,12 @@
     "@typescript-eslint/parser": "5.45.0",
     "codelyzer": "5.2.2",
     "eslint": "7.32.0",
-    "eslint-plugin-cypress": "2.12.1",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-jsdoc": "39.6.4",
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-prettier": "4.2.1",
-    "jasmine-core": "~4.1.0",
-    "jasmine-spec-reporter": "~7.0.0",
-    "karma": "~6.3.19",
-    "karma-chrome-launcher": "~3.1.1",
-    "karma-coverage-istanbul-reporter": "~3.0.3",
-    "karma-jasmine": "~5.0.0",
-    "karma-jasmine-html-reporter": "1.7.0",
-    "karma-phantomjs-launcher": "1.0.4",
     "protractor": "~5.4.4",
     "ts-node": "~8.3.0",
     "typescript": "~3.8.3"
-  },
-  "optionalDependencies": {
-    "cypress": "9.6.0"
-  },
-  "snyk": true
+  }
 }
