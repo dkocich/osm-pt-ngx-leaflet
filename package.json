@@ -71,7 +71,7 @@
     "core-js": "2.5.7",
     "dexie": "2.0.4",
     "express": "4.16.4",
-    "flux-standard-action": "2.0.4",
+    "flux-standard-action": "2.1.2",
     "font-awesome": "4.7.0",
     "intro.js": "2.9.3",
     "leaflet": "1.5.1",
