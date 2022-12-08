@@ -1,4 +1,4 @@
-import { NgRedux } from '@angular-redux/store';
+import { select, Store} from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import * as MobileDetect from 'mobile-detect';
@@ -23,7 +23,7 @@ import { StorageService } from './storage.service';
 export class ErrorHighlightService {
   constructor(
     private modalService: BsModalService,
-    private ngRedux: NgRedux<IAppState>,
+    private store: Store<IAppState>,
     private processSrv: ProcessService,
     public appActions: AppActions,
     public mapSrv: MapService,
@@ -163,7 +163,7 @@ export class ErrorHighlightService {
     const popUpElement = popUp.getElement();
     const popUpId = popUp['_leaflet_id'];
     const errorCorrectionMode =
-      this.ngRedux.getState()['app']['errorCorrectionMode'];
+      this.store.pipe(select(['app']['errorCorrectionMode']));
 
     L.DomEvent.addListener(popUpElement, 'click', (e) => {
       const featureId = Number(stop.id);
@@ -618,7 +618,7 @@ export class ErrorHighlightService {
    */
   quit(): void {
     const errorCorrectionMode: ISuggestionsBrowserOptions =
-      this.ngRedux.getState()['app']['errorCorrectionMode'];
+      this.store.pipe(select(['app']['errorCorrectionMode']));
     if (errorCorrectionMode) {
       if (
         errorCorrectionMode.refSuggestions &&
@@ -884,7 +884,7 @@ export class ErrorHighlightService {
    */
   jumpToLocation(index: number): void {
     const errorCorrectionMode =
-      this.ngRedux.getState()['app']['errorCorrectionMode'];
+      this.store.pipe(select(['app']['errorCorrectionMode']));
     if (errorCorrectionMode.nameSuggestions.startCorrection) {
       document.getElementById(
         this.nameErrorsObj[this.currentIndex].stop.id.toString() +

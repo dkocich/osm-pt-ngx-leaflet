@@ -1,5 +1,4 @@
-import { NgRedux } from '@angular-redux/store';
-import { HttpClient } from '@angular/common/http';
+import {select, Store} from '@ngrx/store';import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import { create } from 'xmlbuilder';
@@ -36,7 +35,7 @@ export class OverpassService {
     private storageSrv: StorageService,
     private mapSrv: MapService,
     private warnSrv: WarnService,
-    private ngRedux: NgRedux<IAppState>,
+    private store: Store<IAppState>,
     public appActions: AppActions,
     private routeWizardSrv: RouteWizardService,
     private routeMasterWizardSrv: RouteMasterWizardService
@@ -45,7 +44,7 @@ export class OverpassService {
      * @param data - string containing ID of clicked marker
      */
     this.mapSrv.markerClick.subscribe((data) => {
-      const goodConnectionMode = ngRedux.getState()['app']['goodConnectMode'];
+      const goodConnectionMode = store.pipe(select(['app']['goodConnectMode']));
       const featureId = Number(data);
 
       if (this.storageSrv.elementsMap.has(featureId)) {
@@ -155,7 +154,7 @@ export class OverpassService {
           this.warnSrv.showSuccess();
 
           const errorCorrectionMode =
-            this.ngRedux.getState()['app']['errorCorrectionMode'];
+            this.store.pipe(select['app']['errorCorrectionMode']);
           if (errorCorrectionMode) {
             if (
               errorCorrectionMode.refSuggestions === null &&
@@ -483,7 +482,7 @@ export class OverpassService {
           console.log('LOG (overpass s.)', res);
           if (process) {
             this.processSrv.processNodeResponse(res);
-            if (!this.ngRedux.getState()['app']['advancedExpMode']) {
+            if (!this.store.pipe(select['app']['advancedExpMode'])) {
               this.processSrv.filterRelationsByStop(
                 this.storageSrv.elementsMap.get(featureId)
               );
@@ -898,7 +897,7 @@ export class OverpassService {
         }
         this.storageSrv.logStats();
         this.storageSrv.elementsDownloaded.add(stopId);
-        if (!this.ngRedux.getState()['app']['advancedExpMode']) {
+        if (!this.store.pipe(select['app']['advancedExpMode'])) {
           const element = this.storageSrv.elementsMap.get(stopId);
           this.storageSrv.selectedStopBeginnerMode = element;
           this.processSrv.filterRelationsByStop(element);
@@ -951,7 +950,7 @@ export class OverpassService {
           this.storageSrv.logStats();
         }
         this.storageSrv.elementsDownloaded.add(platformId);
-        if (!this.ngRedux.getState()['app']['advancedExpMode']) {
+        if (!this.store.pipe(select['app']['advancedExpMode'])) {
           const element = this.storageSrv.elementsMap.get(platformId);
           this.storageSrv.selectedStopBeginnerMode = element;
           this.processSrv.filterRelationsByStop(element);
@@ -1058,7 +1057,7 @@ export class OverpassService {
     console.log(
       'LOG. (overpass s.) Requesting new overpass data for wizard modal map'
     );
-    const wizardMode = this.ngRedux.getState()['app']['wizardMode'];
+    const wizardMode = this.store.pipe(select(['app']['wizardMode']));
     if (wizardMode === 'route wizard') {
       this.setupAreaReference(this.routeWizardSrv.map);
     } else if (wizardMode === 'route master wizard') {
@@ -1233,7 +1232,7 @@ export class OverpassService {
             console.error(err);
             throw new Error(JSON.stringify(err));
           });
-          const wizardMode = this.ngRedux.getState()['app']['wizardMode'];
+          const wizardMode = this.store.pipe(select(['app']['wizardMode']));
           if (wizardMode === 'route wizard') {
             for (const id of idsArr) {
               this.routeWizardSrv.nodesFullyDownloaded.add(id);
@@ -1317,7 +1316,7 @@ export class OverpassService {
               this.storageSrv.elementsDownloaded.add(element.id);
             }
           });
-          const wizardMode = this.ngRedux.getState()['app']['wizardMode'];
+          const wizardMode = this.store.pipe(select(['app']['wizardMode']));
           if (wizardMode === 'route master wizard') {
             this.routeMasterWizardSrv.findMissingRouteMasters(res);
             this.routeMasterWizardSrv.savedMasterQueryResponses.push(res);

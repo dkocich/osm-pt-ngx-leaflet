@@ -1,4 +1,4 @@
-import { NgRedux, select } from '@angular-redux/store';
+import { Store } from '@ngrx/store';
 import { Component, isDevMode, OnInit, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { Spinkit } from 'ng-http-loader';
@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     public appActions: AppActions,
-    private ngRedux: NgRedux<IAppState>,
+    private store: Store<IAppState>,
     private dbSrv: DbService,
     private editSrv: EditService,
     private geocodeSrv: GeocodeService,

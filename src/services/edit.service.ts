@@ -6,8 +6,7 @@ import { StorageService } from './storage.service';
 import { IPtStop } from '../core/ptStop.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtRelationNew } from '../core/ptRelationNew.interface';
-import { NgRedux } from '@angular-redux/store';
-import { IAppState } from '../store/model';
+import {select, Store} from '@ngrx/store';import { IAppState } from '../store/model';
 
 @Injectable()
 export class EditService {
@@ -22,7 +21,7 @@ export class EditService {
     private mapSrv: MapService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState>
+    private store: Store<IAppState>
   ) {
     // local events
     this.currentTotalSteps.subscribe(
@@ -243,7 +242,7 @@ export class EditService {
     }
     this.storageSrv.syncEdits();
     this.updateCounter();
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+    if (this.store.pipe(select(['app']['tutorialMode'])) === false) {
       this.storageSrv.tempStepAdded.emit(true);
     }
   }
@@ -693,7 +692,7 @@ export class EditService {
   private combineChanges(editObj): void {
     console.log('LOG (editing s.) Combining changes');
     const last = this.storageSrv.edits[this.storageSrv.edits.length - 1];
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+    if (this.store.pipe(select(['app']['tutorialMode'])) === false) {
       this.storageSrv.tempStepAdded.emit(false);
     }
     switch (editObj.type) {

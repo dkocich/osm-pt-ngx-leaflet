@@ -1,5 +1,4 @@
-import { NgRedux } from '@angular-redux/store';
-import { HttpClient } from '@angular/common/http';
+import {Store} from '@ngrx/store';import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import { TileLayer } from 'leaflet';
@@ -27,7 +26,7 @@ export class MapService {
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState> // private tutorialSrv: TutorialService,
+    private store: Store<IAppState> // private tutorialSrv: TutorialService,
   ) {
     // @ts-ignore
     this.baseMaps = {

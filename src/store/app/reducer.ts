@@ -2,7 +2,7 @@ import { AnyAction } from 'redux';
 import { IAppState } from '../model';
 import { AppActions } from './actions';
 
-export const INITIAL_STATE: IAppState = {
+export const initialState: Readonly<IAppState> = {
   editing: false,
   selectObject: null,
   advancedExpMode: false,
@@ -14,7 +14,10 @@ export const INITIAL_STATE: IAppState = {
   tutorialMode: null,
 };
 
-export function appReducer(state: IAppState = INITIAL_STATE, actionAction) {
+export function appReducer(
+  state: IAppState = initialState,
+  action: AnyAction
+): IAppState {
   switch (action.type) {
     case AppActions.TOGGLE_EDITING:
       return {

@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, isDevMode, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -66,9 +66,9 @@ import { RouteWizardService } from './services/route-wizard.service';
 import { StorageService } from './services/storage.service';
 import { TutorialService } from './services/tutorial.service';
 import { WarnService } from './services/warn.service';
-import { AppActions } from './store/app/actions';
-import { RootEpics } from './store/epics';
-import { StoreModule } from './store/module';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {StoreModule} from '@ngrx/store';
+import {AppActions} from './store/app/actions';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -171,7 +171,13 @@ const conditional_providers = [
     { provide: APP_BASE_HREF, useValue: '/' },
 
     AppActions,
-    RootEpics,
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: !isDevMode(), // Restrict extension to log-only mode
+      // autoPause: true, // Pauses recording actions and state changes when the extension window is not open
+      // trace: false, //  If set to true, will include stack trace for every dispatched action, so you can see it in trace tab jumping directly to that part of code
+      // traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
+    }),
   ],
 })
 export class AppModule {}

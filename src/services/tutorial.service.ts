@@ -1,5 +1,4 @@
-import { NgRedux } from '@angular-redux/store';
-import { Injectable } from '@angular/core';
+import {select, Store} from '@ngrx/store';import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import { AppActions } from '../store/app/actions';
 import { IAppState } from '../store/model';
@@ -20,7 +19,7 @@ export class TutorialService {
     public editSrv: EditService,
     public storageSrv: StorageService,
     public mapSrv: MapService,
-    private ngRedux: NgRedux<IAppState>
+    private store: Store<IAppState>
   ) {
     this.storageSrv.tutorialStepCompleted.subscribe((action) => {
       if (action) {
@@ -122,7 +121,7 @@ export class TutorialService {
   }
 
   private handleStepCompletion(action: string): void {
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+    if (this.store.pipe(select(['app']['tutorialMode'])) === false) {
       const title = this.storageSrv.currentTutorial;
       switch (title) {
         case 'Add new route':
