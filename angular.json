@@ -1,6 +1,5 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "defaultProject": "osm-pt-leaflet-ngx",
   "newProjectRoot": "projects",
   "projects": {
     "osm-pt-leaflet-ngx": {
@@ -22,7 +21,6 @@
                 }
               ],
               "buildOptimizer": true,
-              "extractCss": true,
               "extractLicenses": true,
               "fileReplacements": [
                 {
