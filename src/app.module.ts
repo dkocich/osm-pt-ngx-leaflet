@@ -69,6 +69,7 @@ import { WarnService } from './services/warn.service';
 import { AppActions } from './store/app/actions';
 import { RootEpics } from './store/epics';
 import { StoreModule } from './store/module';
+import {BsDropdownModule} from "ngx-bootstrap/dropdown";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -114,40 +115,41 @@ const conditional_providers = [
     KeysPipe,
     TagsPropPipe,
   ],
-  imports: [
-    AccordionModule.forRoot(),
-    Angulartics2Module.forRoot([Angulartics2Piwik]),
-    BsDropdownModule.forRoot(),
-    BrowserAnimationsModule,
-    BrowserModule,
-    ButtonsModule.forRoot(),
-    CarouselModule.forRoot(),
-    DragulaModule,
-    FormsModule,
-    HttpClientModule,
-    ModalModule.forRoot(),
-    NgHttpLoaderModule.forRoot(),
-    TooltipModule.forRoot(),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
-    TypeaheadModule.forRoot(),
-    RouterModule.forRoot(ROUTES),
-    StoreModule,
-    ToastrModule.forRoot({
-      timeOut: 2000,
-      positionClass: 'toast-bottom-right',
-      maxOpened: 1,
-    }),
-    SortableModule.forRoot(),
-    TabsModule.forRoot(),
-    ReactiveFormsModule,
-    HotkeyModule.forRoot(),
-  ],
+    imports: [
+        AccordionModule.forRoot(),
+        Angulartics2Module.forRoot([Angulartics2Piwik]),
+        BsDropdownModule.forRoot(),
+        BrowserAnimationsModule,
+        BrowserModule,
+        ButtonsModule.forRoot(),
+        CarouselModule.forRoot(),
+        DragulaModule,
+        FormsModule,
+        HttpClientModule,
+        ModalModule.forRoot(),
+        NgHttpLoaderModule.forRoot(),
+        TooltipModule.forRoot(),
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient],
+            },
+        }),
+        TypeaheadModule.forRoot(),
+        RouterModule.forRoot(ROUTES),
+        StoreModule,
+        ToastrModule.forRoot({
+            timeOut: 2000,
+            positionClass: 'toast-bottom-right',
+            maxOpened: 1,
+        }),
+        SortableModule.forRoot(),
+        TabsModule.forRoot(),
+        ReactiveFormsModule,
+        HotkeyModule.forRoot(),
+        BsDropdownModule,
+    ],
   providers: [
     ...conditional_providers,
 
