@@ -108,7 +108,7 @@
     "@angular/cli": "~9.1.15",
     "@angular/compiler-cli": "~9.1.13",
     "@angular/language-service": "~9.1.13",
-    "@types/jasmine": "~4.0.3",
+    "@types/jasmine": "~4.6.4",
     "@types/jasminewd2": "~2.0.10",
     "@types/karma": "6.3.3",
     "@types/karma-chrome-launcher": "3.1.1",
