@@ -1,1 +1,12 @@
-{}
+{
+    "jira-plugin.workingProject": "",
+    "i18n-ally.localesPaths": [
+        "src/assets/i18n",
+        "src/components/lang"
+    ],
+    "files.exclude": {},
+    "docwriter.progress.trackFunctions": false,
+    "docwriter.progress.trackClasses": true,
+    "docwriter.progress.trackMethods": false,
+    "docwriter.progress.trackTypes": true
+}

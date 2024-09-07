@@ -2,8 +2,8 @@
   "name": "osm-pt-ngx-leaflet",
   "version": "22.4.29",
   "engines": {
-    "node": "16.18",
-    "npm": "8.19"
+    "node": "20",
+    "npm": "10"
   },
   "description": "An OpenStreetMap public transport editor built with Leaflet and Angular.",
   "repository": {
@@ -97,7 +97,6 @@
     "zone.js": "~0.13.1"
   },
   "devDependencies": {
-    "-": "~0.0.1",
     "@angular-devkit/build-angular": "~16.2.5",
     "@angular-eslint/builder": "16.1.1",
     "@angular-eslint/eslint-plugin": "16.1.1",

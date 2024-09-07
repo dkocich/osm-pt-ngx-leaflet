@@ -1,10 +1,10 @@
 {
   "recommendations": [
-    "Angular.ng-template",
+    "angular.ng-template",
     "doggy8088.angular-extension-pack",
     "loiane.angular-extension-pack",
-    "NG-42.ng-fortytwo-vscode-extension",
-    "AngularDoc.angulardoc-vscode",
+    "ng-42.ng-fortytwo-vscode-extension",
+    "angulardoc.angulardoc-vscode",
     "alexiv.vscode-angular2-files",
     "cyrilletuzi.angular-schematics",
     "1tontech.angular-material",
@@ -12,18 +12,19 @@
     "herrherrmann.angular-bootstrap",
     "infinity1207.angular2-switcher",
     "johnpapa.angular-essentials",
-    "johnpapa.Angular2",
-    "MarinhoBrandao.Angular2Tests",
-    "Mikael.Angular-BeastCode",
+    "johnpapa.angular2",
+    "marinhobrandao.angular2tests",
+    "mikael.angular-beastcode",
     "nrwl.angular-console",
-    "UVBrain.Angular2",
+    "uvbrain.angular2",
     "ms-vscode.typescript-javascript-grammar",
     "rbbit.typescript-hero",
     "msjsdiag.debugger-for-chrome",
-    "CoenraadS.bracket-pair-colorizer-2",
+    "coenraads.bracket-pair-colorizer-2",
     "lmcarreiro.vscode-smart-column-indenter",
     "eamodio.gitlens",
     "donjayamanne.githistory",
-    "mhutchie.git-graph"
+    "mhutchie.git-graph",
+    "devboosts.angular-productivity-pack"
   ]
 }

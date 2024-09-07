@@ -29,10 +29,6 @@ Visit the [wiki page](https://github.com/dkocich/osm-pt-ngx-leaflet/wiki) for mo
 
 ## Developing 👷
 
-#### Use a browser based development environment:
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/dkocich/osm-pt-ngx-leaflet)
-
 #### Setup project locally 
 
 This project requires [npm](https://npmpkg.com/) to run locally and it is built mainly with 
