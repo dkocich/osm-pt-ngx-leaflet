@@ -38,7 +38,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
     private modalService: BsModalService,
-    private hotkeysService: HotkeysService
+    private hotkeysService: HotkeysService,
   ) {
     this.hotkeysService.add([
       new Hotkey(
@@ -50,7 +50,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
           return false;
         },
         undefined,
-        'Toggle edit mode'
+        'Toggle edit mode',
       ),
       new Hotkey(
         '1',
@@ -61,7 +61,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
           return false;
         },
         undefined,
-        'Create new platform'
+        'Create new platform',
       ),
       new Hotkey(
         'ctrl+r',
@@ -75,7 +75,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
           return false;
         },
         undefined,
-        'Open route creation wizard'
+        'Open route creation wizard',
       ),
       new Hotkey(
         'ctrl+m',
@@ -89,7 +89,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
           return false;
         },
         undefined,
-        'Open route master creation wizard'
+        'Open route master creation wizard',
       ),
       new Hotkey(
         'left',
@@ -100,7 +100,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
           return false;
         },
         undefined,
-        'Undo edit'
+        'Undo edit',
       ),
       new Hotkey(
         'right',
@@ -111,7 +111,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
           return false;
         },
         undefined,
-        'Redo edit'
+        'Redo edit',
       ),
     ]);
   }
@@ -259,7 +259,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   routeMasterCreationWizard(): void {
     this.modalRefRouteMasterWiz = this.modalService.show(
       RouteMasterWizardComponent,
-      { class: 'modal-lg', ignoreBackdropClick: true }
+      { class: 'modal-lg', ignoreBackdropClick: true },
     );
     this.appActions.actSetWizardMode('route master wizard');
   }

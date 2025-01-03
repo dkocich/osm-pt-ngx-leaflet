@@ -65,7 +65,7 @@ export class BeginnerComponent {
     private appActions: AppActions,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState>
+    private ngRedux: NgRedux<IAppState>,
   ) {}
 
   /**
@@ -93,7 +93,7 @@ export class BeginnerComponent {
       this.storageSrv.currentElement,
       false,
       true,
-      true
+      true,
     );
     this.storageSrv.tutorialStepCompleted.emit('click back button');
   }

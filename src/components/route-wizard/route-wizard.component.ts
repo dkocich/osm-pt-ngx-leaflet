@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
 import { Subject } from 'rxjs';
@@ -18,7 +18,7 @@ import { AppActions } from '../../store/app/actions';
   styleUrls: ['./route-wizard.component.less', '../../styles/main.less'],
   templateUrl: './route-wizard.component.html',
 })
-export class RouteWizardComponent {
+export class RouteWizardComponent implements OnInit {
   map: L.Map;
   newRoutesRefs = [];
   osmtogeojson = require('osmtogeojson');
@@ -45,12 +45,12 @@ export class RouteWizardComponent {
     private processSrv: ProcessService,
     private editSrv: EditService,
     public modalRefRouteWiz: BsModalRef,
-    public appActions: AppActions
+    public appActions: AppActions,
   ) {
     this.routeWizardSrv.routesReceived.subscribe((routesMap) => {
       if (routesMap === null) {
         alert(
-          'No suggestions available for the chosen map bounds. Please select again.'
+          'No suggestions available for the chosen map bounds. Please select again.',
         );
       } else {
         this.routeWizardSrv.routesMap = new Map();
@@ -68,7 +68,7 @@ export class RouteWizardComponent {
           this.selectTab(2);
         } else {
           alert(
-            'No suggestions available for the chosen map bounds. Please select again.'
+            'No suggestions available for the chosen map bounds. Please select again.',
           );
         }
       }
@@ -98,7 +98,7 @@ export class RouteWizardComponent {
             target='_blank' rel='noopener'>CartoDB</a>`,
             maxNativeZoom: 19,
             maxZoom: 22,
-          }
+          },
         ),
       ],
       maxZoom: 22,
@@ -112,7 +112,7 @@ export class RouteWizardComponent {
     this.routeWizardSrv.map = this.map;
     this.routeWizardSrv.renderAlreadyDownloadedData();
     this.routeWizardSrv.modalMapElementsMap = new Map(
-      this.storageSrv.elementsMap
+      this.storageSrv.elementsMap,
     );
     this.routeWizardSrv.map.on('zoomend moveend', (event: L.LeafletEvent) => {
       this.startEventProcessing.next(event);
@@ -169,7 +169,7 @@ export class RouteWizardComponent {
     this.addedNewRouteMembers = this.routeWizardSrv.routesMap.get(ref);
     this.selectTab(3);
     const countObj = RouteWizardService.countNodeType(
-      this.addedNewRouteMembers
+      this.addedNewRouteMembers,
     );
     this.routeWizardSrv.useAndSetAvailableConnectivity(countObj);
     this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers, true);
@@ -194,7 +194,7 @@ export class RouteWizardComponent {
     if (this.stepTabs.tabs[2].active) {
       const newMember = this.processSrv.getElementById(
         featureId,
-        this.routeWizardSrv.modalMapElementsMap
+        this.routeWizardSrv.modalMapElementsMap,
       );
       this.addNewMemberToRoute(newMember);
     }
@@ -206,7 +206,7 @@ export class RouteWizardComponent {
   private addNewMemberToRoute(newMember): void {
     this.addedNewRouteMembers = this.routeWizardSrv.addNewMemberToRoute(
       newMember,
-      this.addedNewRouteMembers
+      this.addedNewRouteMembers,
     );
   }
 
@@ -216,7 +216,7 @@ export class RouteWizardComponent {
   removeMember(toRemoveMemberID: string): void {
     this.addedNewRouteMembers = this.routeWizardSrv.removeMember(
       toRemoveMemberID,
-      this.addedNewRouteMembers
+      this.addedNewRouteMembers,
     );
   }
 
@@ -254,7 +254,7 @@ export class RouteWizardComponent {
       action,
       key,
       event,
-      this.newRoute
+      this.newRoute,
     );
     if (action === 'add tag') {
       this.tagKey = '';
@@ -268,13 +268,13 @@ export class RouteWizardComponent {
   saveStep4(): void {
     RouteWizardService.assignRolesToMembers(this.addedNewRouteMembers);
     this.newRoute.members = RouteWizardService.formRelMembers(
-      this.addedNewRouteMembers
+      this.addedNewRouteMembers,
     );
     this.newRoute.tags = RouteWizardService.filterEmptyTags(this.newRoute);
     const change = { from: undefined, to: this.newRoute };
     this.routeWizardSrv.modalMapElementsMap.set(
       this.newRoute.id,
-      this.newRoute
+      this.newRoute,
     );
     this.editSrv.addChange(this.newRoute, 'add route', change);
     this.modalRefRouteWiz.hide();
@@ -297,7 +297,7 @@ export class RouteWizardComponent {
         break;
       case '3':
         const countObj = RouteWizardService.countNodeType(
-          this.addedNewRouteMembers
+          this.addedNewRouteMembers,
         );
         this.routeWizardSrv.useAndSetAvailableConnectivity(countObj);
         this.routeWizardSrv.highlightRoute(this.addedNewRouteMembers, true);
@@ -316,7 +316,7 @@ export class RouteWizardComponent {
         canStopsConnect: this.canStopsConnect,
         canPlatformsConnect: this.canPlatformsConnect,
       },
-      this.addedNewRouteMembers
+      this.addedNewRouteMembers,
     );
   }
 

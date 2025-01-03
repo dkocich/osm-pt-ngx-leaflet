@@ -22,7 +22,7 @@ export class RelationBrowserComponent implements OnInit {
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private hotkeysService: HotkeysService,
-    private ngRedux: NgRedux<IAppState>
+    private ngRedux: NgRedux<IAppState>,
   ) {
     this.hotkeysService.add(
       new Hotkey(
@@ -37,8 +37,8 @@ export class RelationBrowserComponent implements OnInit {
           return false;
         },
         undefined,
-        'Create a new route master'
-      )
+        'Create a new route master',
+      ),
     );
   }
   currentElement: IOsmElement | IPtRouteMasterNew;
@@ -53,7 +53,7 @@ export class RelationBrowserComponent implements OnInit {
       if (data === 'tag') {
         console.log(
           'LOG (relation-browser) Current selected element changed - ',
-          data
+          data,
         );
         if (this.storageSrv.currentElement.tags.type === 'route_master') {
           // prevent showing members of everything except route_master
@@ -74,7 +74,7 @@ export class RelationBrowserComponent implements OnInit {
           'LOG (relation-browser) List of variants ',
           this.storageSrv.listOfVariants,
           ' currentElement',
-          this.storageSrv.currentElement
+          this.storageSrv.currentElement,
         );
       }
     });
@@ -100,7 +100,7 @@ export class RelationBrowserComponent implements OnInit {
       this.storageSrv.elementsMap.get(relId),
       true,
       false,
-      true
+      true,
     );
   }
 
@@ -125,7 +125,7 @@ export class RelationBrowserComponent implements OnInit {
   changeRouteMasterMembers(routeMasterId: number): void {
     this.editSrv.changeRouteMasterMembers(
       this.currentElement.id,
-      routeMasterId
+      routeMasterId,
     );
   }
 

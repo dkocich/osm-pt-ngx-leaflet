@@ -15,7 +15,7 @@ export class AuthComponent {
 
   constructor(
     private authSrv: AuthService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     this.displayName = this.getDisplayName();
     this.imgHref = this.storageSrv.getImgHref();
@@ -77,7 +77,7 @@ export class AuthComponent {
         singlepage: true,
         url: ConfService.apiUrl,
       },
-      this.gotDetailsCallback.bind(this)
+      this.gotDetailsCallback.bind(this),
     );
   };
 

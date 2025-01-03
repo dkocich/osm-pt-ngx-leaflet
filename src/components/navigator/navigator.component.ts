@@ -14,7 +14,10 @@ export class NavigatorComponent implements OnInit {
 
   private map: Map;
 
-  constructor(private geocodeSrv: GeocodeService, private mapSrv: MapService) {
+  constructor(
+    private geocodeSrv: GeocodeService,
+    private mapSrv: MapService,
+  ) {
     this.address = '';
   }
 

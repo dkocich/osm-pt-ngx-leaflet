@@ -27,7 +27,7 @@ export class StopBrowserComponent implements OnInit {
     private editSrv: EditService,
     private mapSrv: MapService,
     private processSrv: ProcessService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {
     dragulaSrv.drop.subscribe((value) => {
       this.onDrop(value.slice(1));
@@ -77,12 +77,12 @@ export class StopBrowserComponent implements OnInit {
     const elementsWithoutRole = this.currentElement['members'].filter(
       (member) => {
         return member['role'] === '';
-      }
+      },
     );
     const change = {
       from: JSON.parse(JSON.stringify(this.currentElement['members'])),
       to: JSON.parse(
-        JSON.stringify([...this.listOfStopsForRoute, ...elementsWithoutRole])
+        JSON.stringify([...this.listOfStopsForRoute, ...elementsWithoutRole]),
       ),
     };
     this.editSrv.addChange(this.currentElement, type, change);
@@ -91,7 +91,7 @@ export class StopBrowserComponent implements OnInit {
   private onDrop(args): void {
     if (this.currentElement.type !== 'relation') {
       return alert(
-        'Current element has incorrent type. Select relation one more time please.'
+        'Current element has incorrent type. Select relation one more time please.',
       );
     }
     this.createChange();

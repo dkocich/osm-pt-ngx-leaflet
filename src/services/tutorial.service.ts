@@ -20,7 +20,7 @@ export class TutorialService {
     public editSrv: EditService,
     public storageSrv: StorageService,
     public mapSrv: MapService,
-    private ngRedux: NgRedux<IAppState>
+    private ngRedux: NgRedux<IAppState>,
   ) {
     this.storageSrv.tutorialStepCompleted.subscribe((action) => {
       if (action) {
@@ -85,7 +85,7 @@ export class TutorialService {
           document.querySelector(
             data[this.expertMode][this.storageSrv.currentTutorial][
               this.storageSrv.currentTutorialStep
-            ].element
+            ].element,
           )
         ) {
           this.intro.goToStepNumber(nextStep).start();
@@ -115,7 +115,7 @@ export class TutorialService {
       });
       this.storageSrv.edits.splice(
         this.storageSrv.edits.length - this.tempEditSteps,
-        this.tempEditSteps
+        this.tempEditSteps,
       );
       this.mapSrv.clearHighlight(this.mapSrv.map);
     }
@@ -189,7 +189,7 @@ export class TutorialService {
             'keydown',
             (fn = (e) => {
               this.leftKeyClick(e, fn);
-            })
+            }),
           );
         }
         break;
@@ -202,7 +202,7 @@ export class TutorialService {
             'keydown',
             (fn = (e) => {
               this.leftKeyClick(e, fn);
-            })
+            }),
           );
         }
         break;
@@ -215,7 +215,7 @@ export class TutorialService {
             'keydown',
             (fn = (e) => {
               this.leftKeyClick(e, fn);
-            })
+            }),
           );
         }
         break;
@@ -230,7 +230,7 @@ export class TutorialService {
             'keydown',
             (fn = (e) => {
               this.leftKeyClick(e, fn);
-            })
+            }),
           );
         }
         break;
@@ -247,7 +247,7 @@ export class TutorialService {
       'keydown',
       (fn = (e) => {
         this.leftKeyClick(e, fn);
-      })
+      }),
     );
   }
 }

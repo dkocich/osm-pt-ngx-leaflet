@@ -14,7 +14,10 @@ import { MapService } from './map.service';
 export class GeocodeService {
   httpClient: HttpClient;
 
-  constructor(httpClient: HttpClient, private mapSrv: MapService) {
+  constructor(
+    httpClient: HttpClient,
+    private mapSrv: MapService,
+  ) {
     this.httpClient = httpClient;
   }
 
@@ -22,8 +25,8 @@ export class GeocodeService {
     return this.httpClient
       .get<IResponseGeocodeGMaps>(
         `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          address
-        )}`
+          address,
+        )}`,
       )
       .subscribe(
         (response: IResponseGeocodeGMaps) => {
@@ -43,13 +46,13 @@ export class GeocodeService {
             {
               lat: viewPort.northeast.lat,
               lng: viewPort.northeast.lng,
-            }
+            },
           );
           this.mapSrv.map.fitBounds(location.viewBounds, {});
         },
         (err) => {
           throw new Error(JSON.stringify(err));
-        }
+        },
       );
   }
 
@@ -60,7 +63,7 @@ export class GeocodeService {
         (resp1: IResponseIp) => {
           this.httpClient
             .get<IResponseFreeGeoIp>(
-              `${ConfService.geocodingApiUrl}${resp1.ip}${ConfService.geocodingApiKey}`
+              `${ConfService.geocodingApiUrl}${resp1.ip}${ConfService.geocodingApiKey}`,
             )
             .subscribe(
               (resp2: IResponseFreeGeoIp) => {
@@ -72,12 +75,12 @@ export class GeocodeService {
               },
               (err) => {
                 throw new Error(JSON.stringify(err));
-              }
+              },
             );
         },
         (err) => {
           throw new Error(JSON.stringify(err));
-        }
+        },
       );
   }
 }

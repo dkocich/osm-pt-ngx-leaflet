@@ -10,7 +10,7 @@ export class WarnService {
 
   constructor(
     private toastrSrv: ToastrService,
-    private translateSrv: TranslateService
+    private translateSrv: TranslateService,
   ) {
     /**
      * Listens to language change event and translates error and success messages
@@ -21,7 +21,7 @@ export class WarnService {
         this.errorMessage = event.translations[this.errorMessage];
         this.genericSuccessMessage =
           event.translations[this.genericSuccessMessage];
-      }
+      },
     );
   }
 

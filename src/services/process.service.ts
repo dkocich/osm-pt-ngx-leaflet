@@ -31,7 +31,7 @@ export class ProcessService {
 
     private mapSrv: MapService,
     private storageSrv: StorageService,
-    private dbSrv: DbService
+    private dbSrv: DbService,
   ) {
     // this.mapSrv.popupBtnClick.subscribe(
     //     (data) => {
@@ -56,11 +56,11 @@ export class ProcessService {
         const featureId = Number(data);
         const element = this.getElementById(
           featureId,
-          this.storageSrv.elementsMap
+          this.storageSrv.elementsMap,
         );
         if (!element) {
           alert(
-            'Problem occurred - clicked element was not found?! Select different element please.'
+            'Problem occurred - clicked element was not found?! Select different element please.',
           );
         }
         this.appActions.actSelectElement({ element });
@@ -71,7 +71,7 @@ export class ProcessService {
           this.filterRelationsByStop(element);
           this.appActions.actSetBeginnerView('stop');
         }
-      }
+      },
     );
   }
 
@@ -93,7 +93,7 @@ export class ProcessService {
       this.storageSrv.listOfStops.length > 1000
     ) {
       return console.log(
-        'LOG (processing s.) filtering of stops in map bounds was stopped (too much data - limit 1000 nodes).'
+        'LOG (processing s.) filtering of stops in map bounds was stopped (too much data - limit 1000 nodes).',
       );
     }
     this.mapSrv.bounds = this.mapSrv.map.getBounds();
@@ -130,7 +130,7 @@ export class ProcessService {
     console.log('response', response);
     this.mapSrv.renderTransformedGeojsonData(
       transformedGeojson,
-      this.mapSrv.map
+      this.mapSrv.map,
     );
   }
 
@@ -169,7 +169,7 @@ export class ProcessService {
   addPositionToUrlHash(): void {
     const center = this.mapSrv.map.getCenter();
     window.location.hash = `map=${this.mapSrv.map.getZoom()}/${center.lat.toFixed(
-      5
+      5,
     )}/${center.lng.toFixed(5)}`;
   }
 
@@ -188,7 +188,7 @@ export class ProcessService {
     });
     console.log(
       'LOG (processing s.) Total # of master rel. (route_master)',
-      this.storageSrv.listOfMasters.length
+      this.storageSrv.listOfMasters.length,
     );
     this.storageSrv.logStats();
 
@@ -217,7 +217,7 @@ export class ProcessService {
             if (
               element.tags &&
               ['platform', 'stop_position', 'station'].indexOf(
-                element.tags.public_transport
+                element.tags.public_transport,
               ) > -1
             ) {
               this.storageSrv.listOfStops.push(element);
@@ -249,7 +249,7 @@ export class ProcessService {
         }
         const ref: IPtStop = this.getElementById(
           member.ref,
-          this.storageSrv.elementsMap
+          this.storageSrv.elementsMap,
         );
         coords.push([ref.lat, ref.lon]);
       }
@@ -279,7 +279,7 @@ export class ProcessService {
   refreshTagView(element): void {
     if (element) {
       this.storageSrv.currentElementsChange.emit(
-        JSON.parse(JSON.stringify(element))
+        JSON.parse(JSON.stringify(element)),
       );
       this.refreshSidebarView('tag');
     } else {
@@ -296,7 +296,7 @@ export class ProcessService {
       for (const member of rel.members) {
         const routeVariant = this.getElementById(
           member.ref,
-          this.storageSrv.elementsMap
+          this.storageSrv.elementsMap,
         );
         this.storageSrv.listOfVariants.push(routeVariant);
       }
@@ -311,7 +311,7 @@ export class ProcessService {
     rel,
     refreshTagView?: boolean,
     refreshMasterView?: boolean,
-    zoomToElement?: boolean
+    zoomToElement?: boolean,
   ): void {
     this.mapSrv.clearCircleHighlight();
     const missingElements = [];
@@ -344,11 +344,11 @@ export class ProcessService {
     ) {
       console.log(
         'LOG (processing s.) Route not in JS, not in IDB, has some members, and has missing members' +
-          rel.id
+          rel.id,
       );
       console.log(
         'LOG (processing s.) Relation is not completely downloaded. Missing: ' +
-          missingElements.join(', ')
+          missingElements.join(', '),
       );
       this.membersToDownload.emit({
         rel,
@@ -362,7 +362,7 @@ export class ProcessService {
       console.log(
         'LOG (processing s.) (Route in JS) or (no missing elements &' +
           ' old) or (new & has some members)' +
-          rel.id
+          rel.id,
       );
       console.log('condition is valid', rel.id, rel['members'].length);
       console.log('rel available : highlight type', this.mapSrv.highlightType);
@@ -382,7 +382,7 @@ export class ProcessService {
           missingElements.length +
           ' , # of members ' +
           rel['members'].length +
-          JSON.stringify(rel)
+          JSON.stringify(rel),
       );
     }
     if (refreshMasterView) {
@@ -400,7 +400,7 @@ export class ProcessService {
   downloadedMissingMembers(
     rel,
     zoomToElement: boolean,
-    refreshTagView: boolean
+    refreshTagView: boolean,
   ): void {
     if (this.mapSrv.highlightIsActive()) {
       this.mapSrv.clearHighlight(this.mapSrv.map);
@@ -414,7 +414,7 @@ export class ProcessService {
       if (zoomToElement) {
         console.log(
           'LOG (processing s.) fitBounds',
-          this.mapSrv.highlightStroke.length
+          this.mapSrv.highlightStroke.length,
         );
         this.mapSrv.map.fitBounds(this.mapSrv.highlightStroke.getBounds());
       }
@@ -427,7 +427,7 @@ export class ProcessService {
   exploreMaster(rel): void {
     if (rel.members.length === 0) {
       return alert(
-        "Problem occurred - this relation doesn't contain any route variants."
+        "Problem occurred - this relation doesn't contain any route variants.",
       );
     }
     // if (this.mapSrv.highlightIsActive()) this.mapSrv.clearHighlight();
@@ -437,11 +437,11 @@ export class ProcessService {
     // }
     console.log(
       "LOG (processing s.) First master's variant was found: ",
-      this.storageSrv.elementsMap.has(rel.members[0].ref)
+      this.storageSrv.elementsMap.has(rel.members[0].ref),
     );
     if (!this.storageSrv.elementsMap.has(rel.members[0].ref)) {
       return alert(
-        "Problem occurred - first route_master's variant isn't fully downloaded."
+        "Problem occurred - first route_master's variant isn't fully downloaded.",
       );
     }
     // explore first variant and focus tag/rel. browsers on selected master rel.
@@ -449,7 +449,7 @@ export class ProcessService {
       this.getElementById(rel.members[0].ref, this.storageSrv.elementsMap),
       false,
       false,
-      false
+      false,
     );
     // this.mapSrv.showRelatedRoutes(routeVariants);
     this.refreshTagView(rel);
@@ -460,7 +460,7 @@ export class ProcessService {
     stop,
     filterRelations: boolean,
     refreshTags: boolean,
-    zoomTo: boolean
+    zoomTo: boolean,
   ): void {
     if (this.mapSrv.highlightIsActive()) {
       this.mapSrv.clearHighlight(this.mapSrv.map);
@@ -510,10 +510,10 @@ export class ProcessService {
         const stop = this.getElementById(mem.ref, this.storageSrv.elementsMap);
         const stopWithMemberAttr = Object.assign(
           JSON.parse(JSON.stringify(mem)),
-          JSON.parse(JSON.stringify(stop))
+          JSON.parse(JSON.stringify(stop)),
         );
         this.storageSrv.listOfStopsForRoute.push(
-          JSON.parse(JSON.stringify(stopWithMemberAttr))
+          JSON.parse(JSON.stringify(stopWithMemberAttr)),
         );
       }
     });
@@ -529,7 +529,7 @@ export class ProcessService {
       if (!element['lat'] || !element['lon']) {
         return alert(
           'Problem occurred - element has no coordinates.' +
-            JSON.stringify(element)
+            JSON.stringify(element),
         );
       } else {
         this.mapSrv.map.panTo([element['lat'], element['lon']]);
@@ -540,7 +540,7 @@ export class ProcessService {
         if (member.type === 'node') {
           const elem = this.getElementById(
             member.ref,
-            this.storageSrv.elementsMap
+            this.storageSrv.elementsMap,
           );
           if (elem['lat'] && elem['lon']) {
             coords.push([elem['lat'], elem['lon']]);
@@ -608,7 +608,7 @@ export class ProcessService {
         this.storageSrv.localGeojsonStorage = transformedGeojson;
         this.mapSrv.renderTransformedGeojsonData(
           transformedGeojson,
-          this.mapSrv.map
+          this.mapSrv.map,
         );
         this.storageSrv.elementsDownloaded.add(rel.id);
         this.downloadedMissingMembers(rel, true, true);
@@ -617,7 +617,7 @@ export class ProcessService {
         console.log(
           'LOG (overpass s.) Error in fetching / displaying the data for route with id : ' +
             rel.id +
-            'from IDB'
+            'from IDB',
         );
         console.log(err);
       });

@@ -68,7 +68,7 @@ export class Utils {
   static isProductionDeployment(): boolean {
     return (
       ['osm-pt.herokuapp.com', 'osm-pt-dev.herokuapp.com'].indexOf(
-        window.location.hostname
+        window.location.hostname,
       ) > -1
     );
   }

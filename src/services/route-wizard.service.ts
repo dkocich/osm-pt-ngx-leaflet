@@ -11,7 +11,7 @@ export class RouteWizardService {
     private storageSrv: StorageService,
     private mapSrv: MapService,
     private modalService: BsModalService,
-    private processSrv: ProcessService
+    private processSrv: ProcessService,
   ) {
     this.modalService.onShown.subscribe((data) => {
       this.onShownModal();
@@ -20,7 +20,7 @@ export class RouteWizardService {
       this.processAllDownloadedOnMainMap();
       this.storageSrv.currentElement = null;
       this.storageSrv.currentElementsChange.emit(
-        JSON.parse(JSON.stringify(null))
+        JSON.parse(JSON.stringify(null)),
       );
       this.storageSrv.stopsForRoute = [];
       this.storageSrv.platformsForRoute = [];
@@ -253,7 +253,7 @@ export class RouteWizardService {
    */
   renderTransformedGeojsonDataForRouteWizard(
     transformedGeoJSON,
-    map: L.Map
+    map: L.Map,
   ): void {
     this.ptLayerModal = L.geoJSON(transformedGeoJSON, {
       filter: (feature) => {
@@ -278,7 +278,7 @@ export class RouteWizardService {
 
     console.log(
       'LOG (map s.) Adding PTlayer to modal map again',
-      this.ptLayerModal
+      this.ptLayerModal,
     );
     this.ptLayerModal.addTo(map);
   }
@@ -328,7 +328,7 @@ export class RouteWizardService {
   findMissingRoutes(downloadedResponse): void {
     const stopsInBounds = this.mapSrv.findStopsInBounds(
       this.map,
-      this.modalMapElementsMap
+      this.modalMapElementsMap,
     );
     const nodeRefs = this.getRouteRefsFromNodes(stopsInBounds);
     let refsOfRoutes = [];
@@ -352,7 +352,7 @@ export class RouteWizardService {
       RouteWizardService.removeDuplicatesFromArray(refsOfRoutes);
     let notAddedRefs = RouteWizardService.compareArrays(
       nodeRefs,
-      uniqueRefsOfRoutes
+      uniqueRefsOfRoutes,
     );
     notAddedRefs = this.filterPreviouslyAddedRefs(notAddedRefs);
 
@@ -627,7 +627,7 @@ export class RouteWizardService {
         for (const member of element.members) {
           const stopsInBoundsIDs = this.mapSrv.findStopsInBounds(
             this.map,
-            this.modalMapElementsMap
+            this.modalMapElementsMap,
           );
           if (stopsInBoundsIDs.includes(member.id)) {
             refsOfRoutes.push(element.tags.ref);

@@ -34,7 +34,7 @@ export class RouteMasterWizardService {
     private storageSrv: StorageService,
     private mapSrv: MapService,
     private modalService: BsModalService,
-    private processSrv: ProcessService
+    private processSrv: ProcessService,
   ) {
     this.modalService.onShown.subscribe(() => {
       this.onShownModal();
@@ -109,7 +109,7 @@ export class RouteMasterWizardService {
     });
     console.log(
       'LOG (route master wizard s.) Adding PT layer to modal map again',
-      this.ptLayerModal
+      this.ptLayerModal,
     );
     this.ptLayerModal.addTo(map);
   }
@@ -143,7 +143,7 @@ export class RouteMasterWizardService {
       'LOG (route master wizard s.) Newly downloaded relations',
       newDownloadedRoutes,
       'old already present relations',
-      oldDownloadedRoutes
+      oldDownloadedRoutes,
     );
 
     const rels = [...newDownloadedRoutes, ...oldDownloadedRoutes];
@@ -170,7 +170,7 @@ export class RouteMasterWizardService {
     });
     console.log(
       'LOG (route master wizard s.) refs of routes relations to be compared:',
-      refOfRels
+      refOfRels,
     );
     this.relsMap = relsMap;
     return relsMap;
@@ -210,7 +210,7 @@ export class RouteMasterWizardService {
 
     console.log(
       'LOG (route master wizard s.) Refs of route masters to be compared:',
-      RMRefs
+      RMRefs,
     );
 
     this.relsMap.forEach((value, key) => {
@@ -237,7 +237,7 @@ export class RouteMasterWizardService {
     console.log(
       'LOG (route master wizard s.) Route masters for suggestions after ' +
         "filtering RM's withsingle route suggestions",
-      this.newRMsMap
+      this.newRMsMap,
     );
     if (this.newRMsMap.size !== 0) {
       this.newRoutesMapReceived.emit(this.newRMsMap);
@@ -247,7 +247,7 @@ export class RouteMasterWizardService {
 
     console.log(
       "LOG (route master wizard s.) Route masters map for suggestions RM's",
-      this.newRMsMap
+      this.newRMsMap,
     );
   }
 

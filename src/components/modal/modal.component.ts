@@ -58,7 +58,7 @@ export class ModalComponent {
     private editSrv: EditService,
     private storageSrv: StorageService,
     private mapSrv: MapService,
-    private warnSrv: WarnService
+    private warnSrv: WarnService,
   ) {}
 
   /**
@@ -70,11 +70,11 @@ export class ModalComponent {
       this.createChangeForNameTag(name);
       this.bsModalRef.hide();
       const popUpElement = this.mapSrv.getPopUpFromArray(
-        this.mapSrv.currentPopUpFeatureId
+        this.mapSrv.currentPopUpFeatureId,
       );
       MapService.addHoverListenersToPopUp(popUpElement);
       this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter(
-        (popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId
+        (popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId,
       );
       const popupContent = L.DomUtil.create('div', 'content');
       popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
@@ -126,7 +126,7 @@ export class ModalComponent {
       this.addToMembers(this.addedFromNearbySuggestionsRefs);
       this.bsModalRef.hide();
       const popUpElement = this.mapSrv.getPopUpFromArray(
-        this.mapSrv.currentPopUpFeatureId
+        this.mapSrv.currentPopUpFeatureId,
       );
       MapService.addHoverListenersToPopUp(popUpElement);
       this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter((popup) => {
@@ -146,11 +146,11 @@ export class ModalComponent {
   saveWayError(): void {
     this.createChangeForWayError();
     const popUpElement = this.mapSrv.getPopUpFromArray(
-      this.mapSrv.currentPopUpFeatureId
+      this.mapSrv.currentPopUpFeatureId,
     );
     MapService.addHoverListenersToPopUp(popUpElement);
     this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter(
-      (popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId
+      (popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId,
     );
     const popupContent = L.DomUtil.create('div', 'content');
     popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
@@ -170,11 +170,11 @@ export class ModalComponent {
   savePTvError(): void {
     this.createChangeForPTvError();
     const popUpElement = this.mapSrv.getPopUpFromArray(
-      this.mapSrv.currentPopUpFeatureId
+      this.mapSrv.currentPopUpFeatureId,
     );
     MapService.addHoverListenersToPopUp(popUpElement);
     this.mapSrv.popUpArr = this.mapSrv.popUpArr.filter(
-      (popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId
+      (popup) => popup['_leaflet_id'] !== this.mapSrv.currentPopUpFeatureId,
     );
     const popupContent = L.DomUtil.create('div', 'content');
     popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
@@ -195,10 +195,10 @@ export class ModalComponent {
    */
   private rerenderPlatformAsStop(): void {
     this.mapSrv.map.removeLayer(
-      this.getLayerFromMap(this.wayErrorObject.stop.id)
+      this.getLayerFromMap(this.wayErrorObject.stop.id),
     );
     this.storageSrv.elementsRendered.delete(
-      'node/' + this.wayErrorObject.stop.id
+      'node/' + this.wayErrorObject.stop.id,
     );
     const obj = {};
     const elements = [];
@@ -262,7 +262,7 @@ export class ModalComponent {
     this.missingRefRels.forEach((item, ind) => {
       if (item.id === rel.id) {
         this.removedMissingSuggestions = this.removedMissingSuggestions.concat(
-          this.missingRefRels.splice(ind, 1)
+          this.missingRefRels.splice(ind, 1),
         );
       }
     });
@@ -276,7 +276,7 @@ export class ModalComponent {
     this.nearbyRels.forEach((item, ind) => {
       if (item.id === rel.id) {
         this.removedNearbySuggestions = this.removedNearbySuggestions.concat(
-          this.nearbyRels.splice(ind, 1)
+          this.nearbyRels.splice(ind, 1),
         );
       }
     });
@@ -378,13 +378,13 @@ export class ModalComponent {
     if (addedFromNearbySuggestionsRefs.length !== 0) {
       for (const relation of addedFromNearbySuggestionsRefs) {
         const rel = JSON.parse(
-          JSON.stringify(this.storageSrv.elementsMap.get(relation.id))
+          JSON.stringify(this.storageSrv.elementsMap.get(relation.id)),
         );
 
         if (!rel || rel.type !== 'relation') {
           return alert(
             'Relation was not found ' +
-              JSON.stringify(this.storageSrv.currentElement)
+              JSON.stringify(this.storageSrv.currentElement),
           );
         }
 
@@ -401,7 +401,7 @@ export class ModalComponent {
           default:
             alert(
               'FIXME: suspicious role - ' +
-                this.refErrorObject.stop.tags.public_transport
+                this.refErrorObject.stop.tags.public_transport,
             );
             probableRole = 'stop';
         }
@@ -506,7 +506,7 @@ export class ModalComponent {
     const marker = this.editSrv.initializeNewMarker(
       'platform',
       this.newPlatformEvent,
-      newId
+      newId,
     );
     this.editSrv.createNewMarkerEvents(marker);
     this.storageSrv.markersMap.set(newId, marker);

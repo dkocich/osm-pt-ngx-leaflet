@@ -30,7 +30,7 @@ export class SettingsComponent {
     private mapSrv: MapService,
     private tutorialSrv: TutorialService,
     private ngRedux: NgRedux<IAppState>,
-    private hotkeysService: HotkeysService
+    private hotkeysService: HotkeysService,
   ) {
     this.hotkeysService.add([
       new Hotkey(
@@ -40,7 +40,7 @@ export class SettingsComponent {
           return false;
         },
         undefined,
-        'Toggle connection mode'
+        'Toggle connection mode',
       ),
       new Hotkey(
         'shift+a',
@@ -49,7 +49,7 @@ export class SettingsComponent {
           return false;
         },
         undefined,
-        'Toggle expert mode'
+        'Toggle expert mode',
       ),
     ]);
   }

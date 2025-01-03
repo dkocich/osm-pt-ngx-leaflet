@@ -27,7 +27,7 @@ export class ErrorHighlightService {
     private processSrv: ProcessService,
     public appActions: AppActions,
     public mapSrv: MapService,
-    public storageSrv: StorageService
+    public storageSrv: StorageService,
   ) {
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
       const { typeOfErrorObject } = data;
@@ -109,7 +109,7 @@ export class ErrorHighlightService {
       | 'missing refs'
       | 'way as parent'
       | 'PTv correction'
-      | 'pt-pair'
+      | 'pt-pair',
   ): void {
     this.storageSrv.currentIndex = 0;
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: errorName });
@@ -169,7 +169,7 @@ export class ErrorHighlightService {
       const featureId = Number(stop.id);
       const element = this.processSrv.getElementById(
         featureId,
-        this.storageSrv.elementsMap
+        this.storageSrv.elementsMap,
       );
       if (element) {
         if (errorCorrectionMode.nameSuggestions.startCorrection) {
@@ -197,7 +197,7 @@ export class ErrorHighlightService {
           this.openModalWithComponentForPTv(errorObj);
         }
         this.storageSrv.currentElementsChange.emit(
-          JSON.parse(JSON.stringify(element))
+          JSON.parse(JSON.stringify(element)),
         );
       }
       if (
@@ -206,7 +206,7 @@ export class ErrorHighlightService {
         this.mapSrv.getPopUpFromArray(this.mapSrv.currentPopUpFeatureId)
       ) {
         const previousPopUpElement = this.mapSrv.getPopUpFromArray(
-          this.mapSrv.currentPopUpFeatureId
+          this.mapSrv.currentPopUpFeatureId,
         );
         MapService.colorPopUpByColorName('white', previousPopUpElement);
         MapService.addHoverListenersToPopUp(previousPopUpElement);
@@ -224,7 +224,7 @@ export class ErrorHighlightService {
     const featureId = Number(errorObject.stop.id);
     const element = this.processSrv.getElementById(
       featureId,
-      this.storageSrv.elementsMap
+      this.storageSrv.elementsMap,
     );
     const latlng = { lat: element.lat, lng: element.lon };
 
@@ -246,7 +246,7 @@ export class ErrorHighlightService {
     const featureId = Number(errorObject.stop.id);
     const element = this.processSrv.getElementById(
       featureId,
-      this.storageSrv.elementsMap
+      this.storageSrv.elementsMap,
     );
     const latlng = { lat: element.lat, lng: element.lon };
     const parentRels = this.getParentRelations(errorObject.stop.id);
@@ -257,7 +257,7 @@ export class ErrorHighlightService {
     if (parentRels.length !== 0) {
       if (errorObject.stop.tags['route_ref']) {
         const addedRefs = this.getAlreadyAddedRefsInTag(
-          errorObject.stop.tags['route_ref']
+          errorObject.stop.tags['route_ref'],
         );
         missingRefRels = this.compareRefs(parentRels, addedRefs);
       } else {
@@ -276,7 +276,7 @@ export class ErrorHighlightService {
     } else {
       const nearbyRels = this.getNearbyRoutesSuggestions(
         latlng,
-        missingRefRels
+        missingRefRels,
       );
       initialState = {
         error: 'missing refs',
@@ -370,7 +370,7 @@ export class ErrorHighlightService {
             if (parentRels.length !== 0) {
               if (stop.tags['route_ref']) {
                 addedRefs = this.getAlreadyAddedRefsInTag(
-                  stop.tags['route_ref']
+                  stop.tags['route_ref'],
                 );
                 missingRefRels = this.compareRefs(parentRels, addedRefs);
               } else {
@@ -502,10 +502,10 @@ export class ErrorHighlightService {
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
       const stop = errorsObj[this.currentIndex].stop;
       document.getElementById(
-        errorsObj[errorsObj.length - 1].stop.id.toString() + appendStringID
+        errorsObj[errorsObj.length - 1].stop.id.toString() + appendStringID,
       ).style.backgroundColor = 'white';
       document.getElementById(
-        errorsObj[this.currentIndex]['stop'].id.toString() + appendStringID
+        errorsObj[this.currentIndex]['stop'].id.toString() + appendStringID,
       ).style.backgroundColor = 'lightblue';
       if (typeOfErrorObject !== 'pt-pair') {
         this.addSinglePopUp(errorsObj[this.currentIndex]);
@@ -521,10 +521,10 @@ export class ErrorHighlightService {
       const stop = errorsObj[this.currentIndex].stop;
 
       document.getElementById(
-        errorsObj[this.currentIndex - 1].stop.id.toString() + appendStringID
+        errorsObj[this.currentIndex - 1].stop.id.toString() + appendStringID,
       ).style.backgroundColor = 'white';
       document.getElementById(
-        errorsObj[this.currentIndex].stop.id.toString() + appendStringID
+        errorsObj[this.currentIndex].stop.id.toString() + appendStringID,
       ).style.backgroundColor = 'lightblue';
 
       if (typeOfErrorObject !== 'pt-pair') {
@@ -578,10 +578,10 @@ export class ErrorHighlightService {
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
       const stop = errorsObj[this.currentIndex].stop;
       document.getElementById(
-        errorsObj[0].stop.id.toString() + appendStringID
+        errorsObj[0].stop.id.toString() + appendStringID,
       ).style.backgroundColor = 'white';
       document.getElementById(
-        errorsObj[errorsObj.length - 1].stop.id.toString() + appendStringID
+        errorsObj[errorsObj.length - 1].stop.id.toString() + appendStringID,
       ).style.backgroundColor = 'lightblue';
 
       if (typeOfErrorObject !== 'pt-pair') {
@@ -597,10 +597,10 @@ export class ErrorHighlightService {
       this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject });
       const stop = errorsObj[this.currentIndex].stop;
       document.getElementById(
-        errorsObj[this.currentIndex + 1].stop.id.toString() + appendStringID
+        errorsObj[this.currentIndex + 1].stop.id.toString() + appendStringID,
       ).style.backgroundColor = 'white';
       document.getElementById(
-        errorsObj[this.currentIndex].stop.id.toString() + appendStringID
+        errorsObj[this.currentIndex].stop.id.toString() + appendStringID,
       ).style.backgroundColor = 'lightblue';
 
       if (typeOfErrorObject !== 'pt-pair') {
@@ -708,7 +708,7 @@ export class ErrorHighlightService {
       }
       this.storageSrv.currentElement = null;
       this.storageSrv.currentElementsChange.emit(
-        JSON.parse(JSON.stringify(null))
+        JSON.parse(JSON.stringify(null)),
       );
       document.getElementById('map').classList.remove('platform-cursor');
     }
@@ -751,7 +751,7 @@ export class ErrorHighlightService {
           const idTypestring = layer.feature.id;
           const featureTypeId = idTypestring.split('/');
           inRange.push(
-            this.storageSrv.elementsMap.get(Number(featureTypeId[1]))
+            this.storageSrv.elementsMap.get(Number(featureTypeId[1])),
           );
         }
       }
@@ -820,7 +820,7 @@ export class ErrorHighlightService {
       | INameErrorObject
       | IRefErrorObject
       | IWayErrorObject
-      | IPTvErrorObject
+      | IPTvErrorObject,
   ): void {
     const stop = errorObj['stop'];
     this.mapSrv.removePopUps();
@@ -831,7 +831,7 @@ export class ErrorHighlightService {
     });
     const latlng = { lat: stop.lat, lng: stop.lon };
     const popupContent = ErrorHighlightService.makePopUpContent(
-      errorObj.corrected
+      errorObj.corrected,
     );
     const popup = L.popup({
       closeOnClick: false,
@@ -888,7 +888,7 @@ export class ErrorHighlightService {
     if (errorCorrectionMode.nameSuggestions.startCorrection) {
       document.getElementById(
         this.nameErrorsObj[this.currentIndex].stop.id.toString() +
-          '-name-error-list-id'
+          '-name-error-list-id',
       ).style.backgroundColor = 'white';
       this.currentIndex = index;
       this.storageSrv.currentIndex = index;
@@ -900,7 +900,7 @@ export class ErrorHighlightService {
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
       document.getElementById(
         this.nameErrorsObj[this.currentIndex].stop.id.toString() +
-          '-name-error-list-id'
+          '-name-error-list-id',
       ).style.backgroundColor = 'lightblue';
     }
 
@@ -910,7 +910,7 @@ export class ErrorHighlightService {
     ) {
       document.getElementById(
         this.refErrorsObj[this.currentIndex].stop.id.toString() +
-          '-ref-error-list-id'
+          '-ref-error-list-id',
       ).style.backgroundColor = 'white';
       this.currentIndex = index;
       this.storageSrv.currentIndex = index;
@@ -922,7 +922,7 @@ export class ErrorHighlightService {
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
       document.getElementById(
         this.refErrorsObj[this.currentIndex].stop.id.toString() +
-          '-ref-error-list-id'
+          '-ref-error-list-id',
       ).style.backgroundColor = 'lightblue';
     }
 
@@ -932,7 +932,7 @@ export class ErrorHighlightService {
     ) {
       document.getElementById(
         this.wayErrorsObj[this.currentIndex].stop.id.toString() +
-          '-way-error-list-id'
+          '-way-error-list-id',
       ).style.backgroundColor = 'white';
       this.currentIndex = index;
       this.storageSrv.currentIndex = index;
@@ -944,7 +944,7 @@ export class ErrorHighlightService {
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
       document.getElementById(
         this.wayErrorsObj[this.currentIndex].stop.id.toString() +
-          '-way-error-list-id'
+          '-way-error-list-id',
       ).style.backgroundColor = 'lightblue';
     }
 
@@ -954,7 +954,7 @@ export class ErrorHighlightService {
     ) {
       document.getElementById(
         this.PTvErrorsObj[this.currentIndex].stop.id.toString() +
-          '-PTv-error-list-id'
+          '-PTv-error-list-id',
       ).style.backgroundColor = 'white';
       this.currentIndex = index;
       this.storageSrv.currentIndex = index;
@@ -966,7 +966,7 @@ export class ErrorHighlightService {
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 15);
       document.getElementById(
         this.PTvErrorsObj[this.currentIndex].stop.id.toString() +
-          '-PTv-error-list-id'
+          '-PTv-error-list-id',
       ).style.backgroundColor = 'lightblue';
     }
 
@@ -976,7 +976,7 @@ export class ErrorHighlightService {
     ) {
       document.getElementById(
         this.ptPairErrorsObj[this.currentIndex].stop.id.toString() +
-          '-pt-pair-error-list-id'
+          '-pt-pair-error-list-id',
       ).style.backgroundColor = 'white';
       this.currentIndex = index;
       this.storageSrv.currentIndex = index;
@@ -988,7 +988,7 @@ export class ErrorHighlightService {
       this.mapSrv.map.setView({ lat: stop.lat, lng: stop.lon }, 17);
       document.getElementById(
         this.ptPairErrorsObj[this.currentIndex].stop.id.toString() +
-          '-pt-pair-error-list-id'
+          '-pt-pair-error-list-id',
       ).style.backgroundColor = 'lightblue';
     }
   }
@@ -1086,7 +1086,7 @@ export class ErrorHighlightService {
           opacity: 0.75,
           className: 'platform-cursor',
           interactive: false,
-        }
+        },
       ).addTo(this.mapSrv.map);
       document.getElementById('map').classList.add('platform-cursor');
       stopLayer
@@ -1098,7 +1098,7 @@ export class ErrorHighlightService {
       this.mapSrv.map.on(
         'click',
         (event) =>
-          (this.clickEventFunction = this.onClickMapPTPairCorrection(event))
+          (this.clickEventFunction = this.onClickMapPTPairCorrection(event)),
       );
     } else {
       stopLayer
@@ -1121,17 +1121,17 @@ export class ErrorHighlightService {
         this.openModalWithComponentForPTPair(
           this.ptPairErrorsObj[this.currentIndex],
           event,
-          this.circleHighlight
+          this.circleHighlight,
         );
       } else {
         const response = confirm(
-          'The location you selected is too far away from the stop. Do you still want to continue?'
+          'The location you selected is too far away from the stop. Do you still want to continue?',
         );
         if (response) {
           this.openModalWithComponentForPTPair(
             this.ptPairErrorsObj[this.currentIndex],
             event,
-            this.circleHighlight
+            this.circleHighlight,
           );
         }
       }
@@ -1141,7 +1141,7 @@ export class ErrorHighlightService {
   openModalWithComponentForPTPair(
     errorObject: IPTPairErrorObject,
     event: L.LeafletEvent,
-    circleLayer: L.Layer
+    circleLayer: L.Layer,
   ): void {
     if (errorObject.corrected === 'false') {
       const initialState = {

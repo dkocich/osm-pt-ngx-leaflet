@@ -26,7 +26,7 @@ export class StoreModule {
     store: NgRedux<IRootAppState>,
     devTools: DevToolsExtension,
     ngReduxRouter: NgReduxRouter,
-    rootEpics: RootEpics
+    rootEpics: RootEpics,
   ) {
     // Tell Redux about our reducers and epics. If the Redux DevTools
     // chrome extension is available in the browser, tell Redux about
@@ -38,7 +38,7 @@ export class StoreModule {
       rootReducer,
       {},
       [createLogger()], // , ...rootEpics.createEpics()
-      storeEnhancers
+      storeEnhancers,
     );
 
     // Enable syncing of Angular router state with our Redux store.

@@ -95,7 +95,7 @@ export class StorageService {
       'elMap: ',
       this.elementsMap.size,
       'queriedM: ',
-      this.queriedMasters.size
+      this.queriedMasters.size,
     );
     const stats = {
       a: this.listOfAreas.length,

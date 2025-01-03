@@ -42,7 +42,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     private storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
     private appActions: AppActions,
-    private hotkeysService: HotkeysService
+    private hotkeysService: HotkeysService,
   ) {
     this.advancedExpModeSubscription = ngRedux
       .select<boolean>(['app', 'advancedExpMode'])
@@ -60,7 +60,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
           return false;
         },
         undefined,
-        'Create a new route'
+        'Create a new route',
       ),
       new Hotkey(
         'shift+2',
@@ -74,7 +74,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
           return false;
         },
         undefined,
-        'Toggle editing members of the selected route'
+        'Toggle editing members of the selected route',
       ),
     ]);
   }
@@ -112,7 +112,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
       console.log(
         'LOG (route-browser) Toggle members edit',
         this.membersEditing,
-        this.storageSrv.currentElement
+        this.storageSrv.currentElement,
       );
       this.editSrv.redrawMembersHighlight();
     } else {
@@ -148,7 +148,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
         this.storageSrv.elementsMap.get(rel.id),
         true,
         false,
-        false
+        false,
       );
       this.storageSrv.tutorialStepCompleted.emit('click route from list');
     } else {
@@ -156,7 +156,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
         this.storageSrv.elementsMap.get(rel.id),
         true,
         true,
-        true
+        true,
       );
     }
   }
@@ -173,7 +173,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
         this.storageSrv.elementsMap.get(rel.id),
         true,
         true,
-        true
+        true,
       );
     }
   }
@@ -249,7 +249,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
         this.storageSrv.currentElement,
         false,
         false,
-        true
+        true,
       );
     }
   }

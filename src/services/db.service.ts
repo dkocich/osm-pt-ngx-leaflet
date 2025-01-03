@@ -71,7 +71,7 @@ export class DbService {
       })
       .catch((err) => {
         console.log(
-          'LOG (db s.) Error in fetching ids of completely downloaded elements in IDB'
+          'LOG (db s.) Error in fetching ids of completely downloaded elements in IDB',
         );
         console.error(err);
         throw new Error(JSON.stringify(err));
@@ -91,13 +91,13 @@ export class DbService {
       })
       .then(() => {
         console.log(
-          'LOG (db s.) IDs of routes for which masters have been queried and added to IDB'
+          'LOG (db s.) IDs of routes for which masters have been queried and added to IDB',
         );
         console.log(this.storageSrv.queriedRoutesForMastersIDB);
       })
       .catch((err) => {
         console.log(
-          'LOG (db s.) Error in fetching IDs of routes for which masters have been queried and added to IDB'
+          'LOG (db s.) Error in fetching IDs of routes for which masters have been queried and added to IDB',
         );
         console.error(err);
         throw new Error(JSON.stringify(err));
@@ -167,7 +167,7 @@ export class DbService {
                   return routeId;
                 })
                 .join(',') +
-              ' ] in IDB'
+              ' ] in IDB',
           );
         });
     });
@@ -274,13 +274,13 @@ export class DbService {
                         return platform.id;
                       })
                       .join(',') +
-                    " ] to IDB for Overpass API 's response"
+                    " ] to IDB for Overpass API 's response",
                 );
               })
               .catch((err) => {
                 console.log(
                   'LOG (db s.) Error in adding platforms to IDB, all previous ' +
-                    'operations for this particular transaction (not metadata) will be rolled back'
+                    'operations for this particular transaction (not metadata) will be rolled back',
                 );
                 console.error(err);
                 throw new Error(JSON.stringify(err));
@@ -296,13 +296,13 @@ export class DbService {
                         return stop.id;
                       })
                       .join(',') +
-                    " ] to IDB for Overpass API 's response"
+                    " ] to IDB for Overpass API 's response",
                 );
               })
               .catch((err) => {
                 console.log(
                   'LOG (db s.) Error in adding stops to IDB, all previous ' +
-                    'operations for this particular transaction (not metadata) will be rolled back'
+                    'operations for this particular transaction (not metadata) will be rolled back',
                 );
                 console.error(err);
                 throw new Error(JSON.stringify(err));
@@ -318,13 +318,13 @@ export class DbService {
                         return way.id;
                       })
                       .join(',') +
-                    " ] to IDB for Overpass API 's response"
+                    " ] to IDB for Overpass API 's response",
                 );
               })
               .catch((err) => {
                 console.log(
                   'LOG (db s.) Error in adding ways to IDB, all previous ' +
-                    ' operations for this particular transaction (not metadata) will be rolled back'
+                    ' operations for this particular transaction (not metadata) will be rolled back',
                 );
                 console.error(err);
                 throw new Error(JSON.stringify(err));
@@ -340,13 +340,13 @@ export class DbService {
                         return routeMaster.id;
                       })
                       .join(',') +
-                    ' ] to IDB for Overpass API response'
+                    ' ] to IDB for Overpass API response',
                 );
               })
               .catch((err) => {
                 console.log(
                   'LOG (db s.) Error in adding route masters to IDB, all previous ' +
-                    ' operations for this particular transaction (not metadata) will be rolled back'
+                    ' operations for this particular transaction (not metadata) will be rolled back',
                 );
                 console.error(err);
                 throw new Error(JSON.stringify(err));
@@ -362,19 +362,19 @@ export class DbService {
                         return route.id;
                       })
                       .join(',') +
-                    " ] to IDB for Overpass API 's response"
+                    " ] to IDB for Overpass API 's response",
                 );
               })
               .catch((err) => {
                 console.log(
                   'LOG (db s.) Error in adding routes to IDB, all previous ' +
-                    ' operations for this particular transaction (not metadata) will be rolled back'
+                    ' operations for this particular transaction (not metadata) will be rolled back',
                 );
                 console.error(err);
                 throw new Error(JSON.stringify(err));
               });
           }
-        }
+        },
       )
       .then(() => {
         if (id) {
@@ -383,13 +383,13 @@ export class DbService {
               type +
               ' with ID ' +
               id +
-              ' to IDB (not metadata)'
+              ' to IDB (not metadata)',
           );
         } else {
           console.log(
             "LOG (db s.) Successfully added Overpass API 's response for " +
               type +
-              ' to IDB (not metadata)'
+              ' to IDB (not metadata)',
           );
         }
         return this.addMetaData(
@@ -400,7 +400,7 @@ export class DbService {
           platformsMetaData,
           routesMetaData,
           routeMastersMetaData,
-          waysMetaData
+          waysMetaData,
         )
           .then(() => {
             if (id) {
@@ -409,13 +409,13 @@ export class DbService {
                   type +
                   ' with ID ' +
                   id +
-                  ' to IDB '
+                  ' to IDB ',
               );
             } else {
               console.log(
                 "LOG (db s.) Successfully added metadata Overpass API 's response for " +
                   type +
-                  ' to IDB '
+                  ' to IDB ',
               );
             }
             switch (type) {
@@ -435,7 +435,7 @@ export class DbService {
               'LOG (db s.) Error in adding metadata, all previous metadata addition for' +
                 " this transaction will be rolled back for Overpass API 's response for id: " +
                 id +
-                ' to IDB'
+                ' to IDB',
             );
             this.storageSrv.completelyDownloadedStopsIDB.delete(id);
             this.storageSrv.completelyDownloadedRoutesIDB.delete(id);
@@ -553,13 +553,13 @@ export class DbService {
                         return platform.id;
                       })
                       .join(',') +
-                    " ] to IDB for Overpass API 's response"
+                    " ] to IDB for Overpass API 's response",
                 );
               })
               .catch((err) => {
                 console.log(
                   'LOG (db s.) Error in adding platforms to IDB, all previous ' +
-                    'operations for this particular transaction (not metadata) will be rolled back'
+                    'operations for this particular transaction (not metadata) will be rolled back',
                 );
                 console.error(err);
                 throw new Error(JSON.stringify(err));
@@ -575,13 +575,13 @@ export class DbService {
                         return stop.id;
                       })
                       .join(',') +
-                    " ] to IDB for Overpass API 's response"
+                    " ] to IDB for Overpass API 's response",
                 );
               })
               .catch((err) => {
                 console.log(
                   'LOG (db s.) Error in adding stops to IDB, all previous ' +
-                    'operations for this particular transaction (not metadata) will be rolled back'
+                    'operations for this particular transaction (not metadata) will be rolled back',
                 );
                 console.error(err);
                 throw new Error(JSON.stringify(err));
@@ -597,13 +597,13 @@ export class DbService {
                         return way.id;
                       })
                       .join(',') +
-                    " ] to IDB for Overpass API 's response"
+                    " ] to IDB for Overpass API 's response",
                 );
               })
               .catch((err) => {
                 console.log(
                   'LOG (db s.) Error in adding ways to IDB, all previous ' +
-                    ' operations for this particular transaction (not metadata) will be rolled back'
+                    ' operations for this particular transaction (not metadata) will be rolled back',
                 );
                 console.error(err);
                 throw new Error(JSON.stringify(err));
@@ -619,13 +619,13 @@ export class DbService {
                         return routeMaster.id;
                       })
                       .join(',') +
-                    ' ] to IDB for Overpass API response'
+                    ' ] to IDB for Overpass API response',
                 );
               })
               .catch((err) => {
                 console.log(
                   'LOG (db s.) Error in adding route masters to IDB, all previous ' +
-                    ' operations for this particular transaction (not metadata) will be rolled back'
+                    ' operations for this particular transaction (not metadata) will be rolled back',
                 );
                 console.error(err);
                 throw new Error(JSON.stringify(err));
@@ -641,24 +641,24 @@ export class DbService {
                         return route.id;
                       })
                       .join(',') +
-                    " ] to IDB for Overpass API 's response"
+                    " ] to IDB for Overpass API 's response",
                 );
               })
               .catch((err) => {
                 console.log(
                   'LOG (db s.) Error in adding routes to IDB, all previous ' +
-                    ' operations for this particular transaction (not metadata) will be rolled back'
+                    ' operations for this particular transaction (not metadata) will be rolled back',
                 );
                 console.error(err);
                 throw new Error(JSON.stringify(err));
               });
           }
-        }
+        },
       )
       .then(() => {
         console.log(
           "LOG (db s.) Successfully added Overpass API 's response for :",
-          IDs
+          IDs,
         );
         return this.addMetaDataForMultipleResponse(
           stopsMetaData,
@@ -667,12 +667,12 @@ export class DbService {
           routeMastersMetaData,
           waysMetaData,
           IDs,
-          parentRoutes
+          parentRoutes,
         )
           .then(() => {
             console.log(
               "LOG (db s.) Successfully added metadata Overpass API 's response for ",
-              IDs
+              IDs,
             );
           })
           .catch((err) => {
@@ -680,7 +680,7 @@ export class DbService {
               'LOG (db s.) Error in adding metadata, all previous metadata addition for' +
                 " this transaction will be rolled back for Overpass API 's response for ids: " +
                 IDs +
-                ' to IDB'
+                ' to IDB',
             );
             for (const id of IDs) {
               if (this.storageSrv.completelyDownloadedStopsIDB.has(id)) {
@@ -738,7 +738,7 @@ export class DbService {
                           })
                           .join(' , ') +
                         ' ] for route with ID : ' +
-                        relId
+                        relId,
                     );
                   });
                 this.db.PtPlatforms.where('id')
@@ -755,10 +755,10 @@ export class DbService {
                           })
                           .join(' , ') +
                         ' ] for route with ID : ' +
-                        relId
+                        relId,
                     );
                   });
-              }
+              },
             )
             .then(() => {
               // In order to have the same format as Overpass API response and reuse the functions
@@ -768,7 +768,7 @@ export class DbService {
               return Promise.resolve(object);
             });
         });
-      }
+      },
     );
   }
 
@@ -819,14 +819,14 @@ export class DbService {
                   console.log(
                     'LOG (db s.) Successfully deleted platform with id ' +
                       value.id +
-                      ' from IDB'
+                      ' from IDB',
                   );
                 })
                 .catch((err) => {
                   console.log(
                     'LOG (db s.) Error in deleting platform with id ' +
                       value.id +
-                      ' from IDB'
+                      ' from IDB',
                   );
                   console.error(err);
                   throw new Error(JSON.stringify(err));
@@ -840,14 +840,14 @@ export class DbService {
                   console.log(
                     'LOG (db s.) Successfully deleted stop with id ' +
                       value.id +
-                      ' from IDB'
+                      ' from IDB',
                   );
                 })
                 .catch((err) => {
                   console.log(
                     'LOG (db s.) Error in deleting stop with id ' +
                       value.id +
-                      ' from IDB'
+                      ' from IDB',
                   );
                   console.error(err);
                   throw new Error(JSON.stringify(err));
@@ -861,14 +861,14 @@ export class DbService {
                   console.log(
                     'LOG (db s.) Successfully deleted route master with id ' +
                       value.id +
-                      ' from IDB'
+                      ' from IDB',
                   );
                 })
                 .catch((err) => {
                   console.log(
                     'LOG (db s.) Error in deleting route master with id ' +
                       value.id +
-                      ' from IDB'
+                      ' from IDB',
                   );
                   console.error(err);
                   throw new Error(JSON.stringify(err));
@@ -882,14 +882,14 @@ export class DbService {
                   console.log(
                     'LOG (db s.) Successfully deleted way with id ' +
                       value.id +
-                      ' from IDB'
+                      ' from IDB',
                   );
                 })
                 .catch((err) => {
                   console.log(
                     'LOG (db s.) Error in deleting way with id ' +
                       value.id +
-                      ' from IDB'
+                      ' from IDB',
                   );
                   console.error(err);
                   throw new Error(JSON.stringify(err));
@@ -903,7 +903,7 @@ export class DbService {
                   console.log(
                     'LOG (db s.) Successfully deleted route with id ' +
                       value.id +
-                      ' from IDB'
+                      ' from IDB',
                   );
                   this.db.MetaData.where('type')
                     .anyOf(['stop_position', 'platform'])
@@ -912,7 +912,7 @@ export class DbService {
                         ref2.value.parentRoutes = item.parentRoutes.filter(
                           (e) => {
                             return e !== value.id;
-                          }
+                          },
                         );
                       }
                     })
@@ -920,14 +920,14 @@ export class DbService {
                       console.log(
                         'LOG (db s.) Successfully deleted route from parentRoutes with id' +
                           value.id +
-                          ' from IDB'
+                          ' from IDB',
                       );
                     })
                     .catch((err) => {
                       console.log(
                         'LOG (db s.) Error in deleting route from parentRoutes with id ' +
                           value.id +
-                          ' in metadata from IDB'
+                          ' in metadata from IDB',
                       );
                       console.error(err);
                       throw new Error(JSON.stringify(err));
@@ -937,7 +937,7 @@ export class DbService {
                   console.log(
                     'LOG (db s.) Error in deleting route with id ' +
                       value.id +
-                      ' from IDB'
+                      ' from IDB',
                   );
                   console.error(err);
                   throw new Error(JSON.stringify(err));
@@ -945,7 +945,7 @@ export class DbService {
             }
           }
         });
-      }
+      },
     );
   }
 
@@ -960,7 +960,7 @@ export class DbService {
     platformsMetaData,
     routesMetaData,
     routeMastersMetaData,
-    waysMetaData
+    waysMetaData,
   ) {
     return this.db.transaction(
       'rw',
@@ -1010,10 +1010,10 @@ export class DbService {
             waysMetaData,
             routeMastersMetaData,
             routesMetaData,
-            platformsMetaData
-          )
+            platformsMetaData,
+          ),
         );
-      }
+      },
     );
   }
 
@@ -1027,7 +1027,7 @@ export class DbService {
     routeMastersMetaData,
     waysMetaData,
     IDs,
-    parentRoutes: Map<string, string[]>
+    parentRoutes: Map<string, string[]>,
   ) {
     return this.db.transaction(
       'rw',
@@ -1073,10 +1073,10 @@ export class DbService {
             waysMetaData,
             routeMastersMetaData,
             routesMetaData,
-            platformsMetaData
-          )
+            platformsMetaData,
+          ),
         );
-      }
+      },
     );
   }
 }

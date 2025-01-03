@@ -43,7 +43,7 @@ export class ToolbarComponent implements OnInit {
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
     public storageSrv: StorageService,
-    private hotkeysService: HotkeysService
+    private hotkeysService: HotkeysService,
   ) {
     this.downloading = true;
     this.filtering = this.confSrv.cfgFilterLines;
@@ -53,7 +53,7 @@ export class ToolbarComponent implements OnInit {
           'LOG (toolbar) Current selected element changed - ',
           data,
           this.currentElement,
-          this.storageSrv.currentElement
+          this.storageSrv.currentElement,
         );
         this.currentElement = this.storageSrv.currentElement;
       } else if (data === 'cancel selection') {
@@ -84,7 +84,7 @@ export class ToolbarComponent implements OnInit {
           this.routeLabelShown = false;
           this.enableInfoRouteLabels = false;
         }
-      }
+      },
     );
     this.hotkeysService.add([
       new Hotkey(
@@ -94,7 +94,7 @@ export class ToolbarComponent implements OnInit {
           return false;
         },
         undefined,
-        'Toggle downloading data'
+        'Toggle downloading data',
       ),
     ]);
   }
@@ -149,7 +149,7 @@ export class ToolbarComponent implements OnInit {
         this.storageSrv.elementsMap.get(this.currentElement.id),
         true,
         false,
-        false
+        false,
       );
     }
   }
@@ -216,7 +216,7 @@ export class ToolbarComponent implements OnInit {
     if (!this.routeLabelShown) {
       if (this.storageSrv.currentElement.type === 'node') {
         this.mapSrv.showMultipleRouteInfoLabels(
-          this.multipleRelsHighlightsAndIDs
+          this.multipleRelsHighlightsAndIDs,
         );
       } else if (this.storageSrv.currentElement.type === 'relation') {
         this.mapSrv.showRouteInfoLabels(this.singleRelID);

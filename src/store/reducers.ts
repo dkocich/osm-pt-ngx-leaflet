@@ -10,5 +10,5 @@ export const rootReducer = composeReducers(
   combineReducers({
     app: appReducer,
     router: routerReducer,
-  })
+  }),
 );

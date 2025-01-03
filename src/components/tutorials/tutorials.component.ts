@@ -24,7 +24,7 @@ export class TutorialsComponent implements OnInit {
   constructor(
     private ngRedux: NgRedux<IAppState>,
     private tutorialSrv: TutorialService,
-    public appActions: AppActions
+    public appActions: AppActions,
   ) {}
 
   ngOnInit(): void {

@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
-    private authSrv: AuthService
+    private authSrv: AuthService,
   ) {
     if (isDevMode()) {
       console.log('WARNING: Ang. development mode is ', isDevMode());
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
       .deleteExpiredPTDataIDB()
       .then(() => {
         console.log(
-          'LOG (app component) Successfully checked and deleted old items from IDB'
+          'LOG (app component) Successfully checked and deleted old items from IDB',
         );
       })
       .catch((err) => {

@@ -27,7 +27,7 @@ export class MapService {
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState> // private tutorialSrv: TutorialService,
+    private ngRedux: NgRedux<IAppState>, // private tutorialSrv: TutorialService,
   ) {
     // @ts-ignore
     this.baseMaps = {
@@ -42,7 +42,7 @@ export class MapService {
             target='_blank' rel='noopener'>CartoDB</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        }
+        },
       ),
       CartoDB_light: L.tileLayer(
         'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
@@ -52,7 +52,7 @@ export class MapService {
             target='_blank' rel='noopener'>CartoDB</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        }
+        },
       ),
       Esri: L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/' +
@@ -63,7 +63,7 @@ export class MapService {
             METI, Esri China (Hong Kong), and the GIS User Community`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        }
+        },
       ),
       Esri_imagery: L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/' +
@@ -73,7 +73,7 @@ export class MapService {
             Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community `,
           maxNativeZoom: 19,
           maxZoom: 22,
-        }
+        },
       ),
       HERE_satelliteDay: L.tileLayer(
         'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/' +
@@ -93,7 +93,7 @@ export class MapService {
           language: 'eng',
           format: 'png8',
           size: '256',
-        }
+        },
       ),
       HERE_hybridDay: L.tileLayer(
         'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/' +
@@ -113,7 +113,7 @@ export class MapService {
           language: 'eng',
           format: 'png8',
           size: '256',
-        }
+        },
       ),
       MapBox_imagery: L.tileLayer(
         'https://{s}.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=' +
@@ -126,7 +126,7 @@ export class MapService {
             rel='noopener'>Improve this map</a>`,
           maxNativeZoom: 20,
           maxZoom: 22,
-        }
+        },
       ),
       MapBox_streets: L.tileLayer(
         'https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v7/{z}/{x}/{y}.png?access_token=' +
@@ -139,7 +139,7 @@ export class MapService {
             rel='noopener'>Improve this map</a>`,
           maxNativeZoom: 20,
           maxZoom: 22,
-        }
+        },
       ),
       OSM_hot: L.tileLayer(
         'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
@@ -150,7 +150,7 @@ export class MapService {
             target='_blank' rel='noopener'>Humanitarian OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        }
+        },
       ),
       OSM_standard: L.tileLayer(
         'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -161,7 +161,7 @@ export class MapService {
             target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        }
+        },
       ),
       OSM_PT: L.tileLayer('http://www.openptmap.org/tiles/{z}/{x}/{y}.png', {
         attribution: `&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>
@@ -178,7 +178,7 @@ export class MapService {
             target='_blank' rel='noopener'>OpenStreetMap Team</a>`,
           maxNativeZoom: 19,
           maxZoom: 22,
-        }
+        },
       ),
     };
   }
@@ -239,12 +239,12 @@ export class MapService {
     L.DomEvent.addListener(
       popUpElement,
       'mouseout',
-      MapService.colorPopUpByEvent
+      MapService.colorPopUpByEvent,
     );
     L.DomEvent.addListener(
       popUpElement,
       'mouseover',
-      MapService.colorPopUpByEvent
+      MapService.colorPopUpByEvent,
     );
   }
 
@@ -255,12 +255,12 @@ export class MapService {
     L.DomEvent.removeListener(
       popUpElement,
       'mouseout',
-      MapService.colorPopUpByEvent
+      MapService.colorPopUpByEvent,
     );
     L.DomEvent.removeListener(
       popUpElement,
       'mouseover',
-      MapService.colorPopUpByEvent
+      MapService.colorPopUpByEvent,
     );
   }
 
@@ -381,7 +381,7 @@ export class MapService {
       if (distance > 100) {
         marker.setLatLng(originalCoords).update();
         alert(
-          'Current node was dragged more than 100 meters away which is not allowed - resetting position.'
+          'Current node was dragged more than 100 meters away which is not allowed - resetting position.',
         );
         return;
       }
@@ -463,7 +463,7 @@ export class MapService {
   showStop(stop: IPtStop): void {
     this.markerFrom = L.circleMarker(
       { lat: stop.lat, lng: stop.lon },
-      Utils.FROM_TO_LABEL
+      Utils.FROM_TO_LABEL,
     );
     this.highlight = L.layerGroup([this.markerFrom]);
   }
@@ -503,7 +503,7 @@ export class MapService {
         this.storageSrv.stopsForRoute.push(member.ref);
         const latlng: L.LatLngExpression = this.findCoordinates(
           member.ref,
-          this.storageSrv.elementsMap
+          this.storageSrv.elementsMap,
         );
         if (latlng) {
           latlngs.push(latlng);
@@ -517,7 +517,7 @@ export class MapService {
         '#' + (Math.floor(Math.random() * 0xffffff) | 0x0f0f0f).toString(16);
       this.highlightFill = L.polyline(
         latlngs,
-        Utils.HIGHLIGHT_FILL
+        Utils.HIGHLIGHT_FILL,
       ).bindTooltip(rel.tags.name);
       this.enableInfoRouteLabelsOption.emit({
         type: 'multiple',
@@ -568,7 +568,7 @@ export class MapService {
       } else if (
         member.type === 'node' &&
         ['platform', 'platform_entry_only', 'platform_exit_only'].indexOf(
-          member.role
+          member.role,
         ) > -1
       ) {
         if (member.ref) {
@@ -612,17 +612,17 @@ export class MapService {
     // at least two nodes to form a polyline and not point
     if (latlngs.length > 1) {
       const currentHighlightFill = JSON.parse(
-        JSON.stringify(Utils.HIGHLIGHT_FILL)
+        JSON.stringify(Utils.HIGHLIGHT_FILL),
       );
       currentHighlightFill.color =
         rel.tags.colour || rel.tags.color || Utils.HIGHLIGHT_FILL.color;
       this.highlightStroke = L.polyline(
         latlngs,
-        Utils.HIGHLIGHT_STROKE
+        Utils.HIGHLIGHT_STROKE,
       ).bindTooltip(rel.tags.name);
       this.highlightFill = L.polyline(
         latlngs,
-        currentHighlightFill
+        currentHighlightFill,
       ).bindTooltip(rel.tags.name);
       this.highlight = L.layerGroup([
         this.highlightStroke,
@@ -637,14 +637,14 @@ export class MapService {
     } else {
       if (rel.members.length <= 1) {
         console.log(
-          'LOG (map s.) This is new relation -> do not highlight route'
+          'LOG (map s.) This is new relation -> do not highlight route',
         );
       } else {
         alert(
           'Problem has occurred while drawing line connecting its members (no added stops?).' +
             ' Please add members and try again.' +
             '\n\n' +
-            JSON.stringify(rel)
+            JSON.stringify(rel),
         );
       }
       return false;
@@ -669,13 +669,13 @@ export class MapService {
       case 'Stops':
         latlngFrom = this.findCoordinates(
           this.storageSrv.stopsForRoute[0],
-          this.storageSrv.elementsMap
+          this.storageSrv.elementsMap,
         ); // get first and last ID reference
         return latlngFrom;
       case 'Platforms':
         latlngFrom = this.findCoordinates(
           this.storageSrv.platformsForRoute[0],
-          this.storageSrv.elementsMap
+          this.storageSrv.elementsMap,
         ); // get first and last ID reference
         return latlngFrom;
     }
@@ -689,7 +689,7 @@ export class MapService {
           this.storageSrv.stopsForRoute[
             this.storageSrv.stopsForRoute.length - 1
           ],
-          this.storageSrv.elementsMap
+          this.storageSrv.elementsMap,
         );
         return latlngTo;
       case 'Platforms':
@@ -697,7 +697,7 @@ export class MapService {
           this.storageSrv.platformsForRoute[
             this.storageSrv.platformsForRoute.length - 1
           ],
-          this.storageSrv.elementsMap
+          this.storageSrv.elementsMap,
         );
         return latlngTo;
     }
@@ -721,11 +721,11 @@ export class MapService {
         className: 'from-to-label',
         offset: [0, 0],
         permanent: true,
-      }
+      },
     );
     this.markerFrom = L.circleMarker(
       latlngFrom,
-      Utils.FROM_TO_LABEL
+      Utils.FROM_TO_LABEL,
     ).bindTooltip(from + ' (' + route + ' ' + ref + ')', {
       className: 'from-to-label',
       offset: [0, 0],
@@ -765,7 +765,7 @@ export class MapService {
     } else if ('railway' in fp) {
       if (
         ['crossing', 'level_crossing', 'railway_crossing'].indexOf(
-          fp['railway']
+          fp['railway'],
         ) > -1
       ) {
         iconUrl = 'assets/transport/railway/crossing.png';
@@ -838,7 +838,7 @@ export class MapService {
     const marker: object = feature.target; // FIXME DELETE?
     this.markerMembershipToggleClick.emit({ featureId });
     const rel = this.storageSrv.elementsMap.get(
-      this.storageSrv.currentElement.id
+      this.storageSrv.currentElement.id,
     );
     this.storageSrv.tutorialStepCompleted.emit('click change route members');
   }
@@ -882,7 +882,7 @@ export class MapService {
    * Handles displaying route info labels for the case of multiple route highlight
    */
   showMultipleRouteInfoLabels(
-    relHighlightsAndIDs: Map<number, L.Polyline>
+    relHighlightsAndIDs: Map<number, L.Polyline>,
   ): void {
     relHighlightsAndIDs.forEach((highlight, id) => {
       const rel = this.storageSrv.elementsMap.get(id);

@@ -49,7 +49,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     public appActions: AppActions,
     public storageSrv: StorageService,
     private ngRedux: NgRedux<IAppState>,
-    private hotkeysService: HotkeysService
+    private hotkeysService: HotkeysService,
   ) {
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
       const { typeOfErrorObject } = data;
@@ -89,7 +89,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
           return false;
         },
         undefined,
-        'Start missing name correction'
+        'Start missing name correction',
       ),
       new Hotkey(
         'alt+2',
@@ -99,7 +99,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
           return false;
         },
         undefined,
-        'Start references correction'
+        'Start references correction',
       ),
       new Hotkey(
         'alt+3',
@@ -109,7 +109,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
           return false;
         },
         undefined,
-        'Start way as parent correction'
+        'Start way as parent correction',
       ),
       new Hotkey(
         'alt+4',
@@ -119,7 +119,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
           return false;
         },
         undefined,
-        'Start PTv2 correction'
+        'Start PTv2 correction',
       ),
       new Hotkey(
         'alt+5',
@@ -129,7 +129,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
           return false;
         },
         undefined,
-        'Find suggestions'
+        'Find suggestions',
       ),
       new Hotkey(
         'f',
@@ -139,7 +139,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
           return false;
         },
         undefined,
-        'Start missing name correction'
+        'Start missing name correction',
       ),
     ]);
   }

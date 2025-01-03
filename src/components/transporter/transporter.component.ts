@@ -66,7 +66,7 @@ export class TransporterComponent implements OnInit {
     private mapSrv: MapService,
     private overpassSrv: OverpassService,
     private storageSrv: StorageService,
-    private hotkeysService: HotkeysService
+    private hotkeysService: HotkeysService,
   ) {
     this.hotkeysService.add([
       new Hotkey(
@@ -76,7 +76,7 @@ export class TransporterComponent implements OnInit {
           return false;
         },
         undefined,
-        'Upload data to OSM'
+        'Upload data to OSM',
       ),
     ]);
   }
@@ -92,7 +92,7 @@ export class TransporterComponent implements OnInit {
         if (data) {
           this.editsSummary = this.storageSrv.edits;
         }
-      }
+      },
     );
   }
 
@@ -130,7 +130,7 @@ export class TransporterComponent implements OnInit {
   verifyUpload(): void {
     this.overpassSrv.uploadData(
       { source: 'test upload source', comment: 'test upload comment' },
-      true
+      true,
     );
   }
 

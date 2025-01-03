@@ -21,7 +21,7 @@ export class ExpertComponent {
   constructor(
     private ngRedux: NgRedux<IAppState>,
     private tutorialSrv: TutorialService,
-    private storageSrv: StorageService
+    private storageSrv: StorageService,
   ) {}
   isRouteBrowserOpen = false;
   routeBrowserOptions: IRouteBrowserOptions = {

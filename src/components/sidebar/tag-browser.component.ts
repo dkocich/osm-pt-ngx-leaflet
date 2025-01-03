@@ -42,7 +42,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     private editSrv: EditService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState>
+    private ngRedux: NgRedux<IAppState>,
   ) {
     this.advancedExpModeSubscription = ngRedux
       .select<boolean>(['app', 'advancedExpMode'])
@@ -56,7 +56,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
           'LOG (tag-browser) Current selected element changed - ',
           data,
           this.currentElement,
-          this.storageSrv.currentElement
+          this.storageSrv.currentElement,
         );
         delete this.currentElement;
         this.currentElement = this.storageSrv.currentElement;
@@ -130,7 +130,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
         key,
         this.currentElement.tags[key],
         ' for object: ',
-        this.currentElement
+        this.currentElement,
       );
       this.currentElement.tags[this.tagKey] = this.tagValue;
       this.storageSrv.currentElement.tags[this.tagKey] = this.tagValue;
@@ -145,7 +145,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
         key,
         this.currentElement.tags[key],
         ' for object: ',
-        this.currentElement
+        this.currentElement,
       );
       change = {
         key,
@@ -178,7 +178,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     } else {
       return alert(
         'Problem occurred - unknown problem in toggle ' +
-          JSON.stringify(this.currentElement)
+          JSON.stringify(this.currentElement),
       );
     }
   }
@@ -206,7 +206,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     if (this.currentElement) {
       const existingKeys = Object.keys(this.currentElement.tags);
       return this.tagBrowserOptions.allowedKeys.filter(
-        (key) => !existingKeys.includes(key)
+        (key) => !existingKeys.includes(key),
       );
     }
   }

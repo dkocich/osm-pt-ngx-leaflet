@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
 import { Subject } from 'rxjs';
@@ -19,7 +19,7 @@ import { AppActions } from '../../store/app/actions';
   styleUrls: ['./route-master-wizard.component.less', '../../styles/main.less'],
   templateUrl: './route-master-wizard.component.html',
 })
-export class RouteMasterWizardComponent {
+export class RouteMasterWizardComponent implements OnInit {
   map: L.Map;
   osmtogeojson = require('osmtogeojson');
   private startEventProcessing = new Subject<L.LeafletEvent>();
@@ -52,7 +52,7 @@ export class RouteMasterWizardComponent {
     public appActions: AppActions,
     private processSrv: ProcessService,
     private editSrv: EditService,
-    public modalRefRouteMasterWiz: BsModalRef
+    public modalRefRouteMasterWiz: BsModalRef,
   ) {
     this.routeMasterWizardSrv.newRoutesMapReceived.subscribe((newRMsMap) => {
       this.newRMsMap = newRMsMap;
@@ -73,7 +73,7 @@ export class RouteMasterWizardComponent {
             target='_blank' rel='noopener'>CartoDB</a>`,
             maxNativeZoom: 19,
             maxZoom: 22,
-          }
+          },
         ),
       ],
       maxZoom: 22,
@@ -94,13 +94,13 @@ export class RouteMasterWizardComponent {
       'zoomend moveend',
       (event: L.LeafletEvent) => {
         this.startEventProcessing.next(event);
-      }
+      },
     );
     this.startEventProcessing
       .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe(() => {
         this.overpassSrv.initDownloaderForModalMapRMW(
-          this.routeMasterWizardSrv.map
+          this.routeMasterWizardSrv.map,
         );
       });
   }
@@ -154,7 +154,7 @@ export class RouteMasterWizardComponent {
       this.routeMasterWizardSrv.viewRoute(routeID);
     } else {
       alert(
-        'Cannot highlight the route as it has not been downloaded completly'
+        'Cannot highlight the route as it has not been downloaded completly',
       );
     }
   }
