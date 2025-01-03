@@ -1,10 +1,4 @@
 {
-  "plugins": [
-    "cypress"
-  ],
-  "env": {
-    "cypress/globals": true
-  },
   "root": true,
   "ignorePatterns": ["projects/**/*"],
   "overrides": [

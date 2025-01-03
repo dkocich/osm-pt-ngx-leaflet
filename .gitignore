@@ -32,8 +32,6 @@ public/**/*
 # editors settings
 .idea
 
-# Cypress tests
-cypress/videos
 
 .now
 
@@ -83,4 +81,4 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-/cypress/screenshots/app_spec.js/
+/.angular/cache/*
