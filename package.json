@@ -2,7 +2,7 @@
   "name": "osm-pt-ngx-leaflet",
   "version": "22.4.29",
   "engines": {
-    "node": "20",
+    "node": "22",
     "npm": "10"
   },
   "description": "An OpenStreetMap public transport editor built with Leaflet and Angular.",
@@ -54,7 +54,7 @@
     "@ngx-translate/core": "15.0.0",
     "@ngx-translate/http-loader": "8.0.0",
     "@redux-devtools/extension": "3.2.5",
-    "@sentry/browser": "7.64.0",
+    "@sentry/browser": "8.33.0",
     "@types/bootstrap": "5.2.6",
     "@types/core-js": "2.5.5",
     "@types/es6-shim": "0.31.42",
@@ -90,8 +90,8 @@
     "reflect-metadata": "0.1.13",
     "rxjs": "~7.8.1",
     "rxjs-compat": "~6.6.7",
-    "stylelint": "15.10.3",
-    "stylelint-config-standard": "34.0.0",
+    "stylelint": "16.12.0",
+    "stylelint-config-standard": "36.0.1",
     "tslib": "2.6.2",
     "xmlbuilder": "15.1.1",
     "zone.js": "~0.13.1"
@@ -117,7 +117,7 @@
     "@typescript-eslint/eslint-plugin": "6.4.1",
     "@typescript-eslint/parser": "6.4.1",
     "codelyzer": "6.0.2",
-    "eslint": "8.47.0",
+    "eslint": "8.57.1",
     "eslint-plugin-import": "2.28.1",
     "eslint-plugin-jsdoc": "46.5.0",
     "eslint-plugin-prefer-arrow": "1.2.3",
