@@ -52,7 +52,7 @@
     "@angularclass/hmr": "3.0.0",
     "@ngx-translate/core": "15.0.0",
     "@ngx-translate/http-loader": "8.0.0",
-    "@redux-devtools/extension": "3.2.5",
+    "@redux-devtools/extension": "3.3.0",
     "@sentry/browser": "8.33.0",
     "@types/bootstrap": "5.2.6",
     "@types/core-js": "2.5.5",
