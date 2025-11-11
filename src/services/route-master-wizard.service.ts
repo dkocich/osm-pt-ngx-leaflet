@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { BsModalService } from 'ngx-bootstrap';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { MapService } from './map.service';
 import { StorageService } from './storage.service';
 import { ProcessService } from './process.service';
@@ -8,7 +8,9 @@ import { IPtRelation } from '../core/ptRelation.interface';
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { IOsmElement } from '../core/osmElement.interface';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class RouteMasterWizardService {
   map;
   routes = [];

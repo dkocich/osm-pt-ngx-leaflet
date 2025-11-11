@@ -1,4 +1,3 @@
-import { NgRedux, select } from '@angular-redux/store';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
@@ -8,7 +7,6 @@ import {
 } from '../../core/editingOptions.interface';
 import { StorageService } from '../../services/storage.service';
 import { TutorialService } from '../../services/tutorial.service';
-import { IAppState } from '../../store/model';
 
 @Component({
   providers: [],
@@ -17,9 +15,7 @@ import { IAppState } from '../../store/model';
   templateUrl: './expert.component.html',
 })
 export class ExpertComponent {
-  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
   constructor(
-    private ngRedux: NgRedux<IAppState>,
     private tutorialSrv: TutorialService,
     private storageSrv: StorageService,
   ) {}
@@ -62,7 +58,7 @@ export class ExpertComponent {
   openBrowser(name: string): void {
     if (
       name === 'route-browser' &&
-      this.ngRedux.getState()['app']['tutorialMode'] === false &&
+      // this.ngRedux.getState()['app']['tutorialMode'] === false &&
       this.isRouteBrowserOpen
     ) {
       this.storageSrv.tutorialStepCompleted.emit('open route browser expert');

@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-// import { BsDropdownModule } from "ngx-bootstrap/dropdown";
-
 @Component({
   providers: [],
   selector: 'lang',

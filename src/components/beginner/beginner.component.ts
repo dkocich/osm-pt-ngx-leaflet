@@ -1,4 +1,3 @@
-import { NgRedux, select } from '@angular-redux/store';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
@@ -9,8 +8,6 @@ import {
 import { PtTags } from '../../core/ptTags.class';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-import { AppActions } from '../../store/app/actions';
-import { IAppState } from '../../store/model';
 
 @Component({
   providers: [],
@@ -19,12 +16,9 @@ import { IAppState } from '../../store/model';
   templateUrl: './beginner.component.html',
 })
 export class BeginnerComponent {
-  @ViewChild('accordion1') a1: ElementRef;
+  @ViewChild('accordion1')
+  a1: ElementRef;
 
-  @select(['app', 'beginnerView']) readonly beginnerView$: Observable<string>;
-  @select(['app', 'errorCorrectionMode'])
-  readonly errorCorrectionMode$: Observable<ISuggestionsBrowserOptions>;
-  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
   expectedKeys = PtTags.expectedKeys;
   routeBrowserOptions: IRouteBrowserOptions = {
     createRoute: false,
@@ -62,10 +56,8 @@ export class BeginnerComponent {
   a2;
 
   constructor(
-    private appActions: AppActions,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState>,
   ) {}
 
   /**
@@ -86,7 +78,7 @@ export class BeginnerComponent {
    * Refreshes view for back button functionality
    */
   back(): void {
-    this.appActions.actSetBeginnerView('stop');
+    // this.appActions.actSetBeginnerView('stop');
     this.storageSrv.currentElement = this.storageSrv.selectedStopBeginnerMode;
     this.processSrv.refreshSidebarView('tag');
     this.processSrv.exploreStop(
@@ -102,21 +94,22 @@ export class BeginnerComponent {
    * Determines whether given component should be viewed
    */
   shouldView(windowName: string): boolean {
-    const beginnerView = this.ngRedux.getState()['app']['beginnerView'];
-    const editing = this.ngRedux.getState()['app']['editing'];
-
-    switch (windowName) {
-      case 'route-browser':
-        return beginnerView === 'stop';
-
-      case 'tag-browser':
-        return true;
-
-      case 'validation-browser':
-        return beginnerView === 'stop' && editing;
-
-      default:
-        return false;
-    }
+    return true;
+    // const beginnerView = this.ngRedux.getState()['app']['beginnerView'];
+    // const editing = this.ngRedux.getState()['app']['editing'];
+    //
+    // switch (windowName) {
+    //   case 'route-browser':
+    //     return beginnerView === 'stop';
+    //
+    //   case 'tag-browser':
+    //     return true;
+    //
+    //   case 'validation-browser':
+    //     return beginnerView === 'stop' && editing;
+    //
+    //   default:
+    //     return false;
+    // }
   }
 }

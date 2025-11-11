@@ -1,7 +1,6 @@
-import { select } from '@angular-redux/store';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
-import { ModalDirective } from 'ngx-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { MapService } from '../../services/map.service';
@@ -19,9 +18,10 @@ import { StorageService } from '../../services/storage.service';
   templateUrl: './transporter.component.html',
 })
 export class TransporterComponent implements OnInit {
-  @ViewChild('downloadModal') downloadModal: ModalDirective;
-  @ViewChild('uploadModal') uploadModal: ModalDirective;
-  @select(['app', 'tutorialMode']) readonly tutorialMode$: Observable<string>;
+  @ViewChild('downloadModal')
+  downloadModal: ModalDirective;
+  @ViewChild('uploadModal')
+  uploadModal: ModalDirective;
 
   favoriteQueries = [
     {

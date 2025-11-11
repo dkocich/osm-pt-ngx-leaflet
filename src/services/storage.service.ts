@@ -9,7 +9,9 @@ import {
 import { IOsmElement } from '../core/osmElement.interface';
 import { IPtStop } from '../core/ptStop.interface';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class StorageService {
   elementsDownloaded = new Set();
   queriedMasters = new Set();

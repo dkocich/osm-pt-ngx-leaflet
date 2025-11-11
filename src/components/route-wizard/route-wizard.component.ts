@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import * as L from 'leaflet';
-import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ConfService } from '../../services/conf.service';
@@ -11,7 +12,6 @@ import { ProcessService } from '../../services/process.service';
 import { RouteWizardService } from '../../services/route-wizard.service';
 import { StorageService } from '../../services/storage.service';
 import { WarnService } from '../../services/warn.service';
-import { AppActions } from '../../store/app/actions';
 
 @Component({
   selector: 'route-wizard',
@@ -21,7 +21,7 @@ import { AppActions } from '../../store/app/actions';
 export class RouteWizardComponent implements OnInit {
   map: L.Map;
   newRoutesRefs = [];
-  osmtogeojson = require('osmtogeojson');
+  import osmtogeojson from 'osmtogeojson';
   private startEventProcessing = new Subject<L.LeafletEvent>();
   newRoute = {};
   newRouteMembersSuggestions = [];
@@ -34,7 +34,8 @@ export class RouteWizardComponent implements OnInit {
   canPlatformsConnect = false;
   currentlyViewedRef = null;
 
-  @ViewChild('stepTabs') stepTabs: TabsetComponent;
+  @ViewChild('stepTabs')
+  stepTabs: TabsetComponent;
 
   constructor(
     private storageSrv: StorageService,
@@ -45,7 +46,6 @@ export class RouteWizardComponent implements OnInit {
     private processSrv: ProcessService,
     private editSrv: EditService,
     public modalRefRouteWiz: BsModalRef,
-    public appActions: AppActions,
   ) {
     this.routeWizardSrv.routesReceived.subscribe((routesMap) => {
       if (routesMap === null) {
@@ -267,18 +267,18 @@ export class RouteWizardComponent implements OnInit {
    */
   saveStep4(): void {
     RouteWizardService.assignRolesToMembers(this.addedNewRouteMembers);
-    this.newRoute.members = RouteWizardService.formRelMembers(
+    this.newRoute['members'] = RouteWizardService.formRelMembers(
       this.addedNewRouteMembers,
     );
-    this.newRoute.tags = RouteWizardService.filterEmptyTags(this.newRoute);
+    this.newRoute['tags'] = RouteWizardService.filterEmptyTags(this.newRoute);
     const change = { from: undefined, to: this.newRoute };
     this.routeWizardSrv.modalMapElementsMap.set(
-      this.newRoute.id,
+      this.newRoute['id'],
       this.newRoute,
     );
     this.editSrv.addChange(this.newRoute, 'add route', change);
     this.modalRefRouteWiz.hide();
-    this.appActions.actSetWizardMode(null);
+    // this.appActions.actSetWizardMode(null);
   }
 
   /**

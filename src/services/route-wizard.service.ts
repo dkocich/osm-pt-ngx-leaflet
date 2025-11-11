@@ -1,11 +1,13 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import * as L from 'leaflet';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class RouteWizardService {
   constructor(
     private storageSrv: StorageService,
@@ -230,7 +232,7 @@ export class RouteWizardService {
     this.storageSrv.elementsMap.forEach((element) => {
       elements.push(element);
     });
-    obj.elements = elements;
+    obj['elements'] = elements;
     const transformed = this.osmtogeojson(obj);
     this.renderTransformedGeojsonDataForRouteWizard(transformed, this.map);
   }

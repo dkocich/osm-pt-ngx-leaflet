@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { IOSMAuthOptions } from '../core/osmAuthOptions.interface';
 import { ConfService } from './conf.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
   private osmAuth = require('osm-auth');
   private osmAuthOptions: IOSMAuthOptions = {

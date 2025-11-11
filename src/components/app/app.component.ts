@@ -1,8 +1,6 @@
-import { NgRedux, select } from '@angular-redux/store';
 import { Component, isDevMode, OnInit, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
-import { Spinkit } from 'ng-http-loader';
-import { CarouselConfig, ModalDirective } from 'ngx-bootstrap';
+import { CarouselConfig, ModalDirective } from 'ngx-bootstrap/carousel';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
@@ -12,8 +10,6 @@ import { GeocodeService } from '../../services/geocode.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
-import { AppActions } from '../../store/app/actions';
-import { IAppState } from '../../store/model';
 import { AuthComponent } from '../auth/auth.component';
 import { ToolbarComponent } from '../toolbar/toolbar.component';
 
@@ -24,22 +20,18 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
-  spinkit = Spinkit;
   advancedMode = Boolean(localStorage.getItem('advancedMode'));
 
-  @ViewChild(ToolbarComponent) toolbarComponent: ToolbarComponent;
-  @ViewChild(AuthComponent) authComponent: AuthComponent;
-  @ViewChild('helpModal') helpModal: ModalDirective;
+  @ViewChild(ToolbarComponent)
+  toolbarComponent: ToolbarComponent;
+  @ViewChild(AuthComponent)
+  authComponent: AuthComponent;
+  @ViewChild('helpModal')
+  helpModal: ModalDirective;
 
-  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
-  @select(['app', 'advancedExpMode'])
-  readonly advancedExpMode$: Observable<boolean>;
-  @select(['app', 'tutorialMode']) readonly tutorialMode$: Observable<boolean>;
   private startEventProcessing = new Subject<L.LeafletEvent>();
 
   constructor(
-    public appActions: AppActions,
-    private ngRedux: NgRedux<IAppState>,
     private dbSrv: DbService,
     private editSrv: EditService,
     private geocodeSrv: GeocodeService,
@@ -110,10 +102,10 @@ export class AppComponent implements OnInit {
   }
 
   startTutorials(): void {
-    this.appActions.actToggleTutorialMode(true);
+    // this.appActions.actToggleTutorialMode(true);
   }
 
-  isAuthenticated(): void {
+  isAuthenticated(): boolean {
     return this.authSrv.oauth.authenticated();
   }
 }

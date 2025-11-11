@@ -1,14 +1,13 @@
-import { NgRedux } from '@angular-redux/store';
 import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
-import { AppActions } from '../store/app/actions';
-import { IAppState } from '../store/model';
 import { EditService } from './edit.service';
 import { MapService } from './map.service';
 import { StorageService } from './storage.service';
 import * as data from './tutorials.json';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TutorialService {
   intro = null;
   steps = null;
@@ -16,11 +15,9 @@ export class TutorialService {
   expertMode = null;
 
   constructor(
-    public appActions: AppActions,
     public editSrv: EditService,
     public storageSrv: StorageService,
     public mapSrv: MapService,
-    private ngRedux: NgRedux<IAppState>,
   ) {
     this.storageSrv.tutorialStepCompleted.subscribe((action) => {
       if (action) {
@@ -41,10 +38,10 @@ export class TutorialService {
       tutorialTitle === 'Add new route' ||
       tutorialTitle === 'Quick overview (expert)'
     ) {
-      this.appActions.actSetAdvancedExpMode(true);
+      // this.appActions.actSetAdvancedExpMode(true);
     }
     if (tutorialTitle === 'Quick overview (expert)') {
-      this.appActions.actToggleEditing();
+      // this.appActions.actToggleEditing();
       this.intro.setOptions({ disableInteraction: true });
     }
     this.expertMode = expertMode;
@@ -101,7 +98,7 @@ export class TutorialService {
       });
       this.intro.goToStepNumber(nextStep).start();
       this.storageSrv.currentTutorialStep = 0;
-      this.appActions.actToggleTutorialMode(true);
+      // this.appActions.actToggleTutorialMode(true);
       for (let i = 0; i < this.tempEditSteps; i++) {
         this.editSrv.currentTotalSteps.emit({
           current: this.editSrv.currentEditStep - 1,
@@ -122,23 +119,23 @@ export class TutorialService {
   }
 
   private handleStepCompletion(action: string): void {
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      const title = this.storageSrv.currentTutorial;
-      switch (title) {
-        case 'Add new route':
-          this.moveToNextStep();
-          break;
-        case 'Add new platform':
-          this.moveToNextStep();
-          break;
-        case 'Quick overview (beginner)':
-          this.handleQuickOverviewBeginnerCompletion(action);
-          break;
-        case 'Quick overview (expert)':
-          this.handleQuickOverviewExpertCompletion();
-          break;
-      }
+    // if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+    const title = this.storageSrv.currentTutorial;
+    switch (title) {
+      case 'Add new route':
+        this.moveToNextStep();
+        break;
+      case 'Add new platform':
+        this.moveToNextStep();
+        break;
+      case 'Quick overview (beginner)':
+        this.handleQuickOverviewBeginnerCompletion(action);
+        break;
+      case 'Quick overview (expert)':
+        this.handleQuickOverviewExpertCompletion();
+        break;
     }
+    // }
   }
 
   private leftKeyClick(event, fn): void {

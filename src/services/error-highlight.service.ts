@@ -1,8 +1,7 @@
-import { NgRedux } from '@angular-redux/store';
 import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import * as MobileDetect from 'mobile-detect';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ModalComponent } from '../components/modal/modal.component';
 import { ISuggestionsBrowserOptions } from '../core/editingOptions.interface';
 import {
@@ -13,19 +12,17 @@ import {
   IWayErrorObject,
 } from '../core/errorObject.interface';
 import { IPtStop } from '../core/ptStop.interface';
-import { AppActions } from '../store/app/actions';
-import { IAppState } from '../store/model';
 import { MapService } from './map.service';
 import { ProcessService } from './process.service';
 import { StorageService } from './storage.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ErrorHighlightService {
   constructor(
     private modalService: BsModalService,
-    private ngRedux: NgRedux<IAppState>,
     private processSrv: ProcessService,
-    public appActions: AppActions,
     public mapSrv: MapService,
     public storageSrv: StorageService,
   ) {
@@ -48,9 +45,6 @@ export class ErrorHighlightService {
         this.ptPairErrorsObj = this.storageSrv.ptPairErrorsObject;
       }
     });
-    this.errorCorrectionModeSubscription = ngRedux
-      .select<ISuggestionsBrowserOptions>(['app', 'errorCorrectionMode'])
-      .subscribe((data) => (this.errorCorrectionMode = data));
   }
   modalRef: BsModalRef;
   nameErrorsObj: INameErrorObject[] = [];
@@ -68,7 +62,6 @@ export class ErrorHighlightService {
     | 'PTv correction';
 
   errorCorrectionMode: ISuggestionsBrowserOptions;
-  errorCorrectionModeSubscription;
 
   private circleHighlight: L.Circle = null;
   private clickEventFunction = null;
@@ -122,7 +115,6 @@ export class ErrorHighlightService {
         layer.off('click');
       }
     });
-    this.appActions.actToggleSwitchMode(true);
     if (this.currentMode === 'missing name tags') {
       stop = this.nameErrorsObj[0]['stop'];
       this.addSinglePopUp(this.nameErrorsObj[0]);
@@ -162,8 +154,6 @@ export class ErrorHighlightService {
     const stop = errorObj['stop'];
     const popUpElement = popUp.getElement();
     const popUpId = popUp['_leaflet_id'];
-    const errorCorrectionMode =
-      this.ngRedux.getState()['app']['errorCorrectionMode'];
 
     L.DomEvent.addListener(popUpElement, 'click', (e) => {
       const featureId = Number(stop.id);
@@ -172,27 +162,27 @@ export class ErrorHighlightService {
         this.storageSrv.elementsMap,
       );
       if (element) {
-        if (errorCorrectionMode.nameSuggestions.startCorrection) {
+        if (this.errorCorrectionMode.nameSuggestions.startCorrection) {
           this.openModalWithComponentForName(errorObj);
         }
 
         if (
-          errorCorrectionMode.refSuggestions &&
-          errorCorrectionMode.refSuggestions.startCorrection
+          this.errorCorrectionMode.refSuggestions &&
+          this.errorCorrectionMode.refSuggestions.startCorrection
         ) {
           this.openModalWithComponentForRef(errorObj);
         }
 
         if (
-          errorCorrectionMode.waySuggestions &&
-          errorCorrectionMode.waySuggestions.startCorrection
+          this.errorCorrectionMode.waySuggestions &&
+          this.errorCorrectionMode.waySuggestions.startCorrection
         ) {
           this.openModalWithComponentForWay(errorObj);
         }
 
         if (
-          errorCorrectionMode.PTvSuggestions &&
-          errorCorrectionMode.PTvSuggestions.startCorrection
+          this.errorCorrectionMode.PTvSuggestions &&
+          this.errorCorrectionMode.PTvSuggestions.startCorrection
         ) {
           this.openModalWithComponentForPTv(errorObj);
         }
@@ -617,83 +607,30 @@ export class ErrorHighlightService {
    * Quits specific correction mode
    */
   quit(): void {
-    const errorCorrectionMode: ISuggestionsBrowserOptions =
-      this.ngRedux.getState()['app']['errorCorrectionMode'];
-    if (errorCorrectionMode) {
+    if (this.errorCorrectionMode) {
       if (
-        errorCorrectionMode.refSuggestions &&
-        errorCorrectionMode.refSuggestions.startCorrection
+        this.errorCorrectionMode.refSuggestions &&
+        this.errorCorrectionMode.refSuggestions.startCorrection
       ) {
-        this.appActions.actSetErrorCorrectionMode({
-          nameSuggestions: errorCorrectionMode.nameSuggestions,
-          refSuggestions: {
-            found: true,
-            startCorrection: false,
-          },
-          waySuggestions: errorCorrectionMode.waySuggestions,
-          PTvSuggestions: errorCorrectionMode.PTvSuggestions,
-          ptPairSuggestions: errorCorrectionMode.ptPairSuggestions,
-        });
       }
-      if (errorCorrectionMode.nameSuggestions.startCorrection) {
-        this.appActions.actSetErrorCorrectionMode({
-          nameSuggestions: {
-            found: true,
-            startCorrection: false,
-          },
-          refSuggestions: errorCorrectionMode.refSuggestions,
-          waySuggestions: errorCorrectionMode.waySuggestions,
-          PTvSuggestions: errorCorrectionMode.PTvSuggestions,
-          ptPairSuggestions: errorCorrectionMode.ptPairSuggestions,
-        });
+      if (this.errorCorrectionMode.nameSuggestions.startCorrection) {
       }
       if (
-        errorCorrectionMode.waySuggestions &&
-        errorCorrectionMode.waySuggestions.startCorrection
+        this.errorCorrectionMode.waySuggestions &&
+        this.errorCorrectionMode.waySuggestions.startCorrection
       ) {
-        this.appActions.actSetErrorCorrectionMode({
-          nameSuggestions: errorCorrectionMode.nameSuggestions,
-          refSuggestions: errorCorrectionMode.refSuggestions,
-          PTvSuggestions: errorCorrectionMode.PTvSuggestions,
-          ptPairSuggestions: errorCorrectionMode.ptPairSuggestions,
-          waySuggestions: {
-            found: true,
-            startCorrection: false,
-          },
-        });
       }
       if (
-        errorCorrectionMode.PTvSuggestions &&
-        errorCorrectionMode.PTvSuggestions.startCorrection
+        this.errorCorrectionMode.PTvSuggestions &&
+        this.errorCorrectionMode.PTvSuggestions.startCorrection
       ) {
-        this.appActions.actSetErrorCorrectionMode({
-          nameSuggestions: errorCorrectionMode.nameSuggestions,
-          refSuggestions: errorCorrectionMode.refSuggestions,
-          waySuggestions: errorCorrectionMode.waySuggestions,
-          ptPairSuggestions: errorCorrectionMode.ptPairSuggestions,
-          PTvSuggestions: {
-            found: true,
-            startCorrection: false,
-          },
-        });
       }
       if (
-        errorCorrectionMode.ptPairSuggestions &&
-        errorCorrectionMode.ptPairSuggestions.startCorrection
+        this.errorCorrectionMode.ptPairSuggestions &&
+        this.errorCorrectionMode.ptPairSuggestions.startCorrection
       ) {
-        this.appActions.actSetErrorCorrectionMode({
-          nameSuggestions: errorCorrectionMode.nameSuggestions,
-          refSuggestions: errorCorrectionMode.refSuggestions,
-          waySuggestions: errorCorrectionMode.waySuggestions,
-          PTvSuggestions: errorCorrectionMode.PTvSuggestions,
-          ptPairSuggestions: {
-            found: true,
-            startCorrection: false,
-          },
-        });
       }
 
-      this.appActions.actToggleSwitchMode(false);
       this.processSrv.refreshSidebarView('cancel selection');
       this.mapSrv.removePopUps();
       if (this.circleHighlight) {
@@ -883,9 +820,7 @@ export class ErrorHighlightService {
    * Jumps to error
    */
   jumpToLocation(index: number): void {
-    const errorCorrectionMode =
-      this.ngRedux.getState()['app']['errorCorrectionMode'];
-    if (errorCorrectionMode.nameSuggestions.startCorrection) {
+    if (this.errorCorrectionMode.nameSuggestions.startCorrection) {
       document.getElementById(
         this.nameErrorsObj[this.currentIndex].stop.id.toString() +
           '-name-error-list-id',
@@ -905,8 +840,8 @@ export class ErrorHighlightService {
     }
 
     if (
-      errorCorrectionMode.refSuggestions &&
-      errorCorrectionMode.refSuggestions.startCorrection
+      this.errorCorrectionMode.refSuggestions &&
+      this.errorCorrectionMode.refSuggestions.startCorrection
     ) {
       document.getElementById(
         this.refErrorsObj[this.currentIndex].stop.id.toString() +
@@ -927,8 +862,8 @@ export class ErrorHighlightService {
     }
 
     if (
-      errorCorrectionMode.waySuggestions &&
-      errorCorrectionMode.waySuggestions.startCorrection
+      this.errorCorrectionMode.waySuggestions &&
+      this.errorCorrectionMode.waySuggestions.startCorrection
     ) {
       document.getElementById(
         this.wayErrorsObj[this.currentIndex].stop.id.toString() +
@@ -949,8 +884,8 @@ export class ErrorHighlightService {
     }
 
     if (
-      errorCorrectionMode.PTvSuggestions &&
-      errorCorrectionMode.PTvSuggestions.startCorrection
+      this.errorCorrectionMode.PTvSuggestions &&
+      this.errorCorrectionMode.PTvSuggestions.startCorrection
     ) {
       document.getElementById(
         this.PTvErrorsObj[this.currentIndex].stop.id.toString() +
@@ -971,8 +906,8 @@ export class ErrorHighlightService {
     }
 
     if (
-      errorCorrectionMode.ptPairSuggestions &&
-      errorCorrectionMode.ptPairSuggestions.startCorrection
+      this.errorCorrectionMode.ptPairSuggestions &&
+      this.errorCorrectionMode.ptPairSuggestions.startCorrection
     ) {
       document.getElementById(
         this.ptPairErrorsObj[this.currentIndex].stop.id.toString() +
@@ -1202,3 +1137,4 @@ export class ErrorHighlightService {
     this.storageSrv.refreshErrorObjects.emit({ typeOfErrorObject: 'pt-pair' });
   }
 }
+

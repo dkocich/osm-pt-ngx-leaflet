@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class WarnService {
   private successMessage = 'Data fetched successfully';
   private errorMessage = 'Error in fetching data';

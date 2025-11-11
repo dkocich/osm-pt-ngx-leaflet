@@ -1,4 +1,3 @@
-import { select } from '@angular-redux/store';
 import { Component, OnInit } from '@angular/core';
 import { DragulaService } from 'ng2-dragula';
 import { Observable } from 'rxjs';
@@ -20,7 +19,6 @@ export class StopBrowserComponent implements OnInit {
   currentElement;
   listOfStops: IPtStop[] = this.storageSrv.listOfStops;
   filteredView: boolean;
-  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
 
   constructor(
     private dragulaSrv: DragulaService,

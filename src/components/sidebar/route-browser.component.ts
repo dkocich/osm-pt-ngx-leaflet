@@ -1,4 +1,3 @@
-import { NgRedux, select } from '@angular-redux/store';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Observable } from 'rxjs';
@@ -8,8 +7,6 @@ import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-import { AppActions } from '../../store/app/actions';
-import { IAppState } from '../../store/model';
 
 @Component({
   providers: [],
@@ -18,8 +15,6 @@ import { IAppState } from '../../store/model';
   templateUrl: './route-browser.component.html',
 })
 export class RouteBrowserComponent implements OnInit, OnDestroy {
-  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
-
   currentElement;
   listOfMasters: object[] = this.storageSrv.listOfMasters;
   listOfRelations: object[] = this.storageSrv.listOfRelations;
@@ -30,9 +25,6 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   private idsHaveMaster = new Set();
   membersEditing = false;
   @Input() routeBrowserOptions: IRouteBrowserOptions;
-  @select(['app', 'advancedExpMode'])
-  readonly advancedExpMode$: Observable<boolean>;
-  private advancedExpModeSubscription;
   private advancedExpMode: boolean;
   constructor(
     private editSrv: EditService,
@@ -40,23 +32,18 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
     private overpassSrv: OverpassService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState>,
-    private appActions: AppActions,
     private hotkeysService: HotkeysService,
   ) {
-    this.advancedExpModeSubscription = ngRedux
-      .select<boolean>(['app', 'advancedExpMode'])
-      .subscribe((data) => (this.advancedExpMode = data));
     this.hotkeysService.add([
       new Hotkey(
         '2',
         (event: KeyboardEvent): boolean => {
-          if (
-            this.ngRedux.getState()['app']['editing'] &&
-            this.ngRedux.getState()['app']['advancedExpMode']
-          ) {
-            this.createRoute();
-          }
+          // if (
+          //   this.ngRedux.getState()['app']['editing'] &&
+          //   this.ngRedux.getState()['app']['advancedExpMode']
+          // ) {
+          //   this.createRoute();
+          // }
           return false;
         },
         undefined,
@@ -65,12 +52,12 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
       new Hotkey(
         'shift+2',
         (event: KeyboardEvent): boolean => {
-          if (
-            this.ngRedux.getState()['app']['editing'] &&
-            this.ngRedux.getState()['app']['advancedExpMode']
-          ) {
-            this.toggleMembersEdit();
-          }
+          // if (
+          //   this.ngRedux.getState()['app']['editing'] &&
+          //   this.ngRedux.getState()['app']['advancedExpMode']
+          // ) {
+          //   this.toggleMembersEdit();
+          // }
           return false;
         },
         undefined,
@@ -143,7 +130,7 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   exploreRelation($event, rel): void {
     if (!this.advancedExpMode) {
       this.processSrv.refreshTagView(rel);
-      this.appActions.actSetBeginnerView('route');
+      // this.appActions.actSetBeginnerView('route');
       this.processSrv.exploreRelation(
         this.storageSrv.elementsMap.get(rel.id),
         true,
@@ -255,6 +242,6 @@ export class RouteBrowserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.advancedExpModeSubscription.unsubscribe();
+    // this.advancedExpModeSubscription.unsubscribe();
   }
 }

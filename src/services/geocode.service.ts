@@ -10,7 +10,9 @@ import {
 import { ConfService } from './conf.service';
 import { MapService } from './map.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class GeocodeService {
   httpClient: HttpClient;
 

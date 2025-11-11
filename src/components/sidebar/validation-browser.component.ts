@@ -1,7 +1,6 @@
-import { NgRedux, select } from '@angular-redux/store';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
-import { BsModalService } from 'ngx-bootstrap';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
 import { ISuggestionsBrowserOptions } from '../../core/editingOptions.interface';
 import {
@@ -17,8 +16,6 @@ import { ErrorHighlightService } from '../../services/error-highlight.service';
 import { MapService } from '../../services/map.service';
 import { OverpassService } from '../../services/overpass.service';
 import { StorageService } from '../../services/storage.service';
-import { AppActions } from '../../store/app/actions';
-import { IAppState } from '../../store/model';
 
 @Component({
   selector: 'validation-browser',
@@ -26,11 +23,6 @@ import { IAppState } from '../../store/model';
   styleUrls: ['./validation-browser.component.less'],
 })
 export class ValidationBrowserComponent implements OnInit, OnDestroy {
-  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
-  @select(['app', 'errorCorrectionMode'])
-  readonly errorCorrectionMode$: Observable<object>;
-  @select(['app', 'switchMode']) readonly switchMode$: Observable<boolean>;
-
   refErrorsObj: IRefErrorObject[];
   nameErrorsObj: INameErrorObject[];
   wayErrorsObj: IWayErrorObject[];
@@ -38,7 +30,6 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
   ptPairErrorsObj: IPTPairErrorObject[];
 
   @Input() suggestionsBrowserOptions: ISuggestionsBrowserOptions;
-  errorCorrectionModeSubscription;
   errorCorrectionMode: ISuggestionsBrowserOptions;
 
   constructor(
@@ -46,9 +37,7 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     private mapSrv: MapService,
     private modalService: BsModalService,
     private overpassSrv: OverpassService,
-    public appActions: AppActions,
     public storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState>,
     private hotkeysService: HotkeysService,
   ) {
     this.storageSrv.refreshErrorObjects.subscribe((data) => {
@@ -73,12 +62,6 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
         this.ptPairErrorsObj = this.storageSrv.ptPairErrorsObject;
       }
     });
-
-    this.errorCorrectionModeSubscription = ngRedux
-      .select<ISuggestionsBrowserOptions>(['app', 'errorCorrectionMode'])
-      .subscribe((data) => {
-        this.errorCorrectionMode = data;
-      });
 
     this.hotkeysService.add([
       new Hotkey(
@@ -144,11 +127,11 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
     ]);
   }
   ngOnInit(): void {
-    this.appActions.actSetErrorCorrectionMode(this.suggestionsBrowserOptions);
+    // this.appActions.actSetErrorCorrectionMode(this.suggestionsBrowserOptions);
   }
 
   ngOnDestroy(): void {
-    this.errorCorrectionModeSubscription.unsubscribe();
+    // this.errorCorrectionModeSubscription.unsubscribe();
   }
 
   /**
@@ -172,32 +155,32 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
    */
   startNameCorrection(): void {
     if (this.errorCorrectionMode.nameSuggestions) {
-      this.appActions.actSetErrorCorrectionMode({
-        nameSuggestions: {
-          found: true,
-          startCorrection: true,
-        },
-        refSuggestions: this.errorCorrectionMode.refSuggestions,
-        waySuggestions: this.errorCorrectionMode.waySuggestions,
-        PTvSuggestions: this.errorCorrectionMode.PTvSuggestions,
-        ptPairSuggestions: this.errorCorrectionMode.ptPairSuggestions,
-      });
+      // this.appActions.actSetErrorCorrectionMode({
+      //   nameSuggestions: {
+      //     found: true,
+      //     startCorrection: true,
+      //   },
+      //   refSuggestions: this.errorCorrectionMode.refSuggestions,
+      //   waySuggestions: this.errorCorrectionMode.waySuggestions,
+      //   PTvSuggestions: this.errorCorrectionMode.PTvSuggestions,
+      //   ptPairSuggestions: this.errorCorrectionMode.ptPairSuggestions,
+      // });
     }
     this.errorHighlightSrv.startCorrection('missing name tags');
   }
 
   startWayCorrection(): void {
     if (this.errorCorrectionMode.waySuggestions) {
-      this.appActions.actSetErrorCorrectionMode({
-        waySuggestions: {
-          found: true,
-          startCorrection: true,
-        },
-        refSuggestions: this.errorCorrectionMode.refSuggestions,
-        nameSuggestions: this.errorCorrectionMode.nameSuggestions,
-        PTvSuggestions: this.errorCorrectionMode.PTvSuggestions,
-        ptPairSuggestions: this.errorCorrectionMode.ptPairSuggestions,
-      });
+      // this.appActions.actSetErrorCorrectionMode({
+      //   waySuggestions: {
+      //     found: true,
+      //     startCorrection: true,
+      //   },
+      //   refSuggestions: this.errorCorrectionMode.refSuggestions,
+      //   nameSuggestions: this.errorCorrectionMode.nameSuggestions,
+      //   PTvSuggestions: this.errorCorrectionMode.PTvSuggestions,
+      //   ptPairSuggestions: this.errorCorrectionMode.ptPairSuggestions,
+      // });
     }
     this.errorHighlightSrv.startCorrection('way as parent');
   }
@@ -207,16 +190,16 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
    */
   startRefCorrection(): void {
     if (this.errorCorrectionMode.refSuggestions) {
-      this.appActions.actSetErrorCorrectionMode({
-        nameSuggestions: this.errorCorrectionMode.nameSuggestions,
-        refSuggestions: {
-          found: true,
-          startCorrection: true,
-        },
-        waySuggestions: this.errorCorrectionMode.waySuggestions,
-        PTvSuggestions: this.errorCorrectionMode.PTvSuggestions,
-        ptPairSuggestions: this.errorCorrectionMode.ptPairSuggestions,
-      });
+      // this.appActions.actSetErrorCorrectionMode({
+      //   nameSuggestions: this.errorCorrectionMode.nameSuggestions,
+      //   refSuggestions: {
+      //     found: true,
+      //     startCorrection: true,
+      //   },
+      //   waySuggestions: this.errorCorrectionMode.waySuggestions,
+      //   PTvSuggestions: this.errorCorrectionMode.PTvSuggestions,
+      //   ptPairSuggestions: this.errorCorrectionMode.ptPairSuggestions,
+      // });
     }
     this.errorHighlightSrv.startCorrection('missing refs');
   }
@@ -226,32 +209,32 @@ export class ValidationBrowserComponent implements OnInit, OnDestroy {
    */
   startPTvCorrection(): void {
     if (this.errorCorrectionMode.PTvSuggestions) {
-      this.appActions.actSetErrorCorrectionMode({
-        nameSuggestions: this.errorCorrectionMode.nameSuggestions,
-        refSuggestions: this.errorCorrectionMode.refSuggestions,
-        waySuggestions: this.errorCorrectionMode.waySuggestions,
-        PTvSuggestions: {
-          found: true,
-          startCorrection: true,
-        },
-        ptPairSuggestions: this.errorCorrectionMode.ptPairSuggestions,
-      });
+      // this.appActions.actSetErrorCorrectionMode({
+      //   nameSuggestions: this.errorCorrectionMode.nameSuggestions,
+      //   refSuggestions: this.errorCorrectionMode.refSuggestions,
+      //   waySuggestions: this.errorCorrectionMode.waySuggestions,
+      //   PTvSuggestions: {
+      //     found: true,
+      //     startCorrection: true,
+      //   },
+      //   ptPairSuggestions: this.errorCorrectionMode.ptPairSuggestions,
+      // });
     }
     this.errorHighlightSrv.startCorrection('PTv correction');
   }
 
   startPTPairCorrection(): void {
     if (this.errorCorrectionMode.ptPairSuggestions) {
-      this.appActions.actSetErrorCorrectionMode({
-        nameSuggestions: this.errorCorrectionMode.nameSuggestions,
-        refSuggestions: this.errorCorrectionMode.refSuggestions,
-        waySuggestions: this.errorCorrectionMode.waySuggestions,
-        PTvSuggestions: this.errorCorrectionMode.PTvSuggestions,
-        ptPairSuggestions: {
-          found: true,
-          startCorrection: true,
-        },
-      });
+      // this.appActions.actSetErrorCorrectionMode({
+      //   nameSuggestions: this.errorCorrectionMode.nameSuggestions,
+      //   refSuggestions: this.errorCorrectionMode.refSuggestions,
+      //   waySuggestions: this.errorCorrectionMode.waySuggestions,
+      //   PTvSuggestions: this.errorCorrectionMode.PTvSuggestions,
+      //   ptPairSuggestions: {
+      //     found: true,
+      //     startCorrection: true,
+      //   },
+      // });
     }
     this.errorHighlightSrv.startCorrection('pt-pair');
   }

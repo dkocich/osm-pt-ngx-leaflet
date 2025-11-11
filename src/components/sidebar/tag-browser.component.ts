@@ -1,4 +1,3 @@
-import { NgRedux, select } from '@angular-redux/store';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -14,7 +13,6 @@ import { PtTags } from '../../core/ptTags.class';
 import { EditService } from '../../services/edit.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
-import { IAppState } from '../../store/model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -29,12 +27,8 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
   currentElement: IOsmElement = this.storageSrv.currentElement;
   expectedKeys = PtTags.expectedKeys;
   expectedValues = PtTags.expectedValues;
-  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
-  @select(['app', 'advancedExpMode'])
-  readonly advancedExpMode$: Observable<boolean>;
   @Input() tagBrowserOptions: ITagBrowserOptions;
   unfilledKeys = [];
-  private advancedExpModeSubscription;
   private advancedExpMode: boolean;
 
   constructor(
@@ -42,12 +36,7 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
     private editSrv: EditService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState>,
-  ) {
-    this.advancedExpModeSubscription = ngRedux
-      .select<boolean>(['app', 'advancedExpMode'])
-      .subscribe((data) => (this.advancedExpMode = data));
-  }
+  ) {}
 
   ngOnInit(): void {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {
@@ -222,6 +211,6 @@ export class TagBrowserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.advancedExpModeSubscription.unsubscribe();
+    // this.advancedExpModeSubscription.unsubscribe();
   }
 }

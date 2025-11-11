@@ -2,7 +2,9 @@ import { Db } from '../database/dexiedb';
 import { StorageService } from './storage.service';
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DbService {
   db: Db;
 
@@ -1027,7 +1029,7 @@ export class DbService {
     routeMastersMetaData,
     waysMetaData,
     IDs,
-    parentRoutes: Map<string, string[]>,
+    parentRoutes: Map<string, string[]>
   ) {
     return this.db.transaction(
       'rw',
@@ -1080,3 +1082,4 @@ export class DbService {
     );
   }
 }
+

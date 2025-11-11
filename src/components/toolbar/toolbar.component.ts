@@ -1,4 +1,3 @@
-import { select } from '@angular-redux/store';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import * as L from 'leaflet';
@@ -23,7 +22,8 @@ export class ToolbarComponent implements OnInit {
   htRadioModel: string;
   @ViewChild(TransporterComponent)
   transporterComponent: TransporterComponent;
-  @ViewChild(EditorComponent) editorComponent: EditorComponent;
+  @ViewChild(EditorComponent)
+  editorComponent: EditorComponent;
   filtering: boolean;
 
   currentElement: IOsmElement;
@@ -33,9 +33,6 @@ export class ToolbarComponent implements OnInit {
 
   singleRelID = null;
   multipleRelsHighlightsAndIDs: Map<number, L.Polyline> = null;
-
-  @select(['app', 'errorCorrectionMode'])
-  readonly errorCorrectionMode$: Observable<string>;
 
   constructor(
     private confSrv: ConfService,

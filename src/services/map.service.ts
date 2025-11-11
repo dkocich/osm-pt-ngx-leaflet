@@ -1,4 +1,3 @@
-import { NgRedux } from '@angular-redux/store';
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import * as L from 'leaflet';
@@ -6,7 +5,6 @@ import { TileLayer } from 'leaflet';
 import 'leaflet-textpath';
 import { IPtStop } from '../core/ptStop.interface';
 import { Utils } from '../core/utils.class';
-import { IAppState } from '../store/model';
 import { ConfService } from './conf.service';
 import { StorageService } from './storage.service';
 
@@ -20,14 +18,15 @@ interface IBaseMaps {
   [key: string]: TileLayer;
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class MapService {
   // autoRouteMapNodeClick: EventEmitter<number> = new EventEmitter();
   constructor(
     private confSrv: ConfService,
     private httpClient: HttpClient,
     private storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState>, // private tutorialSrv: TutorialService,
   ) {
     // @ts-ignore
     this.baseMaps = {
@@ -58,7 +57,7 @@ export class MapService {
         'https://server.arcgisonline.com/ArcGIS/rest/services/' +
           'World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
         {
-          attribution: `Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap,
+          attribution: `Tiles &copy; Esri — Esri, DeLorme, NAVTEQ, TomTom, Intermap,
             iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan,
             METI, Esri China (Hong Kong), and the GIS User Community`,
           maxNativeZoom: 19,
@@ -184,7 +183,7 @@ export class MapService {
   }
   map: L.Map;
   baseMaps: IBaseMaps;
-  osmtogeojson = require('osmtogeojson');
+  import osmtogeojson from 'osmtogeojson';
   bounds;
   highlightStroke = undefined;
   editingMode: boolean;

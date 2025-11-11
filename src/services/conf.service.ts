@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 
 import p from '../../package.json';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ConfService {
   static readonly overpassUrl = 'https://overpass-api.de/api/interpreter';
   static readonly baseOsmUrl = 'https://www.openstreetmap.org';

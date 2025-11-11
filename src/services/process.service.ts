@@ -1,4 +1,3 @@
-import { NgRedux } from '@angular-redux/store';
 import { EventEmitter, Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import { Subject } from 'rxjs';
@@ -6,13 +5,13 @@ import { IOsmElement } from '../core/osmElement.interface';
 import { IOverpassResponse } from '../core/overpassResponse.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtStop } from '../core/ptStop.interface';
-import { AppActions } from '../store/app/actions';
-import { IAppState } from '../store/model';
 import { DbService } from './db.service';
 import { MapService } from './map.service';
 import { StorageService } from './storage.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProcessService {
   // Observable boolean sources
   private showRelationsForStopSource = new Subject<boolean>();
@@ -26,27 +25,10 @@ export class ProcessService {
   refreshMasters: EventEmitter<object> = new EventEmitter();
 
   constructor(
-    private ngRedux: NgRedux<IAppState>,
-    private appActions: AppActions,
-
     private mapSrv: MapService,
     private storageSrv: StorageService,
     private dbSrv: DbService,
   ) {
-    // this.mapSrv.popupBtnClick.subscribe(
-    //     (data) => {
-    //         let featureType = data[0];
-    //         let featureId = Number(data[1]);
-    //         let element = this.findElementById(featureId, featureType);
-    //         if (!element) {
-    //             alert("Element was not found?!");
-    //         } else if (featureType === "node") {
-    //             this.exploreStop(element);
-    //         } else if (featureType === "relation") {
-    //             this.exploreRelation(element);
-    //         }
-    //     }
-    // );
 
     this.mapSrv.markerClick.subscribe(
       /**
@@ -63,14 +45,8 @@ export class ProcessService {
             'Problem occurred - clicked element was not found?! Select different element please.',
           );
         }
-        this.appActions.actSelectElement({ element });
         console.log('LOG (processing s.) Selected element is ', element);
         this.refreshTagView(element);
-        if (!this.ngRedux.getState()['app']['advancedExpMode']) {
-          this.storageSrv.selectedStopBeginnerMode = element;
-          this.filterRelationsByStop(element);
-          this.appActions.actSetBeginnerView('stop');
-        }
       },
     );
   }
@@ -123,7 +99,7 @@ export class ProcessService {
 
   processResponse(response: IOverpassResponse): void {
     const responseId = this.getResponseId();
-    const transformedGeojson = this.mapSrv.osmtogeojson(response);
+    const transformedGeojson = import osmtogeojson from 'osmtogeojson';
     this.storageSrv.localJsonStorage.set(responseId, response);
     this.storageSrv.localGeojsonStorage.set(responseId, transformedGeojson);
     this.createLists(responseId);
@@ -572,7 +548,7 @@ export class ProcessService {
   hashIsValidPosition(): boolean {
     const h = window.location.hash.slice(5).split('/').map(Number);
     h.forEach((element) => {
-      if (isNaN) {
+      if (isNaN(element)) {
         return false;
       }
     });
@@ -623,3 +599,4 @@ export class ProcessService {
       });
   }
 }
+

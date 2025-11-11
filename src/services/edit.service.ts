@@ -6,10 +6,10 @@ import { StorageService } from './storage.service';
 import { IPtStop } from '../core/ptStop.interface';
 import { IPtRelation } from '../core/ptRelation.interface';
 import { IPtRelationNew } from '../core/ptRelationNew.interface';
-import { NgRedux } from '@angular-redux/store';
-import { IAppState } from '../store/model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class EditService {
   editingMode: EventEmitter<boolean> = new EventEmitter(false);
   currentEditStep: number;
@@ -22,7 +22,6 @@ export class EditService {
     private mapSrv: MapService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
-    private ngRedux: NgRedux<IAppState>,
   ) {
     // local events
     this.currentTotalSteps.subscribe(
@@ -30,8 +29,8 @@ export class EditService {
        * @param data - f. e. {"current": 5, "total": 10}
        */
       (data) => {
-        this.currentEditStep = data.current;
-        this.totalEditSteps = data.total;
+        this.currentEditStep = data['current'];
+        this.totalEditSteps = data['total'];
       },
     );
 
@@ -43,10 +42,10 @@ export class EditService {
        */
       (data) => {
         const element = this.processSrv.getElementById(
-          Number(data.featureId),
+          Number(data['featureId']),
           this.storageSrv.elementsMap,
         );
-        this.addChange(element, data.type, data.change);
+        this.addChange(element, data['type'], data['change']);
       },
     );
 
@@ -128,34 +127,34 @@ export class EditService {
       case 'add tag':
         console.log('LOG (editing s.) Should add this tag: ', editObj);
         const atElem = this.storageSrv.elementsMap.get(editObj.id);
-        atElem.tags[editObj.change.key] = editObj.change.value;
+        atElem.tags[editObj.change['key']] = editObj.change['value'];
         this.storageSrv.elementsMap.set(editObj.id, atElem);
         console.log('LOG (editing s.) Added element: ', atElem);
         break;
       case 'remove tag':
         console.log('LOG (editing s.) Should remove this tag: ', editObj);
         const rtElem = this.storageSrv.elementsMap.get(editObj.id);
-        delete rtElem.tags[editObj.change.key];
+        delete rtElem.tags[editObj.change['key']];
         this.storageSrv.elementsMap.set(editObj.id, rtElem);
         console.log('LOG (editing s.) Removed element: ', rtElem);
         break;
       case 'change tag':
         console.log('LOG (editing s.) I should make this change: ', editObj);
         const chtElem = this.storageSrv.elementsMap.get(editObj.id);
-        delete chtElem.tags[editObj.change.from.key];
-        chtElem.tags[editObj.change.to.key] = editObj.change.to.value;
+        delete chtElem.tags[editObj.change['from'].key];
+        chtElem.tags[editObj.change['to'].key] = editObj.change['to'].value;
         this.storageSrv.elementsMap.set(editObj.id, chtElem);
         break;
       case 'change members':
         console.log('LOG (editing s.) I should change members', editObj);
         const chmElem = this.storageSrv.elementsMap.get(editObj.id);
-        chmElem.members = editObj.change.to;
+        chmElem.members = editObj.change['to'];
         this.storageSrv.elementsMap.set(editObj.id, chmElem);
         break;
       case 'add element':
         console.log('LOG (editing s.) I should add element', editObj);
         if (!this.storageSrv.elementsMap.get(editObj.id)) {
-          this.storageSrv.elementsMap.set(editObj.id, editObj.change.to);
+          this.storageSrv.elementsMap.set(editObj.id, editObj.change['to']);
         } else {
           alert(
             "FIXME: this new NODE's ID already exists " +
@@ -169,15 +168,15 @@ export class EditService {
       case 'modify element':
         console.log('LOG (editing s.) I should modify element', editObj);
         const modObj = this.storageSrv.elementsMap.get(editObj.id);
-        modObj.lat = editObj.change.to.lat;
-        modObj.lon = editObj.change.to.lon;
+        modObj.lat = editObj.change['to'].lat;
+        modObj.lon = editObj.change['to'].lon;
         this.storageSrv.elementsMap.set(editObj.id, modObj);
         break;
       case 'add route':
         console.log('LOG (editing s.) I should add route', editObj);
         if (!this.storageSrv.elementsMap.get(editObj.id)) {
-          this.storageSrv.elementsMap.set(editObj.id, editObj.change.to);
-          this.storageSrv.listOfRelations.push(editObj.change.to); // un-shift
+          this.storageSrv.elementsMap.set(editObj.id, editObj.change['to']);
+          this.storageSrv.listOfRelations.push(editObj.change['to']); // un-shift
         } else {
           alert(
             "FIXME: this new ROUTE's ID already exists " +
@@ -198,8 +197,8 @@ export class EditService {
       case 'create master':
         console.log('LOG (editing s.) I should add route_master', editObj);
         if (!this.storageSrv.elementsMap.get(editObj.id)) {
-          this.storageSrv.elementsMap.set(editObj.id, editObj.change.to);
-          this.storageSrv.listOfMasters.push(editObj.change.to); // un-shift
+          this.storageSrv.elementsMap.set(editObj.id, editObj.change['to']);
+          this.storageSrv.listOfMasters.push(editObj.change['to']); // un-shift
         } else {
           alert(
             "FIXME: this new ROUTE's ID already exists " +
@@ -243,9 +242,9 @@ export class EditService {
     }
     this.storageSrv.syncEdits();
     this.updateCounter();
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      this.storageSrv.tempStepAdded.emit(true);
-    }
+    // if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+    //   this.storageSrv.tempStepAdded.emit(true);
+    // }
   }
 
   /**
@@ -389,7 +388,7 @@ export class EditService {
     };
     const newOrder = routeMaster.members;
     newOrder.push(newMember);
-    change.to = JSON.parse(JSON.stringify(newOrder));
+    change['to'] = JSON.parse(JSON.stringify(newOrder));
     this.storageSrv.idsHaveMaster.add(relId);
     this.storageSrv.queriedMasters.add(relId);
     this.addChange(routeMaster, 'change members', change);
@@ -677,8 +676,8 @@ export class EditService {
     switch (editObj.type) {
       case 'change tags':
         return (
-          last['change'].to.key === editObj.change.from.key &&
-          last['change'].to.value === editObj.change.from.value
+          last['change'].to.key === editObj.change['from'].key &&
+          last['change'].to.value === editObj.change['from'].value
         );
       case 'change members':
         return last['id'] === editObj.id && last['type'] === 'change members';
@@ -693,19 +692,19 @@ export class EditService {
   private combineChanges(editObj): void {
     console.log('LOG (editing s.) Combining changes');
     const last = this.storageSrv.edits[this.storageSrv.edits.length - 1];
-    if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
-      this.storageSrv.tempStepAdded.emit(false);
-    }
+    // if (this.ngRedux.getState()['app']['tutorialMode'] === false) {
+    //   this.storageSrv.tempStepAdded.emit(false);
+    // }
     switch (editObj.type) {
       case 'change tags':
-        last['change'].to.key = editObj.change.to.key;
-        last['change'].to.value = editObj.change.to.value;
+        last['change'].to.key = editObj.change['to'].key;
+        last['change'].to.value = editObj.change['to'].value;
         this.storageSrv.edits[this.storageSrv.edits.length - 1] = last;
         break;
       case 'change members':
         break;
       case 'toggle members':
-        last['change'].to = editObj.change.to;
+        last['change'].to = editObj.change['to'];
 
         break;
     }

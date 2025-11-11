@@ -1,6 +1,6 @@
 import { Component, ViewChildren } from '@angular/core';
 import * as L from 'leaflet';
-import { BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
   INameErrorObject,
   IPTPairErrorObject,
@@ -26,8 +26,10 @@ export class ModalComponent {
   suggestedNames: string[];
   error: string;
 
-  @ViewChildren('chosenRef') chosenRefS;
-  @ViewChildren('newlyAddedValue') newlyAddedValue;
+  @ViewChildren('chosenRef')
+  chosenRefS;
+  @ViewChildren('newlyAddedValue')
+  newlyAddedValue;
 
   nameErrorObject: INameErrorObject;
   refErrorObject: IRefErrorObject;
@@ -51,7 +53,7 @@ export class ModalComponent {
   newPlatformEvent;
   circleLayer = null;
 
-  osmtogeojson = require('osmtogeojson');
+  import osmtogeojson from 'osmtogeojson';
 
   constructor(
     public bsModalRef: BsModalRef,
@@ -79,7 +81,7 @@ export class ModalComponent {
       const popupContent = L.DomUtil.create('div', 'content');
       popupContent.innerHTML = '<i class="fa fa-check" aria-hidden="true"></i>';
       const popupArr = this.mapSrv.popUpLayerGroup.getLayers();
-      popupArr[0].setContent(popupContent);
+      (popupArr[0] as L.Popup).setContent(popupContent);
       this.nameErrorObject.corrected = 'true';
       this.storageSrv.nameErrorsObj[this.storageSrv.currentIndex].corrected =
         'true';
@@ -203,7 +205,7 @@ export class ModalComponent {
     const obj = {};
     const elements = [];
     elements.push(this.storageSrv.elementsMap.get(this.wayErrorObject.stop.id));
-    obj.elements = elements;
+    obj['elements'] = elements;
     const transformed = this.osmtogeojson(obj);
     this.mapSrv.renderTransformedGeojsonData(transformed, this.mapSrv.map);
   }
@@ -431,8 +433,11 @@ export class ModalComponent {
         '<i class="fa fa-question" aria-hidden="true"></i>';
     } else {
       val = 'false';
+      const popupContent = L.DomUtil.create('div', 'content');
       popupContent.innerHTML =
         '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
+      const popupArr = this.mapSrv.popUpLayerGroup.getLayers();
+      (popupArr[0] as L.Popup).setContent(popupContent);
     }
     this.refErrorObject.corrected = val;
     this.storageSrv.refErrorsObj[this.storageSrv.currentIndex].corrected = val;

@@ -1,4 +1,3 @@
-import { NgRedux, select } from '@angular-redux/store';
 import { Component } from '@angular/core';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 import { Observable } from 'rxjs';
@@ -7,8 +6,6 @@ import { MapService } from '../../services/map.service';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 import { TutorialService } from '../../services/tutorial.service';
-import { AppActions } from '../../store/app/actions';
-import { IAppState } from '../../store/model';
 
 @Component({
   selector: 'settings',
@@ -16,20 +13,12 @@ import { IAppState } from '../../store/model';
   templateUrl: './settings.component.html',
 })
 export class SettingsComponent {
-  @select(['app', 'advancedExpMode'])
-  readonly advancedExpMode$: Observable<boolean>;
-  @select(['app', 'goodConnectMode'])
-  readonly goodConnectMode$: Observable<boolean>;
-  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
-
   constructor(
-    public appActions: AppActions,
     private errorHighlightSrv: ErrorHighlightService,
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private mapSrv: MapService,
     private tutorialSrv: TutorialService,
-    private ngRedux: NgRedux<IAppState>,
     private hotkeysService: HotkeysService,
   ) {
     this.hotkeysService.add([
@@ -55,48 +44,48 @@ export class SettingsComponent {
   }
 
   changeConnMode(goodConnectMode: boolean): void {
-    this.appActions.actSetGoodConnectMode(goodConnectMode);
+    // this.appActions.actSetGoodConnectMode(goodConnectMode);
     localStorage.setItem('goodConnectMode', JSON.stringify(goodConnectMode));
   }
 
   changeExpMode(advancedExpMode: boolean): void {
-    this.appActions.actToggleSwitchMode(false);
+    // this.appActions.actToggleSwitchMode(false);
     this.processSrv.refreshSidebarView('cancel selection');
     this.mapSrv.removePopUps();
     this.storageSrv.currentElement = null;
     this.storageSrv.currentElementsChange.emit(null);
-    this.appActions.actSetErrorCorrectionMode(null);
-    this.appActions.actSetAdvancedExpMode(advancedExpMode);
+    // this.appActions.actSetErrorCorrectionMode(null);
+    // this.appActions.actSetAdvancedExpMode(advancedExpMode);
     localStorage.setItem('advancedMode', JSON.stringify(advancedExpMode));
-    if (
-      this.ngRedux.getState()['app']['tutorialMode'] === false &&
-      advancedExpMode
-    ) {
-      this.storageSrv.tutorialStepCompleted.emit();
-    }
+    // if (
+    //   this.ngRedux.getState()['app']['tutorialMode'] === false &&
+    //   advancedExpMode
+    // ) {
+    //   this.storageSrv.tutorialStepCompleted.emit();
+    // }
   }
 
   toggleConnMode(): void {
-    const connMode = this.ngRedux.getState()['app']['goodConnectMode'];
-    this.appActions.actSetGoodConnectMode(!connMode);
-    localStorage.setItem('goodConnectMode', JSON.stringify(!connMode));
+    // const connMode = this.ngRedux.getState()['app']['goodConnectMode'];
+    // this.appActions.actSetGoodConnectMode(!connMode);
+    // localStorage.setItem('goodConnectMode', JSON.stringify(!connMode));
   }
 
   toggleExpMode(): void {
-    const advancedExpMode = this.ngRedux.getState()['app']['advancedExpMode'];
-    this.appActions.actToggleSwitchMode(false);
+    // const advancedExpMode = this.ngRedux.getState()['app']['advancedExpMode'];
+    // this.appActions.actToggleSwitchMode(false);
     this.processSrv.refreshSidebarView('cancel selection');
     this.mapSrv.removePopUps();
     this.storageSrv.currentElement = null;
     this.storageSrv.currentElementsChange.emit(null);
-    this.appActions.actSetErrorCorrectionMode(null);
-    this.appActions.actSetAdvancedExpMode(!advancedExpMode);
-    localStorage.setItem('advancedMode', JSON.stringify(!advancedExpMode));
-    if (
-      this.ngRedux.getState()['app']['tutorialMode'] === false &&
-      !advancedExpMode
-    ) {
-      this.storageSrv.tutorialStepCompleted.emit();
-    }
+    // this.appActions.actSetErrorCorrectionMode(null);
+    // this.appActions.actSetAdvancedExpMode(!advancedExpMode);
+    // localStorage.setItem('advancedMode', JSON.stringify(!advancedExpMode));
+    // if (
+    //   this.ngRedux.getState()['app']['tutorialMode'] === false &&
+    //   !advancedExpMode
+    // ) {
+    //   this.storageSrv.tutorialStepCompleted.emit();
+    // }
   }
 }

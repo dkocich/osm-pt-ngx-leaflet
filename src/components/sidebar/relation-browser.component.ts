@@ -2,12 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProcessService } from '../../services/process.service';
 import { StorageService } from '../../services/storage.service';
 import { EditService } from '../../services/edit.service';
-import { ModalDirective } from 'ngx-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IPtRouteMasterNew } from '../../core/ptRouteMasterNew.interface';
 import { IOsmElement } from '../../core/osmElement.interface';
 import { Observable } from 'rxjs';
-import { NgRedux, select } from '@angular-redux/store';
-import { IAppState } from '../../store/model';
 import { Hotkey, HotkeysService } from 'angular2-hotkeys';
 
 @Component({
@@ -22,18 +20,17 @@ export class RelationBrowserComponent implements OnInit {
     private processSrv: ProcessService,
     private storageSrv: StorageService,
     private hotkeysService: HotkeysService,
-    private ngRedux: NgRedux<IAppState>,
   ) {
     this.hotkeysService.add(
       new Hotkey(
         '3',
         (): boolean => {
-          if (
-            this.ngRedux.getState()['app']['editing'] &&
-            this.ngRedux.getState()['app']['advancedExpMode']
-          ) {
-            this.createMaster();
-          }
+          // if (
+          //   this.ngRedux.getState()['app']['editing'] &&
+          //   this.ngRedux.getState()['app']['advancedExpMode']
+          // ) {
+          //   this.createMaster();
+          // }
           return false;
         },
         undefined,
@@ -43,10 +40,10 @@ export class RelationBrowserComponent implements OnInit {
   }
   currentElement: IOsmElement | IPtRouteMasterNew;
   listOfVariants = this.storageSrv.listOfVariants;
-  @select(['app', 'editing']) readonly editing$: Observable<boolean>;
   listOfMasters = this.storageSrv.listOfMasters;
 
-  @ViewChild('masterModal') masterModal: ModalDirective;
+  @ViewChild('masterModal')
+  masterModal: ModalDirective;
 
   ngOnInit(): void {
     this.processSrv.refreshSidebarViews$.subscribe((data) => {

@@ -1,15 +1,15 @@
 import { ErrorHandler } from '@angular/core';
-import * as Raven from 'raven-js';
+import * as Sentry from '@sentry/browser';
 import { Utils } from './core/utils.class';
 
 if (Utils.isProductionDeployment()) {
-  Raven.config(
+  Sentry.config(
     'https://6a8266c320b44a1890c43313027c1f2b@sentry.io/1199897',
   ).install();
 }
 
 export class RavenErrorHandler implements ErrorHandler {
   handleError(err): void {
-    Raven.captureException(err);
+    Sentry.captureException(err);
   }
 }

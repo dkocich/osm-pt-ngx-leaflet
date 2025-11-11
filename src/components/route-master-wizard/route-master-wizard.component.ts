@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import * as L from 'leaflet';
-import { BsModalRef, TabsetComponent } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { IOsmElement } from '../../core/osmElement.interface';
@@ -12,7 +13,6 @@ import { ProcessService } from '../../services/process.service';
 import { RouteMasterWizardService } from '../../services/route-master-wizard.service';
 import { StorageService } from '../../services/storage.service';
 import { WarnService } from '../../services/warn.service';
-import { AppActions } from '../../store/app/actions';
 
 @Component({
   selector: 'route-master-wizard',
@@ -21,7 +21,7 @@ import { AppActions } from '../../store/app/actions';
 })
 export class RouteMasterWizardComponent implements OnInit {
   map: L.Map;
-  osmtogeojson = require('osmtogeojson');
+  import osmtogeojson from 'osmtogeojson';
   private startEventProcessing = new Subject<L.LeafletEvent>();
   usedRM = [];
 
@@ -41,7 +41,8 @@ export class RouteMasterWizardComponent implements OnInit {
     colour: '',
   };
 
-  @ViewChild('stepTabs') stepTabs: TabsetComponent;
+  @ViewChild('stepTabs')
+  stepTabs: TabsetComponent;
 
   constructor(
     private routeMasterWizardSrv: RouteMasterWizardService,
@@ -49,7 +50,6 @@ export class RouteMasterWizardComponent implements OnInit {
     public mapSrv: MapService,
     private warnSrv: WarnService,
     private overpassSrv: OverpassService,
-    public appActions: AppActions,
     private processSrv: ProcessService,
     private editSrv: EditService,
     public modalRefRouteMasterWiz: BsModalRef,
@@ -230,7 +230,7 @@ export class RouteMasterWizardComponent implements OnInit {
     this.routeMasterWizardSrv.modalMapElementsMap.set(newRM.id, newRM);
     this.editSrv.addChange(newRM, 'add route', change);
     this.modalRefRouteMasterWiz.hide();
-    this.appActions.actSetWizardMode(null);
+    // this.appActions.actSetWizardMode(null);
   }
 
   /**
